@@ -12,21 +12,22 @@ import products from 'src/__mocks__/products';
 const ProductList = () => (
   <>
     <Helmet>
-      <title>Products | Material Kit</title>
+      <title>Services</title>
     </Helmet>
     <Box
       sx={{
-        backgroundColor: 'background.default',
+        backgroundColor: '#f4f6f8',
         minHeight: '100%',
-        py: 3
+        overflow: 'hidden',
       }}
     >
       <Container maxWidth={false}>
         <ProductListToolbar />
-        <Box sx={{ pt: 3 }}>
+        <Box sx={{ pt: 3, }}>
           <Grid
             container
-            spacing={3}
+            spacing={10}
+            dir="rtl"
           >
             {products.map((product) => (
               <Grid

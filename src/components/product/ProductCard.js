@@ -1,103 +1,159 @@
+import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
-  Avatar,
   Box,
   Card,
   CardContent,
-  Divider,
   Grid,
+  Button,
+  Divider,
   Typography
 } from '@material-ui/core';
-import AccessTimeIcon from '@material-ui/icons/AccessTime';
-import GetAppIcon from '@material-ui/icons/GetApp';
 
-const ProductCard = ({ product, ...rest }) => (
-  <Card
-    sx={{
-      display: 'flex',
-      flexDirection: 'column',
-      height: '100%'
-    }}
-    {...rest}
-  >
-    <CardContent>
+const ProductCard = ({ product, ...rest }) => {
+  const navigate = useNavigate();
+
+  return (
+    <Card
+      {...rest}
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+        boxShadow: '-10px 10px 10px #3c808426',
+        background: '#fff',
+        borderRadius: '20px',
+        minHeight: '450px'
+      }}
+    >
       <Box
         sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          pb: 3
+          position: 'relative',
         }}
       >
-        <Avatar
-          alt="Product"
-          src={product.media}
-          variant="square"
-        />
+        <Box
+          sx={{
+            background: '#fff',
+          }}
+        >
+          <CardContent
+            sx={{
+              height: '320px',
+              width: '70%',
+              margin: '0 auto',
+            }}
+          >
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                pb: 3,
+              }}
+            >
+              <img
+                alt="Product"
+                src={product.media}
+                width="120"
+
+              />
+            </Box>
+            <Typography
+              align="center"
+              color="textPrimary"
+              gutterBottom
+              variant="h4"
+              sx={{
+                pb: 2,
+                pt: 0,
+                fontSize: '25px'
+              }}
+            >
+              {product.title}
+            </Typography>
+            <Divider
+              variant="middle"
+              sx={{
+                width: '70%',
+                margin: '0 auto',
+                borderWidth: '1px',
+                borderColor: '#3c8084'
+              }}
+            />
+            <Typography
+              align="center"
+              color="textPrimary"
+              variant="body1"
+              sx={{
+                pb: 0,
+                pt: 2,
+              }}
+            >
+              {product.description}
+            </Typography>
+          </CardContent>
+          <Box sx={{ flexGrow: 1 }} />
+          <Box sx={{ pt: 8 }}>
+            <Grid
+              container
+              spacing={2}
+              sx={{ justifyContent: 'space-between' }}
+            >
+              <Button
+                size="large"
+                type="submit"
+                variant="contained"
+                onClick={() => navigate(product.url, { replace: true })}
+                sx={{
+                  borderRadius: '5em',
+                  margin: '0 auto',
+                  backgroundColor: '#3c8084',
+                  fontSize: '16px',
+                  fontWeight: '900',
+                  pl: 4,
+                  pr: 4
+                }}
+              >
+                ذهاب للخدمة
+              </Button>
+            </Grid>
+          </Box>
+        </Box>
+        {Boolean(!product.isActive) && (
+          <Box
+            sx={{
+              width: '100%',
+              height: '100%',
+              position: 'absolute',
+              left: 0,
+              top: 0,
+              background: '#fff',
+              opacity: '0.91',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <Typography
+              align="center"
+              color="textPrimary"
+              variant="body1"
+              sx={{
+                width: '160px',
+                color: '#3a3939',
+                fontSize: '25px',
+                fontWeight: '900'
+              }}
+            >
+              سيتم إطلاق الخدمة قريباً
+            </Typography>
+          </Box>
+        )}
       </Box>
-      <Typography
-        align="center"
-        color="textPrimary"
-        gutterBottom
-        variant="h4"
-      >
-        {product.title}
-      </Typography>
-      <Typography
-        align="center"
-        color="textPrimary"
-        variant="body1"
-      >
-        {product.description}
-      </Typography>
-    </CardContent>
-    <Box sx={{ flexGrow: 1 }} />
-    <Divider />
-    <Box sx={{ p: 2 }}>
-      <Grid
-        container
-        spacing={2}
-        sx={{ justifyContent: 'space-between' }}
-      >
-        <Grid
-          item
-          sx={{
-            alignItems: 'center',
-            display: 'flex'
-          }}
-        >
-          <AccessTimeIcon color="action" />
-          <Typography
-            color="textSecondary"
-            display="inline"
-            sx={{ pl: 1 }}
-            variant="body2"
-          >
-            Updated 2hr ago
-          </Typography>
-        </Grid>
-        <Grid
-          item
-          sx={{
-            alignItems: 'center',
-            display: 'flex'
-          }}
-        >
-          <GetAppIcon color="action" />
-          <Typography
-            color="textSecondary"
-            display="inline"
-            sx={{ pl: 1 }}
-            variant="body2"
-          >
-            {product.totalDownloads}
-            {' '}
-            Downloads
-          </Typography>
-        </Grid>
-      </Grid>
-    </Box>
-  </Card>
-);
+
+    </Card>
+  );
+};
 
 ProductCard.propTypes = {
   product: PropTypes.object.isRequired

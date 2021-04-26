@@ -24,7 +24,26 @@ const useStyles = makeStyles(() => createStyles({
     '#root': {
       height: '100%',
       width: '100%'
+    },
+    '.st0': {
+      fill: '00bef2'
+    },
+    '.custom-field label': {
+      transformOrigin: 'top right',
+      right: '30px',
+      left: 'unset'
+    },
+    '.custom-field fieldset': {
+      textAlign: 'right'
+    },
+    'span.css-htszrh-MuiButton-startIcon': {
+      marginLeft: '8px',
+      marginRight: '-4px'
+    },
+    '.customGrid .MuiGrid-item': {
+      paddingLeft: '0px !important'
     }
+
   }
 }));
 

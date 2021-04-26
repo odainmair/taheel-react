@@ -31,7 +31,7 @@ const NavItem = ({
       <Button
         component={RouterLink}
         sx={{
-          color: 'text.secondary',
+          color: 'text.white',
           fontWeight: 'medium',
           justifyContent: 'flex-start',
           letterSpacing: 0,
@@ -39,10 +39,10 @@ const NavItem = ({
           textTransform: 'none',
           width: '100%',
           ...(active && {
-            color: 'primary.main'
+            color: 'action.active'
           }),
           '& svg': {
-            mr: 1
+            ml: 1
           }
         }}
         to={href}

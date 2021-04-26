@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import {
   Avatar,
   Box,
-  Button,
   Divider,
   Drawer,
   Hidden,
@@ -12,63 +11,46 @@ import {
   Typography
 } from '@material-ui/core';
 import {
-  AlertCircle as AlertCircleIcon,
-  BarChart as BarChartIcon,
-  Lock as LockIcon,
+  LogOut as LogoutIcon,
+  Monitor as BarChartIcon,
   Settings as SettingsIcon,
   ShoppingBag as ShoppingBagIcon,
   User as UserIcon,
-  UserPlus as UserPlusIcon,
-  Users as UsersIcon
 } from 'react-feather';
 import NavItem from './NavItem';
+import Logo from './Logo';
 
 const user = {
-  avatar: '/static/images/avatars/avatar_6.png',
-  jobTitle: 'Senior Developer',
-  name: 'Katarina Smith'
+  avatar: '/static/images/avatars/avatar_4.png',
+  currentDate: '3 FEBRUARY 2020',
+  name: 'عبدالله بن محمد'
 };
 
 const items = [
   {
     href: '/app/dashboard',
     icon: BarChartIcon,
-    title: 'Dashboard'
-  },
-  {
-    href: '/app/customers',
-    icon: UsersIcon,
-    title: 'Customers'
+    title: 'لوحة البيانات'
   },
   {
     href: '/app/products',
     icon: ShoppingBagIcon,
-    title: 'Products'
+    title: 'الخدمات'
   },
   {
     href: '/app/account',
     icon: UserIcon,
-    title: 'Account'
+    title: 'معلومات الشخصيه'
   },
   {
     href: '/app/settings',
     icon: SettingsIcon,
-    title: 'Settings'
+    title: 'الإعدادات'
   },
   {
     href: '/login',
-    icon: LockIcon,
-    title: 'Login'
-  },
-  {
-    href: '/register',
-    icon: UserPlusIcon,
-    title: 'Register'
-  },
-  {
-    href: '/404',
-    icon: AlertCircleIcon,
-    title: 'Error'
+    icon: LogoutIcon,
+    title: 'تسجيل خروج'
   }
 ];
 
@@ -93,7 +75,6 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
         sx={{
           alignItems: 'center',
           display: 'flex',
-          flexDirection: 'column',
           p: 2
         }}
       >
@@ -102,23 +83,32 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
           src={user.avatar}
           sx={{
             cursor: 'pointer',
-            width: 64,
-            height: 64
+            width: 44,
+            height: 44
           }}
           to="/app/account"
         />
-        <Typography
-          color="textPrimary"
-          variant="h5"
-        >
-          {user.name}
-        </Typography>
-        <Typography
-          color="textSecondary"
-          variant="body2"
-        >
-          {user.jobTitle}
-        </Typography>
+        <Box sx={{ p: 2 }}>
+          <Typography
+            variant="h6"
+            sx={{
+              fontSize: '20px',
+              fontWeight: 'bold',
+              color: '#fff'
+            }}
+          >
+            {user.name}
+          </Typography>
+          <Typography
+            variant="body2"
+            sx={{
+              fontSize: 10,
+              color: '#fff'
+            }}
+          >
+            {user.currentDate}
+          </Typography>
+        </Box>
       </Box>
       <Divider />
       <Box sx={{ p: 2 }}>
@@ -133,43 +123,36 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
           ))}
         </List>
       </Box>
-      <Box sx={{ flexGrow: 1 }} />
+      <Box sx={{ flexGrow: 1, }} />
       <Box
         sx={{
-          backgroundColor: 'background.default',
-          m: 2,
+          backgroundColor: '#103145',
+          alignItems: 'center',
+          display: 'flex',
+          flexDirection: 'column',
           p: 2
         }}
       >
-        <Typography
-          align="center"
-          gutterBottom
-          variant="h4"
-        >
-          Need more?
-        </Typography>
+        <RouterLink to="/">
+          <Logo />
+          <img
+            alt="Logo"
+            src="/static/logo-w.svg"
+            width="100"
+          />
+        </RouterLink>
         <Typography
           align="center"
           variant="body2"
-        >
-          Upgrade to PRO version and access 20 more screens
-        </Typography>
-        <Box
           sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            pt: 2
+            fontSize: 10,
+            color: '#CCC',
+            paddingTop: 2
           }}
         >
-          <Button
-            color="primary"
-            component="a"
-            href="https://react-material-kit.devias.io"
-            variant="contained"
-          >
-            See PRO version
-          </Button>
-        </Box>
+          جميع الحقوق محفوظة
+          © 2021
+        </Typography>
       </Box>
     </Box>
   );
@@ -184,7 +167,8 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
           variant="temporary"
           PaperProps={{
             sx: {
-              width: 256
+              width: 256,
+              backgroundColor: '#214255',
             }
           }}
         >
@@ -193,14 +177,18 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
       </Hidden>
       <Hidden lgDown>
         <Drawer
-          anchor="left"
+          anchor="right"
           open
           variant="persistent"
           PaperProps={{
             sx: {
               width: 256,
-              top: 64,
-              height: 'calc(100% - 64px)'
+              top: 80,
+              bottom: 16,
+              height: 'calc(100% - 96px)',
+              backgroundColor: '#214255',
+              borderBottomLeftRadius: 50,
+              borderTopLeftRadius: 50
             }
           }}
         >

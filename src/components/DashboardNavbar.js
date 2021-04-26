@@ -15,7 +15,7 @@ import InputIcon from '@material-ui/icons/Input';
 import Logo from './Logo';
 
 const DashboardNavbar = ({ onMobileNavOpen, ...rest }) => {
-  const [notifications] = useState([]);
+  const [notifications] = useState(['1', '2']);
 
   return (
     <AppBar
@@ -30,7 +30,7 @@ const DashboardNavbar = ({ onMobileNavOpen, ...rest }) => {
         <Hidden lgDown>
           <IconButton color="inherit">
             <Badge
-              badgeContent={notifications.length}
+              badgeContent={2 + notifications.length}
               color="primary"
               variant="dot"
             >

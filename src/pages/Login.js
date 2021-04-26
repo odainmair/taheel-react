@@ -9,10 +9,9 @@ import {
   Grid,
   Link,
   TextField,
-  Typography
+  Typography,
 } from '@material-ui/core';
 import FacebookIcon from 'src/icons/Facebook';
-import GoogleIcon from 'src/icons/Google';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -20,7 +19,7 @@ const Login = () => {
   return (
     <>
       <Helmet>
-        <title>Login | Material Kit</title>
+        <title>Login</title>
       </Helmet>
       <Box
         sx={{
@@ -34,7 +33,7 @@ const Login = () => {
         <Container maxWidth="sm">
           <Formik
             initialValues={{
-              email: 'demo@devias.io',
+              email: 'abdallah@takamolholding.com',
               password: 'Password123'
             }}
             validationSchema={Yup.object().shape({
@@ -42,7 +41,7 @@ const Login = () => {
               password: Yup.string().max(255).required('Password is required')
             })}
             onSubmit={() => {
-              navigate('/app/dashboard', { replace: true });
+              navigate('/app/products', { replace: true });
             }}
           >
             {({
@@ -55,19 +54,12 @@ const Login = () => {
               values
             }) => (
               <form onSubmit={handleSubmit}>
-                <Box sx={{ mb: 3 }}>
+                <Box sx={{ mb: 3, textAlign: 'center' }}>
                   <Typography
                     color="textPrimary"
                     variant="h2"
                   >
-                    Sign in
-                  </Typography>
-                  <Typography
-                    color="textSecondary"
-                    gutterBottom
-                    variant="body2"
-                  >
-                    Sign in on the internal platform
+                    تسجيل الدخول
                   </Typography>
                 </Box>
                 <Grid
@@ -77,32 +69,19 @@ const Login = () => {
                   <Grid
                     item
                     xs={12}
-                    md={6}
+                    md={12}
                   >
                     <Button
-                      color="primary"
                       fullWidth
                       startIcon={<FacebookIcon />}
                       onClick={handleSubmit}
                       size="large"
                       variant="contained"
+                      sx={{
+                        backgroundColor: '#3c8084',
+                      }}
                     >
-                      Login with Facebook
-                    </Button>
-                  </Grid>
-                  <Grid
-                    item
-                    xs={12}
-                    md={6}
-                  >
-                    <Button
-                      fullWidth
-                      startIcon={<GoogleIcon />}
-                      onClick={handleSubmit}
-                      size="large"
-                      variant="contained"
-                    >
-                      Login with Google
+                      تسجيل دخول عن طريق AZURE AD
                     </Button>
                   </Grid>
                 </Grid>
@@ -117,14 +96,14 @@ const Login = () => {
                     color="textSecondary"
                     variant="body1"
                   >
-                    or login with email address
+                    تسجيل دخول عن طريق رقم الهوية/الاقامة أو البربد الالكتروني
                   </Typography>
                 </Box>
                 <TextField
                   error={Boolean(touched.email && errors.email)}
                   fullWidth
                   helperText={touched.email && errors.email}
-                  label="Email Address"
+                  label="رقم الهوية/الاقامة أو البربد الالكتروني"
                   margin="normal"
                   name="email"
                   onBlur={handleBlur}
@@ -132,12 +111,13 @@ const Login = () => {
                   type="email"
                   value={values.email}
                   variant="outlined"
+                  className="custom-field"
                 />
                 <TextField
                   error={Boolean(touched.password && errors.password)}
                   fullWidth
                   helperText={touched.password && errors.password}
-                  label="Password"
+                  label="كلمة المرور"
                   margin="normal"
                   name="password"
                   onBlur={handleBlur}
@@ -145,33 +125,69 @@ const Login = () => {
                   type="password"
                   value={values.password}
                   variant="outlined"
+                  className="custom-field"
                 />
-                <Box sx={{ py: 2 }}>
+                <Box
+                  textAlign="center"
+                  sx={{
+                    py: 2,
+                    justifyContent: 'center',
+                    display: 'flex',
+                    flexDirection: 'column',
+                  }}
+                >
+                  <Typography
+                    color="textSecondary"
+                    variant="body1"
+                    sx={{
+                      paddingBottom: '16px',
+                      textDecoration: 'underline'
+                    }}
+                  >
+                    <Link
+                      component={RouterLink}
+                      to="/login"
+                      variant="h6"
+                    >
+                      نسيت كلمة المرور
+                    </Link>
+                  </Typography>
                   <Button
                     color="primary"
                     disabled={isSubmitting}
-                    fullWidth
                     size="large"
                     type="submit"
                     variant="contained"
+                    sx={{
+                      borderRadius: '5em',
+                      width: '50%',
+                      margin: '0 auto'
+                    }}
                   >
-                    Sign in now
+                    تسجيل دخول
                   </Button>
-                </Box>
-                <Typography
-                  color="textSecondary"
-                  variant="body1"
-                >
-                  Don&apos;t have an account?
-                  {' '}
-                  <Link
-                    component={RouterLink}
-                    to="/register"
-                    variant="h6"
+                  <Typography
+                    color="textSecondary"
+                    variant="body1"
+                    sx={{
+                      paddingTop: '16px',
+                    }}
                   >
-                    Sign up
-                  </Link>
-                </Typography>
+                    ليس لديك رقم حساب ؟
+                    {' '}
+                    <Link
+                      component={RouterLink}
+                      to="/login"
+                      variant="h6"
+                      sx={{
+                        textDecoration: 'underline'
+                      }}
+                    >
+                      إنشاء حساب
+                    </Link>
+                  </Typography>
+                </Box>
+
               </form>
             )}
           </Formik>

@@ -1,6 +1,6 @@
 import {
   Box,
-  Button,
+  // Button,
   Card,
   CardContent,
   TextField,
@@ -11,7 +11,7 @@ import { Search as SearchIcon } from 'react-feather';
 
 const ProductListToolbar = (props) => (
   <Box {...props}>
-    <Box
+    {/* <Box
       sx={{
         display: 'flex',
         justifyContent: 'flex-end'
@@ -29,7 +29,7 @@ const ProductListToolbar = (props) => (
       >
         Add product
       </Button>
-    </Box>
+    </Box> */}
     <Box sx={{ mt: 3 }}>
       <Card>
         <CardContent>
@@ -48,7 +48,7 @@ const ProductListToolbar = (props) => (
                   </InputAdornment>
                 )
               }}
-              placeholder="Search product"
+              placeholder="بحث"
               variant="outlined"
             />
           </Box>

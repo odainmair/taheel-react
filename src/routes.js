@@ -2,6 +2,7 @@ import { Navigate } from 'react-router-dom';
 import DashboardLayout from 'src/components/DashboardLayout';
 import MainLayout from 'src/components/MainLayout';
 import Account from 'src/pages/Account';
+import Survey from 'src/pages/services/Survey';
 import CustomerList from 'src/pages/CustomerList';
 import Dashboard from 'src/pages/Dashboard';
 import Login from 'src/pages/Login';
@@ -11,6 +12,17 @@ import Register from 'src/pages/Register';
 import Settings from 'src/pages/Settings';
 
 const routes = [
+  {
+    path: '/',
+    element: <MainLayout />,
+    children: [
+      { path: 'login', element: <Login /> },
+      { path: 'register', element: <Register /> },
+      { path: '404', element: <NotFound /> },
+      { path: '/', element: <Navigate to="/login" /> },
+      { path: '*', element: <Navigate to="/404" /> }
+    ]
+  },
   {
     path: 'app',
     element: <DashboardLayout />,
@@ -24,13 +36,10 @@ const routes = [
     ]
   },
   {
-    path: '/',
-    element: <MainLayout />,
+    path: 'services',
+    element: <DashboardLayout />,
     children: [
-      { path: 'login', element: <Login /> },
-      { path: 'register', element: <Register /> },
-      { path: '404', element: <NotFound /> },
-      { path: '/', element: <Navigate to="/app/dashboard" /> },
+      { path: 'survey', element: <Survey /> },
       { path: '*', element: <Navigate to="/404" /> }
     ]
   }

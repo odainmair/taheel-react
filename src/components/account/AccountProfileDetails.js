@@ -12,27 +12,27 @@ import {
 
 const states = [
   {
-    value: 'alabama',
-    label: 'Alabama'
+    value: '1',
+    label: 'الرياض'
   },
   {
-    value: 'new-york',
-    label: 'New York'
+    value: '2',
+    label: 'جدة'
   },
   {
-    value: 'san-francisco',
-    label: 'San Francisco'
+    value: '3',
+    label: 'مكة'
   }
 ];
 
 const AccountProfileDetails = (props) => {
   const [values, setValues] = useState({
-    firstName: 'Katarina',
-    lastName: 'Smith',
-    email: 'demo@devias.io',
+    firstName: 'عبدالله',
+    lastName: 'بن محمد',
+    email: 'abdallah@takamolholding.com',
     phone: '',
-    state: 'Alabama',
-    country: 'USA'
+    state: '1',
+    country: 'السعودية'
   });
 
   const handleChange = (event) => {
@@ -50,8 +50,8 @@ const AccountProfileDetails = (props) => {
     >
       <Card>
         <CardHeader
-          subheader="The information can be edited"
-          title="Profile"
+          subheader="هذه المعلوما التي يمكنك ان تقوم في تعديلها"
+          title="معلومات الشخصية"
         />
         <Divider />
         <CardContent>
@@ -66,13 +66,14 @@ const AccountProfileDetails = (props) => {
             >
               <TextField
                 fullWidth
-                helperText="Please specify the first name"
-                label="First name"
+                label="الاسم الاول"
                 name="firstName"
                 onChange={handleChange}
                 required
                 value={values.firstName}
                 variant="outlined"
+                dir="rtl"
+                className="custom-field"
               />
             </Grid>
             <Grid
@@ -82,12 +83,13 @@ const AccountProfileDetails = (props) => {
             >
               <TextField
                 fullWidth
-                label="Last name"
+                label="اسم العائلة"
                 name="lastName"
                 onChange={handleChange}
                 required
                 value={values.lastName}
                 variant="outlined"
+                className="custom-field"
               />
             </Grid>
             <Grid
@@ -97,12 +99,13 @@ const AccountProfileDetails = (props) => {
             >
               <TextField
                 fullWidth
-                label="Email Address"
+                label="البريد الاكتروني"
                 name="email"
                 onChange={handleChange}
                 required
                 value={values.email}
                 variant="outlined"
+                className="custom-field"
               />
             </Grid>
             <Grid
@@ -112,12 +115,13 @@ const AccountProfileDetails = (props) => {
             >
               <TextField
                 fullWidth
-                label="Phone Number"
+                label="رقم الجوال"
                 name="phone"
                 onChange={handleChange}
                 type="number"
                 value={values.phone}
                 variant="outlined"
+                className="custom-field"
               />
             </Grid>
             <Grid
@@ -127,12 +131,13 @@ const AccountProfileDetails = (props) => {
             >
               <TextField
                 fullWidth
-                label="Country"
+                label="الدولة"
                 name="country"
                 onChange={handleChange}
                 required
                 value={values.country}
                 variant="outlined"
+                className="custom-field"
               />
             </Grid>
             <Grid
@@ -142,7 +147,7 @@ const AccountProfileDetails = (props) => {
             >
               <TextField
                 fullWidth
-                label="Select State"
+                label="المدينة"
                 name="state"
                 onChange={handleChange}
                 required
@@ -150,6 +155,8 @@ const AccountProfileDetails = (props) => {
                 SelectProps={{ native: true }}
                 value={values.state}
                 variant="outlined"
+                className="custom-field"
+
               >
                 {states.map((option) => (
                   <option
@@ -175,7 +182,7 @@ const AccountProfileDetails = (props) => {
             color="primary"
             variant="contained"
           >
-            Save details
+            حفظ المعلومات
           </Button>
         </Box>
       </Card>
