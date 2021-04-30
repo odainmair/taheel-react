@@ -5,12 +5,11 @@ import {
   Grid,
   Typography
 } from '@material-ui/core';
-import { indigo } from '@material-ui/core/colors';
-import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
+import HistoryOutlinedIcon from '@material-ui/icons/HistoryOutlined';
 import Skeleton from '@material-ui/lab/Skeleton';
 import PropTypes from 'prop-types';
 
-const TotalProfit = (props) => {
+const TotalPendingRequest = (props) => {
   const { loading = false } = props;
   return (
     <Card>
@@ -27,7 +26,7 @@ const TotalProfit = (props) => {
                 gutterBottom
                 variant="h6"
               >
-                TOTAL PROFIT
+                TOTAL Pending Request
               </Typography>
             ) : (
               <Skeleton animation="wave" height={10} width={200} style={{ marginBottom: 6 }} />
@@ -37,7 +36,7 @@ const TotalProfit = (props) => {
                 color="textPrimary"
                 variant="h3"
               >
-                $23,200
+                15
               </Typography>
             ) : (
               <Skeleton animation="wave" height={10} width={100} style={{ marginTop: 10 }} />
@@ -47,12 +46,12 @@ const TotalProfit = (props) => {
             {loading ? (
               <Avatar
                 sx={{
-                  backgroundColor: indigo[500],
+                  backgroundColor: '#103145',
                   height: 56,
                   width: 56
                 }}
               >
-                <AttachMoneyIcon />
+                <HistoryOutlinedIcon />
               </Avatar>
             ) : (
               <Skeleton animation="wave" variant="circle" height={56} width={56} />
@@ -64,8 +63,8 @@ const TotalProfit = (props) => {
   );
 };
 
-export default TotalProfit;
+export default TotalPendingRequest;
 
-TotalProfit.propTypes = {
+TotalPendingRequest.propTypes = {
   loading: PropTypes.bool.isRequired,
 };

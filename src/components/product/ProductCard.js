@@ -25,6 +25,7 @@ const ProductCard = ({ product, ...rest }) => {
         borderRadius: '20px',
         minHeight: '450px'
       }}
+      className={product.isActive ? '' : 'service-not-active'}
     >
       <Box
         sx={{
@@ -37,6 +38,7 @@ const ProductCard = ({ product, ...rest }) => {
           }}
         >
           <CardContent
+            className="service-content"
             sx={{
               height: '320px',
               width: '70%',
@@ -96,6 +98,7 @@ const ProductCard = ({ product, ...rest }) => {
             <Grid
               container
               spacing={2}
+              className="service-content"
               sx={{ justifyContent: 'space-between' }}
             >
               <Button
@@ -126,8 +129,7 @@ const ProductCard = ({ product, ...rest }) => {
               position: 'absolute',
               left: 0,
               top: 0,
-              background: '#fff',
-              opacity: '0.91',
+              background: 'transparent',
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',

@@ -161,7 +161,7 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
     <>
       <Hidden lgUp>
         <Drawer
-          anchor="left"
+          anchor="right"
           onClose={onMobileClose}
           open={openMobile}
           variant="temporary"

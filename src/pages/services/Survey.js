@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import {
   Card,
   CardContent,
@@ -8,48 +7,69 @@ import {
   Container,
   Typography,
   Grid,
-  TextField,
   RadioGroup,
+  MenuItem,
   FormLabel,
   FormControl,
   FormControlLabel,
+  FormHelperText,
+  InputAdornment
 } from '@material-ui/core';
 import { Form, Field } from 'react-final-form';
-import { Radio } from 'final-form-material-ui';
+import { Radio, TextField as TextFieldFinal, Select } from 'final-form-material-ui';
 import FileUploader from 'src/components/FileUploader';
+import MapContainer from 'src/components/MapContainer';
+import { OnChange } from 'react-final-form-listeners';
 import useRequest from '../../hooks/use-request';
 
 const Survey = () => {
   const { doRequest, errors } = useRequest({
-    url: 'https://inspiredemo2.appiancloud.com/suite/webapi/CreateTemp',
+    url: 'https://inspiredemo2.appiancloud.com/suite/webapi/CreateTempt',
     method: 'post',
     body: {
 
     },
     onSuccess: () => console.log('test')
   });
-  const [fieldValues, setFieldValues] = useState({
-    idNo: '',
-    centerOwner: '',
-    birthDate: '',
-  });
-  const handleChange = (event) => {
-    setFieldValues({
-      ...fieldValues,
-      [event.target.name]: event.target.value
-    });
-  };
-  const onSubmit = async () => {
+  const onSubmit = async (values) => {
     const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
     await sleep(300);
     const bodyRequest = {
       centerData: {
-        name: fieldValues.centerOwner
+        name: values.centerOwner
       }
     };
     const response = await doRequest(bodyRequest);
 
     window.alert(` تم تقديم طلبك بنجاح، رقم الرخصة ${response.center.ID} وتاريخ انتهاء الرخصة ${response.center.expirationDate} هجري`);
+  };
+ 
+  const validate = (values) => {
+    // console.log(JSON.stringify(values));
+    const fieldErrors = {};
+    if (!values.idNo) {
+      fieldErrors.idNo = 'Required';
+    }
+    if (!values.centerOwner) {
+      fieldErrors.centerOwner = 'Required';
+    }
+    if (!values.birthDate) {
+      fieldErrors.birthDate = 'Required';
+    }
+    if (!values.durationWork) {
+      fieldErrors.durationWork = 'Required';
+    }
+    if (!values.age) {
+      fieldErrors.age = 'Required';
+    }
+    if (!values.gender) {
+      fieldErrors.gender = 'Required';
+    }
+    if (!values.centerType) {
+      fieldErrors.centerType = 'Required';
+    }
+    console.log('ttest');
+    return fieldErrors;
   };
 
   console.log('ttest');
@@ -57,13 +77,23 @@ const Survey = () => {
     <Container maxWidth="md">
       <Form
         onSubmit={onSubmit}
-        initialValues={{ employed: true, stooge: 'larry' }}
+        initialValues={{
+          employed: true,
+          firstName: '',
+          stooge: 'larry',
+          durationWork: '1',
+          age: '1',
+          gender: '1',
+          requestType: '2',
+          licenseType: '1'
+        }}
+        validate={validate}
         render={({
           handleSubmit,
           reset,
           submitting,
           pristine,
-          values
+          values // eslint-disable-line no-unused-vars
         }) => (
           <form onSubmit={handleSubmit} noValidate>
             <Card>
@@ -72,11 +102,50 @@ const Survey = () => {
               />
               <Divider />
               <CardContent>
+                <Grid
+                  container
+                  mt={4}
+                  spacing={3}
+                >
+                  <Grid
+                    item
+                    md={6}
+                    xs={12}
+                    className="custom-label-field"
+                  >
+                    <Field
+                      fullWidth
+                      label="صفة المالك*"
+                      name="requestType"
+                      component={Select}
+                      required
+                      dir="rtl"
+                      className="custom-field"
+                      formControlProps={{ fullWidth: true }}
+                      onChange={() => console.log('odai')}
+                    >
+                      <MenuItem value="2" selected>صفة طبيعية</MenuItem>
+                      <MenuItem value="1">صفة اعتباريه</MenuItem>
+                    </Field>
+                    <OnChange name="requestType">
+                      {(value, previous) => {
+                        console.log(`odai + ${value} + ${previous}`);
+                        values.crNo = ''; // eslint-disable-line no-param-reassign
+                      }}
+                    </OnChange>
+                  </Grid>
+                  <Grid
+                    item
+                    md={6}
+                    xs={12}
+                    className="custom-label-field"
+                  />
+                </Grid>
                 <Typography
                   color="textPrimary"
                   gutterBottom
                   mb={4}
-                  mt={2}
+                  mt={6}
                   variant="h4"
                 >
                   معلومات المالك
@@ -84,18 +153,20 @@ const Survey = () => {
                 <Grid
                   container
                   spacing={3}
+                  display={(values.requestType === '1') ? 'none' : 'flex'}
                 >
                   <Grid
                     item
                     md={6}
                     xs={12}
                   >
-                    <TextField
+                    <Field
                       fullWidth
+                      required
                       label="رقم الهوية"
                       name="idNo"
-                      onChange={handleChange}
-                      required
+                      component={TextFieldFinal}
+                      type="text"
                       variant="outlined"
                       dir="rtl"
                       className="custom-field"
@@ -106,27 +177,13 @@ const Survey = () => {
                     md={6}
                     xs={12}
                   >
-                    <TextField
+                    <Field
                       fullWidth
+                      required
                       label="اسم مالك المركز"
                       name="centerOwner"
-                      onChange={handleChange}
-                      required
-                      variant="outlined"
-                      className="custom-field"
-                    />
-                  </Grid>
-                  <Grid
-                    item
-                    md={6}
-                    xs={12}
-                  >
-                    <TextField
-                      fullWidth
-                      label="تاريخ الميلاد"
-                      name="birthDate"
-                      onChange={handleChange}
-                      required
+                      component={TextFieldFinal}
+                      type="text"
                       variant="outlined"
                       dir="rtl"
                       className="custom-field"
@@ -137,14 +194,127 @@ const Survey = () => {
                     md={6}
                     xs={12}
                   >
-                    <TextField
+                    <Field
                       fullWidth
+                      required
+                      label="تاريخ الميلاد"
+                      name="birthDate"
+                      component={TextFieldFinal}
+                      type="text"
+                      variant="outlined"
+                      dir="rtl"
+                      className="custom-field"
+                    />
+                  </Grid>
+                  <Grid
+                    item
+                    md={6}
+                    xs={12}
+                  >
+                    <Field
+                      fullWidth
+                      required
                       label="رقم الجوال"
                       name="mobileNo"
-                      onChange={handleChange}
-                      required
+                      component={TextFieldFinal}
+                      type="text"
                       variant="outlined"
+                      dir="rtl"
                       className="custom-field"
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            | 966+
+                          </InputAdornment>
+                        ),
+                      }}
+                    />
+                  </Grid>
+                </Grid>
+                <Grid
+                  container
+                  spacing={3}
+                  display={(values.requestType !== '1') ? 'none' : 'flex'}
+                >
+                  <Grid
+                    item
+                    md={6}
+                    xs={12}
+                    className="custom-label-field"
+                    display={(values.requestType !== '1') ? 'none' : 'flex'}
+                  >
+                    <Field
+                      fullWidth
+                      label="نوع رخصة*"
+                      name="licenseType"
+                      component={Select}
+                      required
+                      dir="rtl"
+                      className="custom-field"
+                      formControlProps={{ fullWidth: true }}
+                    >
+                      <MenuItem value="1">سجل تجاري</MenuItem>
+                      <MenuItem value="2">رخصة استثمار اجنبي</MenuItem>
+                      <MenuItem value="3">شهادة تسجيل للجمعيات والمؤسسات الاهليه</MenuItem>
+                    </Field>
+                  </Grid>
+                  <Grid
+                    item
+                    md={6}
+                    xs={12}
+                    display={(values.requestType !== '1') ? 'none' : 'flex'}
+                  >
+                    <Field
+                      fullWidth
+                      required
+                      label="رقم"
+                      name="crNo"
+                      component={TextFieldFinal}
+                      type="text"
+                      variant="outlined"
+                      dir="rtl"
+                      className="custom-field"
+                    />
+                  </Grid>
+                  <Grid
+                    item
+                    md={6}
+                    xs={12}
+                  >
+                    <Field
+                      fullWidth
+                      required
+                      label="اسم الكيان"
+                      name="centerOwner"
+                      component={TextFieldFinal}
+                      type="text"
+                      variant="outlined"
+                      dir="rtl"
+                      className="custom-field"
+                    />
+                  </Grid>
+                  <Grid
+                    item
+                    md={6}
+                    xs={12}
+                  >
+                    <Field
+                      fullWidth
+                      required
+                      label="رقم الجوال المفوض"
+                      name="mobileNo"
+                      component={TextFieldFinal}
+                      type="text"
+                      variant="outlined"
+                      dir="rtl"
+                      className="custom-field"
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            | 966+
+                          </InputAdornment>
+                        ),
+                      }}
                     />
                   </Grid>
                 </Grid>
@@ -178,12 +348,13 @@ const Survey = () => {
                         md={12}
                         xs={12}
                       >
-                        <TextField
+                        <Field
                           fullWidth
+                          required
                           label="رقم المبنى"
                           name="buildNo"
-                          onChange={handleChange}
-                          required
+                          component={TextFieldFinal}
+                          type="text"
                           variant="outlined"
                           dir="rtl"
                           className="custom-field"
@@ -194,12 +365,13 @@ const Survey = () => {
                         md={12}
                         xs={12}
                       >
-                        <TextField
+                        <Field
                           fullWidth
+                          required
                           label="الشارع"
                           name="street"
-                          onChange={handleChange}
-                          required
+                          component={TextFieldFinal}
+                          type="text"
                           variant="outlined"
                           dir="rtl"
                           className="custom-field"
@@ -210,12 +382,13 @@ const Survey = () => {
                         md={12}
                         xs={12}
                       >
-                        <TextField
+                        <Field
                           fullWidth
+                          required
                           label="الحي"
                           name="sub"
-                          onChange={handleChange}
-                          required
+                          component={TextFieldFinal}
+                          type="text"
                           variant="outlined"
                           dir="rtl"
                           className="custom-field"
@@ -226,12 +399,13 @@ const Survey = () => {
                         md={12}
                         xs={12}
                       >
-                        <TextField
+                        <Field
                           fullWidth
+                          required
                           label="المدينة"
                           name="city"
-                          onChange={handleChange}
-                          required
+                          component={TextFieldFinal}
+                          type="text"
                           variant="outlined"
                           dir="rtl"
                           className="custom-field"
@@ -242,12 +416,13 @@ const Survey = () => {
                         md={12}
                         xs={12}
                       >
-                        <TextField
+                        <Field
                           fullWidth
+                          required
                           label="الرمز البريدي"
                           name="postalCodde"
-                          onChange={handleChange}
-                          required
+                          component={TextFieldFinal}
+                          type="text"
                           variant="outlined"
                           dir="rtl"
                           className="custom-field"
@@ -260,11 +435,7 @@ const Survey = () => {
                     md={6}
                     xs={12}
                   >
-                    <img
-                      alt="Logo"
-                      src="/static/googlemap.png"
-                      height="400"
-                    />
+                    <MapContainer />
                   </Grid>
                 </Grid>
                 <Typography
@@ -285,12 +456,13 @@ const Survey = () => {
                     md={6}
                     xs={12}
                   >
-                    <TextField
+                    <Field
                       fullWidth
+                      required
                       label="اسم المركز"
                       name="centerName"
-                      onChange={handleChange}
-                      required
+                      component={TextFieldFinal}
+                      type="text"
                       variant="outlined"
                       dir="rtl"
                       className="custom-field"
@@ -300,30 +472,37 @@ const Survey = () => {
                     item
                     md={6}
                     xs={12}
+                    className="custom-label-field"
                   >
-                    <TextField
+                    <Field
                       fullWidth
-                      label="نوع المركز"
+                      label="نوع المركز*"
                       name="centerType"
-                      onChange={handleChange}
+                      component={Select}
                       required
-                      variant="outlined"
                       dir="rtl"
                       className="custom-field"
-                    />
+                      formControlProps={{ fullWidth: true }}
+                    >
+                      <MenuItem value="London">London</MenuItem>
+                      <MenuItem value="Paris">Paris</MenuItem>
+                      <MenuItem value="Budapest">
+                        A city with a very long Name
+                      </MenuItem>
+                    </Field>
                   </Grid>
                   <Grid
                     item
                     md={6}
                     xs={12}
                   >
-                    <TextField
+                    <Field
                       fullWidth
+                      required
                       label="الطاقة الاستعابية المحتملة"
                       name="centerCap"
-                      onChange={handleChange}
-                      required
-                      value={values.firstName}
+                      component={TextFieldFinal}
+                      type="text"
                       variant="outlined"
                       dir="rtl"
                       className="custom-field"
@@ -334,75 +513,90 @@ const Survey = () => {
                     md={6}
                     xs={12}
                   >
-                    <FormControl component="fieldset">
-                      <FormLabel component="legend">فترة العمل</FormLabel>
-                      <RadioGroup row>
-                        <FormControlLabel
-                          label="القترة الصباحية"
-                          control={<Field name="durationWork" component={Radio} type="radio" value="1" />}
+                    <Field name="durationWork">
+                      {({ input, meta }) => ( // eslint-disable-line no-unused-vars
+                        <FormControl component="fieldset" error={meta.error} required>
+                          <FormLabel component="legend">فترة العمل</FormLabel>
+                          <RadioGroup row>
+                            <FormControlLabel
+                              label="القترة الصباحية"
+                              control={<Field name="durationWork" component={Radio} type="radio" value="1" />}
 
-                        />
-                        <FormControlLabel
-                          label="الفترة المسائية"
-                          control={<Field name="durationWork" component={Radio} type="radio" value="2" />}
+                            />
+                            <FormControlLabel
+                              label="الفترة المسائية"
+                              control={<Field name="durationWork" component={Radio} type="radio" value="2" />}
 
-                        />
-                        <FormControlLabel
-                          label="فترتين"
-                          control={<Field name="durationWork" component={Radio} type="radio" value="3" />}
-                        />
-                      </RadioGroup>
-                    </FormControl>
+                            />
+                            <FormControlLabel
+                              label="فترتين"
+                              control={<Field name="durationWork" component={Radio} type="radio" value="3" />}
+                            />
+                          </RadioGroup>
+                          {meta.error && meta.touched && <FormHelperText dir="rtl">{meta.error}</FormHelperText>}
+                        </FormControl>
+                      )}
+                    </Field>
                   </Grid>
                   <Grid
                     item
                     md={6}
                     xs={12}
                   >
-                    <FormControl component="fieldset">
-                      <FormLabel component="legend">الفئة العمرية للمستفدين</FormLabel>
-                      <RadioGroup row>
-                        <FormControlLabel
-                          label="سنتين - ١٢سنة"
-                          control={<Field name="age" component={Radio} type="radio" value="1" />}
+                    <Field name="age">
+                      {({ input, meta }) => ( // eslint-disable-line no-unused-vars
+                        <FormControl component="fieldset" error={meta.error} required>
+                          <FormLabel component="legend">الفئة العمرية للمستفدين</FormLabel>
+                          <RadioGroup row>
+                            <FormControlLabel
+                              label="سنتين - ١٢سنة"
+                              control={<Field name="age" component={Radio} type="radio" value="1" />}
 
-                        />
-                        <FormControlLabel
-                          label="١٣سنة - ١٨سنة"
-                          control={<Field name="age" component={Radio} type="radio" value="2" />}
+                            />
+                            <FormControlLabel
+                              label="١٣سنة - ١٨سنة"
+                              control={<Field name="age" component={Radio} type="radio" value="2" />}
 
-                        />
-                        <FormControlLabel
-                          label="١٩سنة -٤٥سنة"
-                          control={<Field name="age" component={Radio} type="radio" value="3" />}
-                        />
-                      </RadioGroup>
-                    </FormControl>
+                            />
+                            <FormControlLabel
+                              label="١٩سنة -٤٥سنة"
+                              control={<Field name="age" component={Radio} type="radio" value="3" />}
+                            />
+                          </RadioGroup>
+                          {meta.error && meta.touched && <FormHelperText dir="rtl">{meta.error}</FormHelperText>}
+                        </FormControl>
+                      )}
+                    </Field>
                   </Grid>
                   <Grid
                     item
                     md={6}
                     xs={12}
                   >
-                    <FormControl component="fieldset">
-                      <FormLabel component="legend">جنس المستفدين</FormLabel>
-                      <RadioGroup row>
-                        <FormControlLabel
-                          label="ذكر"
-                          control={<Field name="gender" component={Radio} type="radio" value="1" />}
+                    <Field name="age">
+                      {({ input, meta }) => ( // eslint-disable-line no-unused-vars
+                        <FormControl component="fieldset" error={meta.error} required>
+                          <FormLabel component="legend">جنس المستفدين</FormLabel>
+                          <RadioGroup row>
+                            <FormControlLabel
+                              label="ذكر"
+                              control={<Field name="gender" component={Radio} type="radio" value="1" />}
 
-                        />
-                        <FormControlLabel
-                          label="انثى"
-                          control={<Field name="gender" component={Radio} type="radio" value="2" />}
+                            />
+                            <FormControlLabel
+                              label="انثى"
+                              control={<Field name="gender" component={Radio} type="radio" value="2" />}
 
-                        />
-                        <FormControlLabel
-                          label="كلا الجنسين"
-                          control={<Field name="gender" component={Radio} type="radio" value="3" />}
-                        />
-                      </RadioGroup>
-                    </FormControl>
+                            />
+                            <FormControlLabel
+                              label="كلا الجنسين"
+                              control={<Field name="gender" component={Radio} type="radio" value="3" />}
+                            />
+                          </RadioGroup>
+                          {meta.error && meta.touched && <FormHelperText dir="rtl">{meta.error}</FormHelperText>}
+                        </FormControl>
+                      )}
+                    </Field>
                   </Grid>
                 </Grid>
                 <Typography
@@ -423,13 +617,13 @@ const Survey = () => {
                     md={6}
                     xs={12}
                   >
-                    <TextField
+                    <Field
                       fullWidth
+                      required
                       label="رقم الهوية"
                       name="idManagerNo"
-                      onChange={handleChange}
-                      required
-                      value={values.firstName}
+                      component={TextFieldFinal}
+                      type="text"
                       variant="outlined"
                       dir="rtl"
                       className="custom-field"
@@ -440,16 +634,10 @@ const Survey = () => {
                     md={6}
                     xs={12}
                   >
-                    <TextField
-                      fullWidth
+                    <FileUploader
+                      handleFile={(test) => console.log(test)}
                       label="نسخة من الهوية/ الاقامة"
                       name="copyIDImage"
-                      onChange={handleChange}
-                      required
-                      value={values.firstName}
-                      variant="outlined"
-                      dir="rtl"
-                      className="custom-field"
                     />
                   </Grid>
                   <Grid
@@ -457,13 +645,13 @@ const Survey = () => {
                     md={6}
                     xs={12}
                   >
-                    <TextField
+                    <Field
                       fullWidth
+                      required
                       label="اسم المدير كامل"
                       name="managerName"
-                      onChange={handleChange}
-                      required
-                      value={values.firstName}
+                      component={TextFieldFinal}
+                      type="text"
                       variant="outlined"
                       dir="rtl"
                       className="custom-field"
@@ -474,16 +662,10 @@ const Survey = () => {
                     md={6}
                     xs={12}
                   >
-                    <TextField
-                      fullWidth
+                    <FileUploader
+                      handleFile={(test) => console.log(test)}
                       label="موهلات المدير التعليمية"
                       name="managerExp"
-                      onChange={handleChange}
-                      required
-                      value={values.firstName}
-                      variant="outlined"
-                      dir="rtl"
-                      className="custom-field"
                     />
                   </Grid>
                   <Grid
@@ -491,23 +673,17 @@ const Survey = () => {
                     md={6}
                     xs={12}
                   >
-                    <FileUploader handleFile={(test) => console.log(test)} />
-                    <TextField
-                      fullWidth
+                    <FileUploader
+                      handleFile={(test) => console.log(test)}
                       label="خبرات المدير السابقة"
                       name="preManagerExp"
-                      onChange={handleChange}
-                      required
-                      value={values.firstName}
-                      variant="outlined"
-                      dir="rtl"
-                      className="custom-field"
                     />
                   </Grid>
                 </Grid>
                 <Grid
                   container
                   spacing={3}
+                  justifyContent="flex-end"
                 >
                   <Grid item style={{ marginTop: 20 }}>
                     <Button

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import axios from 'axios';
 import { useState } from 'react';
 
@@ -28,14 +29,11 @@ export default ({
       setErrors(
         <div className="alert alert-danger">
           <ul className="my-0">
-            {err.response?.data && err.response.data.errors.map((err1) => (
-              <li key={err1.message}>{err1.message}</li>
-            ))}
+            {JSON.stringify(err)}
           </ul>
         </div>
       );
     }
-    return null;
   };
 
   return { doRequest, errors };

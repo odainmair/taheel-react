@@ -33,6 +33,11 @@ const useStyles = makeStyles(() => createStyles({
       right: '30px',
       left: 'unset'
     },
+    '.custom-label-field label': {
+      transformOrigin: 'top right',
+      right: '15px',
+      left: 'unset'
+    },
     '.custom-field fieldset': {
       textAlign: 'right'
     },
@@ -42,8 +47,30 @@ const useStyles = makeStyles(() => createStyles({
     },
     '.customGrid .MuiGrid-item': {
       paddingLeft: '0px !important'
+    },
+    '.custom-field .MuiSelect-icon': {
+      right: 'unset',
+      left: '0'
+    },
+    '.Mui-checked': {
+      color: '#fcb712 !important'
+    },
+    '.google-map': {
+      position: 'relative !important'
+    },
+    '.custom-wizard .MuiStepConnector-horizontal': {
+      left: 'calc(50% + 20px)',
+      right: 'calc(-50% + 20px)'
+    },
+    '.custom-wizard  .MuiStepIcon-completed': {
+      color: '#3c8084 !important'
+    },
+    '.service-not-active .service-content': {
+      filter: 'blur(7px)'
+    },
+    '.MuiCardHeader-title': {
+      fontSize: '20px !important'
     }
-
   }
 }));
 

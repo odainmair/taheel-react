@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button } from '@material-ui/core';
+import { TextField, InputAdornment } from '@material-ui/core';
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 
-const FileUploader = ({ handleFile }) => {
+const FileUploader = ({ handleFile, name, label }) => {
   const hiddenFileInput = React.useRef(null);
   const handleClick = () => {
     hiddenFileInput.current.click();
@@ -13,9 +14,23 @@ const FileUploader = ({ handleFile }) => {
   };
   return (
     <>
-      <Button onClick={handleClick}>
-        Upload a file
-      </Button>
+      <TextField
+        fullWidth
+        label={label}
+        name={name}
+        onClick={handleClick}
+        variant="outlined"
+        dir="rtl"
+        disabled
+        className="custom-field"
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <CloudUploadIcon />
+            </InputAdornment>
+          ),
+        }}
+      />
       <input
         type="file"
         ref={hiddenFileInput}
@@ -28,5 +43,7 @@ const FileUploader = ({ handleFile }) => {
 export default FileUploader;
 
 FileUploader.propTypes = {
-  handleFile: PropTypes.string.isRequired,
+  handleFile: PropTypes.func.isRequired,
+  name: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
 };
