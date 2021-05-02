@@ -98,35 +98,28 @@ export default class RegisterFromWizard extends React.Component {
     const activePage = React.Children.toArray(this.props.children)[
       this.state.page
     ];
-    if (isLastPage) {
+
+
+    if (isLastPage && counter !== 1) {
       this.setState((state) => ({
-        completed: true,
+        completed: true
       }));
-      if (counter === 1) {
-        if (activePage.props.nextFun) {
-          const { isSuccessful, message } = await activePage.props.nextFun(values); /// nextFun come from validateAPIFunc in register file
-          if (!isSuccessful) {
-            this.setState((state) => ({
-              errMessage: message
-            }));
-            return;
-          }
-        }
-      } else {
-        const { isSuccessful, message } = await onSubmit(values);
-        if (!isSuccessful) {
-          this.setState((state) => ({
-            errMessage: message
-          }));
-        }
-      }
-    } else {
-      if (activePage.props.nextFun) {
-        const { isSuccessful, message } = await activePage.props.nextFun(values); /// nextFun come from validateAPIFunc in register file
-        if (!isSuccessful) {
+      const { isSuccessful, message } = await onSubmit(values)
+      console.log("isSuccessful",isSuccessful,"message",message)
+      if (!isSuccessful) {
           this.setState((state) => ({
             isNextCallBackFunSuccess: false,
             errMessage: message
+          }));
+          return;
+        }
+    } else {
+      if (activePage.props.nextFun) {
+        const { isSuccessful, message } = await activePage.props.nextFun(values);
+        if (!isSuccessful) {
+          this.setState((state) => ({
+            isNextCallBackFunSuccess: false,
+            errMessage: message.errorMessageAr
           }));
           return;
         }
@@ -136,7 +129,113 @@ export default class RegisterFromWizard extends React.Component {
         errMessage: ''
       }));
       this.next(values);
+
     }
+
+
+
+    // if (counter !== 1) {
+    //   const { isSuccessful, message } = await onSubmit(values);
+    //   if (!isSuccessful) {
+    //     this.setState((state) => ({
+    //       errMessage: message
+    //     }));
+    //     return;
+    //   }
+    // }
+    // else {
+    //   if (activePage.props.nextFun) {
+    //     const { isSuccessful, message } = await activePage.props.nextFun(values); /// nextFun come from validateAPIFunc in register file
+    //     if (!isSuccessful) {
+    //       this.setState((state) => ({
+    //         errMessage: message
+    //       }));
+    //       return;
+    //     }
+    //   }
+    //   this.setState((state) => ({
+    //     isNextCallBackFunSuccess: true,
+    //     errMessage: ''
+    //   }));
+    //   this.next(values);
+    // }
+
+   
+
+
+    // if (isLastPage) {
+    //   this.setState((state) => ({
+    //     completed: true,
+    //   }));
+    //   if (counter === 1) {
+    //     /////
+    //   } else {
+    //     /// submit
+    //   }
+    // } else {
+    //   if (activePage.props.nextFun) {
+    //     const { isSuccessful, message } = await activePage.props.nextFun(values); /// nextFun come from validateAPIFunc in register file
+    //     if (!isSuccessful) {
+    //       this.setState((state) => ({
+    //         isNextCallBackFunSuccess: false,
+    //         errMessage: message
+    //       }));
+    //       return;
+    //     }
+    //   }
+    //   this.setState((state) => ({
+    //     isNextCallBackFunSuccess: true,
+    //     errMessage: ''
+    //   }));
+    //   this.next(values);
+    // }
+
+
+
+
+
+    // if (isLastPage) {
+    //   this.setState((state) => ({
+    //     completed: true,
+    //   }));
+    //   if (counter === 1) {
+    //     if (activePage.props.nextFun) {
+    //       const { isSuccessful, message } = await activePage.props.nextFun(values); /// nextFun come from validateAPIFunc in register file
+    //       if (!isSuccessful) {
+    //         this.setState((state) => ({
+    //           errMessage: message
+    //         }));
+    //         return;
+    //       }
+    //     }
+    //   } else {
+    //     const { isSuccessful, message } = await onSubmit(values);
+    //     if (!isSuccessful) {
+    //       this.setState((state) => ({
+    //         errMessage: message
+    //       }));
+    //     }
+    //   }
+    // } else {
+    //   if (activePage.props.nextFun) {
+    //     const { isSuccessful, message } = await activePage.props.nextFun(values); /// nextFun come from validateAPIFunc in register file
+    //     if (!isSuccessful) {
+    //       this.setState((state) => ({
+    //         isNextCallBackFunSuccess: false,
+    //         errMessage: message
+    //       }));
+    //       return;
+    //     }
+    //   }
+    //   this.setState((state) => ({
+    //     isNextCallBackFunSuccess: true,
+    //     errMessage: ''
+    //   }));
+    //   this.next(values);
+    // }
+
+
+
   }
 
   render() {

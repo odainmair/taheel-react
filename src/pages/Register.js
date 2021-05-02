@@ -57,7 +57,7 @@ const CreateTemporaryLicense = () => {
     method: 'post',
     body: {
     },
-    onSuccess: () => console.log('DOOOONNNNEEE')
+    onSuccess: (value) => console.log('DOOOONNNNEEE',value)
   });
   const validateCitizenFunc = async (idNumber, birthDate) => {
     const url = 'https://inspiredemo2.appiancloud.com/suite/webapi/taheel-apis-utilities-validateCitizen-v2';
@@ -104,12 +104,14 @@ const CreateTemporaryLicense = () => {
 
   const validateTaheelOtp = async values => {
     setCounter(0)
-    return sendSms(values.phoneNumber);
+     sendSms(values.phoneNumber);
+     return { isSuccessful: true, message: '' };
   };
 
   const onSubmit = async (values) => {
-    const { taheelOtp } = values;
-    if (otp == taheelOtp) {
+    const { taheelOtp } = values
+    console.log("otp == taheelOtp",otp == taheelOtp,"taheelOtp",taheelOtp);
+    if (otp == taheelOtp) { 
       const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
       await sleep(300);
       const bodyRequest = {
@@ -176,17 +178,6 @@ const CreateTemporaryLicense = () => {
           boxShadow: '5px 10px 18px #ecf1f5'
         }}
       >
-
-        {/* <Box
-                  sx={{
-                    backgroundColor: 'white',
-                    borderRadius: 5,
-                    padding: 8,
-                    boxShadow: '5px 10px 18px #ecf1f5'
-                  }}
-                > */}
-        {/* <Card> */}
-
         <Box
           className={classes.root}
           sx={{ mb: 5, mr: 12, }}

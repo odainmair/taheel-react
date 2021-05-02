@@ -110,10 +110,11 @@ const TaheelOtp = (props) => {
               sx={{
                 paddingBottom: '16px',
                 cursor: 'pointer',
+
               }}
             >
               <a
-                onClick={async () => { const response = await doRequest(JSON.stringify(bodyRequest)); }}
+                onClick={() => doRequest(JSON.stringify(bodyRequest))}
               >
                 إعادة ارسال رمز التحقق
               </a>
