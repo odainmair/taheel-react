@@ -1,6 +1,7 @@
 /* eslint-disable */
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 // import { useState } from 'react';
+import { useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
@@ -11,12 +12,10 @@ import {
   Button,
   Container,
   Grid,
-  Link,
-  Alert,
   TextField,
   Typography,
 } from '@material-ui/core';
-import useRequest from '../hooks/use-request Login';
+import useRequest from '../hooks/use-request';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -31,33 +30,29 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Login = () => {
-  const navigate = useNavigate();
+const LoginOtp = () => {
   const { doRequest, error } = useRequest({
-    url: 'https://inspiredemo2.appiancloud.com/suite/webapi/taheel-apis-users-login-v2',
+    url: 'https://inspiredemo2.appiancloud.com/suite/webapi/taheel-apis-utilities-sendSms-v2',
     method: 'post',
     body: {
 
     },
-    onSuccess: async (value) => {
-      console.log("value",value)
-      if (value.status === 'SUCCESS') {
-        const otp = Math.floor(Math.random() * (1000000 - 100000) + 100000);
-        const bodyRequest = {
-          recipient: value.data.phoneNumber,
-          message: `Hello ${value.data.firstName}, use this OTP to validate your login: ${otp}.`
-        };
-        navigate('/otplogin', { state: { otp, bodyRequest } });
-      }
-    },
+    onSuccess: (value) => console.log('SMS DONE', value)
   });
 
+  const navigate = useNavigate();
   const classes = useStyles();
   // const [avtarColor, setColor] = useState({
   //   rightAvatar: '#c8d9d9',
   //   leftAvatar: '#c8d9d9',
   // });
-
+  const location = useLocation();
+  // const otp = location.state.otp;
+  const { otp, bodyRequest } = location.state;
+  useEffect(async () => {
+    const response = await doRequest(JSON.stringify(bodyRequest));
+    console.log('OTP::', otp);
+  })
   return (
     <>
       <Helmet>
@@ -75,19 +70,15 @@ const Login = () => {
         <Container maxWidth="sm">
           <Formik
             initialValues={{
-              email: ' ',
-              password: ''
+              otp: '',
             }}
             validationSchema={Yup.object().shape({
-              email: Yup.string().test('max', 'رقم الهوية/الاقامة يجب ان تحتوي فقط على 10 ارقام او البريد الالكتروني غير صالح', (value) => value && (value.includes('@') || value.length == 8)).required('يجب تعبئة الحقل'),
-              password: Yup.string().max(8, 'حقل كلمة المرور يجب أن يحتوي على ٨ احرف على الاقل').required('يجب تعبئة الحقل')
+              otp: Yup.string().length(6, 'حقل كلمة المرور يجب أن يحتوي على 6 ارقام').required('يجب تعبئة الحقل').test('otp', 'رمز التحقق المدخل غير صحيح', (value) => value == otp),
             })}
             onSubmit={async (values) => {
-              const bodyRequest = {
-                username: values.email,
-                password: values.password
-              };
-              const response = await doRequest(JSON.stringify(bodyRequest));
+              if (values.otp == otp) {
+                navigate('/app/products', { replace: true });
+              }
             }}
           >
             {({
@@ -162,45 +153,24 @@ const Login = () => {
                       color="textSecondary"
                       variant="body1"
                     >
-                      تسجيل دخول عن طريق رقم الهوية/الاقامة أو البربد الالكتروني
+                      ادخل رمز التحقق المدخل الى هاتفك الجوال
                     </Typography>
                   </Box>
                   <TextField
-                    error={Boolean(touched.email && errors.email)}
+                    error={Boolean(touched.otp && errors.otp)}
                     fullWidth
-                    helperText={touched.email && errors.email}
-                    label="رقم الهوية/الاقامة أو البربد الالكتروني"
+                    helperText={touched.otp && errors.otp}
+                    label="رمز التحقق"
                     margin="normal"
-                    name="email"
+                    name="otp"
                     onBlur={handleBlur}
                     onChange={handleChange}
                     type="text"
-                    value={values.email}
+                    value={values.otp}
                     variant="outlined"
                     className="custom-field"
                   />
-                
-                  <TextField
-                    error={Boolean(touched.password && errors.password)}
-                    fullWidth
-                    helperText={touched.password && errors.password}
-                    label="كلمة المرور"
-                    margin="normal"
-                    name="password"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    type="password"
-                    value={values.password}
-                    variant="outlined"
-                    className="custom-field"
-                  />
-                  { error && (
-                        <Box mt={3}>
-                          <Alert severity="error">
-                          {error}
-                          </Alert>
-                        </Box>
-                      )}
+                  {error}
                   <Box
                     textAlign="center"
                     sx={{
@@ -215,16 +185,25 @@ const Login = () => {
                       variant="body1"
                       sx={{
                         paddingBottom: '16px',
+                      }}
+                    >
+                      لم يصلك رمز التحقق ؟
+                    </Typography>
+
+                    <Typography
+                      color="textSecondary"
+                      variant="body1"
+                      sx={{
+                        paddingBottom: '16px',
+                        cursor: 'pointer',
                         textDecoration: 'underline'
                       }}
                     >
-                      <Link
-                        component={RouterLink}
-                        to="/ForgetPwd"
-                        variant="h6"
+                      <a
+                        onClick={async () => { const response = await doRequest(JSON.stringify(bodyRequest)); }}
                       >
-                        نسيت كلمة المرور
-                      </Link>
+                        إعادة ارسال رمز التحقق
+                      </a>
                     </Typography>
                     <Button
                       color="primary"
@@ -240,30 +219,6 @@ const Login = () => {
                     >
                       التالي
                     </Button>
-                    <Typography
-                      color="textSecondary"
-                      variant="body1"
-                      sx={{
-                        paddingTop: '16px',
-                      }}
-                    >
-                      ليس لديك رقم حساب ؟
-                    </Typography>
-                    <Typography
-                      color="textSecondary"
-                      variant="body1"
-                    >
-                      <Link
-                        component={RouterLink}
-                        to="/register"
-                        variant="h6"
-                        sx={{
-                          textDecoration: 'underline'
-                        }}
-                      >
-                        إنشاء حساب
-                      </Link>
-                    </Typography>
                   </Box>
                 </Box>
               </form>
@@ -275,4 +230,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default LoginOtp;
