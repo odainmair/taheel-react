@@ -10,7 +10,7 @@ import Skeleton from '@material-ui/lab/Skeleton';
 import PropTypes from 'prop-types';
 
 const TotalCenters = (props) => {
-  const { loading = false } = props;
+  const { loading = false, totalcenters } = props;
   return (
     <Card>
       <CardContent>
@@ -24,9 +24,9 @@ const TotalCenters = (props) => {
               <Typography
                 color="textSecondary"
                 gutterBottom
-                variant="h6"
+                variant="h5"
               >
-                TOTAL Centers
+                عدد المراكز
               </Typography>
             ) : (
               <Skeleton animation="wave" height={10} width={200} style={{ marginBottom: 6 }} />
@@ -36,7 +36,7 @@ const TotalCenters = (props) => {
                 color="textPrimary"
                 variant="h3"
               >
-                10
+                {totalcenters}
               </Typography>
             ) : (
               <Skeleton animation="wave" height={10} width={100} style={{ marginTop: 10 }} />
@@ -67,4 +67,5 @@ export default TotalCenters;
 
 TotalCenters.propTypes = {
   loading: PropTypes.bool.isRequired,
+  totalcenters: PropTypes.number.isRequired
 };

@@ -70,6 +70,13 @@ const useStyles = makeStyles(() => createStyles({
     },
     '.MuiCardHeader-title': {
       fontSize: '20px !important'
+    },
+    '.MuiChip-icon': {
+      marginRight: '4px !important',
+      marginLeft: '0 !important',
+    },
+    '.MuiTableCell-root': {
+      textAlign: 'right !important'
     }
   }
 }));

@@ -132,8 +132,7 @@ const CreateTemporaryLicense = () => {
             onSubmit={onSubmit}
           >
             <FinalFromWizard.Page 
-              label="معلومات المركز"
-              
+              label="معلومات المركز"         
               //nextFun={(values)=>validateAPIFunc(values)} 
             >
               <CenterInfo Condition={Condition} />

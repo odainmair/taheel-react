@@ -3,6 +3,7 @@ import {
   Card,
   CardContent,
   Grid,
+  colors,
   Typography
 } from '@material-ui/core';
 import DoneOutlineOutlinedIcon from '@material-ui/icons/DoneOutlineOutlined';
@@ -10,7 +11,7 @@ import Skeleton from '@material-ui/lab/Skeleton';
 import PropTypes from 'prop-types';
 
 const TotalCompletedRequest = (props) => {
-  const { loading = false } = props;
+  const { loading = false, totalcompletedrequests = 0 } = props;
   return (
     <Card>
       <CardContent>
@@ -24,9 +25,9 @@ const TotalCompletedRequest = (props) => {
               <Typography
                 color="textSecondary"
                 gutterBottom
-                variant="h6"
+                variant="h5"
               >
-                TOTAL Completed Requests
+                مجموع الطلبات المكتملة
               </Typography>
             ) : (
               <Skeleton animation="wave" height={10} width={200} style={{ marginBottom: 6 }} />
@@ -36,7 +37,7 @@ const TotalCompletedRequest = (props) => {
                 color="textPrimary"
                 variant="h3"
               >
-                10
+                {totalcompletedrequests}
               </Typography>
             ) : (
               <Skeleton animation="wave" height={10} width={100} style={{ marginTop: 10 }} />
@@ -46,7 +47,7 @@ const TotalCompletedRequest = (props) => {
             {loading ? (
               <Avatar
                 sx={{
-                  backgroundColor: '#103145',
+                  backgroundColor: colors.green[600],
                   height: 56,
                   width: 56
                 }}
@@ -67,4 +68,5 @@ export default TotalCompletedRequest;
 
 TotalCompletedRequest.propTypes = {
   loading: PropTypes.bool.isRequired,
+  totalcompletedrequests: PropTypes.number.isRequired
 };
