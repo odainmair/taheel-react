@@ -12,6 +12,7 @@ import TotalCompletedRequest from 'src/components/dashboard//TotalCompletedReque
 import TotalProfit from 'src/components/dashboard//TotalProfit';
 import RequestsChart from 'src/components/dashboard/RequestsChart';
 import APIRequest from 'src/api/APIRequest';
+import CentersTable from 'src/components/dashboard/CentersTable';
 
 const Dashboard = () => {
   const getTaheelRequestsFun = async (userEmail) => {
@@ -26,8 +27,16 @@ const Dashboard = () => {
     const response = await APIRequest({ url, queryParams });
     return response;
   };
+  const getCentersCertFun = async (docId) => {
+    const url = 'https://inspiredemo2.appiancloud.com/suite/webapi/taheel-apis-utilities-downloadDocument-v2';
+    const queryParams = { DocID:docId };
+    const response = await APIRequest({ url, queryParams });
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    return response;
+  };
   const [loading, setLoading] = useState(false);
   const [taheelRequests, setTaheelRequests] = useState([]);
+  const [centerRequests, setCenterRequests] = useState([]);
   const [totalPendingRequests, setTotalPendingRequests] = useState(0);
   const [totalCompletedRequests, setTotalCompletedRequests] = useState(0);
   const [totalRejectedRequests, setTotalRejectedRequests] = useState(0);
@@ -59,6 +68,7 @@ const Dashboard = () => {
     }
     const { Centers } = getCentersRs.responseBody.data;
     setTotalCenters(Centers.length);
+    setCenterRequests(Centers);
     setLoading(true);
     return response;
   });
@@ -86,7 +96,7 @@ const Dashboard = () => {
               xl={3}
               xs={12}
             >
-              <TotalPendingRequest loading={loading} totalpendingrequests={totalPendingRequests} />
+              <TotalCenters loading={loading} totalcenters={totalCenters} />
             </Grid>
             <Grid
               item
@@ -104,7 +114,7 @@ const Dashboard = () => {
               xl={3}
               xs={12}
             >
-              <TotalCenters loading={loading} totalcenters={totalCenters} />
+              <TotalPendingRequest loading={loading} totalpendingrequests={totalPendingRequests} />
             </Grid>
             <Grid
               item
@@ -139,6 +149,15 @@ const Dashboard = () => {
                 totalrejectedrequests={totalRejectedRequests}
                 totaltahelrequests={totalTahelRequests}
               />
+            </Grid>
+            <Grid
+              item
+              lg={8}
+              md={12}
+              xl={9}
+              xs={12}
+            >
+              <CentersTable loading={loading} centerRequests={centerRequests} />
             </Grid>
           </Grid>
         </Container>
