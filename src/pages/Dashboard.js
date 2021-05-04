@@ -27,13 +27,7 @@ const Dashboard = () => {
     const response = await APIRequest({ url, queryParams });
     return response;
   };
-  const getCentersCertFun = async (docId) => {
-    const url = 'https://inspiredemo2.appiancloud.com/suite/webapi/taheel-apis-utilities-downloadDocument-v2';
-    const queryParams = { DocID:docId };
-    const response = await APIRequest({ url, queryParams });
-    const url = window.URL.createObjectURL(new Blob([response.data]));
-    return response;
-  };
+  
   const [loading, setLoading] = useState(false);
   const [taheelRequests, setTaheelRequests] = useState([]);
   const [centerRequests, setCenterRequests] = useState([]);
