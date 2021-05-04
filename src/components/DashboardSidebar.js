@@ -18,7 +18,6 @@ import {
   User as UserIcon,
 } from 'react-feather';
 import NavItem from './NavItem';
-import Logo from './Logo';
 
 const user = {
   avatar: '/static/images/avatars/avatar_4.png',
@@ -134,11 +133,10 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
         }}
       >
         <RouterLink to="/">
-          <Logo />
           <img
             alt="Logo"
-            src="/static/logo-w.svg"
-            width="100"
+            src="/static/Taheel_logo-footer.png"
+            width="200"
           />
         </RouterLink>
         <Typography

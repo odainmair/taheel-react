@@ -79,15 +79,21 @@ const Login = () => {
               password: ''
             }}
             validationSchema={Yup.object().shape({
-              email: Yup.string().test('max', 'رقم الهوية/الاقامة يجب ان تحتوي فقط على 10 ارقام او البريد الالكتروني غير صالح', (value) => value && (value.includes('@') || value.length == 8)).required('يجب تعبئة الحقل'),
-              password: Yup.string().max(8, 'حقل كلمة المرور يجب أن يحتوي على ٨ احرف على الاقل').required('يجب تعبئة الحقل')
+              //email: Yup.string().test('max', 'رقم الهوية/الاقامة يجب ان تحتوي فقط على 10 ارقام او البريد الالكتروني غير صالح', (value) => value && (value.includes('@') || value.length == 8)).required('يجب تعبئة الحقل'),
+              //password: Yup.string().max(8, 'حقل كلمة المرور يجب أن يحتوي على ٨ احرف على الاقل').required('يجب تعبئة الحقل')
             })}
             onSubmit={async (values) => {
-              const bodyRequest = {
+             /* const bodyRequest = {
                 username: values.email,
                 password: values.password
+              };*/
+              const bodyRequest = {
+                recipient: '009667599611',
+                message: 'Hello abdallah, use this OTP to validate your login:000000 '
               };
-              const response = await doRequest(JSON.stringify(bodyRequest));
+              navigate('/otplogin', { state: { otp:'000000', bodyRequest } });
+
+              //const response = await doRequest(JSON.stringify(bodyRequest));
             }}
           >
             {({
@@ -125,7 +131,7 @@ const Login = () => {
                           className={classes.large}
                           // onClick={() => setColor({ ...avtarColor, rightAvatar: '#214256', leftAvatar: '#c8d9d9' })}
                           sx={{
-                            height: '70px', width: '70px', marginLeft: '30%', backgroundColor: '#214256'
+                            height: '70px', width: '70px', marginLeft: '30%', backgroundColor: '#c8d9d9'
                           }}
                         >
                           مستفيد
@@ -135,7 +141,7 @@ const Login = () => {
                           className={classes.large}
                           // onClick={() => setColor({ ...avtarColor, leftAvatar: '#214256', rightAvatar: '#c8d9d9' })}
                           sx={{
-                            height: '70px', width: '70px', marginLeft: '20%', backgroundColor: '#c8d9d9'
+                            height: '70px', width: '70px', marginLeft: '20%', backgroundColor: '#214256'
                           }}
                         >
                           مركز

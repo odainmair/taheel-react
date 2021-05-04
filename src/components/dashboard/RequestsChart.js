@@ -39,7 +39,7 @@ const RequestsChart = (props) => {
         hoverBorderColor: colors.common.white
       }
     ],
-    labels: ['Completed', 'Pending', 'Rejected']
+    labels: ['مكتمل', 'قيد المراجعة', 'مرفوض']
   };
 
   const options = {

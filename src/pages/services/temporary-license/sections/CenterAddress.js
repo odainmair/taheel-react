@@ -9,7 +9,7 @@ import { TextField as TextFieldFinal } from 'final-form-material-ui';
 
 const sampleData = {
   vendorStreetAddress: {
-    caption: '7546 Ad Daywan, Al Hamra, Riyadh 13216 2825, Saudi Arabia',
+    caption: '7596 الديوان، الحمراء، الرياض 13216 2802، السعودية',
     heart: { lat: 24.774265, lng: 46.738586 },
   },
   vendorServiceAreas: [
@@ -48,12 +48,20 @@ const CenterAddress = ({ Condition }) => {
         (addressArray.find((x) => x.types.some((t) => ['sublocality_level_1', 'locality'].includes(t))) || {}).long_name
         || '',
       country: (addressArray.find((x) => x.types[0] === 'country') || {}).long_name || '',
+      street: (addressArray.find((x) => x.types[0] === 'route') || {}).long_name || '',
       city: (addressArray.find((x) => x.types[0] === 'administrative_area_level_2') || {}).long_name || '',
       state: (addressArray.find((x) => x.types[0] === 'administrative_area_level_1') || {}).long_name || '',
       address: geoResult.formatted_address,
+      lat: geoResult.geometry.location.lat,
+      lng: geoResult.geometry.location.lng,
     };
     setStreetAddr(currentAddress);
-    inputEl.current.value = 22;
+    window.setFormValue('sub', currentAddress.area);
+    window.setFormValue('city', currentAddress.city);
+    window.setFormValue('street', currentAddress.street);
+    window.setFormValue('lat', currentAddress.lat);
+    window.setFormValue('lng', currentAddress.lng);
+
     console.log(inputEl.current);
     return currentAddress;
   };
@@ -86,14 +94,32 @@ const CenterAddress = ({ Condition }) => {
           <Field
             fullWidth
             required
-            label="رقم المبنى"
-            name="buildNo"
-            component={(props) => <TextFieldFinal {...props} ref={inputEl} />}
+            label="المدينة"
+            name="city"
+            component={TextFieldFinal}
             type="text"
             variant="outlined"
             dir="rtl"
             className="custom-field"
           />
+        </Grid>
+        <Grid
+          item
+          md={6}
+          xs={12}
+        >
+          <Field
+            fullWidth
+            required
+            label="الحي"
+            name="sub"
+            component={TextFieldFinal}
+            type="text"
+            variant="outlined"
+            dir="rtl"
+            className="custom-field"
+          />
+
         </Grid>
         <Grid
           item
@@ -120,25 +146,8 @@ const CenterAddress = ({ Condition }) => {
           <Field
             fullWidth
             required
-            label="الحي"
-            name="sub"
-            component={TextFieldFinal}
-            type="text"
-            variant="outlined"
-            dir="rtl"
-            className="custom-field"
-          />
-        </Grid>
-        <Grid
-          item
-          md={6}
-          xs={12}
-        >
-          <Field
-            fullWidth
-            required
-            label="المدينة"
-            name="city"
+            label="رقم المبنى"
+            name="buildNo"
             component={TextFieldFinal}
             type="text"
             variant="outlined"

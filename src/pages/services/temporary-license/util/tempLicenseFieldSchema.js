@@ -175,23 +175,10 @@ export default [
   {
     id: uuid(),
     label: {
-      ar: 'رقم المبنى',
-      en: 'buildNo'
+      ar: 'المدينة',
+      en: 'city'
     },
-    name: 'buildNo',
-    type: 'Text',
-    gridSize: '6',
-    sectionName: 'CenterAddress',
-    options: [],
-    validators: [],
-  },
-  {
-    id: uuid(),
-    label: {
-      ar: 'الشارع',
-      en: 'street'
-    },
-    name: 'street',
+    name: 'city',
     type: 'Text',
     gridSize: '6',
     sectionName: 'CenterAddress',
@@ -214,10 +201,23 @@ export default [
   {
     id: uuid(),
     label: {
-      ar: 'المدينة',
-      en: 'city'
+      ar: 'الشارع',
+      en: 'street'
     },
-    name: 'city',
+    name: 'street',
+    type: 'Text',
+    gridSize: '6',
+    sectionName: 'CenterAddress',
+    options: [],
+    validators: [],
+  },
+  {
+    id: uuid(),
+    label: {
+      ar: 'رقم المبنى',
+      en: 'buildNo'
+    },
+    name: 'buildNo',
     type: 'Text',
     gridSize: '6',
     sectionName: 'CenterAddress',

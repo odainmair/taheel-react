@@ -27,6 +27,7 @@ const CenterInfo = ({ Condition }) => (
           component={Select}
           required
           dir="rtl"
+          variant="outlined"
           className="custom-field"
           formControlProps={{ fullWidth: true }}
         >
@@ -53,6 +54,7 @@ const CenterInfo = ({ Condition }) => (
           component={Select}
           required
           dir="rtl"
+          variant="outlined"
           className="custom-field"
           formControlProps={{ fullWidth: true }}
         >
@@ -133,6 +135,7 @@ const CenterInfo = ({ Condition }) => (
             required
             dir="rtl"
             className="custom-field"
+            variant="outlined"
             formControlProps={{ fullWidth: true }}
           >
             <MenuItem value="1">سجل تجاري</MenuItem>

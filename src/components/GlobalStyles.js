@@ -6,6 +6,7 @@ const useStyles = makeStyles(() => createStyles({
       boxSizing: 'border-box',
       margin: 0,
       padding: 0,
+      fontFamily: 'FrutigerLTArabic-55Roman !important',
     },
     html: {
       '-webkit-font-smoothing': 'antialiased',
@@ -36,7 +37,13 @@ const useStyles = makeStyles(() => createStyles({
     '.custom-label-field label': {
       transformOrigin: 'top right',
       right: '15px',
-      left: 'unset'
+      left: 'unset',
+      backgroundColor: '#fff',
+      padding: '0 8px',
+      'z-index': '4'
+    },
+    '.custom-label-field .MuiInputLabel-shrink': {
+      top: '-9px'
     },
     '.custom-field fieldset': {
       textAlign: 'right'
@@ -63,7 +70,10 @@ const useStyles = makeStyles(() => createStyles({
       right: 'calc(-50% + 20px)'
     },
     '.custom-wizard  .MuiStepIcon-completed': {
-      color: '#3c8084 !important'
+      color: '#34ae73 !important'
+    },
+    '.custom-wizard  .MuiStepLabel-completed': {
+      color: '#34ae73 !important'
     },
     '.service-not-active .service-content': {
       filter: 'blur(7px)'

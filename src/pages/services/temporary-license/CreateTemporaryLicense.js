@@ -28,7 +28,7 @@ const CreateTemporaryLicense = () => {
 
 
   const { doRequest, errors } = useRequest({
-    url: 'https://inspiredemo2.appiancloud.com/suite/webapi/CreateTemp',
+    url: 'https://inspiredemo2.appiancloud.com/suite/webapi/taheel-apis-services-createTempLicense-v2',
     method: 'post',
     body: {
 
@@ -78,22 +78,40 @@ const CreateTemporaryLicense = () => {
     const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
     await sleep(300);
     console.log(JSON.stringify(values))
-    const bodyRequest = {
+    const requestBody = {
       centerData: {
         name: values.name,
-        type: values.requestType,
-        ownerName: values.ownerName,
+        type: '1',
+        ownerType:values.requestType,
         workingHours:values.workingHours,
         targetedGender:values.targetedGender,
         ageGroup: values.ageGroup,
-        licenseType: values.licenseType,
+        licenseType: '1',
         licenceNumber: values.licenceNumber,
         IDNumber: values.idNumber,
+        crInfo_r: {
+          crNumber: values.licenceNumber,
+          commissionerMobNum: values.compMobileNo
+        },
+        centerInfo_r: {
+          estimatedCapacity: values.centerCap
+        },
+        addressInfo: {
+          city: values.city,
+          area: values.sub,
+          street: values.street,
+          buildNo: values.buildNo,
+          postalCode: values.postalCodde,
+          lat: values.lat,
+          lng: values.lng
+        }
       }
     };
+    const url= "https://inspiredemo2.appiancloud.com/suite/webapi/taheel-apis-services-createTempLicense-v2"
 
-    //const response = await doRequest(bodyRequest);
-    handleClickOpen("تم تقديم طلبك بنجاح، رقم الرخصة ${response.center.ID} وتاريخ انتهاء الرخصة ${response.center.expirationDate} هجري",'تم تقديم طلبك بنجاح');
+    const response = await APIRequest({requestBody,url});
+    console.log(JSON.stringify(response));
+    handleClickOpen(`تم تقديم طلبك بنجاح، رقم الرخصة ${response.responseBody.data.ID} وتاريخ انتهاء الرخصة ${response.responseBody.data.expirationDate} هجري`,'تم تقديم طلبك بنجاح');
     //window.alert(` تم تقديم طلبك بنجاح، رقم الرخصة ${response.center.ID} وتاريخ انتهاء الرخصة ${response.center.expirationDate} هجري`);
   };
 
@@ -133,7 +151,7 @@ const CreateTemporaryLicense = () => {
           >
             <FinalFromWizard.Page 
               label="معلومات المركز"         
-              //nextFun={(values)=>validateAPIFunc(values)} 
+              nextFun={(values)=>validateAPIFunc(values)} 
             >
               <CenterInfo Condition={Condition} />
             </FinalFromWizard.Page>

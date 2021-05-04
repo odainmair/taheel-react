@@ -49,6 +49,7 @@ const CenterDetails = ({ Condition }) => (
           component={Select}
           required
           dir="rtl"
+          variant="outlined"
           className="custom-field"
           formControlProps={{ fullWidth: true }}
         >
@@ -68,6 +69,7 @@ const CenterDetails = ({ Condition }) => (
           component={Select}
           required
           dir="rtl"
+          variant="outlined"
           className="custom-field"
           formControlProps={{ fullWidth: true }}
         >

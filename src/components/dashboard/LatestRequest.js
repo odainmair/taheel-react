@@ -127,7 +127,7 @@ const LatestRequests = (props) => {
     <Card>
       <CardHeader title={
         loading ? (
-          'احدث الطلبات'
+          'الطلبات المقدمة'
         ) : (
           <Skeleton animation="wave" height={15} width="20%" style={{ marginBottom: 6 }} />
         )
@@ -152,7 +152,7 @@ const LatestRequests = (props) => {
                     )}
                 </TableCell>
                 <TableCell>
-                  {loading ? 'طبيعة المركز'
+                  {loading ? 'نوع الطلب'
                     : (
                       <Skeleton />
                     )}

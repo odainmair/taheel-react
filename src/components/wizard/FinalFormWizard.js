@@ -85,8 +85,16 @@ export default class FinalFromWizard extends React.Component {
         initialValues={values}
         validate={this.validate}
         onSubmit={this.handleSubmit}
+        mutators={{
+          // expect (field, value) args from the mutator
+          setValue: ([field, value], state, { changeValue }) => {
+            changeValue(state, field, () => value)
+          }
+        }}
       >
-        {({ handleSubmit, pristine, form, submitting, values }) => (
+        {({ handleSubmit, pristine, form, submitting, values }) => {
+          if (!window.setFormValue) window.setFormValue = form.mutators.setValue
+          return (
           <form onSubmit={handleSubmit} autoComplete="off" noValidate>
             <Stepper className="custom-wizard" alternativeLabel activeStep={page}>
               {childrenArray.map((child, index) => (
@@ -98,7 +106,7 @@ export default class FinalFromWizard extends React.Component {
             {!isNextCallBackFunSuccess && (
               <Box mt={3}>
                 <Alert variant="outlined" severity="error">
-                {errMessage}
+                  {errMessage}
                 </Alert>
               </Box>
             )}
@@ -149,10 +157,8 @@ export default class FinalFromWizard extends React.Component {
                 </Grid>
               )}
             </Grid>
-
-            <pre>{JSON.stringify(values, 0, 2)}</pre>
           </form>
-        )}
+        )}}
       </Form>
     )
   }
