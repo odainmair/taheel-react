@@ -1,11 +1,14 @@
 /* eslint-disable */
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-// import { useState } from 'react';
+import { useContext } from 'react';
 import { Helmet } from 'react-helmet';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
 import Avatar from '@material-ui/core/Avatar';
 import { makeStyles } from '@material-ui/core/styles';
+import localContext from '../localContext';
+import APIRequest from 'src/api/APIRequest';
+
 import {
   Box,
   Button,
@@ -31,8 +34,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Login = () => {
+const Login = (props) => {
+
   const navigate = useNavigate();
+  const { users, setUser } = useContext(localContext);
   const { doRequest, error } = useRequest({
     url: 'https://inspiredemo2.appiancloud.com/suite/webapi/taheel-apis-users-login-v2',
     method: 'post',
@@ -40,14 +45,14 @@ const Login = () => {
 
     },
     onSuccess: async (value) => {
-      console.log("value",value)
       if (value.status === 'SUCCESS') {
         const otp = Math.floor(Math.random() * (1000000 - 100000) + 100000);
-        const bodyRequest = {
+        const requestBody = {
           recipient: value.data.phoneNumber,
           message: `Hello ${value.data.firstName}, use this OTP to validate your login: ${otp}.`
         };
-        navigate('/otplogin', { state: { otp, bodyRequest } });
+        setUser(value.data)
+        navigate('/otplogin', { state: { otp, requestBody } });
       }
     },
   });
@@ -73,27 +78,35 @@ const Login = () => {
         }}
       >
         <Container maxWidth="sm">
+
           <Formik
             initialValues={{
               email: ' ',
               password: ''
             }}
             validationSchema={Yup.object().shape({
-              //email: Yup.string().test('max', 'رقم الهوية/الاقامة يجب ان تحتوي فقط على 10 ارقام او البريد الالكتروني غير صالح', (value) => value && (value.includes('@') || value.length == 8)).required('يجب تعبئة الحقل'),
-              //password: Yup.string().max(8, 'حقل كلمة المرور يجب أن يحتوي على ٨ احرف على الاقل').required('يجب تعبئة الحقل')
+              email: Yup.string().required('يجب تعبئة الحقل').test('max', 'رقم الهوية/الاقامة يجب ان تحتوي فقط على 10 ارقام او البريد الالكتروني غير صالح', (value) => value && (value.includes('@') || value.length == 10)),
+              password: Yup.string().min(8, 'حقل كلمة المرور يجب أن يحتوي على ٨ احرف على الاقل').required('يجب تعبئة الحقل')
             })}
             onSubmit={async (values) => {
-             /* const bodyRequest = {
+              const bodyRequest = {
                 username: values.email,
                 password: values.password
-              };*/
-              const bodyRequest = {
-                recipient: '009667599611',
-                message: 'Hello abdallah, use this OTP to validate your login:000000 '
               };
-              navigate('/otplogin', { state: { otp:'000000', bodyRequest } });
-
-              //const response = await doRequest(JSON.stringify(bodyRequest));
+              const response = await doRequest(JSON.stringify(bodyRequest));
+              // const url= 'https://inspiredemo2.appiancloud.com/suite/webapi/taheel-apis-users-login-v2'
+              // const response = await APIRequest({ requestBody, url });
+              // console.log("response=========>>>>>>>>",response)
+              // if (response.isSuccessful) {
+              //   console.log("response=========>>>>>>>>",response.data.responseBody.data.firstName)
+              //   const otp = Math.floor(Math.random() * (1000000 - 100000) + 100000);
+              //   const requestBody = {
+              //     recipient: response.data.phoneNumber,
+              //     message: `Hello ${response.data.responseBody.data.firstName}, use this OTP to validate your login: ${otp}.`
+              //   };
+              //   setUser(response.data)
+              //   navigate('/otplogin', { state: { otp, requestBody } });
+              // }
             }}
           >
             {({
@@ -185,7 +198,7 @@ const Login = () => {
                     variant="outlined"
                     className="custom-field"
                   />
-                
+
                   <TextField
                     error={Boolean(touched.password && errors.password)}
                     fullWidth
@@ -200,13 +213,13 @@ const Login = () => {
                     variant="outlined"
                     className="custom-field"
                   />
-                  { error && (
-                        <Box mt={3}>
-                          <Alert severity="error">
-                          {error}
-                          </Alert>
-                        </Box>
-                      )}
+                  {error && (
+                    <Box mt={3}>
+                      <Alert severity="error">
+                        {error}
+                      </Alert>
+                    </Box>
+                  )}
                   <Box
                     textAlign="center"
                     sx={{
@@ -275,6 +288,7 @@ const Login = () => {
               </form>
             )}
           </Formik>
+
         </Container>
       </Box>
     </>

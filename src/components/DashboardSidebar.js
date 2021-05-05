@@ -1,5 +1,6 @@
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
+import localContext from 'src/localContext'
 import PropTypes from 'prop-types';
 import {
   Avatar,
@@ -55,6 +56,8 @@ const items = [
 
 const DashboardSidebar = ({ onMobileClose, openMobile }) => {
   const location = useLocation();
+  const {users}= useContext(localContext);
+  user.name = users.firstName
 
   useEffect(() => {
     if (openMobile && onMobileClose) {
