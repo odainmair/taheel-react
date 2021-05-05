@@ -63,7 +63,7 @@ const CenterAddress = ({ Condition }) => {
     window.setFormValue('city', currentAddress.city);
     window.setFormValue('street', currentAddress.street);
     window.setFormValue('buildNo', currentAddress.streetNumber);
-    window.setFormValue('postalCode', `${currentAddress.postalCodeSuffix}-${currentAddress.postalCode}`);
+    window.setFormValue('postalCode', `${currentAddress.postalCode}-${currentAddress.postalCodeSuffix}`);
     window.setFormValue('lat', currentAddress.lat);
     window.setFormValue('lng', currentAddress.lng);
 

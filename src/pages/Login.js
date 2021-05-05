@@ -20,6 +20,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import useRequest from '../hooks/use-request Login';
+import { setCurrentUser } from 'src/utils/UserLocalStorage';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -37,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
 const Login = (props) => {
 
   const navigate = useNavigate();
-  const { users, setUser } = useContext(localContext);
+  const { user, setUser } = useContext(localContext);
   const { doRequest, error } = useRequest({
     url: 'https://inspiredemo2.appiancloud.com/suite/webapi/taheel-apis-users-login-v2',
     method: 'post',
@@ -51,8 +52,10 @@ const Login = (props) => {
           recipient: value.data.phoneNumber,
           message: `Hello ${value.data.firstName}, use this OTP to validate your login: ${otp}.`
         };
-        setUser(value.data)
-        navigate('/otplogin', { state: { otp, requestBody } });
+
+        setCurrentUser(value.data);
+        console.log(JSON.stringify(value.data));
+        navigate('/otplogin', { state: { user, otp, requestBody } });
       }
     },
   });
@@ -81,18 +84,19 @@ const Login = (props) => {
 
           <Formik
             initialValues={{
-              email: ' ',
+              email: '',
               password: ''
             }}
             validationSchema={Yup.object().shape({
-              email: Yup.string().required('يجب تعبئة الحقل').test('max', 'رقم الهوية/الاقامة يجب ان تحتوي فقط على 10 ارقام او البريد الالكتروني غير صالح', (value) => value && (value.includes('@') || value.length == 10)),
-              password: Yup.string().min(8, 'حقل كلمة المرور يجب أن يحتوي على ٨ احرف على الاقل').required('يجب تعبئة الحقل')
+              // email: Yup.string().required('يجب تعبئة الحقل').test('max', 'رقم الهوية/الاقامة يجب ان تحتوي فقط على 10 ارقام او البريد الالكتروني غير صالح', (value) => value && (value.includes('@') || value.length == 10)),
+              // password: Yup.string().min(8, 'حقل كلمة المرور يجب أن يحتوي على ٨ احرف على الاقل').required('يجب تعبئة الحقل')
             })}
             onSubmit={async (values) => {
               const bodyRequest = {
                 username: values.email,
                 password: values.password
               };
+
               const response = await doRequest(JSON.stringify(bodyRequest));
               // const url= 'https://inspiredemo2.appiancloud.com/suite/webapi/taheel-apis-users-login-v2'
               // const response = await APIRequest({ requestBody, url });

@@ -29,7 +29,9 @@ const APIRequest = async ({
     } catch (err) {
         response.isSuccessful = false;
         console.log(`----requestBody err :: ${JSON.stringify(err.response)}`);
-        response.message = err.response.data.message.errorMessageAr;
+        if (err.response.data.message){
+            response.message = err.response.data.message.errorMessageAr;
+        }
         console.log(`----apiResponse err.message :: ${response.message}`);
     }
     return response;

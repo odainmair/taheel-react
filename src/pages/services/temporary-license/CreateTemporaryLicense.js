@@ -24,12 +24,15 @@ import questionnaireSectionOne from './util/questionnaireSectionOne';
 import questionnaireSectionThree from './util/questionnaireSectionThree';
 import questionnaireSectionFour from './util/questionnaireSectionFour';
 import questionnaireSectionFive from './util/questionnaireSectionFive';
+import moment from 'moment-hijri';
+import { getCurrentUser } from 'src/utils/UserLocalStorage';
 
 const CreateTemporaryLicense = () => {
 
   const [open, setOpen] = React.useState(false);
   const [dialogContent, setDialogContent] = React.useState("");
   const [dialogTitle, setDialogTitle] = React.useState("");
+  const { email, idNumIqamaNum,  DOB, phoneNumber} = getCurrentUser();
   const navigate = useNavigate();
 
 
@@ -51,7 +54,7 @@ const CreateTemporaryLicense = () => {
     const url = "https://inspiredemo2.appiancloud.com/suite/webapi/taheel-apis-utilities-validateCitizen-v2"
     const requestBody = {
       IDNo: idNumber,
-      HijriDateOfBirth: birthDate
+      HijriDateOfBirth: moment(birthDate,'iDD/iMM/iYYYY').format('iYYYYiMMiDD')
     };
     const response = await APIRequest({ requestBody, url });
     return response;
@@ -101,40 +104,44 @@ const CreateTemporaryLicense = () => {
     const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
     await sleep(300);
     console.log(JSON.stringify(values))
+  
+
     const requestBody = {
+      userEmail: email,
       centerData: {
-        name: values.name,
-        type: '1',
-        ownerType: values.requestType,
+        name: values.centerName, 
+        type: values.centerType,
+        targetedBeneficiary: values.beneficiaryCategory,
+        targetedServices: values.specialCenterType,
+        ownerID: (values.requestType === "2") ? values.idNumber : values.licenceNumber,
+        ownerIDType: (values.requestType === "2") ? "الصفة الطبيعية" : "الصفة الاعتبارية",
+        ownerType: (values.requestType === "2") ? "الصفة الطبيعية" : "الصفة الاعتبارية",
+        ownerName: (values.requestType === "2") ? values.ownerName : values.companyName,
         workingHours: values.workingHours,
         targetedGender: values.targetedGender,
-        ageGroup: values.ageGroup,
-        licenseType: '1',
-        licenceNumber: values.licenceNumber,
-        IDNumber: values.idNumber,
+        ageGroup: values.ageGroup,    
         crInfo_r: {
           crNumber: values.licenceNumber,
           commissionerMobNum: values.compMobileNo
         },
         centerInfo_r: {
           estimatedCapacity: values.centerCap
-        },
-        addressInfo: {
-          city: values.city,
-          area: values.sub,
-          street: values.street,
-          buildNo: values.buildNo,
-          postalCode: values.postalCode,
-          lat: values.lat,
-          lng: values.lng
-        }
+        },     
+        city: values.city,
+        area: values.sub,
+        street: values.street,
+        buildNo: values.buildNo,
+        postalCode: values.postalCode,
+        lat: values.lat,
+        lng: values.lng,  
+        questionnairesScore: values.questionnairesScore
       }
     };
     const url = "https://inspiredemo2.appiancloud.com/suite/webapi/taheel-apis-services-createTempLicense-v2"
 
     const response = await APIRequest({ requestBody, url });
     console.log(JSON.stringify(response));
-    handleClickOpen(`تم تقديم طلبك بنجاح، رقم الرخصة ${response.responseBody.data.ID} وتاريخ انتهاء الرخصة ${response.responseBody.data.expirationDate} هجري`, 'تم تقديم طلبك بنجاح');
+    handleClickOpen(`تم تقديم طلبك بنجاح، رقم الرخصة ${response.responseBody.data.licenceNumber} وتاريخ انتهاء الرخصة ${response.responseBody.data.expirationDate} هجري`, 'تم تقديم طلبك بنجاح');
     //window.alert(` تم تقديم طلبك بنجاح، رقم الرخصة ${response.center.ID} وتاريخ انتهاء الرخصة ${response.center.expirationDate} هجري`);
   };
 
@@ -152,7 +159,7 @@ const CreateTemporaryLicense = () => {
 
   const handleClose = (value) => {
     setOpen(false);
-    navigate('/app/products', { replace: true });
+    navigate('/app/dashboard', { replace: true });
   };
 
   console.log('ttest');
@@ -166,9 +173,12 @@ const CreateTemporaryLicense = () => {
         <CardContent>
           <FinalFromWizard
             initialValues={{
-              centerType: '1',
-              beneficiaryCategory: '1',
+              centerType: '01',
+              beneficiaryCategory: '01',
               requestType: '1',
+              idNumber:idNumIqamaNum,
+              birthDate:DOB,
+              mobileNo:phoneNumber,
               agree: []
             }}
             onSubmit={onSubmit}

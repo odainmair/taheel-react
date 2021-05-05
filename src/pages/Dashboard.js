@@ -13,6 +13,7 @@ import TotalProfit from 'src/components/dashboard//TotalProfit';
 import RequestsChart from 'src/components/dashboard/RequestsChart';
 import { APIRequest } from 'src/api/APIRequest';
 import CentersTable from 'src/components/dashboard/CentersTable';
+import { getCurrentUser } from 'src/utils/UserLocalStorage';
 
 const Dashboard = () => {
   const getTaheelRequestsFun = async (userEmail) => {
@@ -40,29 +41,32 @@ const Dashboard = () => {
     // Update the document title using the browser API
     // const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
     // await sleep(1000);
-    const getTaheelRequestsRs = await getTaheelRequestsFun('ahmad.albuthom@inspirejo.com');
+    const { email } = getCurrentUser();
+    const getTaheelRequestsRs = await getTaheelRequestsFun(email);
     let response = {};
     if (!getTaheelRequestsRs.isSuccessful) {
       setLoading(true);
       response = { isSuccessful: false, message: getTaheelRequestsRs.message };
+    } else {
+      const { data } = getTaheelRequestsRs.responseBody;
+      console.log(JSON.stringify(data));
+      setTaheelRequests(data);
+      setTotalTahelRequests(data.length);
+      setTotalCompletedRequests(data.filter((request) => request.status === -1).length);
+      setTotalRejectedRequests(data.filter((request) => request.status === -2).length);
+      setTotalPendingRequests(data.filter((request) => request.status !== -1 && request.status !== -2).length);
     }
-    const { data } = getTaheelRequestsRs.responseBody;
-    console.log(JSON.stringify(data));
-    setTaheelRequests(data);
-    setTotalTahelRequests(data.length);
-    setTotalCompletedRequests(data.filter((request) => request.status === -1).length);
-    setTotalRejectedRequests(data.filter((request) => request.status === -2).length);
-    setTotalPendingRequests(data.filter((request) => request.status !== -1 && request.status !== -2).length);
 
-    const getCentersRs = await getCentersFun('ahmad.albuthom@inspirejo.com');
+    const getCentersRs = await getCentersFun(email);
     if (!getCentersRs.isSuccessful) {
       setLoading(true);
       response = { isSuccessful: false, message: getCentersRs.message };
+    } else {
+      const { Centers } = getCentersRs.responseBody.data;
+      setTotalCenters(Centers.length);
+      setCenterRequests(Centers);
+      setLoading(true);
     }
-    const { Centers } = getCentersRs.responseBody.data;
-    setTotalCenters(Centers.length);
-    setCenterRequests(Centers);
-    setLoading(true);
     return response;
   }, []);
   return (

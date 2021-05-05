@@ -9,13 +9,16 @@ import {
   Divider,
   Typography
 } from '@material-ui/core';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import { getCurrentUser } from 'src/utils/UserLocalStorage';
 
+const { firstName, lastName } = getCurrentUser();
 const user = {
   avatar: '/static/images/avatars/avatar_4.png',
   city: 'الرياض',
   country: 'السعودية',
   jobTitle: 'Manager',
-  name: 'عبدالله بن محمد',
+  name: `${firstName} ${lastName}`,
   timezone: 'GTM-7'
 };
 
@@ -30,12 +33,13 @@ const AccountProfile = (props) => (
         }}
       >
         <Avatar
-          src={user.avatar}
           sx={{
-            height: 100,
-            width: 100
+            height: 80,
+            width: 80
           }}
-        />
+        >
+          <AccountCircleIcon accentHeight={60} fontSize="large" />
+        </Avatar>
         <Typography
           color="textPrimary"
           gutterBottom

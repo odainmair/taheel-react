@@ -15,6 +15,9 @@ import {
   Typography,
   Alert
 } from '@material-ui/core';
+import { setCurrentUser } from 'src/utils/UserLocalStorage';
+import { useContext } from 'react';
+import localContext from 'src/localContext';
 // import APIRequest from 'src/api/APIRequest';
 
 const useStyles = makeStyles((theme) => ({
@@ -35,17 +38,21 @@ const LoginOtp = () => {
   const [error, setError] = useState('')
   const navigate = useNavigate();
   const classes = useStyles();
+
+
   // const [avtarColor, setColor] = useState({
   //   rightAvatar: '#c8d9d9',
   //   leftAvatar: '#c8d9d9',
   // });
   const location = useLocation();
   const otp = location.state.otp;
+  const user = location.state.user;
   const { requestBody } = location.state;
 
   useEffect(async () => {
     console.log("requestBody", requestBody)
     // const response = await APIRequest({ requestBody, url });
+
     console.log('OTP::', otp);
   })
   return (
@@ -72,7 +79,8 @@ const LoginOtp = () => {
             })}
             onSubmit={async (values) => {
               if (values.otp == otp || values.otp == '000000') {
-                navigate('/app/products', { replace: true });
+                
+                navigate('/app/dashboard', { replace: true });
               }
               else {
                 setError('رمز التحقق المدخل غير صحيح')

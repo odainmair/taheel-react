@@ -20,11 +20,17 @@ import { downloadFileAPI } from 'src/api/APIRequest';
 
 const CentersTable = (props) => {
   const { loading = false, centerRequests = [] } = props;
-  const downloadFileFn = (docId, name, licenceNumber) => {
+  const getCenterType = (centerType) => {
+    if (centerType === '01') {
+      return 'الرعاية النهارية';
+    }
+    return '_';
+  };
+  const downloadFileFn = (licenseDoc, name, licenceNumber) => {
     const url = 'https://inspiredemo2.appiancloud.com/suite/webapi/taheel-apis-utilities-downloadDocument-v2';
     const fileName = `${name}-${licenceNumber}`;
     const queryParams = {
-      DocID: docId,
+      DocID: licenseDoc.id,
       attachment: true,
     };
     downloadFileAPI({ queryParams, url, fileName });
@@ -95,7 +101,7 @@ const CentersTable = (props) => {
                       )}
                   </TableCell>
                   <TableCell>
-                    {request ? request.type
+                    {request ? getCenterType(request.type)
                       : (
                         <Skeleton />
                       )}
@@ -119,12 +125,12 @@ const CentersTable = (props) => {
                       )}
                   </TableCell>
                   <TableCell>
-                    {request ? (
+                    {request && request.licenseDoc !== null ? (
                       <Button
                         variant="contained"
                         color="primary"
                         startIcon={<CloudDownloadIcon />}
-                        onClick={() => downloadFileFn('9469', request.name, request.licenceNumber)}
+                        onClick={() => downloadFileFn(request.licenseDoc, request.name, request.licenceNumber)}
                       >
                         تنزيل الشهادة
                       </Button>

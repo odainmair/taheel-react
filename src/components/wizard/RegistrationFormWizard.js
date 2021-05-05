@@ -119,7 +119,7 @@ export default class RegisterFromWizard extends React.Component {
         if (!isSuccessful) {
           this.setState((state) => ({
             isNextCallBackFunSuccess: false,
-            errMessage: message.errorMessageAr
+            errMessage: message
           }));
           return;
         }

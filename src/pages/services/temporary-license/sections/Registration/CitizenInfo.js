@@ -5,6 +5,7 @@ import {
   Box,
   Typography,
   MenuItem,
+  Grid,
 } from '@material-ui/core';
 
 const CitizenInfo = () => {
@@ -25,85 +26,105 @@ const CitizenInfo = () => {
 
   return (
     <>
-      <Box
-        sx={{
-          backgroundColor: 'white',
-          display: 'flex',
-          flexDirection: 'column',
-          height: '100%',
-          justifyContent: 'center',
-          mt: 5,
-          maxWidth: 'sm'
-        }}
+      <Grid
+        container
+        spacing={0}
+        mt={6}
       >
-        <Field
-          fullWidth
-          required
-          label="رقم الهوية/الإقامة "
-          name="idNumber"
-          component={TextFieldFinal}
-          type="text"
-          variant="outlined"
-          dir="rtl"
-          className="custom-field"
-        />
-        <Box
-          sx={{ mt: 5 }}
+        <Grid
+          item
+          md={12}
+          xs={12}
         >
-          <Typography> تاريخ الميلاد</Typography>
-
           <Field
-            sx={{ ml: 3, width: 100 }}
             fullWidth
-            label="اليوم*"
-            name="day"
-            component={Select}
             required
+            label="رقم الهوية/الإقامة "
+            name="idNumber"
+            component={TextFieldFinal}
+            type="text"
+            variant="outlined"
             dir="rtl"
             className="custom-field"
+          />
+        </Grid>
+
+        <Grid
+          container
+          spacing={3}
+          mt={2}
+        >
+          <Grid
+            item
+            md={12}
+            xs={12}
           >
+            <Typography> تاريخ الميلاد</Typography>
+          </Grid>
 
-            <MenuItem value="">
-              <em>  </em>
-            </MenuItem>
-            {calendar.days.map((day, index) => <MenuItem key ={index} value={day}>{day}</MenuItem>)}
-          </Field>
-
-          <Field
-            sx={{ ml: 5, width: 100 }}
-            fullWidth
-            label="الشهر*"
-            name="month"
-            component={Select}
-            id="demo-simple-select-outlined"
-            required
-            dir="rtl"
-            className="custom-field"
+          <Grid
+            item
+            md={4}
+            xs={4}
+            className="custom-label-field"
           >
-
-            <MenuItem value="">
-              <em>  </em>
-            </MenuItem>
-            {calendar.months.map((month, index) => <MenuItem key ={index} value={month}>{month}</MenuItem>)}
-          </Field>
-
-          <Field
-            sx={{ ml: 5, width: 100 }}
-            fullWidth
-            label="السنة*"
-            name="year"
-            component={Select}
-            required
-            dir="rtl"
-            className="custom-field"
+            <Field
+              fullWidth
+              label="اليوم*"
+              name="day"
+              component={Select}
+              required
+              dir="rtl"
+              className="custom-field"
+              variant="outlined"
+              formControlProps={{ fullWidth: true }}
+            >
+              {calendar.days.map((day, index) => <MenuItem key={index} value={day}>{day}</MenuItem>)}
+            </Field>
+          </Grid>
+          <Grid
+            item
+            md={4}
+            xs={4}
+            className="custom-label-field"
           >
-            <MenuItem value="">
-              <em>  </em>
-            </MenuItem>
-            {calendar.years.map((year, index) => <MenuItem key ={index} value={year}>{year}</MenuItem>)}
-          </Field>
-        </Box>
-      </Box>
+            <Field
+              fullWidth
+              label="الشهر*"
+              name="month"
+              component={Select}
+              id="demo-simple-select-outlined"
+              required
+              dir="rtl"
+              className="custom-field"
+              variant="outlined"
+              formControlProps={{ fullWidth: true }}
+            >
+              {calendar.months.map((month, index) => <MenuItem key={index} value={month}>{month}</MenuItem>)}
+            </Field>
+          </Grid>
+          <Grid
+            item
+            md={4}
+            xs={4}
+            className="custom-label-field"
+          >
+            <Field
+              fullWidth
+              label="السنة*"
+              name="year"
+              component={Select}
+              required
+              dir="rtl"
+              className="custom-field"
+              variant="outlined"
+              formControlProps={{ fullWidth: true }}
+            >
+              {calendar.years.map((year, index) => <MenuItem key={index} value={year}>{year}</MenuItem>)}
+            </Field>
+          </Grid>
+        </Grid>
+      </Grid>
     </>
   );
 };

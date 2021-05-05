@@ -67,19 +67,19 @@ const RequestsChart = (props) => {
   const devices = [
     {
       title: 'مكتمل',
-      value: ((totalcompletedrequests / totaltahelrequests) * 100).toFixed(1),
+      value: totaltahelrequests !== 0 ? ((totalcompletedrequests / totaltahelrequests) * 100).toFixed(1) : 0,
       icon: DoneOutlineOutlinedIcon,
       color: colors.green[600]
     },
     {
       title: 'قيد المراجعة',
-      value: ((totalpendingrequests / totaltahelrequests) * 100).toFixed(1),
+      value: totaltahelrequests !== 0 ? ((totalpendingrequests / totaltahelrequests) * 100).toFixed(1) : 0,
       icon: HistoryOutlinedIcon,
       color: colors.orange[600]
     },
     {
       title: 'مرفوض',
-      value: ((totalpendingrequests / totaltahelrequests) * 100).toFixed(1),
+      value: totaltahelrequests !== 0 ? ((totalpendingrequests / totaltahelrequests) * 100).toFixed(1) : 0,
       icon: ErrorOutlineIcon,
       color: colors.red[600]
     }

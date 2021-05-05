@@ -28,7 +28,7 @@ export default [
     gridSize: '6',
     sectionName: 'CenterInfo',
     options: [
-      { value: '1', label: { ar: 'ذوي الإعاقة' } },
+      { value: '01', label: { ar: 'ذوي الإعاقة' } },
     ],
     validators: [],
   },
@@ -142,9 +142,9 @@ export default [
     id: uuid(),
     label: {
       ar: 'اسم الكيان',
-      en: 'centerName'
+      en: 'companyName'
     },
-    name: 'centerName',
+    name: 'companyName',
     type: 'Text',
     gridSize: '6',
     sectionName: 'OwnerInfo',
@@ -261,7 +261,7 @@ export default [
     gridSize: '6',
     sectionName: 'CenterDetails',
     options: [
-      { value: '1', label: { ar: 'الرعاية النهارية' } },
+      { value: '01', label: { ar: 'الرعاية النهارية' } },
     ],
     validators: [],
   },
@@ -276,10 +276,10 @@ export default [
     gridSize: '6',
     sectionName: 'CenterDetails',
     options: [
-      { value: '1', label: { ar: 'مركز تأهيل الاشخاص ذوي الاعاقات المتعددة' } },
-      { value: '2', label: { ar: 'مراكز تأهيل الاشخاص ذوي الإعاقة العقلية والإعاقات الحركية' } },
-      { value: '3', label: { ar: 'مركز تأهيل الاشخاص ذوي الإعاقة والحسية' } },
-      { value: '4', label: { ar: 'مراكز تاهيل الاشخاص ذوي الاعاقة متوسط وشديدي الإعاقة' } },
+      { value: '01', label: { ar: 'مركز تأهيل الاشخاص ذوي الاعاقات المتعددة' } },
+      { value: '02', label: { ar: 'مراكز تأهيل الاشخاص ذوي الإعاقة العقلية والإعاقات الحركية' } },
+      { value: '03', label: { ar: 'مركز تأهيل الاشخاص ذوي الإعاقة والحسية' } },
+      { value: '04', label: { ar: 'مراكز تاهيل الاشخاص ذوي الاعاقة متوسط وشديدي الإعاقة' } },
     ],
     validators: [],
   },
@@ -307,26 +307,9 @@ export default [
     gridSize: '6',
     sectionName: 'CenterDetails',
     options: [
-      { value: '1', label: { ar: 'القترة الصباحية' } },
-      { value: '2', label: { ar: 'الفترة المسائية' } },
-      { value: '3', label: { ar: 'فترتين' } },
-    ],
-    validators: [],
-  },
-  {
-    id: uuid(),
-    label: {
-      ar: 'الفئة العمرية للمستفدين',
-      en: 'targetedGender'
-    },
-    name: 'targetedGender',
-    type: 'Radio',
-    gridSize: '6',
-    sectionName: 'CenterDetails',
-    options: [
-      { value: '1', label: { ar: 'سنتين - ١٢سنة' } },
-      { value: '2', label: { ar: '١٣سنة - ١٨سنة' } },
-      { value: '3', label: { ar: '١٩سنة -٤٥سنة' } },
+      { value: 'morning', label: { ar: 'القترة الصباحية' } },
+      { value: 'evening', label: { ar: 'الفترة المسائية' } },
+      { value: 'both', label: { ar: 'فترتين' } },
     ],
     validators: [],
   },
@@ -341,9 +324,26 @@ export default [
     gridSize: '6',
     sectionName: 'CenterDetails',
     options: [
-      { value: '1', label: { ar: 'ذكر' } },
-      { value: '2', label: { ar: 'انثى' } },
-      { value: '3', label: { ar: 'كلا الجنسين' } },
+      { value: '2-12', label: { ar: 'سنتين - ١٢سنة' } },
+      { value: '13-18', label: { ar: '١٣سنة - ١٨سنة' } },
+      { value: '19-45', label: { ar: '١٩سنة -٤٥سنة' } },
+    ],
+    validators: [],
+  },
+  {
+    id: uuid(),
+    label: {
+      ar: 'الفئة العمرية للمستفدين',
+      en: 'targetedGender'
+    },
+    name: 'targetedGender',
+    type: 'Radio',
+    gridSize: '6',
+    sectionName: 'CenterDetails',
+    options: [
+      { value: 'm', label: { ar: 'ذكر' } },
+      { value: 'f', label: { ar: 'انثى' } },
+      { value: 'b', label: { ar: 'كلا الجنسين' } },
     ],
     validators: [],
   },

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { useState } from 'react';
 import {
   Box,
@@ -9,6 +10,7 @@ import {
   Grid,
   TextField
 } from '@material-ui/core';
+import { getCurrentUser } from 'src/utils/UserLocalStorage';
 
 const states = [
   {
@@ -26,11 +28,12 @@ const states = [
 ];
 
 const AccountProfileDetails = (props) => {
+  const {firstName,lastName,email,phoneNumber} = getCurrentUser();
   const [values, setValues] = useState({
-    firstName: 'عبدالله',
-    lastName: 'بن محمد',
-    email: 'abdallah@takamolholding.com',
-    phone: '',
+    firstName: firstName,
+    lastName: lastName,
+    email: email,
+    phone: phoneNumber,
     state: '1',
     country: 'السعودية'
   });
@@ -181,6 +184,7 @@ const AccountProfileDetails = (props) => {
           <Button
             color="primary"
             variant="contained"
+            disabled
           >
             حفظ المعلومات
           </Button>

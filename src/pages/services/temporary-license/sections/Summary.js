@@ -252,7 +252,7 @@ const Summary = ({ Condition, dialog }) => {
                     )}
                 </Field>
             </Grid>
-            <TermsDialog dialogContent={TermsContent()} dialogTitle={"التعهد"} open={open} onClose={handleClose} acceptBtnName="اوفق" />
+            <TermsDialog dialogContent={TermsContent()} dialogTitle={"التعهد"} open={open} onClose={handleClose} acceptBtnName="اوافق" />
 
         </>
     )

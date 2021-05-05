@@ -17,6 +17,7 @@ import TaheelOtp from './services/temporary-license/sections/Registration/Taheel
 import RegistrationInfo from './services/temporary-license/sections/Registration/RegistrationInfo';
 import {APIRequest} from 'src/api/APIRequest';
 import AlertDialog from 'src/components/AlertDialog';
+import moment from 'moment-hijri';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -26,8 +27,8 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   large: {
-    width: theme.spacing(38),
-    height: theme.spacing(38),
+    width: theme.spacing(40),
+    height: theme.spacing(40),
   },
   backButton: {
     marginRight: theme.spacing(1),
@@ -49,7 +50,7 @@ const CreateTemporaryLicense = () => {
   const [info, setInfo] = React.useState({});
   const [avtarColor, setColor] = React.useState({
     rightAvatar: '#c8d9d9',
-    leftAvatar: '#c8d9d9',
+    leftAvatar: '#214256',
   });
   const navigate = useNavigate();
   const { doRequest, errors } = useRequest({
@@ -80,6 +81,7 @@ const CreateTemporaryLicense = () => {
       return { isSuccessful: false, message: validateCitRs.message };
     }
     const data = validateCitRs.responseBody.data.Body;
+    console.log(JSON.stringify(data))
     setInfo(data);
     sendSms('0527212403');
     return response;
@@ -103,8 +105,8 @@ const CreateTemporaryLicense = () => {
   };
 
   const validateTaheelOtp = async values => {
-    setCounter(0)
-     sendSms(values.phoneNumber);
+     setCounter(0)
+     await sendSms(values.phoneNumber);
      return { isSuccessful: true, message: '' };
   };
 
@@ -114,34 +116,29 @@ const CreateTemporaryLicense = () => {
     if (otp == taheelOtp) { 
       const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
       await sleep(300);
-      const bodyRequest = {
-        centerData: {
-          firstName: info.Name.firstName,
-          secondName: info.Name.secondName,
-          thirdName: info.Name.thirdName,
-          lastName: info.Name.lastName,
+      const requestBody = {
+          firstName: info.Name.FirstName,
+          secondName: info.Name.SecondName,
+          thirdName: info.Name.ThirdName,
+          lastName: info.Name.LastName,
           email: values.email,
           idNumIqamaNum: info.IdExpiry.IdNo,
-          sponsorName: 'sponsorName',
-          appianUsername_r: 'appianUsername_r',
           phoneNumber: values.phoneNumber,
-          DOB: info.BirthHijriDate,
-          userType: 'userType',
+          DOB: moment(info.BirthHijriDate,'iYYYYiMMiDD').format('iDD/iMM/iYYYY'),
+          userType: 'center owner',
           userPassword: values.password,
-          expiryDate: info.IdExpiry,
+          expiryDate: moment(info.IdExpiry.HijriDate, 'iYYYYiMMiDD').format('iDD/iMM/iYYYY'), 
           gender: info.Gender,
           profession: info.IdExpiry.Profession,
           maritalStatus: info.IdExpiry.MaritalStatus,
-          placeOFBirth: info.BirthPlace,
-          Nationality: 'Nationality'
-        }
+          placeOFBirth: info.BirthPlace
       };
       const url = 'https://inspiredemo2.appiancloud.com/suite/webapi/taheel-apis-users-registration-v2';
-      const response = await APIRequest({ bodyRequest, url });
+      const response = await APIRequest({ requestBody, url });
       if (!response.isSuccessful) {
         return { isSuccessful: false, message: validateCitRs.message };
       }
-      handleClickOpen('لقد تم تسجيلك بنجاح', 'هجري');
+      handleClickOpen('لقد تم تسجيلك بنجاح', '');
       return { isSuccessful: true, message: '' };
     }
     return { isSuccessful: false, message: 'رمز التحقق المدخل غير صحيح' };
@@ -180,13 +177,13 @@ const CreateTemporaryLicense = () => {
       >
         <Box
           className={classes.root}
-          sx={{ mb: 5, mr: 12, }}
+          sx={{ mb: 5, mr: 12,textAlign: 'center' }}
         >
           <Avatar
             className={classes.large}
             onClick={() => setColor({ ...avtarColor, rightAvatar: '#214256', leftAvatar: '#c8d9d9' })}
             sx={{
-              height: '70px', width: '70px', marginLeft: '40%', backgroundColor: avtarColor.rightAvatar
+              height: '100px', width: '100px', marginLeft: '20%', backgroundColor: avtarColor.rightAvatar
             }}
           >
             مستفيد
@@ -196,7 +193,7 @@ const CreateTemporaryLicense = () => {
             className={classes.large}
             onClick={() => setColor({ ...avtarColor, leftAvatar: '#214256', rightAvatar: '#c8d9d9' })}
             sx={{
-              height: '70px', width: '70px', marginLeft: '20%', backgroundColor: avtarColor.leftAvatar
+              height: '100px', width: '100px', marginLeft: '20%', backgroundColor: avtarColor.leftAvatar
             }}
           >
             مركز
@@ -223,7 +220,7 @@ const CreateTemporaryLicense = () => {
           >
             <RegisterFromWizard.Page
               label=""
-              // nextFun={(values) => validateAPIFunc(values)}
+              nextFun={(values) => validateAPIFunc(values)}
             >
               <CitizenInfo />
             </RegisterFromWizard.Page>
