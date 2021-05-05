@@ -15,7 +15,7 @@ import CitizenInfo from './services/temporary-license/sections/Registration/Citi
 import AbsherOtp from './services/temporary-license/sections/Registration/AbsherOtp';
 import TaheelOtp from './services/temporary-license/sections/Registration/TaheelOtp';
 import RegistrationInfo from './services/temporary-license/sections/Registration/RegistrationInfo';
-import APIRequest from 'src/api/APIRequest';
+import {APIRequest} from 'src/api/APIRequest';
 import AlertDialog from 'src/components/AlertDialog';
 
 const useStyles = makeStyles((theme) => ({

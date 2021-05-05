@@ -15,9 +15,20 @@ import {
 import ArrowLeftIcon from '@material-ui/icons/ArrowLeft';
 import Skeleton from '@material-ui/lab/Skeleton';
 import PropTypes from 'prop-types';
+import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
+import { downloadFileAPI } from 'src/api/APIRequest';
 
 const CentersTable = (props) => {
   const { loading = false, centerRequests = [] } = props;
+  const downloadFileFn = (docId, name, licenceNumber) => {
+    const url = 'https://inspiredemo2.appiancloud.com/suite/webapi/taheel-apis-utilities-downloadDocument-v2';
+    const fileName = `${name}-${licenceNumber}`;
+    const queryParams = {
+      DocID: docId,
+      attachment: true,
+    };
+    downloadFileAPI({ queryParams, url, fileName });
+  };
   return (
     <Card>
       <CardHeader title={
@@ -108,7 +119,18 @@ const CentersTable = (props) => {
                       )}
                   </TableCell>
                   <TableCell>
-                    <Skeleton />
+                    {request ? (
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        startIcon={<CloudDownloadIcon />}
+                        onClick={() => downloadFileFn('9469', request.name, request.licenceNumber)}
+                      >
+                        تنزيل الشهادة
+                      </Button>
+                    ) : (
+                      <Skeleton />
+                    )}
                   </TableCell>
                 </TableRow>
               ))}
@@ -131,7 +153,7 @@ const CentersTable = (props) => {
               size="large"
               variant="text"
             >
-              عرض جميع الطلبات
+              عرض جميع المراكز
             </Button>
           ) : (
             <Skeleton animation="wave" width="10%" />

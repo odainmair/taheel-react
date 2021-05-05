@@ -15,9 +15,15 @@ import CenterInfo from './sections/CenterInfo';
 import CenterAddress from './sections/CenterAddress';
 import CenterDetails from './sections/CenterDetails';
 import OwnerInfo from './sections/OwnerInfo';
-import APIRequest from 'src/api/APIRequest';
+import { APIRequest } from 'src/api/APIRequest';
 import Summary from './sections/Summary';
 import AlertDialog from 'src/components/AlertDialog';
+import QuestionnaireSection from './sections/QuestionnaireSection';
+import questionnaireSectionTwo from './util/questionnaireSectionTwo';
+import questionnaireSectionOne from './util/questionnaireSectionOne';
+import questionnaireSectionThree from './util/questionnaireSectionThree';
+import questionnaireSectionFour from './util/questionnaireSectionFour';
+import questionnaireSectionFive from './util/questionnaireSectionFive';
 
 const CreateTemporaryLicense = () => {
 
@@ -36,42 +42,59 @@ const CreateTemporaryLicense = () => {
     onSuccess: () => console.log('test')
   });
   const validateCompanyFunc = async (crNumber) => {
-    const url= "https://inspiredemo2.appiancloud.com/suite/webapi/taheel-apis-utilities-validateCompany-v2"
-    const requestBody= {CRNumber: crNumber};
-    const response = await APIRequest({url,requestBody});
+    const url = "https://inspiredemo2.appiancloud.com/suite/webapi/taheel-apis-utilities-validateCompany-v2"
+    const requestBody = { CRNumber: crNumber };
+    const response = await APIRequest({ url, requestBody });
     return response;
   }
   const validateCitizenFunc = async (idNumber, birthDate) => {
-    const url= "https://inspiredemo2.appiancloud.com/suite/webapi/taheel-apis-utilities-validateCitizen-v2"
-    const requestBody= {
+    const url = "https://inspiredemo2.appiancloud.com/suite/webapi/taheel-apis-utilities-validateCitizen-v2"
+    const requestBody = {
       IDNo: idNumber,
       HijriDateOfBirth: birthDate
     };
-    const response = await APIRequest({requestBody,url});
+    const response = await APIRequest({ requestBody, url });
     return response;
   }
   const validateAPIFunc = async values => {
-    const {requestType, licenceNumber, idNumber, birthDate}= values;
-    const response = {isSuccessful: true, message: ''};
+    const { requestType, licenceNumber, idNumber, birthDate } = values;
+    const response = { isSuccessful: true, message: '' };
     if (requestType === "1") {
       const validateCompRs = await validateCompanyFunc(licenceNumber);
-      if(!validateCompRs.isSuccessful){
-        return {isSuccessful: false, message: validateCompRs.message}
+      if (!validateCompRs.isSuccessful) {
+        return { isSuccessful: false, message: validateCompRs.message }
       }
       const data = validateCompRs.responseBody.data;
       console.log(JSON.stringify(data));
-      values.centerName=data.CRName;
+      values.centerName = data.CRName;
 
     } else {
-      const validateCitRs = await validateCitizenFunc(idNumber,birthDate);
-      if(!validateCitRs.isSuccessful){
-        return {isSuccessful: false, message: validateCitRs.message}
+      const validateCitRs = await validateCitizenFunc(idNumber, birthDate);
+      if (!validateCitRs.isSuccessful) {
+        return { isSuccessful: false, message: validateCitRs.message }
       }
       const data = validateCitRs.responseBody.data.Body;
       console.log(JSON.stringify(data));
-      const {FirstName, SecondName, ThirdName, LastName} = data.Name;
-      values.ownerName=`${FirstName} ${SecondName} ${ThirdName} ${LastName}`;
+      const { FirstName, SecondName, ThirdName, LastName } = data.Name;
+      values.ownerName = `${FirstName} ${SecondName} ${ThirdName} ${LastName}`;
     }
+    return response;
+  }
+  const calAnswerOfQuestionnaires = (values) => {
+    const questionnairesArray = [questionnaireSectionOne, questionnaireSectionTwo, questionnaireSectionThree, questionnaireSectionFour, questionnaireSectionFive];
+    console.log(JSON.stringify(values));
+    let totalCorrectedAnswer = 0;
+    let totalQuestions = 0;
+    questionnairesArray.forEach((questionnaire) =>
+      questionnaire.questions.forEach((question, index) => {
+        totalQuestions++;
+        if (values[`${questionnaire.sectionName}_q${index}`] === question.correctAnswer)
+          totalCorrectedAnswer++;
+      })
+    );
+    values.questionnairesScore = ((totalCorrectedAnswer / totalQuestions) * 100).toFixed(2) + "%";
+    console.log(`totalCorrectedAnswer:${totalCorrectedAnswer} totalQuestions:${totalQuestions} questionnairesScore:${values.questionnairesScore}`);
+    const response = { isSuccessful: true, message: '' };
     return response;
   }
   const onSubmit = async (values) => {
@@ -82,9 +105,9 @@ const CreateTemporaryLicense = () => {
       centerData: {
         name: values.name,
         type: '1',
-        ownerType:values.requestType,
-        workingHours:values.workingHours,
-        targetedGender:values.targetedGender,
+        ownerType: values.requestType,
+        workingHours: values.workingHours,
+        targetedGender: values.targetedGender,
         ageGroup: values.ageGroup,
         licenseType: '1',
         licenceNumber: values.licenceNumber,
@@ -101,17 +124,17 @@ const CreateTemporaryLicense = () => {
           area: values.sub,
           street: values.street,
           buildNo: values.buildNo,
-          postalCode: values.postalCodde,
+          postalCode: values.postalCode,
           lat: values.lat,
           lng: values.lng
         }
       }
     };
-    const url= "https://inspiredemo2.appiancloud.com/suite/webapi/taheel-apis-services-createTempLicense-v2"
+    const url = "https://inspiredemo2.appiancloud.com/suite/webapi/taheel-apis-services-createTempLicense-v2"
 
-    const response = await APIRequest({requestBody,url});
+    const response = await APIRequest({ requestBody, url });
     console.log(JSON.stringify(response));
-    handleClickOpen(`تم تقديم طلبك بنجاح، رقم الرخصة ${response.responseBody.data.ID} وتاريخ انتهاء الرخصة ${response.responseBody.data.expirationDate} هجري`,'تم تقديم طلبك بنجاح');
+    handleClickOpen(`تم تقديم طلبك بنجاح، رقم الرخصة ${response.responseBody.data.ID} وتاريخ انتهاء الرخصة ${response.responseBody.data.expirationDate} هجري`, 'تم تقديم طلبك بنجاح');
     //window.alert(` تم تقديم طلبك بنجاح، رقم الرخصة ${response.center.ID} وتاريخ انتهاء الرخصة ${response.center.expirationDate} هجري`);
   };
 
@@ -121,7 +144,7 @@ const CreateTemporaryLicense = () => {
     </Field>
   )
 
-  const handleClickOpen = (dialogContent,dialogTitle) => {
+  const handleClickOpen = (dialogContent, dialogTitle) => {
     setDialogContent(dialogContent);
     setDialogTitle(dialogTitle)
     setOpen(true);
@@ -137,21 +160,22 @@ const CreateTemporaryLicense = () => {
     <Container maxWidth="md">
       <Card>
         <CardHeader
-          title="اصدار ترخيص مؤقت لمركز تأهيل أهلي"     
+          title="اصدار ترخيص مؤقت لمركز تأهيل أهلي"
         />
         <Divider />
         <CardContent>
           <FinalFromWizard
-            initialValues={{ 
-              centerType: '1', 
+            initialValues={{
+              centerType: '1',
               beneficiaryCategory: '1',
-              requestType: '1' 
+              requestType: '1',
+              agree: []
             }}
             onSubmit={onSubmit}
           >
-            <FinalFromWizard.Page 
-              label="معلومات المركز"         
-              nextFun={(values)=>validateAPIFunc(values)} 
+            <FinalFromWizard.Page
+              label="معلومات المركز"
+              nextFun={(values) => validateAPIFunc(values)}
             >
               <CenterInfo Condition={Condition} />
             </FinalFromWizard.Page>
@@ -164,13 +188,19 @@ const CreateTemporaryLicense = () => {
             <FinalFromWizard.Page label="تفاصيل المركز">
               <CenterDetails Condition={Condition} />
             </FinalFromWizard.Page>
+            <FinalFromWizard.Page
+              label="تقييم الجاهزية"
+              nextFun={(values) => calAnswerOfQuestionnaires(values)}
+            >
+              <QuestionnaireSection Condition={Condition} />
+            </FinalFromWizard.Page>
             <FinalFromWizard.Page label="ملخص">
-              <Summary Condition={Condition} />
+              <Summary Condition={Condition} dialog={handleClickOpen} />
             </FinalFromWizard.Page>
           </FinalFromWizard>
         </CardContent>
       </Card>
-      <AlertDialog  dialogContent={dialogContent} dialogTitle={dialogTitle} open={open} onClose={handleClose} acceptBtnName="تم" />
+      <AlertDialog dialogContent={dialogContent} dialogTitle={dialogTitle} open={open} onClose={handleClose} acceptBtnName="تم" />
     </Container>
   );
 };

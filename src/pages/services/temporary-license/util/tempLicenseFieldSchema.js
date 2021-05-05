@@ -228,9 +228,9 @@ export default [
     id: uuid(),
     label: {
       ar: 'الرمز البريدي',
-      en: 'postalCodde'
+      en: 'postalCode'
     },
-    name: 'postalCodde',
+    name: 'postalCode',
     type: 'Text',
     gridSize: '6',
     sectionName: 'CenterAddress',

@@ -87,6 +87,39 @@ const useStyles = makeStyles(() => createStyles({
     },
     '.MuiTableCell-root': {
       textAlign: 'right !important'
+    },
+    '.MuiButton-startIcon': {
+      'margin-left': '8px !important',
+      'margin-right': '-4px !important'
+    },
+    '.unordered-list': {
+      'padding-right': '24px',
+      'line-height': '2.0'
+    },
+    '.ordered-list': {
+      'padding-right': '24px',
+      'line-height': '2.0'
+    },
+    '.appendix': {
+      marginRight: '30px',
+      'line-height': '2.0'
+    },
+    '.section-headline': {
+      marginBottom: '16px',
+      'line-height': '2.0',
+      'font-weight': '700'
+    },
+    '#terms-dialog-title .MuiTypography-root': {
+      fontSize: '30px !important'
+    },
+    '.MuiFormControlLabel-root': {
+      'margin-left': '16px !important',
+      'margin-right': '-11px !important'
+    },
+    '.MuiFormGroup-row': {
+      'justify-content': 'space-between !important',
+      'align-items': 'center !important',
+      height: '100% !important'
     }
   }
 }));

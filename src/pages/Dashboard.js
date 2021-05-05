@@ -11,7 +11,7 @@ import TotalCenters from 'src/components/dashboard//TotalCenters';
 import TotalCompletedRequest from 'src/components/dashboard//TotalCompletedRequest';
 import TotalProfit from 'src/components/dashboard//TotalProfit';
 import RequestsChart from 'src/components/dashboard/RequestsChart';
-import APIRequest from 'src/api/APIRequest';
+import { APIRequest } from 'src/api/APIRequest';
 import CentersTable from 'src/components/dashboard/CentersTable';
 
 const Dashboard = () => {
@@ -64,7 +64,7 @@ const Dashboard = () => {
     setCenterRequests(Centers);
     setLoading(true);
     return response;
-  });
+  }, []);
   return (
     <>
       <Helmet>

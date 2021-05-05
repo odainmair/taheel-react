@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useRef } from 'react';
-import { Grid } from '@material-ui/core';
+import { Grid, Typography } from '@material-ui/core';
 import { Field } from 'react-final-form';
 import PropTypes from 'prop-types';
 import GmapsAddress from 'src/components/gmap/GmapsAddress';
@@ -49,6 +49,9 @@ const CenterAddress = ({ Condition }) => {
         || '',
       country: (addressArray.find((x) => x.types[0] === 'country') || {}).long_name || '',
       street: (addressArray.find((x) => x.types[0] === 'route') || {}).long_name || '',
+      streetNumber: (addressArray.find((x) => x.types[0] === 'street_number') || {}).long_name || '',
+      postalCode: (addressArray.find((x) => x.types[0] === 'postal_code') || {}).long_name || '',
+      postalCodeSuffix: (addressArray.find((x) => x.types[0] === 'postal_code_suffix') || {}).long_name || '',
       city: (addressArray.find((x) => x.types[0] === 'administrative_area_level_2') || {}).long_name || '',
       state: (addressArray.find((x) => x.types[0] === 'administrative_area_level_1') || {}).long_name || '',
       address: geoResult.formatted_address,
@@ -59,6 +62,8 @@ const CenterAddress = ({ Condition }) => {
     window.setFormValue('sub', currentAddress.area);
     window.setFormValue('city', currentAddress.city);
     window.setFormValue('street', currentAddress.street);
+    window.setFormValue('buildNo', currentAddress.streetNumber);
+    window.setFormValue('postalCode', `${currentAddress.postalCodeSuffix}-${currentAddress.postalCode}`);
     window.setFormValue('lat', currentAddress.lat);
     window.setFormValue('lng', currentAddress.lng);
 
@@ -77,11 +82,15 @@ const CenterAddress = ({ Condition }) => {
         spacing={3}
         mt={3}
       >
+
         <Grid
           item
           md={12}
           xs={12}
         >
+          <Typography gutterBottom variant="body2" color="textSecondary" component="p">
+            الرجاء ادخال العنوان المتوقع للمركز الجديد
+          </Typography>
           <WithGoogleApi apiKey="AIzaSyC43U2-wqXxYEk1RBrTLdkYt3aDoOxO4Fw">
             <GmapsAddress value={streetAddr} onChange={setFieldValue} getStreetAddrPartsFromGeoResultMine={getStreetAddrPartsFromGeoResult} />
           </WithGoogleApi>
@@ -164,7 +173,7 @@ const CenterAddress = ({ Condition }) => {
             fullWidth
             required
             label="الرمز البريدي"
-            name="postalCodde"
+            name="postalCode"
             component={TextFieldFinal}
             type="text"
             variant="outlined"
