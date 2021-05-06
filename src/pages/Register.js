@@ -177,27 +177,41 @@ const CreateTemporaryLicense = () => {
       >
         <Box
           className={classes.root}
-          sx={{ mb: 5, mr: 12,textAlign: 'center' }}
+          sx={{ mb: 5, mt:5, mr: 8,textAlign: 'center' }}
         >
-          <Avatar
-            className={classes.large}
-            onClick={() => setColor({ ...avtarColor, rightAvatar: '#214256', leftAvatar: '#c8d9d9' })}
-            sx={{
-              height: '100px', width: '100px', marginLeft: '20%', backgroundColor: avtarColor.rightAvatar
-            }}
-          >
-            مستفيد
-          </Avatar>
-
-          <Avatar
-            className={classes.large}
-            onClick={() => setColor({ ...avtarColor, leftAvatar: '#214256', rightAvatar: '#c8d9d9' })}
-            sx={{
-              height: '100px', width: '100px', marginLeft: '20%', backgroundColor: avtarColor.leftAvatar
-            }}
-          >
-            مركز
-          </Avatar>
+                        <Avatar
+                          className={classes.large}
+                          // onClick={() => setColor({ ...avtarColor, rightAvatar: '#214256', leftAvatar: '#c8d9d9' })}
+                          sx={{
+                            height: '85px', width: '85px', marginLeft: '15%', backgroundColor: '#c8d9d9'
+                          }}
+                        >
+                          مستفيد
+                        </Avatar>
+                        
+                        <Avatar
+                          className={classes.large}
+                          // onClick={() => setColor({ ...avtarColor, leftAvatar: '#214256', rightAvatar: '#c8d9d9' })}
+                          sx={{
+                            height: '85px', width: '85px', marginLeft: '15%', backgroundColor: '#214256'
+                          }}
+                        >
+                          <a href="/login" style={{color:'white'}}>
+                          مركز
+                          </a>
+                        </Avatar>
+                        
+                        <a href="https://inspiredemo2.appiancloud.com/suite/sites/takamol-taheel/page/request-Records">
+                        <Avatar
+                          className={classes.large}
+                          // onClick={() => setColor({ ...avtarColor, leftAvatar: '#214256', rightAvatar: '#c8d9d9' })}
+                          sx={{
+                            height: '85px', width: '85px', marginLeft: '15%', backgroundColor: '#f4a523'
+                          }}
+                        >
+                          موظف
+                        </Avatar>
+                        </a>
         </Box>
         <Box sx={{ mb: 3, textAlign: 'center' }}>
           <Typography

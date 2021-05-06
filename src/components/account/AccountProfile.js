@@ -22,56 +22,63 @@ const user = {
   timezone: 'GTM-7'
 };
 
-const AccountProfile = (props) => (
-  <Card {...props}>
-    <CardContent>
-      <Box
-        sx={{
-          alignItems: 'center',
-          display: 'flex',
-          flexDirection: 'column'
-        }}
-      >
-        <Avatar
+const AccountProfile = (props) => {
+  
+  
+  useEffect(() => {
+
+  });
+  return (
+    <Card {...props}>
+      <CardContent>
+        <Box
           sx={{
-            height: 80,
-            width: 80
+            alignItems: 'center',
+            display: 'flex',
+            flexDirection: 'column'
           }}
         >
-          <AccountCircleIcon accentHeight={60} fontSize="large" />
-        </Avatar>
-        <Typography
-          color="textPrimary"
-          gutterBottom
-          variant="h3"
+          <Avatar
+            sx={{
+              height: 80,
+              width: 80
+            }}
+          >
+            <AccountCircleIcon accentHeight={60} fontSize="large" />
+          </Avatar>
+          <Typography
+            color="textPrimary"
+            gutterBottom
+            variant="h3"
+          >
+            {user.name}
+          </Typography>
+          <Typography
+            color="textSecondary"
+            variant="body1"
+          >
+            {`${user.city} ${user.country}`}
+          </Typography>
+          <Typography
+            color="textSecondary"
+            variant="body1"
+          >
+            {`${moment().format('hh:mm A')} ${user.timezone}`}
+          </Typography>
+        </Box>
+      </CardContent>
+      <Divider />
+      <CardActions>
+        <Button
+          color="primary"
+          fullWidth
+          variant="text"
         >
-          {user.name}
-        </Typography>
-        <Typography
-          color="textSecondary"
-          variant="body1"
-        >
-          {`${user.city} ${user.country}`}
-        </Typography>
-        <Typography
-          color="textSecondary"
-          variant="body1"
-        >
-          {`${moment().format('hh:mm A')} ${user.timezone}`}
-        </Typography>
-      </Box>
-    </CardContent>
-    <Divider />
-    <CardActions>
-      <Button
-        color="primary"
-        fullWidth
-        variant="text"
-      >
-        تحميل صورة
-      </Button>
-    </CardActions>
-  </Card>
-);
+          تحميل صورة
+        </Button>
+      </CardActions>
+    </Card>
+  )
+};
 
 export default AccountProfile;

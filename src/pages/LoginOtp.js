@@ -117,13 +117,13 @@ const LoginOtp = () => {
                     >
                       <Box
                         className={classes.root}
-                        sx={{ mb: 5, mr: 8 }}
+                        sx={{ mb: 5, mr: 2 }}
                       >
                         <Avatar
                           className={classes.large}
                           // onClick={() => setColor({ ...avtarColor, rightAvatar: '#214256', leftAvatar: '#c8d9d9' })}
                           sx={{
-                            height: '70px', width: '70px', marginLeft: '30%', backgroundColor: '#214256'
+                            height: '85px', width: '85px', marginLeft: '15%', backgroundColor: '#c8d9d9'
                           }}
                         >
                           مستفيد
@@ -133,11 +133,24 @@ const LoginOtp = () => {
                           className={classes.large}
                           // onClick={() => setColor({ ...avtarColor, leftAvatar: '#214256', rightAvatar: '#c8d9d9' })}
                           sx={{
-                            height: '70px', width: '70px', marginLeft: '20%', backgroundColor: '#c8d9d9'
+                            height: '85px', width: '85px', marginLeft: '15%', backgroundColor: '#214256'
                           }}
                         >
+                          <a href="/login" style={{color:'white'}}>
                           مركز
+                          </a>
                         </Avatar>
+                        <a href="https://inspiredemo2.appiancloud.com/suite/sites/takamol-taheel/page/request-Records">
+                        <Avatar
+                          className={classes.large}
+                          // onClick={() => setColor({ ...avtarColor, leftAvatar: '#214256', rightAvatar: '#c8d9d9' })}
+                          sx={{
+                            height: '85px', width: '85px', marginLeft: '15%', backgroundColor: '#f4a523'
+                          }}
+                        >
+                          موظف
+                        </Avatar>
+                        </a>
                       </Box>
                       <Box sx={{ mb: 3, textAlign: 'center' }}>
                         <Typography

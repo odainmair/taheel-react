@@ -5,7 +5,7 @@ const getCurrentUser = () => {
         const foundUser = JSON.parse(loggedInUser);
         return foundUser;
     }
-    return null;
+    return {firstName:"",lastName:""};
 };
 const setCurrentUser = (user) => {
      localStorage.setItem('currentUser', JSON.stringify(user));

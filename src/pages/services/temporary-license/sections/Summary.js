@@ -16,15 +16,13 @@ import tempLicenseFieldSchema from '../util/tempLicenseFieldSchema';
 import TermsContent from './TermsContent';
 import TermsDialog from 'src/components/TermsDialog';
 
-const contentField = ({ input: { value, name }, label, type }) => (
+const contentField = ({ input: { value, name }, label, type, inputType }) => (
     <>
         <Typography gutterBottom variant="body2" color="textSecondary" component="p">
-
             {label}
-
         </Typography>
         <Typography gutterBottom variant="h5" component="h2">
-            {type != 'Select' && type != 'Radio' ? value : getFieldValue({ name, value })}
+            {inputType !== 'Select' && inputType !== 'Radio' ? value : getFieldValue({ name, value })}
         </Typography>
     </>
 )
@@ -38,6 +36,8 @@ const termsLabel = (openDialog) => (
     </>
 )
 const getFieldValue = ({ name, value }) => {
+    console.log("name",name);
+    console.log("value",value)
     if (value == '')
         return '';
     const filredTemp = tempLicenseFieldSchema.filter(tempLicense => tempLicense.name === name);
@@ -86,7 +86,7 @@ const Summary = ({ Condition, dialog }) => {
                             label={filteredTempLicense.label.ar}
                             name={filteredTempLicense.name}
                             component={contentField}
-                            type={filteredTempLicense.type}
+                            inputType={filteredTempLicense.type}
                         />
                     </Grid>
                 ))}
@@ -103,7 +103,7 @@ const Summary = ({ Condition, dialog }) => {
                                 label={filteredTempLicense.label.ar}
                                 name={filteredTempLicense.name}
                                 component={contentField}
-                                type={filteredTempLicense.type}
+                                inputType={filteredTempLicense.type}
                             />
                         </Grid>
                     </Condition>
@@ -121,7 +121,7 @@ const Summary = ({ Condition, dialog }) => {
                                 label={filteredTempLicense.label.ar}
                                 name={filteredTempLicense.name}
                                 component={contentField}
-                                type={filteredTempLicense.type}
+                                inputType={filteredTempLicense.type}
                             />
                         </Grid>
                     </Condition>
@@ -156,7 +156,7 @@ const Summary = ({ Condition, dialog }) => {
                             label={filteredTempLicense.label.ar}
                             name={filteredTempLicense.name}
                             component={contentField}
-                            type={filteredTempLicense.type}
+                            inputType={filteredTempLicense.type}
                         />
                     </Grid>
                 ))}
@@ -189,7 +189,7 @@ const Summary = ({ Condition, dialog }) => {
                             label={filteredTempLicense.label.ar}
                             name={filteredTempLicense.name}
                             component={contentField}
-                            type={filteredTempLicense.type}
+                            inputType={filteredTempLicense.type}
                         />
                     </Grid>
                 ))}

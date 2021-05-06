@@ -69,7 +69,7 @@ const CreateTemporaryLicense = () => {
       }
       const data = validateCompRs.responseBody.data;
       console.log(JSON.stringify(data));
-      values.centerName = data.CRName;
+      values.companyName = data.CRName;
 
     } else {
       const validateCitRs = await validateCitizenFunc(idNumber, birthDate);
