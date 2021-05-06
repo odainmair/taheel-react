@@ -26,40 +26,49 @@ const CitizenInfo = () => {
 
   return (
     <>
-      <Box
-        sx={{
-          backgroundColor: 'white',
-          display: 'flex',
-          flexDirection: 'column',
-          height: '100%',
-          justifyContent: 'center',
-          mt: 5,
-          maxWidth: 'sm'
-        }}
+      <Grid
+        container
+        spacing={0}
+        mt={6}
       >
-        <Field
-          fullWidth
-          required
-          label="رقم الهوية/الإقامة "
-          name="idNumber"
-          component={TextFieldFinal}
-          type="text"
-          variant="outlined"
-          dir="rtl"
-          className="custom-field"
-        />
-        {/* <Box
-          sx={{ mt: 5 }}
-        > */}
-         <Typography
-         sx={{ mt: 5 }}
-         > تاريخ الميلاد</Typography>
-         <Grid container spacing={10} justifyContent="center">
+        <Grid
+          item
+          md={12}
+          xs={12}
+        >
+          <Field
+            fullWidth
+            required
+            label="رقم الهوية/الإقامة "
+            name="idNumber"
+            component={TextFieldFinal}
+            type="text"
+            variant="outlined"
+            dir="rtl"
+            className="custom-field"
+          />
+        </Grid>
 
-         
-          <Grid item xs={4}>
+        <Grid
+          container
+          spacing={3}
+          mt={2}
+        >
+          <Grid
+            item
+            md={12}
+            xs={12}
+          >
+            <Typography> تاريخ الميلاد</Typography>
+          </Grid>
+
+          <Grid
+            item
+            md={4}
+            xs={4}
+            className="custom-label-field"
+          >
             <Field
-              // sx={{width: 100 }}
               fullWidth
               label="اليوم*"
               name="day"
@@ -67,19 +76,19 @@ const CitizenInfo = () => {
               required
               dir="rtl"
               className="custom-field"
+              variant="outlined"
               formControlProps={{ fullWidth: true }}
             >
-
-              <MenuItem value="">
-                <em>  </em>
-              </MenuItem>
               {calendar.days.map((day, index) => <MenuItem key={index} value={day}>{day}</MenuItem>)}
             </Field>
           </Grid>
-
-          <Grid item  xs={4}>
+          <Grid
+            item
+            md={4}
+            xs={4}
+            className="custom-label-field"
+          >
             <Field
-              //  sx={{ width: 100 }}
               fullWidth
               label="الشهر*"
               name="month"
@@ -88,37 +97,34 @@ const CitizenInfo = () => {
               required
               dir="rtl"
               className="custom-field"
+              variant="outlined"
               formControlProps={{ fullWidth: true }}
             >
-
-              <MenuItem value="">
-                <em>  </em>
-              </MenuItem>
               {calendar.months.map((month, index) => <MenuItem key={index} value={month}>{month}</MenuItem>)}
             </Field>
           </Grid>
-
-          <Grid item xs={4}>
+          <Grid
+            item
+            md={4}
+            xs={4}
+            className="custom-label-field"
+          >
             <Field
-              //  sx={{width: 100}}
-              // fullWidth
+              fullWidth
               label="السنة*"
               name="year"
               component={Select}
               required
               dir="rtl"
               className="custom-field"
+              variant="outlined"
               formControlProps={{ fullWidth: true }}
             >
-              <MenuItem value="">
-                <em>  </em>
-              </MenuItem>
               {calendar.years.map((year, index) => <MenuItem key={index} value={year}>{year}</MenuItem>)}
             </Field>
           </Grid>
         </Grid>
-      </Box>
-      {/* </Box> */}
+      </Grid>
     </>
   );
 };

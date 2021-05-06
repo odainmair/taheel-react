@@ -1,5 +1,6 @@
 /* eslint-disable */
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import { useContext } from 'react';
 import { Helmet } from 'react-helmet';
 import * as Yup from 'yup';
@@ -7,7 +8,7 @@ import { Formik } from 'formik';
 import Avatar from '@material-ui/core/Avatar';
 import { makeStyles } from '@material-ui/core/styles';
 import localContext from '../localContext';
-import APIRequest from 'src/api/APIRequest';
+import{ APIRequest }from 'src/api/APIRequest';
 
 import {
   Box,
@@ -20,6 +21,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import useRequest from '../hooks/use-request Login';
+import { setCurrentUser } from 'src/utils/UserLocalStorage';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -38,6 +40,7 @@ const Login = (props) => {
 
   const navigate = useNavigate();
   const { users, setUser } = useContext(localContext);
+  const [error, setError] = useState('')
  
   // const { doRequest, error } = useRequest({
   //   url: 'https://inspiredemo2.appiancloud.com/suite/webapi/taheel-apis-users-login-v2',
@@ -82,7 +85,7 @@ const Login = (props) => {
 
           <Formik
             initialValues={{
-              email: ' ',
+              email: '',
               password: ''
             }}
             validationSchema={Yup.object().shape({
@@ -106,6 +109,10 @@ const Login = (props) => {
                 };
                 setUser(response.responseBody.data)
                 navigate('/otplogin', { state: { otp, requestBody } });
+              }else {
+                
+                  setError('رمز التحقق المدخل غير صحيح')
+               
               }
             }}
           >
@@ -226,13 +233,13 @@ const Login = (props) => {
                     variant="outlined"
                     className="custom-field"
                   />
-                  {/* {error && (
+                  {error && (
                     <Box mt={3}>
                       <Alert severity="error">
                         {error}
                       </Alert>
                     </Box>
-                  )} */}
+                  )}
                   <Box
                     textAlign="center"
                     sx={{

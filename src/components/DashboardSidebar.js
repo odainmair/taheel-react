@@ -14,17 +14,21 @@ import {
 import {
   LogOut as LogoutIcon,
   Monitor as BarChartIcon,
-  Settings as SettingsIcon,
   ShoppingBag as ShoppingBagIcon,
   User as UserIcon,
 } from 'react-feather';
+import { getCurrentUser } from 'src/utils/UserLocalStorage';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import moment from 'moment-hijri';
 import NavItem from './NavItem';
 import Logo from './Logo';
 import  localContext  from '../localContext';
 
+moment.locale('ar-SA');
+
 const user = {
   avatar: '/static/images/avatars/avatar_4.png',
-  currentDate: '3 FEBRUARY 2020',
+  currentDate: moment().format('iYYYY iMMM iD'),
   name: 'عبدالله بن محمد'
 };
 
@@ -45,11 +49,6 @@ const items = [
     title: 'معلومات الشخصيه'
   },
   {
-    href: '/app/settings',
-    icon: SettingsIcon,
-    title: 'الإعدادات'
-  },
-  {
     href: '/login',
     icon: LogoutIcon,
     title: 'تسجيل خروج'
@@ -58,9 +57,8 @@ const items = [
 
 const DashboardSidebar = ({ onMobileClose, openMobile }) => {
   const location = useLocation();
-  const {users}= useContext(localContext);
-  console.log("users:",users)
-  user.name = users.firstName
+  const { firstName, lastName } = getCurrentUser();
+  user.name = `${firstName} ${lastName}`;
 
   useEffect(() => {
     if (openMobile && onMobileClose) {
@@ -85,14 +83,15 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
       >
         <Avatar
           component={RouterLink}
-          src={user.avatar}
           sx={{
             cursor: 'pointer',
-            width: 44,
-            height: 44
+            width: 60,
+            height: 60
           }}
           to="/app/account"
-        />
+        >
+          <AccountCircleIcon accentHeight={60} fontSize="large" />
+        </Avatar>
         <Box sx={{ p: 2 }}>
           <Typography
             variant="h6"
@@ -107,8 +106,9 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
           <Typography
             variant="body2"
             sx={{
-              fontSize: 10,
-              color: '#fff'
+              fontSize: 13,
+              color: '#fff',
+              paddingTop: 1
             }}
           >
             {user.currentDate}
@@ -139,11 +139,10 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
         }}
       >
         <RouterLink to="/">
-          <Logo />
           <img
             alt="Logo"
-            src="/static/logo-w.svg"
-            width="100"
+            src="/static/Taheel_logo-footer.png"
+            width="200"
           />
         </RouterLink>
         <Typography

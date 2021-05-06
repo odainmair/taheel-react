@@ -84,6 +84,7 @@ const OwnerInfo = ({ Condition }) => (
             variant="outlined"
             dir="rtl"
             className="custom-field"
+            disabled
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
@@ -131,7 +132,7 @@ const OwnerInfo = ({ Condition }) => (
             fullWidth
             required
             label="اسم الكيان"
-            name="centerName"
+            name="companyName"
             component={TextFieldFinal}
             type="text"
             variant="outlined"

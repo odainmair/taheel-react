@@ -27,6 +27,7 @@ const CenterInfo = ({ Condition }) => (
           component={Select}
           required
           dir="rtl"
+          variant="outlined"
           className="custom-field"
           formControlProps={{ fullWidth: true }}
         >
@@ -53,12 +54,13 @@ const CenterInfo = ({ Condition }) => (
           component={Select}
           required
           dir="rtl"
+          variant="outlined"
           className="custom-field"
           formControlProps={{ fullWidth: true }}
         >
           {/* <MenuItem value="Orphans">أيتام</MenuItem>
           <MenuItem value="Juveniles">الأحداث</MenuItem> */}
-          <MenuItem value="1">ذوي الإعاقة </MenuItem>
+          <MenuItem value="01">ذوي الإعاقة </MenuItem>
           {/* <MenuItem value="Family">عائلة</MenuItem>
           <MenuItem value="Protection">حماية</MenuItem>
           <MenuItem value="Beggars">بيجار</MenuItem>
@@ -67,49 +69,6 @@ const CenterInfo = ({ Condition }) => (
         </Field>
       </Grid>
     </Grid>
-    <Condition when="requestType" is="2">
-      <Grid
-        container
-        spacing={3}
-        mt={3}
-        mb={3}
-      >
-        <Grid
-          item
-          md={6}
-          xs={12}
-        >
-          <Field
-            fullWidth
-            required
-            label="رقم الهوية"
-            name="idNumber"
-            component={TextFieldFinal}
-            type="text"
-            variant="outlined"
-            dir="rtl"
-            className="custom-field"
-          />
-        </Grid>
-        <Grid
-          item
-          md={6}
-          xs={12}
-        >
-          <Field
-            fullWidth
-            required
-            label="تاريخ الميلاد"
-            name="birthDate"
-            component={TextFieldFinal}
-            type="text"
-            variant="outlined"
-            dir="rtl"
-            className="custom-field"
-          />
-        </Grid>
-      </Grid>
-    </Condition>
     <Condition when="requestType" is="1">
       <Grid
         container
@@ -133,11 +92,10 @@ const CenterInfo = ({ Condition }) => (
             required
             dir="rtl"
             className="custom-field"
+            variant="outlined"
             formControlProps={{ fullWidth: true }}
           >
             <MenuItem value="1">سجل تجاري</MenuItem>
-            <MenuItem value="2">رخصة استثمار اجنبي</MenuItem>
-            <MenuItem value="3">شهادة تسجيل للجمعيات والمؤسسات الاهليه</MenuItem>
           </Field>
         </Grid>
         <Grid

@@ -3,6 +3,7 @@ import {
   Card,
   CardContent,
   Grid,
+  colors,
   Typography
 } from '@material-ui/core';
 import HistoryOutlinedIcon from '@material-ui/icons/HistoryOutlined';
@@ -10,7 +11,7 @@ import Skeleton from '@material-ui/lab/Skeleton';
 import PropTypes from 'prop-types';
 
 const TotalPendingRequest = (props) => {
-  const { loading = false } = props;
+  const { loading = false, totalpendingrequests } = props;
   return (
     <Card>
       <CardContent>
@@ -24,9 +25,9 @@ const TotalPendingRequest = (props) => {
               <Typography
                 color="textSecondary"
                 gutterBottom
-                variant="h6"
+                variant="h5"
               >
-                TOTAL Pending Request
+                مجموع الطلبات قيد المراجعة
               </Typography>
             ) : (
               <Skeleton animation="wave" height={10} width={200} style={{ marginBottom: 6 }} />
@@ -36,7 +37,7 @@ const TotalPendingRequest = (props) => {
                 color="textPrimary"
                 variant="h3"
               >
-                15
+                {totalpendingrequests}
               </Typography>
             ) : (
               <Skeleton animation="wave" height={10} width={100} style={{ marginTop: 10 }} />
@@ -46,7 +47,7 @@ const TotalPendingRequest = (props) => {
             {loading ? (
               <Avatar
                 sx={{
-                  backgroundColor: '#103145',
+                  backgroundColor: colors.orange[600],
                   height: 56,
                   width: 56
                 }}
@@ -67,4 +68,5 @@ export default TotalPendingRequest;
 
 TotalPendingRequest.propTypes = {
   loading: PropTypes.bool.isRequired,
+  totalpendingrequests: PropTypes.number.isRequired
 };

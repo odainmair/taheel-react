@@ -1,8 +1,8 @@
 const Logo = (props) => (
   <img
     alt="Logo"
-    src="/static/takamol-logo.png"
-    width="80"
+    src="/static/Taheel_logo-footer.png"
+    width="180"
     {...props}
   />
 );

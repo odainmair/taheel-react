@@ -49,10 +49,11 @@ const CenterDetails = ({ Condition }) => (
           component={Select}
           required
           dir="rtl"
+          variant="outlined"
           className="custom-field"
           formControlProps={{ fullWidth: true }}
         >
-          <MenuItem value="1">الرعاية النهارية</MenuItem>
+          <MenuItem value="01">الرعاية النهارية</MenuItem>
         </Field>
       </Grid>
       <Grid
@@ -68,13 +69,14 @@ const CenterDetails = ({ Condition }) => (
           component={Select}
           required
           dir="rtl"
+          variant="outlined"
           className="custom-field"
           formControlProps={{ fullWidth: true }}
         >
-          <MenuItem value="1">مركز تأهيل الاشخاص ذوي الاعاقات المتعددة</MenuItem>
-          <MenuItem value="2">مراكز تأهيل الاشخاص ذوي الإعاقة العقلية والإعاقات الحركية</MenuItem>
-          <MenuItem value="3">مركز تأهيل الاشخاص ذوي الإعاقة والحسية</MenuItem>
-          <MenuItem value="4">مراكز تاهيل الاشخاص ذوي الاعاقة متوسط وشديدي الإعاقة </MenuItem>
+          <MenuItem value="01">مركز تأهيل الاشخاص ذوي الاعاقات المتعددة</MenuItem>
+          <MenuItem value="02">مراكز تأهيل الاشخاص ذوي الإعاقة العقلية والإعاقات الحركية</MenuItem>
+          <MenuItem value="03">مركز تأهيل الاشخاص ذوي الإعاقة والحسية</MenuItem>
+          <MenuItem value="04">مراكز تاهيل الاشخاص ذوي الاعاقة متوسط وشديدي الإعاقة </MenuItem>
         </Field>
       </Grid>
       <Grid
@@ -106,17 +108,17 @@ const CenterDetails = ({ Condition }) => (
               <RadioGroup row>
                 <FormControlLabel
                   label="القترة الصباحية"
-                  control={<Field name="workingHours" component={Radio} type="radio" value="1" />}
+                  control={<Field name="workingHours" component={Radio} type="radio" value="morning" />}
 
                 />
                 <FormControlLabel
                   label="الفترة المسائية"
-                  control={<Field name="workingHours" component={Radio} type="radio" value="2" />}
+                  control={<Field name="workingHours" component={Radio} type="radio" value="evening" />}
 
                 />
                 <FormControlLabel
                   label="فترتين"
-                  control={<Field name="workingHours" component={Radio} type="radio" value="3" />}
+                  control={<Field name="workingHours" component={Radio} type="radio" value="both" />}
                 />
               </RadioGroup>
               {meta.error && meta.touched && <FormHelperText dir="rtl">{meta.error}</FormHelperText>}
@@ -136,17 +138,17 @@ const CenterDetails = ({ Condition }) => (
               <RadioGroup row>
                 <FormControlLabel
                   label="سنتين - ١٢سنة"
-                  control={<Field name="targetedGender" component={Radio} type="radio" value="1" />}
+                  control={<Field name="ageGroup" component={Radio} type="radio" value="2-12" />}
 
                 />
                 <FormControlLabel
                   label="١٣سنة - ١٨سنة"
-                  control={<Field name="targetedGender" component={Radio} type="radio" value="2" />}
+                  control={<Field name="ageGroup" component={Radio} type="radio" value="13-18" />}
 
                 />
                 <FormControlLabel
                   label="١٩سنة -٤٥سنة"
-                  control={<Field name="targetedGender" component={Radio} type="radio" value="3" />}
+                  control={<Field name="ageGroup" component={Radio} type="radio" value="19-45" />}
                 />
               </RadioGroup>
               {meta.error && meta.touched && <FormHelperText dir="rtl">{meta.error}</FormHelperText>}
@@ -159,24 +161,24 @@ const CenterDetails = ({ Condition }) => (
         md={6}
         xs={12}
       >
-        <Field name="ageGroup">
+        <Field name="targetedGender">
           {({ input, meta }) => ( // eslint-disable-line no-unused-vars
             <FormControl component="fieldset" error={meta.error} required>
               <FormLabel component="legend">جنس المستفدين</FormLabel>
               <RadioGroup row>
                 <FormControlLabel
                   label="ذكر"
-                  control={<Field name="ageGroup" component={Radio} type="radio" value="1" />}
+                  control={<Field name="targetedGender" component={Radio} type="radio" value="m" />}
 
                 />
                 <FormControlLabel
                   label="انثى"
-                  control={<Field name="ageGroup" component={Radio} type="radio" value="2" />}
+                  control={<Field name="targetedGender" component={Radio} type="radio" value="f" />}
 
                 />
                 <FormControlLabel
                   label="كلا الجنسين"
-                  control={<Field name="ageGroup" component={Radio} type="radio" value="3" />}
+                  control={<Field name="targetedGender" component={Radio} type="radio" value="b" />}
                 />
               </RadioGroup>
               {meta.error && meta.touched && <FormHelperText dir="rtl">{meta.error}</FormHelperText>}

@@ -11,27 +11,35 @@ import {
 } from '@material-ui/core';
 import DoneOutlineOutlinedIcon from '@material-ui/icons/DoneOutlineOutlined';
 import HistoryOutlinedIcon from '@material-ui/icons/HistoryOutlined';
+import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 import Skeleton from '@material-ui/lab/Skeleton';
 import PropTypes from 'prop-types';
 
 const RequestsChart = (props) => {
-  const { loading = false } = props;
+  const {
+    loading = false,
+    totalpendingrequests = 0,
+    totalrejectedrequests = 0,
+    totalcompletedrequests = 0,
+    totaltahelrequests = 0
+  } = props;
   const theme = useTheme();
 
   const data = {
     datasets: [
       {
-        data: [10, 15],
+        data: [totalcompletedrequests, totalpendingrequests, totalrejectedrequests],
         backgroundColor: [
           colors.green[600],
-          colors.orange[600]
+          colors.orange[600],
+          colors.red[600]
         ],
         borderWidth: 8,
         borderColor: colors.common.white,
         hoverBorderColor: colors.common.white
       }
     ],
-    labels: ['Completed', 'Pending']
+    labels: ['مكتمل', 'قيد المراجعة', 'مرفوض']
   };
 
   const options = {
@@ -58,16 +66,22 @@ const RequestsChart = (props) => {
 
   const devices = [
     {
-      title: 'Completed',
-      value: 55,
+      title: 'مكتمل',
+      value: totaltahelrequests !== 0 ? ((totalcompletedrequests / totaltahelrequests) * 100).toFixed(1) : 0,
       icon: DoneOutlineOutlinedIcon,
       color: colors.green[600]
     },
     {
-      title: 'Pending',
-      value: 45,
+      title: 'قيد المراجعة',
+      value: totaltahelrequests !== 0 ? ((totalpendingrequests / totaltahelrequests) * 100).toFixed(1) : 0,
       icon: HistoryOutlinedIcon,
       color: colors.orange[600]
+    },
+    {
+      title: 'مرفوض',
+      value: totaltahelrequests !== 0 ? ((totalpendingrequests / totaltahelrequests) * 100).toFixed(1) : 0,
+      icon: ErrorOutlineIcon,
+      color: colors.red[600]
     }
   ];
 
@@ -76,7 +90,7 @@ const RequestsChart = (props) => {
       <CardHeader
         title={
           loading ? (
-            'My Request'
+            'تحليل الطلبات'
           ) : (
             <Skeleton animation="wave" height={15} width="60%" style={{ marginBottom: 6 }} />
           )
@@ -184,4 +198,8 @@ export default RequestsChart;
 
 RequestsChart.propTypes = {
   loading: PropTypes.bool.isRequired,
+  totalpendingrequests: PropTypes.number.isRequired,
+  totaltahelrequests: PropTypes.number.isRequired,
+  totalcompletedrequests: PropTypes.number.isRequired,
+  totalrejectedrequests: PropTypes.number.isRequired,
 };

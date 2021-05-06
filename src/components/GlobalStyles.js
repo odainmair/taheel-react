@@ -6,6 +6,7 @@ const useStyles = makeStyles(() => createStyles({
       boxSizing: 'border-box',
       margin: 0,
       padding: 0,
+      fontFamily: 'FrutigerLTArabic-55Roman !important',
     },
     html: {
       '-webkit-font-smoothing': 'antialiased',
@@ -36,7 +37,13 @@ const useStyles = makeStyles(() => createStyles({
     '.custom-label-field label': {
       transformOrigin: 'top right',
       right: '15px',
-      left: 'unset'
+      left: 'unset',
+      backgroundColor: '#fff',
+      padding: '0 8px',
+      'z-index': '4'
+    },
+    '.custom-label-field .MuiInputLabel-shrink': {
+      top: '-9px'
     },
     '.custom-field fieldset': {
       textAlign: 'right'
@@ -63,13 +70,56 @@ const useStyles = makeStyles(() => createStyles({
       right: 'calc(-50% + 20px)'
     },
     '.custom-wizard  .MuiStepIcon-completed': {
-      color: '#3c8084 !important'
+      color: '#34ae73 !important'
+    },
+    '.custom-wizard  .MuiStepLabel-completed': {
+      color: '#34ae73 !important'
     },
     '.service-not-active .service-content': {
       filter: 'blur(7px)'
     },
     '.MuiCardHeader-title': {
       fontSize: '20px !important'
+    },
+    '.MuiChip-icon': {
+      marginRight: '4px !important',
+      marginLeft: '0 !important',
+    },
+    '.MuiTableCell-root': {
+      textAlign: 'right !important'
+    },
+    '.MuiButton-startIcon': {
+      'margin-left': '8px !important',
+      'margin-right': '-4px !important'
+    },
+    '.unordered-list': {
+      'padding-right': '24px',
+      'line-height': '2.0'
+    },
+    '.ordered-list': {
+      'padding-right': '24px',
+      'line-height': '2.0'
+    },
+    '.appendix': {
+      marginRight: '30px',
+      'line-height': '2.0'
+    },
+    '.section-headline': {
+      marginBottom: '16px',
+      'line-height': '2.0',
+      'font-weight': '700'
+    },
+    '#terms-dialog-title .MuiTypography-root': {
+      fontSize: '30px !important'
+    },
+    '.MuiFormControlLabel-root': {
+      'margin-left': '16px !important',
+      'margin-right': '-11px !important'
+    },
+    '.MuiFormGroup-row': {
+      'justify-content': 'space-between !important',
+      'align-items': 'center !important',
+      height: '100% !important'
     }
   }
 }));

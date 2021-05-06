@@ -8,7 +8,7 @@ import {
   Typography,
   InputAdornment,
 } from '@material-ui/core';
-import APIRequest from 'src/api/APIRequest';
+import {APIRequest} from 'src/api/APIRequest';
 import localContext from 'src/localContext'
 
 

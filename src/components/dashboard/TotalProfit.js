@@ -25,9 +25,9 @@ const TotalProfit = (props) => {
               <Typography
                 color="textSecondary"
                 gutterBottom
-                variant="h6"
+                variant="h5"
               >
-                TOTAL PROFIT
+                مجموع الرباح
               </Typography>
             ) : (
               <Skeleton animation="wave" height={10} width={200} style={{ marginBottom: 6 }} />

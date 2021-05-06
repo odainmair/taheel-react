@@ -8,7 +8,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import localContext from 'src/localContext'
-import APIRequest from 'src/api/APIRequest';
+import {APIRequest} from 'src/api/APIRequest';
 
 const AbsherOtp = () => {
   const { otp, setOtp} = useContext(localContext);
