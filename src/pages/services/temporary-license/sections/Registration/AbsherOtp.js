@@ -1,13 +1,23 @@
 /* eslint-disable */
 import { Field } from 'react-final-form';
 import { TextField as TextFieldFinal } from 'final-form-material-ui';
+import { useContext } from 'react';
 import {
   Box,
   Grid,
   Typography,
 } from '@material-ui/core';
+import localContext from 'src/localContext'
+import APIRequest from 'src/api/APIRequest';
 
 const AbsherOtp = () => {
+  const { otp, setOtp} = useContext(localContext);
+  const url = 'https://inspiredemo2.appiancloud.com/suite/webapi/taheel-apis-utilities-AbsherOTP-v2?BeneficiaryId=7273&OTP=7537555'
+  const requestBody = {
+    BeneficiaryId: "273",
+    OTP: otp
+  }
+
   return (
     <>
       <Grid
@@ -75,7 +85,10 @@ const AbsherOtp = () => {
             textDecoration: 'underline'
           }}
         >
-          <a>
+          <a
+           onClick={() => APIRequest({ requestBody, url })}
+          >
+       
             إعادة ارسال رمز التحقق
           </a>
         </Typography>

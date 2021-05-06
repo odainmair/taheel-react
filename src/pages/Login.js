@@ -1,11 +1,14 @@
 /* eslint-disable */
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-// import { useState } from 'react';
+import { useContext } from 'react';
 import { Helmet } from 'react-helmet';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
 import Avatar from '@material-ui/core/Avatar';
 import { makeStyles } from '@material-ui/core/styles';
+import localContext from '../localContext';
+import APIRequest from 'src/api/APIRequest';
+
 import {
   Box,
   Button,
@@ -31,26 +34,29 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Login = () => {
-  const navigate = useNavigate();
-  const { doRequest, error } = useRequest({
-    url: 'https://inspiredemo2.appiancloud.com/suite/webapi/taheel-apis-users-login-v2',
-    method: 'post',
-    body: {
+const Login = (props) => {
 
-    },
-    onSuccess: async (value) => {
-      console.log("value",value)
-      if (value.status === 'SUCCESS') {
-        const otp = Math.floor(Math.random() * (1000000 - 100000) + 100000);
-        const bodyRequest = {
-          recipient: value.data.phoneNumber,
-          message: `Hello ${value.data.firstName}, use this OTP to validate your login: ${otp}.`
-        };
-        navigate('/otplogin', { state: { otp, bodyRequest } });
-      }
-    },
-  });
+  const navigate = useNavigate();
+  const { users, setUser } = useContext(localContext);
+ 
+  // const { doRequest, error } = useRequest({
+  //   url: 'https://inspiredemo2.appiancloud.com/suite/webapi/taheel-apis-users-login-v2',
+  //   method: 'post',
+  //   body: {
+
+  //   },
+  //   onSuccess: async (value) => {
+  //     if (value.status === 'SUCCESS') {
+  //       const otp = Math.floor(Math.random() * (1000000 - 100000) + 100000);
+  //       const requestBody = {
+  //         recipient: value.data.phoneNumber,
+  //         message: `Hello ${value.data.firstName}, use this OTP to validate your login: ${otp}.`
+  //       };
+  //       setUser(value.data)
+  //       navigate('/otplogin', { state: { otp, requestBody } });
+  //     }
+  //   },
+  // });
 
   const classes = useStyles();
   // const [avtarColor, setColor] = useState({
@@ -73,21 +79,34 @@ const Login = () => {
         }}
       >
         <Container maxWidth="sm">
+
           <Formik
             initialValues={{
               email: ' ',
               password: ''
             }}
             validationSchema={Yup.object().shape({
-              email: Yup.string().test('max', 'رقم الهوية/الاقامة يجب ان تحتوي فقط على 10 ارقام او البريد الالكتروني غير صالح', (value) => value && (value.includes('@') || value.length == 8)).required('يجب تعبئة الحقل'),
-              password: Yup.string().max(8, 'حقل كلمة المرور يجب أن يحتوي على ٨ احرف على الاقل').required('يجب تعبئة الحقل')
+              email: Yup.string().required('يجب تعبئة الحقل').test('max', 'رقم الهوية/الاقامة يجب ان تحتوي فقط على 10 ارقام او البريد الالكتروني غير صالح', (value) => value && (value.includes('@') || value.length == 10)),
+              password: Yup.string().min(8, 'حقل كلمة المرور يجب أن يحتوي على ٨ احرف على الاقل').required('يجب تعبئة الحقل')
             })}
             onSubmit={async (values) => {
-              const bodyRequest = {
+              const requestBody = {
                 username: values.email,
                 password: values.password
               };
-              const response = await doRequest(JSON.stringify(bodyRequest));
+              // const response = await doRequest(JSON.stringify(bodyRequest));
+              const url= 'https://inspiredemo2.appiancloud.com/suite/webapi/taheel-apis-users-login-v2'
+              const response = await APIRequest({ requestBody, url });
+              if (response.isSuccessful) {
+                const otp = Math.floor(Math.random() * (1000000 - 100000) + 100000);
+                
+                const requestBody = {
+                  recipient:response.responseBody.data.phoneNumber,
+                  message: `Hello ${response.responseBody.data.firstName}, use this OTP to validate your login: ${otp}.`
+                };
+                setUser(response.responseBody.data)
+                navigate('/otplogin', { state: { otp, requestBody } });
+              }
             }}
           >
             {({
@@ -119,13 +138,13 @@ const Login = () => {
                     >
                       <Box
                         className={classes.root}
-                        sx={{ mb: 5, mr: 8 }}
+                        sx={{ mb: 5, mr: 2 }}
                       >
                         <Avatar
                           className={classes.large}
                           // onClick={() => setColor({ ...avtarColor, rightAvatar: '#214256', leftAvatar: '#c8d9d9' })}
                           sx={{
-                            height: '70px', width: '70px', marginLeft: '30%', backgroundColor: '#214256'
+                            height: '85px', width: '85px', marginLeft: '15%', backgroundColor: '#c8d9d9'
                           }}
                         >
                           مستفيد
@@ -135,11 +154,24 @@ const Login = () => {
                           className={classes.large}
                           // onClick={() => setColor({ ...avtarColor, leftAvatar: '#214256', rightAvatar: '#c8d9d9' })}
                           sx={{
-                            height: '70px', width: '70px', marginLeft: '20%', backgroundColor: '#c8d9d9'
+                            height: '85px', width: '85px', marginLeft: '15%', backgroundColor: '#214256'
                           }}
                         >
+                          <a href="/login" style={{color:'white'}}>
                           مركز
+                          </a>
                         </Avatar>
+                        <a href="https://inspiredemo2.appiancloud.com/suite/sites/takamol-taheel/page/request-Records">
+                        <Avatar
+                          className={classes.large}
+                          // onClick={() => setColor({ ...avtarColor, leftAvatar: '#214256', rightAvatar: '#c8d9d9' })}
+                          sx={{
+                            height: '85px', width: '85px', marginLeft: '15%', backgroundColor: '#f4a523'
+                          }}
+                        >
+                          موظف
+                        </Avatar>
+                        </a>
                       </Box>
                       <Box sx={{ mb: 3, textAlign: 'center' }}>
                         <Typography
@@ -179,7 +211,7 @@ const Login = () => {
                     variant="outlined"
                     className="custom-field"
                   />
-                
+
                   <TextField
                     error={Boolean(touched.password && errors.password)}
                     fullWidth
@@ -194,13 +226,13 @@ const Login = () => {
                     variant="outlined"
                     className="custom-field"
                   />
-                  { error && (
-                        <Box mt={3}>
-                          <Alert severity="error">
-                          {error}
-                          </Alert>
-                        </Box>
-                      )}
+                  {/* {error && (
+                    <Box mt={3}>
+                      <Alert severity="error">
+                        {error}
+                      </Alert>
+                    </Box>
+                  )} */}
                   <Box
                     textAlign="center"
                     sx={{
@@ -269,6 +301,7 @@ const Login = () => {
               </form>
             )}
           </Formik>
+
         </Container>
       </Box>
     </>
@@ -276,3 +309,11 @@ const Login = () => {
 };
 
 export default Login;
+
+
+
+
+
+
+
+

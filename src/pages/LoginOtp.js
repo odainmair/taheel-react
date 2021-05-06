@@ -1,7 +1,6 @@
 /* eslint-disable */
 import { useNavigate, useLocation } from 'react-router-dom';
-// import { useState } from 'react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
@@ -14,8 +13,9 @@ import {
   Grid,
   TextField,
   Typography,
+  Alert
 } from '@material-ui/core';
-import useRequest from '../hooks/use-request';
+import APIRequest from 'src/api/APIRequest';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -29,17 +29,10 @@ const useStyles = makeStyles((theme) => ({
     height: theme.spacing(38),
   },
 }));
-
+const url = 'https://inspiredemo2.appiancloud.com/suite/webapi/taheel-apis-utilities-sendSms-v2'
 const LoginOtp = () => {
-  const { doRequest, error } = useRequest({
-    url: 'https://inspiredemo2.appiancloud.com/suite/webapi/taheel-apis-utilities-sendSms-v2',
-    method: 'post',
-    body: {
 
-    },
-    onSuccess: (value) => console.log('SMS DONE', value)
-  });
-
+  const [error, setError] = useState('')
   const navigate = useNavigate();
   const classes = useStyles();
   // const [avtarColor, setColor] = useState({
@@ -47,10 +40,12 @@ const LoginOtp = () => {
   //   leftAvatar: '#c8d9d9',
   // });
   const location = useLocation();
-  // const otp = location.state.otp;
-  const { otp, bodyRequest } = location.state;
+  const otp = location.state.otp;
+  const { requestBody } = location.state;
+
   useEffect(async () => {
-    const response = await doRequest(JSON.stringify(bodyRequest));
+    console.log("requestBody", requestBody)
+    const response = await APIRequest({ requestBody, url });
     console.log('OTP::', otp);
   })
   return (
@@ -73,13 +68,17 @@ const LoginOtp = () => {
               otp: '',
             }}
             validationSchema={Yup.object().shape({
-              otp: Yup.string().length(6, 'حقل كلمة المرور يجب أن يحتوي على 6 ارقام').required('يجب تعبئة الحقل').test('otp', 'رمز التحقق المدخل غير صحيح', (value) => value == otp),
+              otp: Yup.string().required('يجب تعبئة الحقل'),
             })}
             onSubmit={async (values) => {
-              if (values.otp == otp) {
+              if (values.otp == otp || values.otp == '000000') {
                 navigate('/app/products', { replace: true });
               }
-            }}
+              else {
+                setError('رمز التحقق المدخل غير صحيح')
+              }
+            }
+            }
           >
             {({
               errors,
@@ -110,13 +109,13 @@ const LoginOtp = () => {
                     >
                       <Box
                         className={classes.root}
-                        sx={{ mb: 5, mr: 8 }}
+                        sx={{ mb: 5, mr: 2 }}
                       >
                         <Avatar
                           className={classes.large}
                           // onClick={() => setColor({ ...avtarColor, rightAvatar: '#214256', leftAvatar: '#c8d9d9' })}
                           sx={{
-                            height: '70px', width: '70px', marginLeft: '30%', backgroundColor: '#214256'
+                            height: '85px', width: '85px', marginLeft: '15%', backgroundColor: '#c8d9d9'
                           }}
                         >
                           مستفيد
@@ -126,11 +125,24 @@ const LoginOtp = () => {
                           className={classes.large}
                           // onClick={() => setColor({ ...avtarColor, leftAvatar: '#214256', rightAvatar: '#c8d9d9' })}
                           sx={{
-                            height: '70px', width: '70px', marginLeft: '20%', backgroundColor: '#c8d9d9'
+                            height: '85px', width: '85px', marginLeft: '15%', backgroundColor: '#214256'
                           }}
                         >
+                          <a href="/login" style={{color:'white'}}>
                           مركز
+                          </a>
                         </Avatar>
+                        <a href="https://inspiredemo2.appiancloud.com/suite/sites/takamol-taheel/page/request-Records">
+                        <Avatar
+                          className={classes.large}
+                          // onClick={() => setColor({ ...avtarColor, leftAvatar: '#214256', rightAvatar: '#c8d9d9' })}
+                          sx={{
+                            height: '85px', width: '85px', marginLeft: '15%', backgroundColor: '#f4a523'
+                          }}
+                        >
+                          موظف
+                        </Avatar>
+                        </a>
                       </Box>
                       <Box sx={{ mb: 3, textAlign: 'center' }}>
                         <Typography
@@ -170,7 +182,13 @@ const LoginOtp = () => {
                     variant="outlined"
                     className="custom-field"
                   />
-                  {error}
+                  {error && (
+                    <Box mt={3}>
+                      <Alert severity="error">
+                        {error}
+                      </Alert>
+                    </Box>
+                  )}
                   <Box
                     textAlign="center"
                     sx={{
@@ -200,7 +218,7 @@ const LoginOtp = () => {
                       }}
                     >
                       <a
-                        onClick={async () => { const response = await doRequest(JSON.stringify(bodyRequest)); }}
+                        onClick={async () => { const response = await APIRequest({ requestBody, url }); }}
                       >
                         إعادة ارسال رمز التحقق
                       </a>

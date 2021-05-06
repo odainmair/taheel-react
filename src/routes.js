@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { Navigate } from 'react-router-dom';
 import DashboardLayout from 'src/components/DashboardLayout';
 import MainLayout from 'src/components/MainLayout';
@@ -11,6 +12,11 @@ import ProductList from 'src/pages/ProductList';
 import Register from 'src/pages/Register';
 import Settings from 'src/pages/Settings';
 import OTPLogin from 'src/pages/LoginOtp';
+import Home from 'src/pages/Home';
+import About from './pages/About';
+import Faq from './pages/Faq';
+import Services from './pages/Services';
+import ContactUs from './pages/ContactUs';
 
 const routes = [
   {
@@ -19,6 +25,11 @@ const routes = [
     children: [
       { path: 'login', element: <Login /> },
       { path: 'otplogin', element: <OTPLogin /> },
+      { path: 'Home', element: <Home /> },
+      { path: 'about', element: <About /> },
+      { path: 'faq', element: <Faq /> },
+      { path: '/services-page', element: <Services /> },
+      { path: '/call-us', element: <ContactUs /> },
       { path: 'register', element: <Register /> },
       { path: '404', element: <NotFound /> },
       { path: '/', element: <Navigate to="/login" /> },

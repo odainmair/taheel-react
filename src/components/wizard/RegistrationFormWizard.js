@@ -34,9 +34,28 @@ export default class RegisterFromWizard extends React.Component {
     const activePage = React.Children.toArray(this.props.children)[
       this.state.page
     ];
+    const errors = activePage.props.validate ? activePage.props.validate(values) : {};
 
+    if (this.state.page === 0) {
+      if (!values.idNumber)
+        errors.idNumber = 'يجب تعبئة الحقل';
+
+      if (!values.day)
+        errors.day = 'يجب تعبئة الحقل';
+
+      if (!values.month)
+        errors.month = 'يجب تعبئة الحقل';
+
+      if (!values.year)
+        errors.year = 'يجب تعبئة الحقل';
+    }
+    if (this.state.page === 1) {
+      if (!values.AbsherOtp)
+        errors.AbsherOtp = 'يجب تعبئة الحقل';
+      return errors;
+    }
     if (this.state.page === 2) {
-      const errors = activePage.props.validate ? activePage.props.validate(values) : {};
+
       const format = /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
       if (!values.email) {
         errors.email = 'يجب تعبئة الحقل';
@@ -85,9 +104,9 @@ export default class RegisterFromWizard extends React.Component {
         errors.password = 'حقل كلمة المرور غير صحيح';
         document.getElementById('symbol').style.color = 'red';
       }
-
       return errors;
     }
+
     return activePage.props.validate ? activePage.props.validate(values) : {};
   }
 
@@ -105,21 +124,20 @@ export default class RegisterFromWizard extends React.Component {
         completed: true
       }));
       const { isSuccessful, message } = await onSubmit(values)
-      console.log("isSuccessful",isSuccessful,"message",message)
       if (!isSuccessful) {
-          this.setState((state) => ({
-            isNextCallBackFunSuccess: false,
-            errMessage: message
-          }));
-          return;
-        }
+        this.setState((state) => ({
+          isNextCallBackFunSuccess: false,
+          errMessage: message
+        }));
+        return;
+      }
     } else {
       if (activePage.props.nextFun) {
         const { isSuccessful, message } = await activePage.props.nextFun(values);
         if (!isSuccessful) {
           this.setState((state) => ({
             isNextCallBackFunSuccess: false,
-            errMessage: message.errorMessageAr
+            errMessage: message
           }));
           return;
         }
@@ -131,110 +149,6 @@ export default class RegisterFromWizard extends React.Component {
       this.next(values);
 
     }
-
-
-
-    // if (counter !== 1) {
-    //   const { isSuccessful, message } = await onSubmit(values);
-    //   if (!isSuccessful) {
-    //     this.setState((state) => ({
-    //       errMessage: message
-    //     }));
-    //     return;
-    //   }
-    // }
-    // else {
-    //   if (activePage.props.nextFun) {
-    //     const { isSuccessful, message } = await activePage.props.nextFun(values); /// nextFun come from validateAPIFunc in register file
-    //     if (!isSuccessful) {
-    //       this.setState((state) => ({
-    //         errMessage: message
-    //       }));
-    //       return;
-    //     }
-    //   }
-    //   this.setState((state) => ({
-    //     isNextCallBackFunSuccess: true,
-    //     errMessage: ''
-    //   }));
-    //   this.next(values);
-    // }
-
-   
-
-
-    // if (isLastPage) {
-    //   this.setState((state) => ({
-    //     completed: true,
-    //   }));
-    //   if (counter === 1) {
-    //     /////
-    //   } else {
-    //     /// submit
-    //   }
-    // } else {
-    //   if (activePage.props.nextFun) {
-    //     const { isSuccessful, message } = await activePage.props.nextFun(values); /// nextFun come from validateAPIFunc in register file
-    //     if (!isSuccessful) {
-    //       this.setState((state) => ({
-    //         isNextCallBackFunSuccess: false,
-    //         errMessage: message
-    //       }));
-    //       return;
-    //     }
-    //   }
-    //   this.setState((state) => ({
-    //     isNextCallBackFunSuccess: true,
-    //     errMessage: ''
-    //   }));
-    //   this.next(values);
-    // }
-
-
-
-
-
-    // if (isLastPage) {
-    //   this.setState((state) => ({
-    //     completed: true,
-    //   }));
-    //   if (counter === 1) {
-    //     if (activePage.props.nextFun) {
-    //       const { isSuccessful, message } = await activePage.props.nextFun(values); /// nextFun come from validateAPIFunc in register file
-    //       if (!isSuccessful) {
-    //         this.setState((state) => ({
-    //           errMessage: message
-    //         }));
-    //         return;
-    //       }
-    //     }
-    //   } else {
-    //     const { isSuccessful, message } = await onSubmit(values);
-    //     if (!isSuccessful) {
-    //       this.setState((state) => ({
-    //         errMessage: message
-    //       }));
-    //     }
-    //   }
-    // } else {
-    //   if (activePage.props.nextFun) {
-    //     const { isSuccessful, message } = await activePage.props.nextFun(values); /// nextFun come from validateAPIFunc in register file
-    //     if (!isSuccessful) {
-    //       this.setState((state) => ({
-    //         isNextCallBackFunSuccess: false,
-    //         errMessage: message
-    //       }));
-    //       return;
-    //     }
-    //   }
-    //   this.setState((state) => ({
-    //     isNextCallBackFunSuccess: true,
-    //     errMessage: ''
-    //   }));
-    //   this.next(values);
-    // }
-
-
 
   }
 

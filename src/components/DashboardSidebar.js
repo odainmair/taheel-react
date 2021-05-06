@@ -1,4 +1,5 @@
-import { useEffect } from 'react';
+/* eslint-disable */
+import { useContext, useEffect } from 'react';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
@@ -19,6 +20,7 @@ import {
 } from 'react-feather';
 import NavItem from './NavItem';
 import Logo from './Logo';
+import  localContext  from '../localContext';
 
 const user = {
   avatar: '/static/images/avatars/avatar_4.png',
@@ -56,6 +58,9 @@ const items = [
 
 const DashboardSidebar = ({ onMobileClose, openMobile }) => {
   const location = useLocation();
+  const {users}= useContext(localContext);
+  console.log("users:",users)
+  user.name = users.firstName
 
   useEffect(() => {
     if (openMobile && onMobileClose) {
