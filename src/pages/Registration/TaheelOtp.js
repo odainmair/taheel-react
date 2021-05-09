@@ -1,26 +1,27 @@
 /* eslint-disable */
-import { useNavigate } from 'react-router-dom';
 import { Field } from 'react-final-form';
 import { TextField as TextFieldFinal } from 'final-form-material-ui';
+import { useContext } from 'react';
 import {
   Box,
   Grid,
   Typography,
   InputAdornment,
 } from '@material-ui/core';
-import useRequest from '../../../../../hooks/use-request';
+import {APIRequest} from 'src/api/APIRequest';
+import localContext from 'src/localContext'
+
+
 
 const TaheelOtp = (props) => {
-  const { doRequest, error } = useRequest({
-    url: 'https://inspiredemo2.appiancloud.com/suite/webapi/taheel-apis-utilities-sendSms-v2',
-    method: 'post',
-    body: {
+  const { otp, setOtp} = useContext(localContext);
+  const { recipient, setRecipient} = useContext(localContext);
 
-    },
-    onSuccess: (value) => console.log('DONE', value)
-  });
-
-  const navigate = useNavigate();
+  const url = 'https://inspiredemo2.appiancloud.com/suite/webapi/taheel-apis-utilities-sendSms-v2';
+  const requestBody = {
+    recipient: recipient,
+    message: `Hi, use this OTP to validate your register: ${otp}.`
+  };
 
   return (
     <>
@@ -33,7 +34,7 @@ const TaheelOtp = (props) => {
         sx={{
           pb: 1,
           pt: 3,
-          my: 3 
+          mt: 8
         }}
       >
         <Typography
@@ -67,6 +68,7 @@ const TaheelOtp = (props) => {
       {(props && props.counter === 0) &&
         <Box>
           <Field
+            sx={{ mb: 2 }}
             fullWidth
             required
             label="رمز التحقق"
@@ -114,7 +116,9 @@ const TaheelOtp = (props) => {
               }}
             >
               <a
-                onClick={() => doRequest(JSON.stringify(bodyRequest))}
+                onClick={() => APIRequest({ requestBody, url })}
+
+              // onClick={() => doRequest(JSON.stringify(bodyRequest))}
               >
                 إعادة ارسال رمز التحقق
               </a>

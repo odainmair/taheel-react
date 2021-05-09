@@ -1,5 +1,6 @@
 /* eslint-disable */
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import { useContext } from 'react';
 import { Helmet } from 'react-helmet';
 import * as Yup from 'yup';
@@ -7,7 +8,9 @@ import { Formik } from 'formik';
 import Avatar from '@material-ui/core/Avatar';
 import { makeStyles } from '@material-ui/core/styles';
 import localContext from '../localContext';
-import APIRequest from 'src/api/APIRequest';
+import { APIRequest } from 'src/api/APIRequest';
+import DashboardNavbar from '../components/DashboardNavbar';
+import MainNavbar from '../components/MainNavbar';
 
 import {
   Box,
@@ -19,8 +22,6 @@ import {
   TextField,
   Typography,
 } from '@material-ui/core';
-import useRequest from '../hooks/use-request Login';
-import { setCurrentUser } from 'src/utils/UserLocalStorage';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -36,29 +37,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Login = (props) => {
-
+  const [isMobileNavOpen, setMobileNavOpen] = useState(false);
   const navigate = useNavigate();
-  const { user, setUser } = useContext(localContext);
-  const { doRequest, error } = useRequest({
-    url: 'https://inspiredemo2.appiancloud.com/suite/webapi/taheel-apis-users-login-v2',
-    method: 'post',
-    body: {
-
-    },
-    onSuccess: async (value) => {
-      if (value.status === 'SUCCESS') {
-        const otp = Math.floor(Math.random() * (1000000 - 100000) + 100000);
-        const requestBody = {
-          recipient: value.data.phoneNumber,
-          message: `Hello ${value.data.firstName}, use this OTP to validate your login: ${otp}.`
-        };
-
-        setCurrentUser(value.data);
-        console.log(JSON.stringify(value.data));
-        navigate('/otplogin', { state: { user, otp, requestBody } });
-      }
-    },
-  });
+  const { users, setUser } = useContext(localContext);
+  const [error, setError] = useState('')
 
   const classes = useStyles();
   // const [avtarColor, setColor] = useState({
@@ -68,6 +50,11 @@ const Login = (props) => {
 
   return (
     <>
+      <DashboardNavbar onMobileNavOpen={() => setMobileNavOpen(true)} />
+      <MainNavbar
+        onMobileClose={() => setMobileNavOpen(false)}
+        openMobile={isMobileNavOpen}
+      />
       <Helmet>
         <title>Login</title>
       </Helmet>
@@ -76,7 +63,7 @@ const Login = (props) => {
           backgroundColor: '#fafafa',
           display: 'flex',
           flexDirection: 'column',
-          height: '100%',
+          // height: '100%',
           justifyContent: 'center'
         }}
       >
@@ -88,29 +75,30 @@ const Login = (props) => {
               password: ''
             }}
             validationSchema={Yup.object().shape({
-              // email: Yup.string().required('يجب تعبئة الحقل').test('max', 'رقم الهوية/الاقامة يجب ان تحتوي فقط على 10 ارقام او البريد الالكتروني غير صالح', (value) => value && (value.includes('@') || value.length == 10)),
-              // password: Yup.string().min(8, 'حقل كلمة المرور يجب أن يحتوي على ٨ احرف على الاقل').required('يجب تعبئة الحقل')
+              email: Yup.string().required('يجب تعبئة الحقل').test('max', 'رقم الهوية/الاقامة يجب ان تحتوي فقط على 10 ارقام او البريد الالكتروني غير صالح', (value) => value && (value.includes('@') || value.length == 10)),
+              password: Yup.string().min(8, 'حقل كلمة المرور يجب أن يحتوي على ٨ احرف على الاقل').required('يجب تعبئة الحقل')
             })}
             onSubmit={async (values) => {
-              const bodyRequest = {
+              const requestBody = {
                 username: values.email,
                 password: values.password
               };
+              const url = 'https://inspiredemo2.appiancloud.com/suite/webapi/taheel-apis-users-login-v2'
+              const response = await APIRequest({ requestBody, url });
+              if (response.isSuccessful) {
+                const otp = Math.floor(Math.random() * (1000000 - 100000) + 100000);
 
-              const response = await doRequest(JSON.stringify(bodyRequest));
-              // const url= 'https://inspiredemo2.appiancloud.com/suite/webapi/taheel-apis-users-login-v2'
-              // const response = await APIRequest({ requestBody, url });
-              // console.log("response=========>>>>>>>>",response)
-              // if (response.isSuccessful) {
-              //   console.log("response=========>>>>>>>>",response.data.responseBody.data.firstName)
-              //   const otp = Math.floor(Math.random() * (1000000 - 100000) + 100000);
-              //   const requestBody = {
-              //     recipient: response.data.phoneNumber,
-              //     message: `Hello ${response.data.responseBody.data.firstName}, use this OTP to validate your login: ${otp}.`
-              //   };
-              //   setUser(response.data)
-              //   navigate('/otplogin', { state: { otp, requestBody } });
-              // }
+                const requestBody = {
+                  recipient: response.responseBody.data.phoneNumber,
+                  message: `Hello ${response.responseBody.data.firstName}, use this OTP to validate your login: ${otp}.`
+                };
+                setUser(response.responseBody.data)
+                navigate('/otplogin', { state: { otp, requestBody } });
+              } else {
+
+                setError('رمز التحقق المدخل غير صحيح')
+
+              }
             }}
           >
             {({
@@ -125,9 +113,14 @@ const Login = (props) => {
               <form onSubmit={handleSubmit}>
                 <Box
                   sx={{
+                    // backgroundColor: 'white',
+                    // borderRadius: 5,
+                    // padding: 8,
+                    mt: '2%',
+                    // mb: '2%',
                     backgroundColor: 'white',
                     borderRadius: 5,
-                    padding: 8,
+                    padding: 3,
                     boxShadow: '5px 10px 18px #ecf1f5'
                   }}
                 >
@@ -161,19 +154,19 @@ const Login = (props) => {
                             height: '85px', width: '85px', marginLeft: '15%', backgroundColor: '#214256'
                           }}
                         >
-                          <a href="/login" style={{color:'white'}}>
-                          مركز
+                          <a href="/login" style={{ color: 'white' }}>
+                            مركز
                           </a>
                         </Avatar>
                         <a href="https://inspiredemo2.appiancloud.com/suite/sites/takamol-taheel/page/request-Records">
-                        <Avatar
-                          className={classes.large}
-                          // onClick={() => setColor({ ...avtarColor, leftAvatar: '#214256', rightAvatar: '#c8d9d9' })}
-                          sx={{
-                            height: '85px', width: '85px', marginLeft: '15%', backgroundColor: '#f4a523'
-                          }}
-                        >
-                          موظف
+                          <Avatar
+                            className={classes.large}
+                            // onClick={() => setColor({ ...avtarColor, leftAvatar: '#214256', rightAvatar: '#c8d9d9' })}
+                            sx={{
+                              height: '85px', width: '85px', marginLeft: '15%', backgroundColor: '#f4a523'
+                            }}
+                          >
+                            موظف
                         </Avatar>
                         </a>
                       </Box>
@@ -313,3 +306,11 @@ const Login = (props) => {
 };
 
 export default Login;
+
+
+
+
+
+
+
+

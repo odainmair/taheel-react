@@ -1,4 +1,5 @@
-import { useEffect } from 'react';
+/* eslint-disable */
+import { useContext, useEffect } from 'react';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
@@ -20,6 +21,8 @@ import { getCurrentUser } from 'src/utils/UserLocalStorage';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import moment from 'moment-hijri';
 import NavItem from './NavItem';
+import Logo from './Logo';
+import  localContext  from '../localContext';
 
 moment.locale('ar-SA');
 
