@@ -6,6 +6,8 @@ import * as Yup from 'yup';
 import { Formik } from 'formik';
 import Avatar from '@material-ui/core/Avatar';
 import { makeStyles } from '@material-ui/core/styles';
+import { useContext } from 'react';
+import localContext from '../localContext';
 import {
   Box,
   Button,
@@ -15,11 +17,10 @@ import {
   Typography,
   Alert
 } from '@material-ui/core';
-import { setCurrentUser } from 'src/utils/UserLocalStorage';
-import { useContext } from 'react';
-import localContext from 'src/localContext';
 import{ APIRequest }from 'src/api/APIRequest';
-
+import DashboardNavbar from '../components/DashboardNavbar';
+import MainNavbar from '../components/MainNavbar';
+import { setCurrentUser } from 'src/utils/UserLocalStorage'
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
@@ -46,20 +47,24 @@ const LoginOtp = () => {
   // });
   const location = useLocation();
   const otp = location.state.otp;
-  const user = location.state.user;
-
+  const { users, setUser } = useContext(localContext);
+  const [isMobileNavOpen, setMobileNavOpen] = useState(false);
+  console.log('OTP::', otp);
   const { requestBody } = location.state;
 
   useEffect(async () => {
-    console.log("requestBody", requestBody)
-    const response = await APIRequest({ requestBody, url });
-    console.log('OTP::', otp);
+    const response = await APIRequest({ requestBody, url });  
   })
   return (
     <>
       <Helmet>
         <title>Login</title>
       </Helmet>
+      <DashboardNavbar onMobileNavOpen={() => setMobileNavOpen(true)} />
+            <MainNavbar
+                onMobileClose={() => setMobileNavOpen(false)}
+                openMobile={isMobileNavOpen}
+            />
       <Box
         sx={{
           backgroundColor: '#fafafa',
@@ -79,12 +84,14 @@ const LoginOtp = () => {
             })}
             onSubmit={async (values) => {
               if (values.otp == otp || values.otp == '000000') {
-                
+                setCurrentUser(users)
                 navigate('/app/dashboard', { replace: true });
               }
               else {
                 setError('رمز التحقق المدخل غير صحيح')
               }
+
+              
             }
             }
           >

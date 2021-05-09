@@ -31,6 +31,7 @@ export default class RegisterFromWizard extends React.Component {
    */
 
   validate = (values) => {
+    let { counter } = this.props;
     const activePage = React.Children.toArray(this.props.children)[
       this.state.page
     ];
@@ -103,6 +104,14 @@ export default class RegisterFromWizard extends React.Component {
       else {
         errors.password = 'حقل كلمة المرور غير صحيح';
         document.getElementById('symbol').style.color = 'red';
+      }
+      return errors;
+    }
+
+    if (this.state.page === 3) {
+      if (!values.phoneNumber){
+        errors.phoneNumber = 'يجب تعبئة الحقل';
+        counter  =0
       }
       return errors;
     }

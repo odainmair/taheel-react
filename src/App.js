@@ -8,9 +8,12 @@ import 'src/mixins/chartjs';
 import theme from 'src/theme';
 import routes from 'src/routes';
 import localContext from './localContext'
+import { getCurrentUser } from 'src/utils/UserLocalStorage'
 
 const App = () => {
-  const routing = useRoutes(routes);
+  const isLoggedIn = getCurrentUser().firstName
+  console.log('isLoggedIn',isLoggedIn)
+  const routing = useRoutes(routes(isLoggedIn));
   const [otp, setOtp] = useState(Math.floor(Math.random() * (1000000 - 100000) + 100000));
   const [ recipient, setRecipient] = useState(null);
   const [users, setUser] = useState(null);

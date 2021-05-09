@@ -18,10 +18,10 @@ import Faq from './pages/Faq';
 import Services from './pages/Services';
 import ContactUs from './pages/ContactUs';
 
-const routes = [
+const routes = (isLoggedIn) =>  [
   {
     path: '/',
-    element: <MainLayout />,
+    element: <MainLayout /> ,
     children: [
       { path: 'login', element: <Login /> },
       { path: 'otplogin', element: <OTPLogin /> },
@@ -38,7 +38,7 @@ const routes = [
   },
   {
     path: 'app',
-    element: <DashboardLayout />,
+    element: isLoggedIn !== "" ?  <DashboardLayout />  : <Navigate to="/login" />,
     children: [
       { path: 'account', element: <Account /> },
       { path: 'customers', element: <CustomerList /> },
@@ -50,7 +50,7 @@ const routes = [
   },
   {
     path: 'services',
-    element: <DashboardLayout />,
+    element: isLoggedIn  !== "" ?  <DashboardLayout /> : <Navigate to="/login" />,
     children: [
       { path: 'survey', element: <CreateTemporaryLicense /> },
       { path: '*', element: <Navigate to="/404" /> }
