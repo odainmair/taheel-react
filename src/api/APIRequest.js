@@ -21,7 +21,7 @@ const APIRequest = async ({
             'Appian-API-Key': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2YWUxNjY4OC1kMjMxLTRmZTQtYWYyMy0yYjQ5MWUyMjk2NDkifQ.sVfHaN8hSbxpZuuhIjq1Dd9YOEh_ckc2Qk9pCrX_3Sw',
             'Content-Type': 'application/json; charset=utf-8'
         };
-        const apiResponse = await axios.post(url, requestBody, { headers, params: { ...queryParams } });
+        const apiResponse = await axios.post(`https://inspiredemo2.appiancloud.com/suite/webapi/${url}`, requestBody, { headers, params: { ...queryParams } });
         response.responseBody = { ...apiResponse.data };
         console.log(`----apiResponse :: ${JSON.stringify(apiResponse)}`);
         console.log(`----responseresponseBody :: ${JSON.stringify(response.responseBody)}`);

@@ -18,6 +18,7 @@ export default class FinalFromWizard extends React.Component {
   }
 
   next = (values) => {
+    console.log("--- next  ----");
     this.setState((state) => ({
       page: Math.min(state.page + 1, this.props.children.length - 1),
       values
@@ -36,6 +37,7 @@ export default class FinalFromWizard extends React.Component {
    */
 
   validate = (values) => {
+    console.log("--- validate  ----");
     const activePage = React.Children.toArray(this.props.children)[
       this.state.page
     ];
@@ -43,6 +45,7 @@ export default class FinalFromWizard extends React.Component {
   }
 
   handleSubmit = async (values) => {
+    console.log("--- handleSubmit  ----");
     const { children, onSubmit } = this.props;
     const { page } = this.state;
     const isLastPage = page === React.Children.count(children) - 1;

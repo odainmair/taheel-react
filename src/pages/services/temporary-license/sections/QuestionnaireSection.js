@@ -12,11 +12,11 @@ import {
 import { Field } from 'react-final-form';
 import PropTypes from 'prop-types';
 import { Radio, TextField as TextFieldFinal, Select } from 'final-form-material-ui';
-import questionnaireSectionOne from '../util/questionnaireSectionOne';
-import questionnaireSectionTwo from '../util/questionnaireSectionTwo';
-import questionnaireSectionThree from '../util/questionnaireSectionThree';
-import questionnaireSectionFour from '../util/questionnaireSectionFour';
-import questionnaireSectionFive from '../util/questionnaireSectionFive';
+import questionnaireSectionOne from '../models/questionnaireSectionOne';
+import questionnaireSectionTwo from '../models/questionnaireSectionTwo';
+import questionnaireSectionThree from '../models/questionnaireSectionThree';
+import questionnaireSectionFour from '../models/questionnaireSectionFour';
+import questionnaireSectionFive from '../models/questionnaireSectionFive';
 
 const questionComponent = (name, label) => (
     <Grid

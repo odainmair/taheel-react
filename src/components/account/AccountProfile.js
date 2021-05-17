@@ -23,11 +23,6 @@ const user = {
 };
 
 const AccountProfile = (props) => {
-  
-  
-  useEffect(() => {
-
-  });
   return (
     <Card {...props}>
       <CardContent>

@@ -19,7 +19,7 @@ const TotalCenters = (props) => {
           spacing={3}
           sx={{ justifyContent: 'space-between' }}
         >
-          <Grid item>
+          <Grid  md={8} item>
             {loading ? (
               <Typography
                 color="textSecondary"
@@ -29,7 +29,7 @@ const TotalCenters = (props) => {
                 عدد المراكز
               </Typography>
             ) : (
-              <Skeleton animation="wave" height={10} width={200} style={{ marginBottom: 6 }} />
+              <Skeleton animation="wave" height={10} width={150} style={{ marginBottom: 6 }} />
             )}
             {loading ? (
               <Typography
@@ -42,7 +42,7 @@ const TotalCenters = (props) => {
               <Skeleton animation="wave" height={10} width={100} style={{ marginTop: 10 }} />
             )}
           </Grid>
-          <Grid item>
+          <Grid  md={4} item>
             {loading ? (
               <Avatar
                 sx={{

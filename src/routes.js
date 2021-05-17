@@ -18,27 +18,29 @@ import Faq from './pages/Faq';
 import Services from './pages/Services';
 import ContactUs from './pages/ContactUs';
 
-const routes = (isLoggedIn) =>  [
+const routes = (isLoggedIn) => [
   {
     path: '/',
-    element: <MainLayout /> ,
+    element: <MainLayout />,
     children: [
-      { path: 'login', element: <Login /> },
+      { path: 'login', element: isLoggedIn === "" ? <Login /> : <Navigate to="/app/dashboard" />},
       { path: 'otplogin', element: <OTPLogin /> },
       { path: 'Home', element: <Home /> },
       { path: 'about', element: <About /> },
       { path: 'faq', element: <Faq /> },
       { path: '/services-page', element: <Services /> },
       { path: '/call-us', element: <ContactUs /> },
-      { path: 'register', element: <Register /> },
+      { path: 'register', element: isLoggedIn === "" ? <Register /> : <Navigate to="/app/dashboard" /> },
       { path: '404', element: <NotFound /> },
-      { path: '/', element: <Navigate to="/login" /> },
+      {
+        path: '/', element: isLoggedIn === "" ? <Navigate to="/login" /> : <Navigate to="/app/dashboard" />,
+      },
       { path: '*', element: <Navigate to="/404" /> }
     ]
   },
   {
     path: 'app',
-    element: isLoggedIn !== "" ?  <DashboardLayout />  : <Navigate to="/login" />,
+    element: isLoggedIn !== "" ? <DashboardLayout /> : <Navigate to="/login" />,
     children: [
       { path: 'account', element: <Account /> },
       { path: 'customers', element: <CustomerList /> },
@@ -50,7 +52,7 @@ const routes = (isLoggedIn) =>  [
   },
   {
     path: 'services',
-    element: isLoggedIn  !== "" ?  <DashboardLayout /> : <Navigate to="/login" />,
+    element: isLoggedIn !== "" ? <DashboardLayout /> : <Navigate to="/login" />,
     children: [
       { path: 'survey', element: <CreateTemporaryLicense /> },
       { path: '*', element: <Navigate to="/404" /> }

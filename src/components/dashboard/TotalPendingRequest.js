@@ -20,7 +20,7 @@ const TotalPendingRequest = (props) => {
           spacing={3}
           sx={{ justifyContent: 'space-between' }}
         >
-          <Grid item>
+          <Grid  md={8} item>
             {loading ? (
               <Typography
                 color="textSecondary"
@@ -30,7 +30,7 @@ const TotalPendingRequest = (props) => {
                 مجموع الطلبات قيد المراجعة
               </Typography>
             ) : (
-              <Skeleton animation="wave" height={10} width={200} style={{ marginBottom: 6 }} />
+              <Skeleton animation="wave" height={10} width={150} style={{ marginBottom: 6 }} />
             )}
             {loading ? (
               <Typography
@@ -43,7 +43,7 @@ const TotalPendingRequest = (props) => {
               <Skeleton animation="wave" height={10} width={100} style={{ marginTop: 10 }} />
             )}
           </Grid>
-          <Grid item>
+          <Grid  md={4} item>
             {loading ? (
               <Avatar
                 sx={{

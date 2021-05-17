@@ -17,13 +17,13 @@ import { getCurrentUser } from 'src/utils/UserLocalStorage';
 
 const Dashboard = () => {
   const getTaheelRequestsFun = async (userEmail) => {
-    const url = 'https://inspiredemo2.appiancloud.com/suite/webapi/taheel-apis-records-getRequests-v2';
+    const url = 'taheel-apis-records-getRequests-v2';
     const queryParams = { userEmail };
     const response = await APIRequest({ url, queryParams });
     return response;
   };
   const getCentersFun = async (userEmail) => {
-    const url = 'https://inspiredemo2.appiancloud.com/suite/webapi/taheel-apis-records-getCenters-v2';
+    const url = 'taheel-apis-records-getCenters-v2';
     const queryParams = { userEmail };
     const response = await APIRequest({ url, queryParams });
     return response;
