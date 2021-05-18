@@ -5,7 +5,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import DashboardNavbar from '../components/DashboardNavbar';
 import MainNavbar from '../components/MainNavbar';
 import { useState } from 'react';
-// import disability  from '/static/images/Home/static/images'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -62,17 +61,17 @@ const items = [
   {
     name: 'ذوي الاعاقة',
     description: " تـعد الرعايـة النـهارية أحد الركائـز الأساسية لدى وكالة التأهيل والتوجية الاجتماعي في وزارة الموارد البشرية والتنمية الاجتماعية ",
-    image: 'https://demo-spa.taheel.tech/landing/images/photo_diable_2.jpg'
+    image: 'static/images/Home/photo_diable_2.jpg'
   },
   {
     name: "كبار السن",
     description: " تعد رعاية كبار السن أحد الركائز الاساسية لدى وكالة التأهيل والتوجية الاجتماعي في وزارة الموارد البشرية والتنمية الاجتماعية ",
-    image: 'https://demo-spa.taheel.tech/landing/images/photo_old_3.jpg'
+    image: 'static/images/Home/photo_old_3.jpg'
   },
   {
     name: "الأيتام",
     description: " تعد رعاية الايتام أحد الركائز الاساسية لدى وكالة التأهيل والتوجية الاجتماعي في وزارة الموارد البشرية والتنمية الاجتماعية ",
-    image: 'https://demo-spa.taheel.tech/landing/images/photo_orphan_4.jpg'
+    image: 'static/images/Home/photo_orphan_4.jpg'
   }
 ]
 
@@ -80,19 +79,19 @@ const services = [
   {
     name: "خـدمات التأسـيس",
     description: "تتيح هذه الخدمة للمواطن او المواطنة تأسيس مركز تأهيل أهلي ",
-    image: 'https://demo-spa.taheel.tech/landing/icons/Icon-building.png'
+    image: 'static/images/Home/Icon-building.png'
   },
 
   {
     name: "خـدمـات المستـفيديـن",
     description: "تتيح هذه الخدمة للمركز تحديث بيانات المستفيدين",
-    image: 'https://demo-spa.taheel.tech/landing/icons/icon-users.png'
+    image: 'static/images/Home/icon-users.png'
   },
 
   {
     name: "خـدمـات الـمركـز",
     description: "تتيح هذه الخدمة للمركز ادارة بياناته ",
-    image: 'https://demo-spa.taheel.tech/landing/icons/icon-file.png'
+    image: 'static/images/Home/icon-file.png'
   }
 ]
 
@@ -123,7 +122,7 @@ const Home = () => {
           >
 
             {items.map((item, i) =>
-              <Box key={i} item={item} >
+              <Box item={item} key={i} >
                 <CardMedia
                   className={classes.root}
                   component="img"
@@ -173,6 +172,7 @@ const Home = () => {
           }}
         >
           <Grid item md={6}
+
             sx={{
               mb: '-1%',
               width: "70%",
@@ -197,11 +197,13 @@ const Home = () => {
                 marginBottom: '2%',
                 padding: '0%',
               }}
-                src="https://demo-spa.taheel.tech/landing/images/photo1.png" />
+                src='https://demo-spa.taheel.tech/landing/images/photo1.png' />
             </Paper>
           </Grid>
 
           <Grid item md={6}
+
+
             sx={{ width: "70%", }}>
             <Card
               sx={{
@@ -253,7 +255,7 @@ const Home = () => {
             خدماتنا
       </Typography>
 
-          <svg width="100%" height="370px" viewBox="0 0 2069.587 356.923" class="landing-svg-line"><path data-v-b9e75930="" id="Path_6244" data-name="Path 6244" d="M-15735.4,2560.17s34.461-51.341,126.386-103.4a680.927,680.927,0,0,1,87.795-41.467c54.489-21.3,120.887-40.094,201.262-52.284,69.314-10.513,148.889-16.117,240.039-14.176,78.566,1.673,161.364,4.321,245.547,6.861,90.911,2.743,183.819,5.375,275.759,6.576,118,1.542,234.407.73,343-5.219q25.239-1.383,50-3.153c214.853-15.405,393.793-53.621,484.705-137.748" transform="translate(15743.703 -2208.82)" fill="none" stroke="#eb993f" stroke-width="20"></path></svg>
+          <svg width="100%" height="370px" viewBox="0 0 2069.587 356.923" className="landing-svg-line"><path data-v-b9e75930="" id="Path_6244" data-name="Path 6244" d="M-15735.4,2560.17s34.461-51.341,126.386-103.4a680.927,680.927,0,0,1,87.795-41.467c54.489-21.3,120.887-40.094,201.262-52.284,69.314-10.513,148.889-16.117,240.039-14.176,78.566,1.673,161.364,4.321,245.547,6.861,90.911,2.743,183.819,5.375,275.759,6.576,118,1.542,234.407.73,343-5.219q25.239-1.383,50-3.153c214.853-15.405,393.793-53.621,484.705-137.748" transform="translate(15743.703 -2208.82)" fill="none" stroke="#eb993f" strokeWidth="20"></path></svg>
           <Grid container spacing={1}
             sx={{
               mr: '10%',
@@ -262,7 +264,7 @@ const Home = () => {
           >
             {
               services.map((service, i) =>
-                <Grid item xs={4}
+                <Grid item xs={4} key={i}
                   sx=
                   {{
                     zIndex: '100',
@@ -314,3 +316,4 @@ const Home = () => {
 };
 
 export default Home;
+

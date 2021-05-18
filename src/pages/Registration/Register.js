@@ -4,24 +4,28 @@ import { useNavigate } from 'react-router-dom';
 import Avatar from '@material-ui/core/Avatar';
 import { makeStyles } from '@material-ui/core/styles';
 import { useState } from 'react';
+import { Field } from 'react-final-form';
 import {
   CardContent,
   Typography,
   Box,
   Container,
 } from '@material-ui/core';
-import RegisterFromWizard from '../components/wizard/RegistrationFormWizard';
-import CitizenInfo from './Registration/CitizenInfo';
-import AbsherOtp from './Registration/AbsherOtp';
-import TaheelOtp from './Registration/TaheelOtp';
-import RegistrationInfo from './Registration/RegistrationInfo';
+import FinalFromWizard from '../../components/wizard/FinalFormWizard';
+import CitizenInfo from './sections/CitizenInfo';
+import AbsherOtp from './sections/AbsherOtp';
+import TaheelOtp from './sections/TaheelOtp';
+import RegistrationInfo from './sections/RegistrationInfo';
 import { APIRequest } from 'src/api/APIRequest';
 import AlertDialog from 'src/components/AlertDialog';
 import localContext from 'src/localContext'
 import moment from 'moment-hijri';
-import DashboardNavbar from '../components/DashboardNavbar';
-import MainNavbar from '../components/MainNavbar';
-
+import DashboardNavbar from '../../components/DashboardNavbar';
+import MainNavbar from '../../components/MainNavbar';
+import { CitizenValidate } from './utils'
+import { absherValidate } from './utils'
+import { regitrationValidate } from './utils'
+import { TaheelOtpValidate } from './utils'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -43,25 +47,27 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const CreateTemporaryLicense = () => {
+const Register = () => {
 
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [dialogContent, setDialogContent] = React.useState('');
   const [dialogTitle, setDialogTitle] = React.useState('');
-  const [counter, setCounter] = React.useState(1);
+ 
+
   let { otp, setOtp } = useContext(localContext);
   const { recipient, setRecipient } = useContext(localContext);
   const [isMobileNavOpen, setMobileNavOpen] = useState(false);
-
+  const [is, setIs] = useState(false)
   const [info, setInfo] = React.useState({});
   const [avtarColor, setColor] = React.useState({
     rightAvatar: '#c8d9d9',
     leftAvatar: '#214256',
   });
+
   const navigate = useNavigate();
   const validateCitizenFunc = async (idNumber, birthDate) => {
-    const url = 'https://inspiredemo2.appiancloud.com/suite/webapi/taheel-apis-utilities-validateCitizen-v2';
+    const url = '/taheel-apis-utilities-validateCitizen-v2';
     const requestBody = {
       IDNo: idNumber,
       HijriDateOfBirth: birthDate
@@ -81,11 +87,9 @@ const CreateTemporaryLicense = () => {
       return { isSuccessful: false, message: validateCitRs.message };
     }
     const data = validateCitRs.responseBody.data.Body;
-    console.log(JSON.stringify(data))
     setInfo(data);
-    // sendSms('0527212403');
 
-    const url = 'https://inspiredemo2.appiancloud.com/suite/webapi/taheel-apis-utilities-AbsherOTP-v2?BeneficiaryId=7273&OTP=7537555'
+    const url = '/taheel-apis-utilities-AbsherOTP-v2?BeneficiaryId=7273&OTP=7537555'
     const requestBody = {
       BeneficiaryId: "273",
       OTP: otp
@@ -94,6 +98,7 @@ const CreateTemporaryLicense = () => {
     return response;
   };
 
+  
   // OTP Checking
   const validateOtp = async (values) => {
     const { AbsherOtp } = values;
@@ -105,26 +110,33 @@ const CreateTemporaryLicense = () => {
   const sendSms = async (recipient) => {
     otp = Math.floor(Math.random() * (1000000 - 100000) + 100000)
     setOtp(otp);
-    console.log('OOOTTP:',otp)
+    console.log('OOOTTP:', otp)
     const requestBody = {
       recipient: recipient,
       message: `Hi, use this OTP to validate your register: ${otp}.`
     };
-    const url = 'https://inspiredemo2.appiancloud.com/suite/webapi/taheel-apis-utilities-sendSms-v2';
+    const url = '/taheel-apis-utilities-sendSms-v2';
     const response = await APIRequest({ requestBody, url });
     return response;
   };
 
   const validateTaheelOtp = async values => {
     setRecipient(values.phoneNumber)
-    setCounter(0)
     sendSms(values.phoneNumber);
     return { isSuccessful: true, message: '' };
+
   };
 
   const onSubmit = async (values) => {
-    const { taheelOtp } = values
-    if (otp == taheelOtp || taheelOtp == '000000') {
+    const response = { isSuccessful: true, message: '' };
+    const { taheelOtp, phoneNumber } = values
+
+    if (phoneNumber && !is) {
+      validateTaheelOtp(values)
+      setIs(true)
+    }
+
+    else if ((taheelOtp && otp == taheelOtp) || taheelOtp == '000000') {
       const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
       await sleep(300);
       const requestBody = {
@@ -144,7 +156,7 @@ const CreateTemporaryLicense = () => {
         maritalStatus: info.IdExpiry.MaritalStatus,
         placeOFBirth: info.BirthPlace
       };
-      const url = 'https://inspiredemo2.appiancloud.com/suite/webapi/taheel-apis-users-registration-v2';
+      const url = '/taheel-apis-users-registration-v2';
       const response = await APIRequest({ requestBody, url });
       if (!response.isSuccessful) {
         return { isSuccessful: false, message: validateCitRs.message };
@@ -152,8 +164,19 @@ const CreateTemporaryLicense = () => {
       handleClickOpen('لقد تم تسجيلك بنجاح', '');
       return { isSuccessful: true, message: '' };
     }
-    return { isSuccessful: false, message: 'رمز التحقق المدخل غير صحيح' };
+    else {
+      console.log("I'mmmmm Here")
+      return { isSuccessful: false, message: 'رمز التحقق المدخل غير صحيح' };
+    }
+
+    return response
   };
+
+  const Condition = ({ when, children }) => (
+    <Field name={when} subscription={{ value: true }}>
+      {(value) => (is ? children : null)}
+    </Field>
+  )
 
   const handleClickOpen = (dialogContent, dialogTitle) => {
     setDialogContent(dialogContent);
@@ -171,8 +194,8 @@ const CreateTemporaryLicense = () => {
         backgroundColor: 'background.default',
         display: 'flex',
         flexDirection: 'column',
-        // height: '100%',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        backgroundSize:"cover" 
       }}
     >
       <DashboardNavbar onMobileNavOpen={() => setMobileNavOpen(true)} />
@@ -239,37 +262,52 @@ const CreateTemporaryLicense = () => {
           </Typography>
         </Box>
         <CardContent>
-          <RegisterFromWizard // pass initialValues, onSubmit and 4 childrens
+          <FinalFromWizard // pass initialValues, onSubmit and 4 childrens
             initialValues={{
-              centerType: '1',
-              beneficiaryCategory: '1',
-              requestType: '1'
+              disabledBackButt: true,
+              lastPageErrorHandling:false,
+              agreeTerms:false
             }}
             onSubmit={onSubmit}
-            counter={counter}
+          // counter={counter}
           >
-            <RegisterFromWizard.Page
+
+            <FinalFromWizard.Page
               label=""
-              nextFun={(values) => validateAPIFunc(values)}
+              validate={CitizenValidate}
+            nextFun={(values) => validateAPIFunc(values)}
             >
-              <CitizenInfo />
-            </RegisterFromWizard.Page>
-            <RegisterFromWizard.Page
+              <CitizenInfo
+                Condition={Condition}
+              />
+            </FinalFromWizard.Page>
+
+            <FinalFromWizard.Page
               nextFun={(values) => validateOtp(values)}
+              validate = {absherValidate}
               label=""
             >
-              <AbsherOtp />
-            </RegisterFromWizard.Page>
-            <RegisterFromWizard.Page label="">
-              <RegistrationInfo />
-            </RegisterFromWizard.Page>
-            <RegisterFromWizard.Page
-              label=""
-              nextFun={(values) => validateTaheelOtp(values)}
+              <AbsherOtp
+                Condition={Condition} />
+            </FinalFromWizard.Page>
+
+            <FinalFromWizard.Page label=""
+              validate={regitrationValidate}
             >
-              <TaheelOtp counter={counter} />
-            </RegisterFromWizard.Page>
-          </RegisterFromWizard>
+              <RegistrationInfo
+                Condition={Condition}
+              />
+            </FinalFromWizard.Page>
+
+            <FinalFromWizard.Page
+            validate={TaheelOtpValidate}
+              label=""
+            >
+              <TaheelOtp
+                Condition={Condition}
+              />
+            </FinalFromWizard.Page>
+          </FinalFromWizard>
         </CardContent>
         <AlertDialog dialogContent={dialogContent} dialogTitle={dialogTitle} open={open} onClose={handleClose} acceptBtnName="تم" />
       </Container>
@@ -277,4 +315,4 @@ const CreateTemporaryLicense = () => {
   );
 };
 
-export default CreateTemporaryLicense;
+export default Register;

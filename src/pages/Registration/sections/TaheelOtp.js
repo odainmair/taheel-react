@@ -2,6 +2,7 @@
 import { Field } from 'react-final-form';
 import { TextField as TextFieldFinal } from 'final-form-material-ui';
 import { useContext } from 'react';
+import PropTypes from 'prop-types';
 import {
   Box,
   Grid,
@@ -13,11 +14,11 @@ import localContext from 'src/localContext'
 
 
 
-const TaheelOtp = (props) => {
+const TaheelOtp = ({ Condition }) => {
   const { otp, setOtp} = useContext(localContext);
   const { recipient, setRecipient} = useContext(localContext);
 
-  const url = 'https://inspiredemo2.appiancloud.com/suite/webapi/taheel-apis-utilities-sendSms-v2';
+  const url = '/taheel-apis-utilities-sendSms-v2';
   const requestBody = {
     recipient: recipient,
     message: `Hi, use this OTP to validate your register: ${otp}.`
@@ -65,7 +66,8 @@ const TaheelOtp = (props) => {
           ),
         }}
       />
-      {(props && props.counter === 0) &&
+      <Condition when="phoneNumber">
+      {/* {(props && props.counter === 0) && */}
         <Box>
           <Field
             sx={{ mb: 2 }}
@@ -124,9 +126,14 @@ const TaheelOtp = (props) => {
               </a>
             </Typography>
           </Box>
-        </Box>}
+        </Box>
+        </Condition>
+         {/* } */}
     </>
   );
 };
 
 export default TaheelOtp;
+TaheelOtp.propTypes = {
+  Condition: PropTypes.func.isRequired,
+};

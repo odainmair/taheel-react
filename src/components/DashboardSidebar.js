@@ -18,11 +18,11 @@ import {
   User as UserIcon,
 } from 'react-feather';
 import { getCurrentUser } from 'src/utils/UserLocalStorage';
+import { logoutUser } from 'src/utils/UserLocalStorage';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import moment from 'moment-hijri';
 import NavItem from './NavItem';
 import Logo from './Logo';
-import  localContext  from '../localContext';
 
 moment.locale('ar-SA');
 
@@ -51,7 +51,8 @@ const items = [
   {
     href: '/login',
     icon: LogoutIcon,
-    title: 'تسجيل خروج'
+    title: 'تسجيل خروج',
+    onClick: () => logoutUser()
   }
 ];
 
@@ -124,6 +125,7 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
               key={item.title}
               title={item.title}
               icon={item.icon}
+              onClick = {item.onClick}
             />
           ))}
         </List>
