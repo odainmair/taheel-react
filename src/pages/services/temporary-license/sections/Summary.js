@@ -12,7 +12,7 @@ import {
 import { Field } from 'react-final-form';
 import PropTypes from 'prop-types';
 import { TextField as TextFieldFinal, Checkbox } from 'final-form-material-ui';
-import tempLicenseFieldSchema from '../util/tempLicenseFieldSchema';
+import tempLicenseFieldSchema from '../models/tempLicenseFieldSchema';
 import TermsContent from './TermsContent';
 import TermsDialog from 'src/components/TermsDialog';
 

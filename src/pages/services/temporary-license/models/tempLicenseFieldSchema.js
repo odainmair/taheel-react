@@ -1,3 +1,4 @@
+import { checkIsfilled } from 'src/utils/inputValidator';
 import { v4 as uuid } from 'uuid';
 
 export default [
@@ -81,7 +82,11 @@ export default [
       { value: '2', label: { ar: 'رخصة استثمار اجنبي' } },
       { value: '3', label: { ar: 'شهادة تسجيل للجمعيات والمؤسسات الاهليه' } },
     ],
-    validators: [],
+    validators: [{
+      id: 'licenseType-required',
+      isValidFun: checkIsfilled,
+      alert: 'هذا الحقل مطلوب'
+    }],
     dependOn: {
       fieldName: 'requestType',
       value: '1'
@@ -98,7 +103,11 @@ export default [
     gridSize: '6',
     sectionName: 'CenterInfo',
     options: [],
-    validators: [],
+    validators: [{
+      id: 'licenceNumber-required',
+      isValidFun: checkIsfilled,
+      alert: 'هذا الحقل مطلوب'
+    }],
     dependOn: {
       fieldName: 'requestType',
       value: '1'
@@ -115,7 +124,11 @@ export default [
     gridSize: '6',
     sectionName: 'OwnerInfo',
     options: [],
-    validators: [],
+    validators: [{
+      id: 'ownerName-required',
+      isValidFun: checkIsfilled,
+      alert: 'هذا الحقل مطلوب'
+    }],
     dependOn: {
       fieldName: 'requestType',
       value: '2'
@@ -132,7 +145,11 @@ export default [
     gridSize: '6',
     sectionName: 'OwnerInfo',
     options: [],
-    validators: [],
+    validators: [{
+      id: 'mobileNo-required',
+      isValidFun: checkIsfilled,
+      alert: 'هذا الحقل مطلوب'
+    }],
     dependOn: {
       fieldName: 'requestType',
       value: '2'
@@ -149,7 +166,11 @@ export default [
     gridSize: '6',
     sectionName: 'OwnerInfo',
     options: [],
-    validators: [],
+    validators: [{
+      id: 'companyName-required',
+      isValidFun: checkIsfilled,
+      alert: 'هذا الحقل مطلوب'
+    }],
     dependOn: {
       fieldName: 'requestType',
       value: '1'
@@ -166,7 +187,11 @@ export default [
     gridSize: '6',
     sectionName: 'OwnerInfo',
     options: [],
-    validators: [],
+    validators: [{
+      id: 'compMobileNo-required',
+      isValidFun: checkIsfilled,
+      alert: 'هذا الحقل مطلوب'
+    }],
     dependOn: {
       fieldName: 'requestType',
       value: '1'
@@ -183,7 +208,11 @@ export default [
     gridSize: '6',
     sectionName: 'CenterAddress',
     options: [],
-    validators: [],
+    validators: [{
+      id: 'city-required',
+      isValidFun: checkIsfilled,
+      alert: 'هذا الحقل مطلوب'
+    }],
   },
   {
     id: uuid(),
@@ -196,7 +225,11 @@ export default [
     gridSize: '6',
     sectionName: 'CenterAddress',
     options: [],
-    validators: [],
+    validators: [{
+      id: 'sub-required',
+      isValidFun: checkIsfilled,
+      alert: 'هذا الحقل مطلوب'
+    }],
   },
   {
     id: uuid(),
@@ -209,7 +242,11 @@ export default [
     gridSize: '6',
     sectionName: 'CenterAddress',
     options: [],
-    validators: [],
+    validators: [{
+      id: 'street-required',
+      isValidFun: checkIsfilled,
+      alert: 'هذا الحقل مطلوب'
+    }],
   },
   {
     id: uuid(),
@@ -222,7 +259,11 @@ export default [
     gridSize: '6',
     sectionName: 'CenterAddress',
     options: [],
-    validators: [],
+    validators: [{
+      id: 'buildNo-required',
+      isValidFun: checkIsfilled,
+      alert: 'هذا الحقل مطلوب'
+    }],
   },
   {
     id: uuid(),
@@ -235,7 +276,11 @@ export default [
     gridSize: '6',
     sectionName: 'CenterAddress',
     options: [],
-    validators: [],
+    validators: [{
+      id: 'postalCode-required',
+      isValidFun: checkIsfilled,
+      alert: 'هذا الحقل مطلوب'
+    }],
   },
   {
     id: uuid(),
@@ -248,7 +293,11 @@ export default [
     gridSize: '6',
     sectionName: 'CenterDetails',
     options: [],
-    validators: [],
+    validators: [{
+      id: 'centerName-required',
+      isValidFun: checkIsfilled,
+      alert: 'هذا الحقل مطلوب'
+    }],
   },
   {
     id: uuid(),
@@ -263,7 +312,11 @@ export default [
     options: [
       { value: '01', label: { ar: 'الرعاية النهارية' } },
     ],
-    validators: [],
+    validators: [{
+      id: 'centerType-required',
+      isValidFun: checkIsfilled,
+      alert: 'هذا الحقل مطلوب'
+    }],
   },
   {
     id: uuid(),
@@ -281,7 +334,11 @@ export default [
       { value: '03', label: { ar: 'مركز تأهيل الاشخاص ذوي الإعاقة والحسية' } },
       { value: '04', label: { ar: 'مراكز تاهيل الاشخاص ذوي الاعاقة متوسط وشديدي الإعاقة' } },
     ],
-    validators: [],
+    validators: [{
+      id: 'specialCenterType-required',
+      isValidFun: checkIsfilled,
+      alert: 'هذا الحقل مطلوب'
+    }],
   },
   {
     id: uuid(),
@@ -294,7 +351,11 @@ export default [
     gridSize: '6',
     sectionName: 'CenterDetails',
     options: [],
-    validators: [],
+    validators: [{
+      id: 'centerCap-required',
+      isValidFun: checkIsfilled,
+      alert: 'هذا الحقل مطلوب'
+    }],
   },
   {
     id: uuid(),
@@ -311,7 +372,11 @@ export default [
       { value: 'evening', label: { ar: 'الفترة المسائية' } },
       { value: 'both', label: { ar: 'فترتين' } },
     ],
-    validators: [],
+    validators: [{
+      id: 'workingHours-required',
+      isValidFun: checkIsfilled,
+      alert: 'هذا الحقل مطلوب'
+    }],
   },
   {
     id: uuid(),
@@ -328,7 +393,11 @@ export default [
       { value: '13-18', label: { ar: '١٣سنة - ١٨سنة' } },
       { value: '19-45', label: { ar: '١٩سنة -٤٥سنة' } },
     ],
-    validators: [],
+    validators: [{
+      id: 'ageGroup-required',
+      isValidFun: checkIsfilled,
+      alert: 'هذا الحقل مطلوب'
+    }],
   },
   {
     id: uuid(),
@@ -345,6 +414,10 @@ export default [
       { value: 'f', label: { ar: 'انثى' } },
       { value: 'b', label: { ar: 'كلا الجنسين' } },
     ],
-    validators: [],
+    validators: [{
+      id: 'ageGroup-required',
+      isValidFun: checkIsfilled,
+      alert: 'هذا الحقل مطلوب'
+    }],
   },
 ];
