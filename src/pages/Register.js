@@ -50,7 +50,7 @@ const CreateTemporaryLicense = () => {
   const [dialogContent, setDialogContent] = React.useState('');
   const [dialogTitle, setDialogTitle] = React.useState('');
   const [counter, setCounter] = React.useState(1);
-  const { otp, setOtp } = useContext(localContext);
+  let { otp, setOtp } = useContext(localContext);
   const { recipient, setRecipient } = useContext(localContext);
   const [isMobileNavOpen, setMobileNavOpen] = useState(false);
 
@@ -103,6 +103,9 @@ const CreateTemporaryLicense = () => {
   };
 
   const sendSms = async (recipient) => {
+    otp = Math.floor(Math.random() * (1000000 - 100000) + 100000)
+    setOtp(otp);
+    console.log('OOOTTP:',otp)
     const requestBody = {
       recipient: recipient,
       message: `Hi, use this OTP to validate your register: ${otp}.`
