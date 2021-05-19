@@ -61,10 +61,10 @@ const Login = (props) => {
       <Box
         sx={{
           backgroundColor: '#fafafa',
-          display: 'flex',
-          flexDirection: 'column',
-          // height: '100%',
-          justifyContent: 'center'
+          width:'100%', 
+           position: 'fixed',
+           height:"100%",
+           backgroundSize:"cover" 
         }}
       >
         <Container maxWidth="sm">
@@ -83,7 +83,7 @@ const Login = (props) => {
                 username: values.email,
                 password: values.password
               };
-              const url = 'https://inspiredemo2.appiancloud.com/suite/webapi/taheel-apis-users-login-v2'
+              const url = '/taheel-apis-users-login-v2'
               const response = await APIRequest({ requestBody, url });
               if (response.isSuccessful) {
                 const otp = Math.floor(Math.random() * (1000000 - 100000) + 100000);
@@ -96,7 +96,7 @@ const Login = (props) => {
                 navigate('/otplogin', { state: { otp, requestBody } });
               } else {
 
-                setError('رمز التحقق المدخل غير صحيح')
+                setError('كلمة المرور او رقم الإقامه غير صحيح  ')
 
               }
             }}
@@ -306,11 +306,6 @@ const Login = (props) => {
 };
 
 export default Login;
-
-
-
-
-
 
 
 

@@ -9,7 +9,7 @@ import Dashboard from 'src/pages/Dashboard';
 import Login from 'src/pages/Login';
 import NotFound from 'src/pages/NotFound';
 import ProductList from 'src/pages/ProductList';
-import Register from 'src/pages/Register';
+import Register from 'src/pages/Registration/Register';
 import Settings from 'src/pages/Settings';
 import OTPLogin from 'src/pages/LoginOtp';
 import Home from 'src/pages/Home';

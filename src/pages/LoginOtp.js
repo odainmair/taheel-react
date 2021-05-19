@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
     height: theme.spacing(38),
   },
 }));
-const url = 'https://inspiredemo2.appiancloud.com/suite/webapi/taheel-apis-utilities-sendSms-v2'
+const url = '/taheel-apis-utilities-sendSms-v2'
 const LoginOtp = () => {
 
   const [error, setError] = useState('')
@@ -71,7 +71,12 @@ const LoginOtp = () => {
           display: 'flex',
           flexDirection: 'column',
           height: '100%',
-          justifyContent: 'center'
+          justifyContent: 'center',
+          // backgroundColor: '#fafafa',
+          // width:'100%', 
+          //  position: 'fixed',
+          //  height:"100%",
+           backgroundSize:"cover" 
         }}
       >
         <Container maxWidth="sm">

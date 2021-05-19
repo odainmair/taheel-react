@@ -105,10 +105,10 @@ const MainNavbar = ({ onMobileClose, openMobile }) => {
     >
       <Box sx={{ p: 2 }}>
         <List>
-          {items.map((item) => (
+          {items.map((item, index) => (
             <NavItem
               href={item.href}
-              key={item.title}
+              key={index}
               title={item.title}
               icon={item.icon}
             />
@@ -152,13 +152,13 @@ const MainNavbar = ({ onMobileClose, openMobile }) => {
   const toolbar = (
     <AppBar position="fixed">
       <Toolbar className={classes.toolbar}>
-        <Grid container className={classes.left} spacing={1}>
-          {items.filter(item => item.side).map(element => (
-            <Grid item l={2} >
+        <Grid container className={classes.left} spacing={1} >
+          {items.filter(item => item.side).map((element, index) => (
+            <Grid item l={2} key={index} >
               <NavItem
                 className={classes.title}
                 href={element.href}
-                key={element.title}
+                // key={index}
                 title={element.title}
               />
             </Grid>
@@ -166,13 +166,13 @@ const MainNavbar = ({ onMobileClose, openMobile }) => {
           }
         </Grid>
 
-        <Grid className={classes.right} spacing={1}>
-          {items.filter(item => !item.side).map(element => (
-            <Grid item l={2} >
+        <Grid className={classes.right} key='right'>
+          {items.filter(item => !item.side).map((element, index) => (
+            <Grid item l={2} key={index} >
               <NavItem
                 className={classes.rightLink}
                 href={element.href}
-                key={element.title}
+                // key={index}
                 title={element.title}
               />
             </Grid>
@@ -185,7 +185,7 @@ const MainNavbar = ({ onMobileClose, openMobile }) => {
 
   return (
     <>
-      <Hidden lgUp>
+      <Hidden lgUp key='list'>
         <Drawer
           anchor="right"
           onClose={onMobileClose}
@@ -201,7 +201,7 @@ const MainNavbar = ({ onMobileClose, openMobile }) => {
           {list}
         </Drawer>
       </Hidden>
-      <Hidden lgDown>
+      <Hidden lgDown key='toolbar'>
         {toolbar}
       </Hidden>
     </>
@@ -219,347 +219,3 @@ MainNavbar.defaultProps = {
 };
 
 export default MainNavbar;
-
-
-
-
-
-
-
-
-
-
-
-// /* eslint-disable */
-// import { Link as RouterLink } from 'react-router-dom';
-// import PropTypes from 'prop-types';
-// import { AppBar, Toolbar , Typography, MenuItem, Menu, Link, IconButton,FormGroup,FormControlLabel ,Switch, Drawer   } from '@material-ui/core';
-// import { makeStyles } from '@material-ui/core/styles';
-// import { withStyles } from '@material-ui/core/styles';
-// import MenuIcon from '@material-ui/icons/Menu';
-// import React, { useState, useEffect } from "react";
-
-// import Logo from './Logo';
-
-// const styles  = makeStyles((theme) => ({
-//   title: {
-//     fontSize: 12,
-//   },
-//   // placeholder: toolbarStyles(theme).root,
-//   toolbar: {
-//     justifyContent: 'space-between',
-//   },
-//   left: {
-//     flex: 1,
-//   },
-//   leftLinkActive: {
-//     color: theme.palette.common.white,
-//   },
-//   right: {
-//     flex: 1,
-//     display: 'flex',
-//     justifyContent: 'flex-end',
-//   },
-//   rightLink: {
-//     fontSize: 16,
-//     color: theme.palette.common.white,
-//     marginLeft: theme.spacing(3),
-//   },
-//   linkSecondary: {
-//     color: theme.palette.secondary.main,
-//   },
-
-//   menuButton: {
-//     marginRight: theme.spacing(2),
-
-//   },
-
-// }));
-
-// const MainNavbar = (props) => {
-//   const classes = styles();
-//   const getDrawerChoices = () => {
-//     return 
-//     [1,].map(({ label, href }) => {
-//       return
-//        (
-//         <Link
-//           {...{
-//             component: RouterLink,
-//             to: href,
-//             color: "inherit",
-//             style: { textDecoration: "none" },
-//             key: label,
-//           }}
-//         >
-//           <MenuItem>{label}</MenuItem>
-//         </Link>
-//       );
-//     }
-//     );
-//   };
-//   // const displayMobile = () => {
-//     const handleDrawerOpen = () =>
-//       setState((prevState) => ({ ...prevState, drawerOpen: true }));
-//     const handleDrawerClose = () =>
-//       setState((prevState) => ({ ...prevState, drawerOpen: false }));
-//   // }
-//     const [state, setState] = useState({
-//       mobileView: false,
-//       drawerOpen: false
-//     });
-//   const { mobileView, drawerOpen } = state;
-
-
-//   return (
-
-//     <div>
-//       <AppBar position="fixed">
-//         <Toolbar className={classes.toolbar}>
-//         <IconButton     
-//         {...{
-//           edge: "start",
-//           color: "inherit",
-//           "aria-label": "menu",
-//           "aria-haspopup": "true",
-//           onClick:handleDrawerOpen,
-//         }}
-//             >
-//             <MenuIcon />
-//           </IconButton>
-//           <Drawer
-//           {...{
-//             anchor: "left",
-//             open: drawerOpen,
-//             onClose: handleDrawerClose,
-//           }}
-//         >
-//           <div>{getDrawerChoices()}</div>
-//         </Drawer>
-//           <div className={classes.left} >
-
-//             <IconButton
-//               variant="h6"
-//               underline="none"
-//               color="inherit"
-//               className={classes.title}
-//               href="/home"
-//             >
-//               {'الرئيسية'}
-//             </IconButton>
-
-//             <IconButton
-//               variant="h6"
-//               underline="none"
-//               color="inherit"
-//               className={classes.title}
-//               href="/about"
-//             >
-//               {'عن المنصة'}
-//             </IconButton>
-
-//             <IconButton
-//               variant="h6"
-//               underline="none"
-//               color="inherit"
-//               className={classes.title}
-//               href="/faq"
-//             >
-//               {'أسئلة شائعة'}
-//             </IconButton>
-
-//             <IconButton
-//               variant="h6"
-//               underline="none"
-//               color="inherit"
-//               className={classes.title}
-//               href="/services-page"
-//             >
-//               {' خدماتنا'}
-//             </IconButton>
-
-//             <IconButton
-//               variant="h6"
-//               underline="none"
-//               color="inherit"
-//               className={classes.title}
-//               href="/call-us"
-//             >
-//               {' تصل بنا'}
-//             </IconButton>
-//           </div>
-//           <div className={classes.right}>
-//             <IconButton
-//               color="inherit"
-//               variant="h6"
-//               underline="none"
-//               className={classes.rightLink}
-//               href="/register"
-//             >
-//               {'تسجيل جديد'}
-//             </IconButton>
-//             <IconButton
-//               color="inherit"
-//               variant="h6"
-//               underline="none"
-//               className={classes.rightLink}
-//               href="/login"
-//             >
-//               {'تسجيل الدخول'}
-//             </IconButton>
-//           </div>
-//         </Toolbar>
-//       </AppBar>
-//        {/* <div /> */}
-//     </div>
-//   );
-// };
-
-// // MainNavbar.propTypes = {
-// //   classes: PropTypes.object.isRequired,
-// // };
-
-// export default MainNavbar;
-// // export default withStyles(styles)(MainNavbar);
-
-
-
-
-
-// *******************************************************************
-
-
-// /* eslint-disable */
-// import { Link as RouterLink } from 'react-router-dom';
-// import PropTypes from 'prop-types';
-// import { AppBar, Toolbar , Typography, MenuItem, Menu, Link, IconButton } from '@material-ui/core';
-// import { makeStyles } from '@material-ui/core/styles';
-// import { withStyles } from '@material-ui/core/styles';
-// import MenuIcon from '@material-ui/icons/Menu';
-
-// import Logo from './Logo';
-
-// const styles  = makeStyles((theme) => ({
-//   title: {
-//     fontSize: 12,
-//   },
-//   // placeholder: toolbarStyles(theme).root,
-//   toolbar: {
-//     justifyContent: 'space-between',
-//   },
-//   left: {
-//     flex: 1,
-//   },
-//   leftLinkActive: {
-//     color: theme.palette.common.white,
-//   },
-//   right: {
-//     flex: 1,
-//     display: 'flex',
-//     justifyContent: 'flex-end',
-//   },
-//   rightLink: {
-//     fontSize: 16,
-//     color: theme.palette.common.white,
-//     marginLeft: theme.spacing(3),
-//   },
-//   linkSecondary: {
-//     color: theme.palette.secondary.main,
-//   },
-
-// }));
-
-// const MainNavbar = (props) => {
-//   const classes = styles();
-//   return (
-//     <div>
-//       <AppBar position="fixed">
-//         <Toolbar className={classes.toolbar}>
-//         <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-//             <MenuIcon />
-//           </IconButton>
-//           <div className={classes.left} >
-
-//             <IconButton
-//               variant="h6"
-//               underline="none"
-//               color="inherit"
-//               className={classes.title}
-//               href="/home"
-//             >
-//               {'الرئيسية'}
-//             </IconButton>
-
-//             <IconButton
-//               variant="h6"
-//               underline="none"
-//               color="inherit"
-//               className={classes.title}
-//               href="/about"
-//             >
-//               {'عن المنصة'}
-//             </IconButton>
-
-//             <IconButton
-//               variant="h6"
-//               underline="none"
-//               color="inherit"
-//               className={classes.title}
-//               href="/faq"
-//             >
-//               {'أسئلة شائعة'}
-//             </IconButton>
-
-//             <IconButton
-//               variant="h6"
-//               underline="none"
-//               color="inherit"
-//               className={classes.title}
-//               href="/services-page"
-//             >
-//               {' خدماتنا'}
-//             </IconButton>
-
-//             <IconButton
-//               variant="h6"
-//               underline="none"
-//               color="inherit"
-//               className={classes.title}
-//               href="/call-us"
-//             >
-//               {' تصل بنا'}
-//             </IconButton>
-//           </div>
-//           <div className={classes.right}>
-//             <IconButton
-//               color="inherit"
-//               variant="h6"
-//               underline="none"
-//               className={classes.rightLink}
-//               href="/register"
-//             >
-//               {'تسجيل جديد'}
-//             </IconButton>
-//             <IconButton
-//               color="inherit"
-//               variant="h6"
-//               underline="none"
-//               className={classes.rightLink}
-//               href="/login"
-//             >
-//               {'تسجيل الدخول'}
-//             </IconButton>
-//           </div>
-//         </Toolbar>
-//       </AppBar>
-//        {/* <div /> */}
-//     </div>
-//   );
-// };
-
-// MainNavbar.propTypes = {
-//   classes: PropTypes.object.isRequired,
-// };
-
-// // export default MainNavbar;
-// export default withStyles(styles)(MainNavbar);

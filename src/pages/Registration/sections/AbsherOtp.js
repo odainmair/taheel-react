@@ -12,7 +12,7 @@ import {APIRequest} from 'src/api/APIRequest';
 
 const AbsherOtp = () => {
   const { otp, setOtp} = useContext(localContext);
-  const url = 'https://inspiredemo2.appiancloud.com/suite/webapi/taheel-apis-utilities-AbsherOTP-v2?BeneficiaryId=7273&OTP=7537555'
+  const url = '/taheel-apis-utilities-AbsherOTP-v2?BeneficiaryId=7273&OTP=7537555'
   const requestBody = {
     BeneficiaryId: "273",
     OTP: otp
