@@ -159,7 +159,7 @@ const Register = () => {
       const url = '/taheel-apis-users-registration-v2';
       const response = await APIRequest({ requestBody, url });
       if (!response.isSuccessful) {
-        return { isSuccessful: false, message: validateCitRs.message };
+        return { isSuccessful: false, message: response.message };
       }
       handleClickOpen('لقد تم تسجيلك بنجاح', '');
       return { isSuccessful: true, message: '' };
@@ -266,7 +266,7 @@ const Register = () => {
             initialValues={{
               disabledBackButt: true,
               lastPageErrorHandling:false,
-              agreeTerms:false
+              agree: [false]
             }}
             onSubmit={onSubmit}
           // counter={counter}

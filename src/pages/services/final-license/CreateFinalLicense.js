@@ -3,9 +3,10 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getCurrentUser } from 'src/utils/UserLocalStorage';
 import CenterDetails from './sections/CenterDetails'
-import Requirements from './sections/requirements'
-import Capacity from './sections/capacity';
+import Requirements from './sections/Requirements'
+import Capacity from './sections/Capacity';
 import HealthServices from './sections/HealthServices';
+import Summary from './sections/Summary'
 import { createFinalLicenseAPIFunc } from './services/finalLicenseAPI'
 import {
   Card,
@@ -85,14 +86,14 @@ const CreateFinalLicense = () => {
             >
                 <HealthServices />
             </FinalFromWizard.Page>
-            <FinalFromWizard.Page
+            {/* <FinalFromWizard.Page
               label="معلومات الكوادر"
             >
-            </FinalFromWizard.Page>
+            </FinalFromWizard.Page> */}
             <FinalFromWizard.Page 
               label="الملخص"
             >
-              {/* <Summary Condition={ConditionComp} dialog={handleClickOpen} /> */}
+              <Summary dialog={handleClickOpen} />
             </FinalFromWizard.Page>
           </FinalFromWizard>
         </CardContent>
