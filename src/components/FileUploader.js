@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 import { TextField, InputAdornment } from '@material-ui/core';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 
-const FileUploader = ({ handleFile, name, label }) => {
+const FileUploader = ({ handleFile, name, label, multiple }) => {
   const hiddenFileInput = React.useRef(null);
   const handleClick = () => {
     hiddenFileInput.current.click();
   };
   const handleChange = (event) => {
-    const fileUploaded = event.target.files[0];
+    const fileUploaded = event.target.files;
     handleFile(fileUploaded);
   };
   return (
@@ -32,6 +32,7 @@ const FileUploader = ({ handleFile, name, label }) => {
         }}
       />
       <input
+        multiple= {multiple}
         type="file"
         ref={hiddenFileInput}
         onChange={handleChange}
@@ -46,4 +47,5 @@ FileUploader.propTypes = {
   handleFile: PropTypes.func.isRequired,
   name: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
+  multiple: PropTypes.bool.isRequired,
 };

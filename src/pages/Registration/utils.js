@@ -67,7 +67,7 @@ const CitizenValidate = values =>{
     return msg 
   }
 
-  const TaheelOtpValidate = (values,) => {
+  const TaheelOtpValidate = (values) => {
     var msg ={}
     if(!values.phoneNumber)
       msg.phoneNumber = required
