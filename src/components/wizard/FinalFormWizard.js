@@ -160,7 +160,7 @@ export default class FinalFromWizard extends React.Component {
                   <Grid item>
                     <Button
                       startIcon={submitting ? <CircularProgress size="1rem" /> : null}
-                      // disabled={this.state.values.agreeTerms ? values.agree.length == 0 || submitting :false}
+                      disabled={ values.agree.length == 0 || submitting}
                       variant="contained"
                       color="primary"
                       type="submit"

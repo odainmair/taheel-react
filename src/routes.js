@@ -4,6 +4,7 @@ import DashboardLayout from 'src/components/DashboardLayout';
 import MainLayout from 'src/components/MainLayout';
 import Account from 'src/pages/Account';
 import CreateTemporaryLicense from 'src/pages/services/temporary-license/CreateTemporaryLicense';
+import CreatefinalLicense from 'src/pages/services/final-license/CreateFinalLicense';
 import CustomerList from 'src/pages/CustomerList';
 import Dashboard from 'src/pages/Dashboard';
 import Login from 'src/pages/Login';
@@ -55,6 +56,7 @@ const routes = (isLoggedIn) => [
     element: isLoggedIn !== "" ? <DashboardLayout /> : <Navigate to="/login" />,
     children: [
       { path: 'survey', element: <CreateTemporaryLicense /> },
+      { path: 'finallicense', element: <CreatefinalLicense /> },
       { path: '*', element: <Navigate to="/404" /> }
     ]
   }
