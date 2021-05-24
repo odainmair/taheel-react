@@ -1,8 +1,11 @@
 /* eslint-disable */
 import moment from 'moment-hijri';
 import { APIRequest } from 'src/api/APIRequest';
+import { getCurrentUser } from 'src/utils/UserLocalStorage';
+
 
 const createTempLicenseAPIFunc = async (values) => {
+    const { email } = getCurrentUser();
     const requestBody = {
         userEmail: email,
         centerData: {
