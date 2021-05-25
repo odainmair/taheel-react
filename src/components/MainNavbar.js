@@ -68,12 +68,12 @@ const MainNavbar = ({ onMobileClose, openMobile }) => {
       side: true,
     },
     {
-      href: '/services-page',
+      href: '/services',
       title: 'خدماتنا',
       side: true,
     },
     {
-      href: '/call-us',
+      href: '/contactus',
       title: 'اتصل بنا',
       side: true,
     },

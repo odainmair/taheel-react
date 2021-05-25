@@ -12,12 +12,19 @@ const MainLayoutRoot = experimentalStyled('div')(
   })
 );
 
-const MainLayoutWrapper = experimentalStyled('div')({
+const MainLayoutWrapper = experimentalStyled('div')(
+  ({ theme }) => ({
   display: 'flex',
   flex: '1 1 auto',
   overflow: 'hidden',
-  paddingTop: 64
-});
+  [theme.breakpoints.up('sm')]:{
+    paddingTop: 64,
+  },
+  [theme.breakpoints.down('sm')]:{
+    paddingTop: 55,
+  }
+  })
+);
 
 const MainLayoutContainer = experimentalStyled('div')({
   display: 'flex',

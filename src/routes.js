@@ -13,11 +13,11 @@ import ProductList from 'src/pages/ProductList';
 import Register from 'src/pages/Registration/Register';
 import Settings from 'src/pages/Settings';
 import OTPLogin from 'src/pages/LoginOtp';
-import Home from 'src/pages/Home';
-import About from './pages/About';
-import Faq from './pages/Faq';
-import Services from './pages/Services';
-import ContactUs from './pages/ContactUs';
+import Home from './pages/public/Home';
+import About from './pages/public/AboutUs';
+import Faq from './pages/public/faq';
+import Services from './pages/public/Services';
+import ContactUs from './pages/public/ContactUs';
 
 const routes = (isLoggedIn) => [
   {
@@ -27,14 +27,14 @@ const routes = (isLoggedIn) => [
       { path: 'login', element: isLoggedIn === "" ? <Login /> : <Navigate to="/app/dashboard" />},
       { path: 'otplogin', element: <OTPLogin /> },
       { path: 'Home', element: <Home /> },
-      { path: 'about', element: <About /> },
-      { path: 'faq', element: <Faq /> },
-      { path: '/services-page', element: <Services /> },
-      { path: '/call-us', element: <ContactUs /> },
+      { path: '/about', element: <About /> },
+      { path: '/faq', element: <Faq /> },
+      { path: '/services', element: <Services /> },
+      { path: '/contactus', element: <ContactUs /> },
       { path: 'register', element: isLoggedIn === "" ? <Register /> : <Navigate to="/app/dashboard" /> },
       { path: '404', element: <NotFound /> },
       {
-        path: '/', element: isLoggedIn === "" ? <Navigate to="/login" /> : <Navigate to="/app/dashboard" />,
+        path: '/', element: isLoggedIn === "" ? <Navigate to="/home" /> : <Navigate to="/app/dashboard" />,
       },
       { path: '*', element: <Navigate to="/404" /> }
     ]
