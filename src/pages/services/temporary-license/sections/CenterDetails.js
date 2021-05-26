@@ -132,7 +132,7 @@ const CenterDetails = ({ Condition }) => (
         md={6}
         xs={12}
       >
-        <Field name="targetedGender">
+        <Field name="ageGroup">
         {({ input, meta }) => {const showError = ((meta.submitError && !meta.dirtySinceLastSubmit) || meta.error) && meta.touched; return ( // eslint-disable-line no-unused-vars
             <FormControl component="fieldset" error={showError ? meta.error || meta.submitError : undefined} required>
               <FormLabel component="legend">{console.log(JSON.stringify(meta))}الفئة العمرية للمستفدين</FormLabel>
