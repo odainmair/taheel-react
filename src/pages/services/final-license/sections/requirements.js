@@ -99,7 +99,7 @@ const Requirements = () => {
             </Grid>
 
         </>
-    )
+    ) 
 };
 
 export default Requirements;
