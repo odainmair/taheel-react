@@ -2,6 +2,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
+  Box,
   Card,
   CardContent,
   CardHeader,
@@ -81,15 +82,13 @@ const CreateTemporaryLicense = () => {
             >
               <OwnerInfo Condition={ConditionComp} />
             </FinalFromWizard.Page>
-            <FinalFromWizard.Page 
-            label="عنوان المركز"
-            validate={(values) => sectionValidateInput(tempLicenseFieldSchema, "CenterAddress", values)}
-            >
-              <CenterAddress Condition={ConditionComp} />
-            </FinalFromWizard.Page>
-            <FinalFromWizard.Page 
-            label="تفاصيل المركز"
-            validate={(values) => sectionValidateInput(tempLicenseFieldSchema, "CenterDetails", values)}
+            <FinalFromWizardAddressPage
+              label="عنوان المركز"
+              validate={(values) => sectionValidateInput(tempLicenseFieldSchema, "CenterAddress", values)}
+            />
+            <FinalFromWizard.Page
+              label="تفاصيل المركز"
+              validate={(values) => sectionValidateInput(tempLicenseFieldSchema, "CenterDetails", values)}
             >
               <CenterDetails Condition={ConditionComp} />
             </FinalFromWizard.Page>
@@ -99,7 +98,7 @@ const CreateTemporaryLicense = () => {
             >
               <QuestionnaireSection Condition={ConditionComp} />
             </FinalFromWizard.Page>
-            <FinalFromWizard.Page 
+            <FinalFromWizard.Page
               label="ملخص"
             >
               <Summary Condition={ConditionComp} dialog={handleClickOpen} />
@@ -111,5 +110,10 @@ const CreateTemporaryLicense = () => {
     </Container>
   );
 };
+const FinalFromWizardAddressPage = ({ label, validate, setField }) => (
+  <Box>
+    <CenterAddress Condition={ConditionComp} setField={(fieldName, fieldValue) => setField(fieldName, fieldValue)} />
+  </Box>
 
+);
 export default CreateTemporaryLicense;
