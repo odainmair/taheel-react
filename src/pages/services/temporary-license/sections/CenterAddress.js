@@ -37,7 +37,7 @@ const sampleData = {
   ],
 };
 
-const CenterAddress = ({ Condition }) => {
+const CenterAddress = ({ Condition, setField }) => {
   const inputEl = useRef(null);
   const [streetAddr, setStreetAddr] = useState(sampleData.vendorStreetAddress);
   const getStreetAddrPartsFromGeoResult = (geoResult) => {
@@ -59,13 +59,13 @@ const CenterAddress = ({ Condition }) => {
       lng: geoResult.geometry.location.lng,
     };
     setStreetAddr(currentAddress);
-    window.setFormValue('sub', currentAddress.area);
-    window.setFormValue('city', currentAddress.city);
-    window.setFormValue('street', currentAddress.street);
-    window.setFormValue('buildNo', currentAddress.streetNumber);
-    window.setFormValue('postalCode', `${currentAddress.postalCode}-${currentAddress.postalCodeSuffix}`);
-    window.setFormValue('lat', currentAddress.lat);
-    window.setFormValue('lng', currentAddress.lng);
+    setField('sub', currentAddress.area);
+    setField('city', currentAddress.city);
+    setField('street', currentAddress.street);
+    setField('buildNo', currentAddress.streetNumber);
+    setField('postalCode', `${currentAddress.postalCode}-${currentAddress.postalCodeSuffix}`);
+    setField('lat', currentAddress.lat);
+    setField('lng', currentAddress.lng);
 
     console.log(inputEl.current);
     return currentAddress;
@@ -189,4 +189,5 @@ export default CenterAddress;
 
 CenterAddress.propTypes = {
   Condition: PropTypes.func.isRequired,
+  setField: PropTypes.func
 };

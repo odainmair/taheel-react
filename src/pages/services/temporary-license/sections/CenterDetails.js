@@ -101,9 +101,10 @@ const CenterDetails = ({ Condition }) => (
         md={6}
         xs={12}
       >
-        <Field name="workingHours">
-          {({ input, meta }) => ( // eslint-disable-line no-unused-vars
-            <FormControl component="fieldset" error={meta.error} required>
+        <Field name="workingHours" >
+          {({ input, meta }) => {const showError = ((meta.submitError && !meta.dirtySinceLastSubmit) || meta.error) && meta.touched; return ( // eslint-disable-line no-unused-vars
+
+            <FormControl component="fieldset" error={showError ? meta.error || meta.submitError : undefined} required>
               <FormLabel component="legend">فترة العمل</FormLabel>
               <RadioGroup row>
                 <FormControlLabel
@@ -121,9 +122,9 @@ const CenterDetails = ({ Condition }) => (
                   control={<Field name="workingHours" component={Radio} type="radio" value="both" />}
                 />
               </RadioGroup>
-              {meta.error && meta.touched && <FormHelperText dir="rtl">{meta.error}</FormHelperText>}
+              {showError && <FormHelperText dir="rtl">{showError ? meta.error || meta.submitError : undefined}</FormHelperText>}
             </FormControl>
-          )}
+          )}}
         </Field>
       </Grid>
       <Grid
@@ -131,10 +132,10 @@ const CenterDetails = ({ Condition }) => (
         md={6}
         xs={12}
       >
-        <Field name="targetedGender">
-          {({ input, meta }) => ( // eslint-disable-line no-unused-vars
-            <FormControl component="fieldset" error={meta.error} required>
-              <FormLabel component="legend">الفئة العمرية للمستفدين</FormLabel>
+        <Field name="ageGroup">
+        {({ input, meta }) => {const showError = ((meta.submitError && !meta.dirtySinceLastSubmit) || meta.error) && meta.touched; return ( // eslint-disable-line no-unused-vars
+            <FormControl component="fieldset" error={showError ? meta.error || meta.submitError : undefined} required>
+              <FormLabel component="legend">{console.log(JSON.stringify(meta))}الفئة العمرية للمستفدين</FormLabel>
               <RadioGroup row>
                 <FormControlLabel
                   label="سنتين - ١٢سنة"
@@ -151,9 +152,9 @@ const CenterDetails = ({ Condition }) => (
                   control={<Field name="ageGroup" component={Radio} type="radio" value="19-45" />}
                 />
               </RadioGroup>
-              {meta.error && meta.touched && <FormHelperText dir="rtl">{meta.error}</FormHelperText>}
+              {showError && <FormHelperText dir="rtl">{showError ? meta.error || meta.submitError : undefined}</FormHelperText>}
             </FormControl>
-          )}
+          )}}
         </Field>
       </Grid>
       <Grid
@@ -162,8 +163,8 @@ const CenterDetails = ({ Condition }) => (
         xs={12}
       >
         <Field name="targetedGender">
-          {({ input, meta }) => ( // eslint-disable-line no-unused-vars
-            <FormControl component="fieldset" error={meta.error} required>
+        {({ input, meta }) => {const showError = ((meta.submitError && !meta.dirtySinceLastSubmit) || meta.error) && meta.touched; return ( // eslint-disable-line no-unused-vars
+            <FormControl component="fieldset" error={showError ? meta.error || meta.submitError : undefined}  required>
               <FormLabel component="legend">جنس المستفدين</FormLabel>
               <RadioGroup row>
                 <FormControlLabel
@@ -181,9 +182,9 @@ const CenterDetails = ({ Condition }) => (
                   control={<Field name="targetedGender" component={Radio} type="radio" value="b" />}
                 />
               </RadioGroup>
-              {meta.error && meta.touched && <FormHelperText dir="rtl">{meta.error}</FormHelperText>}
+              {showError && <FormHelperText dir="rtl">{showError ? meta.error || meta.submitError : undefined}</FormHelperText>}
             </FormControl>
-          )}
+          )}}
         </Field>
       </Grid>
     </Grid>
