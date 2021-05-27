@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React, { useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import Avatar from '@material-ui/core/Avatar';
 import { makeStyles } from '@material-ui/core/styles';
 import { useState } from 'react';
@@ -10,6 +10,9 @@ import {
   Typography,
   Box,
   Container,
+  Grid,
+  Link,
+  Button
 } from '@material-ui/core';
 import FinalFromWizard from '../../components/wizard/FinalFormWizard';
 import CitizenInfo from './sections/CitizenInfo';
@@ -45,6 +48,13 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
   },
+
+  avatarHover: {
+    "&:hover": {
+      backgroundColor: '#f6a923',
+      border: 'solid 5px #f6a923'
+    }
+  }
 }));
 
 const Register = () => {
@@ -189,79 +199,80 @@ const Register = () => {
     navigate('/login', { replace: true });
   };
   return (
-    <Box
-      sx={{
-        backgroundColor: 'background.default',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        backgroundSize:"cover" 
-      }}
-    >
+    <>
+    
       <DashboardNavbar onMobileNavOpen={() => setMobileNavOpen(true)} />
       <MainNavbar
         onMobileClose={() => setMobileNavOpen(false)}
         openMobile={isMobileNavOpen}
       />
+      <Box
+      sx={{
+        backgroundColor: '#fafafa',
+          width:'100%', 
+           position: 'fixed',
+           height:"100%",
+           backgroundSize:"cover"  
+      }}
+    >
       <Container
         maxWidth="sm"
-        sx={{
-          mt: '2%',
-          mb: '2%',
-          backgroundColor: 'white',
-          borderRadius: 5,
-          padding: 3,
-          boxShadow: '5px 10px 18px #ecf1f5'
-        }}
       >
+        <Box sx={{
+                    // backgroundColor: 'white',
+                    // borderRadius: 5,
+                    // padding: 8,
+                    mt: '2%',
+                    // mb: '2%',
+                    backgroundColor: 'white',
+                    borderRadius: 5,
+                    padding: 3,
+                    boxShadow: '5px 10px 18px #ecf1f5'
+        }}>
         <Box
-          className={classes.root}
-          // sx={{ mb: 5, mt: 5, mr: 8, textAlign: 'center' }}
-          sx={{ mb: 5, mr: 2 }}
-        >
-          <Avatar
-            className={classes.large}
-            // onClick={() => setColor({ ...avtarColor, rightAvatar: '#214256', leftAvatar: '#c8d9d9' })}
-            sx={{
-              height: '85px', width: '85px', marginLeft: '15%', backgroundColor: '#c8d9d9'
-            }}
-          >
-            مستفيد
+                        className={classes.root}
+                        sx={{ mb: 5, mr: 1.5 }}
+                      >
+                        <Grid container spacing={3} sx={{margin: "0 auto", width:"auto"}}>
+                        <Grid item xs={6}>
+
+                        <Avatar
+                          className={classes.large + ' ' + classes.avatarHover}
+                          // onClick={() => setColor({ ...avtarColor, rightAvatar: '#214256', leftAvatar: '#c8d9d9' })}
+                          sx={{
+                            height: '85px', width: '85px', backgroundColor: '#c8d9d9', cursor: "pointer"
+                          }}
+                        >
+                          أفراد
                         </Avatar>
 
-          <Avatar
-            className={classes.large}
-            // onClick={() => setColor({ ...avtarColor, leftAvatar: '#214256', rightAvatar: '#c8d9d9' })}
-            sx={{
-              height: '85px', width: '85px', marginLeft: '15%', backgroundColor: '#214256'
-            }}
-          >
-            <a href="/login" style={{ color: 'white' }}>
-              مركز
-                          </a>
-          </Avatar>
 
-          <a href="https://inspiredemo2.appiancloud.com/suite/sites/takamol-taheel/page/request-Records">
-            <Avatar
-              className={classes.large}
-              // onClick={() => setColor({ ...avtarColor, leftAvatar: '#214256', rightAvatar: '#c8d9d9' })}
-              sx={{
-                height: '85px', width: '85px', marginLeft: '15%', backgroundColor: '#f4a523'
-              }}
-            >
-              موظف
+                        </Grid>  
+                        <Grid item xs={6}>
+                        <Avatar
+                          className={classes.large + ' ' + classes.avatarHover}
+                          // onClick={() => setColor({ ...avtarColor, leftAvatar: '#214256', rightAvatar: '#c8d9d9' })}
+                          sx={{
+                            height: '85px', width: '85px', backgroundColor: '#214256', cursor: "pointer"
+                          }}
+                        >
+                            مركز
                         </Avatar>
-          </a>
-        </Box>
+                        </Grid>  
+                        
+                        </Grid>  
+                        
+                        
+                      </Box>
         <Box sx={{ mb: 3, textAlign: 'center' }}>
           <Typography
             color="textPrimary"
             variant="h2"
           >
-            التسجيل
+            تسجيل جديد للمركز
           </Typography>
         </Box>
-        <CardContent>
+        <CardContent sx={{padding:"0px"}}>
           <FinalFromWizard // pass initialValues, onSubmit and 4 childrens
             initialValues={{
               disabledBackButt: true,
@@ -309,9 +320,45 @@ const Register = () => {
             </FinalFromWizard.Page>
           </FinalFromWizard>
         </CardContent>
+        <Box
+                    textAlign="center"
+                    sx={{
+                      py: 2,
+                      justifyContent: 'center',
+                      display: 'flex',
+                      flexDirection: 'column',
+                    }}
+                  >
+                    <Typography
+                      color="textSecondary"
+                      variant="body1"
+                      sx={{
+                        paddingTop: '16px',
+                      }}
+                    >
+                      لديك حساب على المنصة ؟
+                    </Typography>
+                    <Typography
+                      color="textSecondary"
+                      variant="body1"
+                    >
+                      <Link
+                        component={RouterLink}
+                        to="/login"
+                        variant="h6"
+                        sx={{
+                          textDecoration: 'underline'
+                        }}
+                      >
+                        تسجيل الدخول
+                      </Link>
+                    </Typography>
+                  </Box>
         <AlertDialog dialogContent={dialogContent} dialogTitle={dialogTitle} open={open} onClose={handleClose} acceptBtnName="تم" />
+        </Box>
       </Container>
     </Box>
+    </>
   );
 };
 

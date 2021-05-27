@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { useNavigate, useLocation } from 'react-router-dom';
+import { Link as RouterLink, useNavigate, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import * as Yup from 'yup';
@@ -15,7 +15,8 @@ import {
   Grid,
   TextField,
   Typography,
-  Alert
+  Alert,
+  Link
 } from '@material-ui/core';
 import{ APIRequest }from 'src/api/APIRequest';
 import DashboardNavbar from '../components/DashboardNavbar';
@@ -32,6 +33,13 @@ const useStyles = makeStyles((theme) => ({
     width: theme.spacing(38),
     height: theme.spacing(38),
   },
+
+  secondaryButton: {
+    "&:hover": {
+      color: 'white'
+    }
+  }
+
 }));
 const url = '/taheel-apis-utilities-sendSms-v2'
 const LoginOtp = () => {
@@ -68,14 +76,9 @@ const LoginOtp = () => {
       <Box
         sx={{
           backgroundColor: '#fafafa',
-          display: 'flex',
-          flexDirection: 'column',
-          height: '100%',
-          justifyContent: 'center',
-          // backgroundColor: '#fafafa',
-          // width:'100%', 
-          //  position: 'fixed',
-          //  height:"100%",
+          width:'100%', 
+           position: 'fixed',
+           height:"100%",
            backgroundSize:"cover" 
         }}
       >
@@ -112,15 +115,19 @@ const LoginOtp = () => {
               <form onSubmit={handleSubmit}>
                 <Box
                   sx={{
+                    // backgroundColor: 'white',
+                    // borderRadius: 5,
+                    // padding: 8,
+                    mt: '2%',
+                    // mb: '2%',
                     backgroundColor: 'white',
                     borderRadius: 5,
-                    padding: 8,
+                    padding: 3,
                     boxShadow: '5px 10px 18px #ecf1f5'
                   }}
                 >
                   <Grid
                     container
-                    spacing={3}
                   >
                     <Grid
                       item
@@ -129,47 +136,57 @@ const LoginOtp = () => {
                     >
                       <Box
                         className={classes.root}
-                        sx={{ mb: 5, mr: 2 }}
+                        sx={{ mb: 5, mr: 1.5 }}
                       >
+                        <Grid container spacing={3} sx={{margin: "0 auto", width:"auto"}}>
+                        <Grid item xs={4}>
+
                         <Avatar
                           className={classes.large}
                           // onClick={() => setColor({ ...avtarColor, rightAvatar: '#214256', leftAvatar: '#c8d9d9' })}
                           sx={{
-                            height: '85px', width: '85px', marginLeft: '15%', backgroundColor: '#c8d9d9'
+                            height: '85px', width: '85px', backgroundColor: '#c8d9d9'
                           }}
                         >
-                          مستفيد
+                          أفراد
                         </Avatar>
 
+
+                        </Grid>  
+                        <Grid item xs={4}>
                         <Avatar
                           className={classes.large}
                           // onClick={() => setColor({ ...avtarColor, leftAvatar: '#214256', rightAvatar: '#c8d9d9' })}
                           sx={{
-                            height: '85px', width: '85px', marginLeft: '15%', backgroundColor: '#214256'
+                            height: '85px', width: '85px', backgroundColor: '#214256'
                           }}
                         >
-                          <a href="/login" style={{color:'white'}}>
-                          مركز
-                          </a>
+                            مركز
                         </Avatar>
-                        <a href="https://inspiredemo2.appiancloud.com/suite/sites/takamol-taheel/page/request-Records">
-                        <Avatar
-                          className={classes.large}
-                          // onClick={() => setColor({ ...avtarColor, leftAvatar: '#214256', rightAvatar: '#c8d9d9' })}
-                          sx={{
-                            height: '85px', width: '85px', marginLeft: '15%', backgroundColor: '#f4a523'
-                          }}
-                        >
-                          موظف
+                        </Grid>  
+                        <Grid item xs={4}>
+                        <a href="https://inspiredemo2.appiancloud.com/suite/sites/takamol-taheel/page/request-Records" target="_blank">
+                          <Avatar
+                            className={classes.large + ' ' + classes.avatarHover}
+                            // onClick={() => setColor({ ...avtarColor, leftAvatar: '#214256', rightAvatar: '#c8d9d9' })}
+                            sx={{
+                              height: '85px', width: '85px', backgroundColor: '#c8d9d9'
+                            }}
+                          >
+                            موظف
                         </Avatar>
                         </a>
+                        </Grid>  
+                        </Grid>  
+                        
+                        
                       </Box>
                       <Box sx={{ mb: 3, textAlign: 'center' }}>
                         <Typography
                           color="textPrimary"
                           variant="h2"
                         >
-                          تسجيل الدخول
+                          تسجيل دخول المركز
                         </Typography>
                       </Box>
                     </Grid>
@@ -185,7 +202,7 @@ const LoginOtp = () => {
                       color="textSecondary"
                       variant="body1"
                     >
-                      ادخل رمز التحقق المدخل الى هاتفك الجوال
+                      ادخل رمز التحقق المرسل الى هاتفك الجوال
                     </Typography>
                   </Box>
                   <TextField
@@ -243,7 +260,34 @@ const LoginOtp = () => {
                         إعادة ارسال رمز التحقق
                       </a>
                     </Typography>
-                    <Button
+                    <Grid container>
+                      <Grid item xs={6}>
+                      <Link
+                        component={RouterLink}
+                        to="/login"
+                      >
+                        
+                      <Button 
+                      className={classes.secondaryButton}
+                      color="primary"
+                      size="large"
+                      type="button"
+                      variant="contained"
+                      sx={{
+                        borderRadius: '5em',
+                        width: '50%',
+                        margin: '0 auto',
+                        border: 'solid 1px #214255',
+                        backgroundColor: 'white',
+                        color: '#214256'
+                      }}
+                    >
+                      الرجوع
+                    </Button>
+                    </Link>
+                      </Grid>
+                      <Grid item xs={6}>
+                      <Button
                       color="primary"
                       disabled={isSubmitting}
                       size="large"
@@ -252,11 +296,15 @@ const LoginOtp = () => {
                       sx={{
                         borderRadius: '5em',
                         width: '50%',
-                        margin: '0 auto'
+                        margin: '0 auto',                       
                       }}
                     >
                       التالي
                     </Button>
+                      </Grid>
+                    </Grid>
+                    
+                   
                   </Box>
                 </Box>
               </form>
