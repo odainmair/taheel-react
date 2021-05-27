@@ -17,6 +17,7 @@ import Skeleton from '@material-ui/lab/Skeleton';
 import PropTypes from 'prop-types';
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 import { downloadFileAPI } from 'src/api/APIRequest';
+import React,{ useState } from 'react';
 
 const CentersTable = (props) => {
   const { loading = false, centerRequests = [] } = props;
@@ -26,14 +27,19 @@ const CentersTable = (props) => {
     }
     return '_';
   };
-  const downloadFileFn = (licenseDoc, name, licenceNumber) => {
+  const downloadFileFn = async (licenseDoc, name, licenceNumber) => {
     const url = 'https://inspiredemo2.appiancloud.com/suite/webapi/taheel-apis-utilities-downloadDocument-v2';
     const fileName = `${name}-${licenceNumber}`;
     const queryParams = {
       DocID: licenseDoc.id,
       attachment: true,
     };
-    downloadFileAPI({ queryParams, url, fileName });
+    try{
+      await downloadFileAPI({ queryParams, url, fileName });
+    } catch {
+
+    }
+    return;
   };
   return (
     <Card>
@@ -126,14 +132,10 @@ const CentersTable = (props) => {
                   </TableCell>
                   <TableCell>
                     {request && request.licenseDoc !== null ? (
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        startIcon={<CloudDownloadIcon />}
-                        onClick={() => downloadFileFn(request.licenseDoc, request.name, request.licenceNumber)}
+                      <ButtonWithLoading
+                        callBackFn={() => downloadFileFn(request.licenseDoc, request.name, request.licenceNumber)}
                       >
-                        تنزيل الشهادة
-                      </Button>
+                      </ButtonWithLoading>
                     ) : (
                       <Skeleton />
                     )}
@@ -170,9 +172,43 @@ const CentersTable = (props) => {
   );
 };
 
+
+const ButtonWithLoading = ({ callBackFn }) => {
+  const [loading, setLoading] = useState(false);
+  const handleOnClickFn = async () => {
+    console.log(`loading ${loading}`);
+    setLoading(true);
+    await callBackFn();
+    console.log(`loading ${loading}`);
+    setLoading(false);
+    console.log(`loading ${loading}`);
+  }
+  return (
+    <>
+      {
+        !loading ? (
+          <Button
+            variant="contained"
+            color="primary"
+            startIcon={<CloudDownloadIcon />}
+            onClick={() => handleOnClickFn()}
+          >
+            تنزيل الشهادة
+          </Button>
+        ) : (
+          <Skeleton />
+          )
+      }
+    </>
+  )
+}
 export default CentersTable;
 
 CentersTable.propTypes = {
   loading: PropTypes.bool.isRequired,
   centerRequests: PropTypes.array.isRequired
+};
+
+ButtonWithLoading.propTypes = {
+  callBackFn: PropTypes.func.isRequired,
 };
