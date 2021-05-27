@@ -89,12 +89,13 @@ const Register = () => {
     const data = validateCitRs.responseBody.data.Body;
     setInfo(data);
 
-    const url = '/taheel-apis-utilities-AbsherOTP-v2?BeneficiaryId=7273&OTP=7537555'
-    const requestBody = {
+    const url = '/taheel-apis-utilities-AbsherOTP-v2'
+    console.log(otp)
+    const queryParams = {
       BeneficiaryId: "273",
       OTP: otp
     }
-    const absherSms = await APIRequest({ requestBody, url });
+    const absherSms = await APIRequest({ queryParams, url });
     return response;
   };
 
@@ -177,7 +178,11 @@ const Register = () => {
       {(value) => (is ? children : null)}
     </Field>
   )
-
+  const Condition2 = ({ when, children,is }) => (
+    <Field name={when} subscription={{ value: true }}>
+        {({ input: { value } }) => (value == is ? children : null)}
+    </Field>
+  )
   const handleClickOpen = (dialogContent, dialogTitle) => {
     setDialogContent(dialogContent);
     setDialogTitle(dialogTitle);
@@ -193,6 +198,7 @@ const Register = () => {
       sx={{
         backgroundColor: 'background.default',
         display: 'flex',
+        height:'100%',
         flexDirection: 'column',
         justifyContent: 'center',
         backgroundSize:"cover" 
@@ -278,7 +284,7 @@ const Register = () => {
             nextFun={(values) => validateAPIFunc(values)}
             >
               <CitizenInfo
-                Condition={Condition}
+                Condition={Condition2}
               />
             </FinalFromWizard.Page>
 

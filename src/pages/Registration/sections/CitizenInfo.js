@@ -1,28 +1,16 @@
 /* eslint-disable */
 import { Field } from 'react-final-form';
-import { TextField as TextFieldFinal, Select } from 'final-form-material-ui';
+import { TextField as TextFieldFinal, Radio } from 'final-form-material-ui';
 import {
-  Box,
   Typography,
-  MenuItem,
   Grid,
+  FormControlLabel,
+  RadioGroup,
 } from '@material-ui/core';
 
-const CitizenInfo = () => {
-  const calendar = {
-    days: [],
-    months: [],
-    years: []
-  };
+import Calendar from 'src/components/calendar'
 
-  const BirthdayDate = (type, start, end) => {
-    for (let i = start; i <= end; i++) {
-      type.push(i);
-    }
-  };
-  BirthdayDate(calendar.days, 1, 30);
-  BirthdayDate(calendar.months, 1, 12);
-  BirthdayDate(calendar.years, 1324, 1500);
+const CitizenInfo = ({ Condition }) => {
 
   return (
     <>
@@ -31,99 +19,86 @@ const CitizenInfo = () => {
         spacing={0}
         mt={6}
       >
+
         <Grid
           item
           md={12}
           xs={12}
         >
-          <Field
-            fullWidth
-            required
-            label="رقم الهوية/الإقامة "
-            name="idNumber"
-            component={TextFieldFinal}
-            type="text"
-            variant="outlined"
-            dir="rtl"
-            className="custom-field"
-          />
+          <Typography> الجنسية</Typography>
+          <RadioGroup row >
+            <FormControlLabel
+              label="سعودي"
+              control={<Field name="nationality" component={Radio} type="radio" value="SA" />}
+            />
+            <FormControlLabel
+              label="غير سعودي"
+              control={<Field name="nationality" component={Radio} type="radio" value="forign" />}
+            />
+          </RadioGroup>
         </Grid>
 
-        <Grid
-          container
-          spacing={3}
-          mt={2}
-        >
-          <Grid
-            item
-            md={12}
-            xs={12}
-          >
-            <Typography> تاريخ الميلاد</Typography>
-          </Grid>
 
+
+        <Condition when="nationality" is='SA'>
           <Grid
-            item
-            md={4}
-            xs={4}
-            className="custom-label-field"
+            container
+            spacing={3}
+            mt={2}
           >
-            <Field
-              fullWidth
-              label="اليوم*"
-              name="day"
-              component={Select}
-              required
-              dir="rtl"
-              className="custom-field"
-              variant="outlined"
-              formControlProps={{ fullWidth: true }}
+            <Grid
+              item
+              md={12}
+              xs={12}
             >
-              {calendar.days.map((day, index) => <MenuItem key={index} value={day}>{day}</MenuItem>)}
-            </Field>
+              <Field
+                fullWidth
+                required
+                label="رقم الهوية "
+                name="idNumber"
+                component={TextFieldFinal}
+                type="text"
+                variant="outlined"
+                dir="rtl"
+                className="custom-field"
+              />
+            </Grid>
+            <Grid
+              item
+              md={12}
+              xs={12}
+            >
+              <Typography> تاريخ الميلاد</Typography>
+            </Grid>
+            < Calendar FeiledWidth={4} />
+
           </Grid>
+        </Condition>
+        <Condition when="nationality" is='forign'>
           <Grid
-            item
-            md={4}
-            xs={4}
-            className="custom-label-field"
+            container
+            spacing={3}
+            mt={2}
           >
-            <Field
-              fullWidth
-              label="الشهر*"
-              name="month"
-              component={Select}
-              id="demo-simple-select-outlined"
-              required
-              dir="rtl"
-              className="custom-field"
-              variant="outlined"
-              formControlProps={{ fullWidth: true }}
+            <Grid
+              item
+              md={12}
+              xs={12}
             >
-              {calendar.months.map((month, index) => <MenuItem key={index} value={month}>{month}</MenuItem>)}
-            </Field>
+              <Field
+                fullWidth
+                required
+                label="رقم الإقامة "
+                name="idNumber"
+                component={TextFieldFinal}
+                type="text"
+                variant="outlined"
+                dir="rtl"
+                className="custom-field"
+              />
+            </Grid>
           </Grid>
-          <Grid
-            item
-            md={4}
-            xs={4}
-            className="custom-label-field"
-          >
-            <Field
-              fullWidth
-              label="السنة*"
-              name="year"
-              component={Select}
-              required
-              dir="rtl"
-              className="custom-field"
-              variant="outlined"
-              formControlProps={{ fullWidth: true }}
-            >
-              {calendar.years.map((year, index) => <MenuItem key={index} value={year}>{year}</MenuItem>)}
-            </Field>
-          </Grid>
-        </Grid>
+        </Condition>
       </Grid>
     </>
   );

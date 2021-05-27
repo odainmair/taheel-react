@@ -6,10 +6,17 @@ import {
     FormControl,
     Typography,
     FormControlLabel,
-    Link
+    Link,
+    TableContainer,
+    Table,
+    TableBody,
+    TableHead,
+    TableRow,
+    TableCell,
 } from '@material-ui/core';
 import { Field } from 'react-final-form';
-// import PropTypes from 'prop-types';
+import { FieldArray } from "react-final-form-arrays";
+import PropTypes from 'prop-types';
 import { TextField as TextFieldFinal, Checkbox } from 'final-form-material-ui';
 import finalLicenseFieldSchema from '../models/finalLicenseFieldSchema';
 import TermsContent from './TermsContent';
@@ -25,6 +32,13 @@ const contentField = ({ input: { value, name }, label, type, inputType }) => (
         </Typography>
     </>
 )
+// const CustomTableCell = ( { input: { value } }) => (
+//     <>
+//       <TableCell component="th" scope="row">
+//         {value}
+//       </TableCell>
+//     </>
+//   )
 const termsLabel = (openDialog) => (
     <>
         <Typography gutterBottom variant="h5" component="span">
@@ -40,8 +54,10 @@ const getFieldValue = ({ name, value }) => {
     if (value == '')
         return '';
     const filredFinal = finalLicenseFieldSchema.filter(fintalLicense => fintalLicense.name === name);
+    console.log("filredFinal/////////////////////////////", filredFinal)
     if (filredFinal.length > 0) {
         const filteredvalue = filredFinal[0].options.filter(option => option.value == value);
+        console.log("I'm Here in", name,);
         if (filteredvalue.length > 0)
             return filteredvalue[0].label.ar;
     }
@@ -98,7 +114,7 @@ const Summary = () => {
                 mt={6}
                 variant="h4"
             >
-                الطاقة الإستعابية 
+                الطاقة الإستعابية
             </Typography>
             <Grid
                 container
@@ -132,7 +148,124 @@ const Summary = () => {
                 mt={6}
                 variant="h4"
             >
-                الخدمات الضحية 
+                المتطلبات
+            </Typography>
+            <Grid
+                container
+                spacing={3}
+                mt={3}
+                mb={3}
+            >
+                <Grid
+                    item
+                    key={filteredFinalLicense.id}
+                    lg={6}
+                    md={6}
+                    xs={12}
+                >
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        startIcon={<CloudDownloadIcon />}
+                        onClick={() => downloadFileFn(request.licenseDoc, request.name, request.licenceNumber)}
+                    >
+                        تنزيل 
+</Button>
+
+                </Grid>
+
+            </Grid>
+            <Divider />
+            <Typography
+                color="textPrimary"
+                gutterBottom
+                mb={4}
+                mt={6}
+                variant="h4"
+            >
+                معلومات الكوادر
+            </Typography>
+            <Grid
+                container
+                spacing={3}
+                mt={3}
+                mb={3}
+            >
+                {/* {finalLicenseFieldSchema.filter(fintalLicense => fintalLicense.sectionName === "staffInfo" && !fintalLicense.dependOn).map(filteredFinalLicense => ( */}
+                <Grid
+                    item
+                    // key={filteredFinalLicense.id}
+                    lg={12}
+                    md={12}
+                    xs={12}
+                >
+
+                    {/* ///////////////////////////////////////////// */}
+
+                    <TableContainer>
+                        <Table aria-label="simple table">
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell> الاسم الكامل </TableCell>
+                                    <TableCell> رقم الهوية/الاإقامة </TableCell>
+                                    <TableCell> نوع الكادر </TableCell>
+                                    <TableCell> الجنس </TableCell>
+                                    <TableCell> الجنسية</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                <FieldArray name="customers">
+
+                                    {({ fields }) => fields.value.map((name, index) => (
+                                        <TableRow key={name}>
+                                            {console.log("fields", fields.value)}
+
+                                            <TableCell component="th" scope="row">
+                                                {name.fullName}
+                                            </TableCell>
+
+                                            <TableCell component="th" scope="row">
+                                                {name.idNumber ? name.idNumber : name.iqamaNo}
+                                            </TableCell>
+
+                                            <TableCell component="th" scope="row">
+                                                {name.staffTypes}
+                                            </TableCell>
+
+                                            <TableCell component="th" scope="row">
+                                                {name.gender}
+                                            </TableCell>
+
+                                            <TableCell component="th" scope="row">
+                                                {name.nationality}
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </FieldArray>
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+
+
+
+                    {/* //////////////////////////////////////////////////// */}
+
+
+
+                </Grid>
+
+                {/* } */}
+            </Grid>
+
+            <Divider />
+            <Typography
+                color="textPrimary"
+                gutterBottom
+                mb={4}
+                mt={6}
+                variant="h4"
+            >
+                الخدمات الضحية
             </Typography>
             <Grid
                 container
@@ -157,7 +290,7 @@ const Summary = () => {
                     </Grid>
                 ))}
             </Grid>
-            <Divider/>
+            <Divider />
             <Grid
                 container
                 lg={12}
@@ -166,7 +299,7 @@ const Summary = () => {
                 mt={3}
             >
                 <Field name="agree" mt={3}>
-                    {({  meta }) => ( // eslint-disable-line no-unused-vars
+                    {({ meta }) => ( // eslint-disable-line no-unused-vars
                         <FormControl component="fieldset" error={meta.error} required>
                             <FormControlLabel
                                 label={termsLabel(handleClickOpen)}
@@ -187,4 +320,10 @@ const Summary = () => {
         </>
     )
 }
+
 export default Summary;
+// Summary.propTypes = {
+// 	value: PropTypes.func.isRequired,
+// };
+
+

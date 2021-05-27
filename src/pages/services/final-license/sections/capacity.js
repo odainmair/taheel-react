@@ -5,25 +5,34 @@ import {
 	Alert,
 	Typography,
 	Box,
+	CircularProgress,
 } from '@material-ui/core';
 import { Field } from 'react-final-form';
 import PropTypes from 'prop-types';
 import { TextField as TextFieldFinal, Select } from 'final-form-material-ui';
-import { useState, useEffect } from 'react';
-import { validateCompanyFunc } from '../services/finalLicenseAPI'
-import FileUploader from 'src/components/FileUploader';
+import { useState } from 'react';
+import { calculation } from '../services/finalLicenseAPI'
 
+const Capacity = ({ Condition, values }) => {
 
-const Capacity = ({ Condition }) => {
-
-	const [companyDetails, setCompanyDetails] = useState({ Capacity: '10', FinancialGuarantee: '200,000,000' })
+	const [companyDetails, setCompanyDetails] = useState({ Capacity: '', FinancialGuarantee: '' })
 	const [calculatedData, setCalculatedData] = useState(false)
 	const [errMessage, SetErrMessage] = useState('')
-	const calculate = () => {
-		// response = validateCompanyFunc()
-		// setCompanyDetails(response)
-
-		setCalculatedData(true)
+	const [loading, setLoading] = useState(false)
+	const calculate = async () => {
+		setLoading(true)
+	
+		const response = await calculation(values.buildingArea, values.basementArea)
+		if (!response.isSuccessful){
+			SetErrMessage (response.message)
+			setCalculatedData(false)
+		}
+		else {
+			setCompanyDetails({ ...companyDetails, Capacity: response.responseBody.body.carryingCapacity.toFixed(3), FinancialGuarantee: response.responseBody.body.financialGuarantee.toFixed(3) })
+			setCalculatedData(true)
+			SetErrMessage('')
+		}
+		setLoading(false)
 	}
 
 	return (
@@ -106,6 +115,7 @@ const Capacity = ({ Condition }) => {
 					xs={12}
 				>
 					<Button
+					startIcon={loading ? <CircularProgress size="1rem" /> : null}
 						variant='outlined'
 						type="button"
 						sx={{
@@ -178,21 +188,6 @@ const Capacity = ({ Condition }) => {
 									</Alert>
 								</Box>
 							</Grid>
-
-							<Grid
-								item
-								lg={6}
-								md={12}
-								xs={12}
-							>
-								<FileUploader
-									handleFile={(test) => console.log(test)}
-									label="ارفاق الضمان المالي"
-									name="FinancialGuarantee"
-									multiple={false}
-								/>
-							</Grid>
-
 						</Grid>
 
 					</Condition>
@@ -207,4 +202,5 @@ export default Capacity;
 
 Capacity.propTypes = {
 	Condition: PropTypes.func.isRequired,
+	values: PropTypes.func.isRequired,
 };

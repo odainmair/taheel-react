@@ -3,6 +3,7 @@ import {
     Grid,
 } from '@material-ui/core';
 import FileUploader from 'src/components/FileUploader';
+import { uploadDocument } from '../services/finalLicenseAPI'
 const Requirements = () => {
 
     return (
@@ -12,18 +13,7 @@ const Requirements = () => {
                 spacing={3}
                 mt={3}
             >
-                <Grid
-                    item
-                    md={6}
-                    xs={12}
-                >
-                    <FileUploader
-                        handleFile={(test) => console.log(test)}
-                        label="ارفاق الضمان المالي"
-                        name="FinancialGuarantee"
-                        multiple ={false}
-                    />
-                </Grid>
+               
                 <Grid
                     item
                     md={6}
@@ -66,7 +56,7 @@ const Requirements = () => {
                     xs={12}
                 >
                     <FileUploader
-                        handleFile={(test) => console.log(test)}
+                        handleFile={(file) => uploadDocument(file[0])}
                         label="ارفاق تقرير المسح الأمني"
                         name="FinancialGuarantee"
                         multiple ={false}
@@ -81,7 +71,7 @@ const Requirements = () => {
                         handleFile={(test) => console.log(test)}
                         label="ارفاق صور الأثاث و الأجهزة الكهربائية"
                         name="FinancialGuarantee"
-                        multiple ={false}
+                        multiple ={true}
                     />
                 </Grid>
                 <Grid
@@ -90,10 +80,10 @@ const Requirements = () => {
                     xs={12}
                 >
                     <FileUploader
-                        handleFile={(test) => console.log(test)}
-                        label="ارفاق الخطة التشغيلية"
+                         handleFile={(test) => console.log(test)}
+                        label="ارفاق الضمان المالي"
                         name="FinancialGuarantee"
-                        multiple ={true}
+                        multiple ={false}
                     />
                 </Grid>
             </Grid>

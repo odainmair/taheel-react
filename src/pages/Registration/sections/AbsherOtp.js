@@ -12,8 +12,8 @@ import {APIRequest} from 'src/api/APIRequest';
 
 const AbsherOtp = () => {
   const { otp, setOtp} = useContext(localContext);
-  const url = '/taheel-apis-utilities-AbsherOTP-v2?BeneficiaryId=7273&OTP=7537555'
-  const requestBody = {
+  const url = '/taheel-apis-utilities-AbsherOTP-v2'
+  const queryParams = {
     BeneficiaryId: "273",
     OTP: otp
   }
@@ -86,7 +86,7 @@ const AbsherOtp = () => {
           }}
         >
           <a
-           onClick={() => APIRequest({ requestBody, url })}
+           onClick={() => APIRequest({ queryParams, url })}
           >
        
             إعادة ارسال رمز التحقق

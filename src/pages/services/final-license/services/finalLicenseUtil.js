@@ -4,17 +4,17 @@ import { Field } from 'react-final-form';
 import { Typography } from '@material-ui/core';
 
 const CenterDetailsValidation = values => {
-    console.log("values", isNaN(values.commRegistrNo))
+    console.log("values", isNaN(values.CRNumber))
     var msg = {}
-    if (!values.commRegistrNo)
-        msg.commRegistrNo = required
+    if (!values.CRNumber)
+        msg.CRNumber = required
     if (!values.temporaryLicenceNum)
         msg.temporaryLicenceNum = required
     if (!values.municipLicenseNo)
         msg.municipLicenseNo = required
 
-    if (values.commRegistrNo && isNaN(values.commRegistrNo))
-        msg.commRegistrNo = "يجب ان يحتوي فقط على ارقام والا يزيد عددها عن 10 خانات"
+    if (values.CRNumber && isNaN(values.CRNumber))
+        msg.CRNumber = "يجب ان يحتوي فقط على ارقام والا يزيد عددها عن 10 خانات"
     return msg
 }
 
@@ -31,8 +31,20 @@ const capacityValidation = values => {
     return msg
 }
 const ConditionComp = ({ when, is, children }) => (
+    <Field name={when} subscription={{ value: true }}>
+    {({ input: { value } }) => (value == is ? children : null)}
+    </Field>
+)
+
+const ConditionStaffComp = ({ when, is, children }) => (
+    <Field name={when} subscription={{ value: true }}>
+    {({ input: { value } }) => (is.includes(value) ? children : null)}
+    </Field>
+)
+
+const calculationConditionComp = ({ is, children }) => (    
     <Field subscription={{ value: true }}>
         {(value) => (is ? children : null)}
     </Field>
 )
-export { CenterDetailsValidation, capacityValidation, ConditionComp };
+export { CenterDetailsValidation, capacityValidation, ConditionComp, ConditionStaffComp, calculationConditionComp };
