@@ -13,7 +13,9 @@ import {
     TableHead,
     TableRow,
     TableCell,
+    Button,
 } from '@material-ui/core';
+import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 import { Field } from 'react-final-form';
 import { FieldArray } from "react-final-form-arrays";
 import PropTypes from 'prop-types';
@@ -21,6 +23,9 @@ import { TextField as TextFieldFinal, Checkbox } from 'final-form-material-ui';
 import finalLicenseFieldSchema from '../models/finalLicenseFieldSchema';
 import TermsContent from './TermsContent';
 import TermsDialog from 'src/components/TermsDialog';
+import { downloadDocument } from '../services/finalLicenseAPI'
+import { useContext } from 'react';
+import localContext from 'src/localContext';
 
 const contentField = ({ input: { value, name }, label, type, inputType }) => (
     <>
@@ -32,13 +37,28 @@ const contentField = ({ input: { value, name }, label, type, inputType }) => (
         </Typography>
     </>
 )
-// const CustomTableCell = ( { input: { value } }) => (
-//     <>
-//       <TableCell component="th" scope="row">
-//         {value}
-//       </TableCell>
-//     </>
-//   )
+const downloadFileFn = async (licenseNumber) => {
+    console.log("responseresponse",licenseNumber)
+    const downloadDoc = downloadDocument(licenseNumber, false)
+
+}
+
+
+const calculate = async () => {
+    setLoading(true)
+
+    const response = await calculation(values.buildingArea, values.basementArea)
+    if (!response.isSuccessful) {
+        SetErrMessage(response.message)
+        setCalculatedData(false)
+    }
+    else {
+        setCompanyDetails({ ...companyDetails, Capacity: response.responseBody.body.carryingCapacity.toFixed(3), FinancialGuarantee: response.responseBody.body.financialGuarantee.toFixed(3) })
+        setCalculatedData(true)
+        SetErrMessage('')
+    }
+    setLoading(false)
+}
 const termsLabel = (openDialog) => (
     <>
         <Typography gutterBottom variant="h5" component="span">
@@ -65,7 +85,9 @@ const getFieldValue = ({ name, value }) => {
 }
 
 const Summary = () => {
+
     const [open, setOpen] = React.useState(false);
+    const { documents, SetDocuments } = useContext(localContext);
     const handleClickOpen = (dialogContent, dialogTitle) => {
         setOpen(true);
     };
@@ -156,23 +178,30 @@ const Summary = () => {
                 mt={3}
                 mb={3}
             >
-                <Grid
+
+               { documents.map((document,index)=>
+               <Grid
                     item
-                    key={filteredFinalLicense.id}
+                    key={index}
                     lg={6}
                     md={6}
                     xs={12}
                 >
+                    <Typography gutterBottom variant="body2" color="textSecondary" component="p">
+                        {document.name}
+                    </Typography>
+
                     <Button
                         variant="contained"
                         color="primary"
                         startIcon={<CloudDownloadIcon />}
-                        onClick={() => downloadFileFn(request.licenseDoc, request.name, request.licenceNumber)}
+                        onClick={() => downloadFileFn(document.docId)}
                     >
-                        تنزيل 
-</Button>
+                        تنزيل
+                    </Button>
 
-                </Grid>
+                </Grid> 
+                )}
 
             </Grid>
             <Divider />

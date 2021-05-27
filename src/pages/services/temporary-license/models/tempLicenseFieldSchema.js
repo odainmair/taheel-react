@@ -1,4 +1,4 @@
-import { checkIsfilled } from 'src/utils/inputValidator';
+import { checkIsfilled,checkMobilePattern } from 'src/utils/inputValidator';
 import { v4 as uuid } from 'uuid';
 
 export default [
@@ -147,8 +147,8 @@ export default [
     options: [],
     validators: [{
       id: 'mobileNo-required',
-      isValidFun: checkIsfilled,
-      alert: 'هذا الحقل مطلوب'
+      isValidFun: checkMobilePattern,
+      alert: 'يرجى ادخال رقم جوال سعودي صحيح'
     }],
     dependOn: {
       fieldName: 'requestType',
@@ -189,8 +189,8 @@ export default [
     options: [],
     validators: [{
       id: 'compMobileNo-required',
-      isValidFun: checkIsfilled,
-      alert: 'هذا الحقل مطلوب'
+      isValidFun: checkMobilePattern,
+      alert: 'يرجى ادخال رقم جوال سعودي صحيح'
     }],
     dependOn: {
       fieldName: 'requestType',

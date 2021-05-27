@@ -47,6 +47,9 @@ export default class FinalFromWizard extends React.Component {
 
   handleSubmit = async (values) => {
     console.log("--- handleSubmit  ----");
+    const errors = this.validate(values);
+    if (Object.keys(errors).length > 0)
+      return this.validate(values);
     const { children, onSubmit } = this.props;
     const { page } = this.state;
     const isLastPage = page === React.Children.count(children) - 1;
@@ -97,7 +100,7 @@ export default class FinalFromWizard extends React.Component {
     return (
       <Form
         initialValues={values}
-        validate={this.validate}
+        //validate={this.validate}
         onSubmit={this.handleSubmit}
         mutators={{
           // expect (field, value) args from the mutator
@@ -133,7 +136,7 @@ export default class FinalFromWizard extends React.Component {
               })}
 
               <Grid container spacing={2} mt={3} justifyContent="flex-end">
-                {(page > 0 && !this.state.values.disabledBackButt) &&  (
+                {(page > 0 && !this.state.values.disabledBackButt) && (
                   <Grid item>
                     <Button
                       variant="contained"
@@ -144,7 +147,7 @@ export default class FinalFromWizard extends React.Component {
                       }}
                     >
                       رجوع
-                  </Button>
+                    </Button>
                   </Grid>
                 )}
                 {!isLastPage && (
@@ -160,20 +163,20 @@ export default class FinalFromWizard extends React.Component {
                       }}
                     >
                       التالي
-                  </Button>
+                    </Button>
                   </Grid>
                 )}
                 {isLastPage && (
                   <Grid item>
                     <Button
                       startIcon={submitting ? <CircularProgress size="1rem" /> : null}
-                      disabled={ values.agree.length == 0 || submitting}
+                      disabled={values.agree.length == 0 || submitting}
                       variant="contained"
                       color="primary"
                       type="submit"
                     >
                       ارسال
-                  </Button>
+                    </Button>
                   </Grid>
                 )}
               </Grid>

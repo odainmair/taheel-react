@@ -3,7 +3,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getCurrentUser } from 'src/utils/UserLocalStorage';
 import CenterDetails from './sections/CenterDetails'
-import Requirements from './sections/Requirements'
+import Requirements from './sections/requirements'
 import Capacity from './sections/Capacity';
 import HealthServices from './sections/HealthServices';
 import PersonDetials from './sections/staff/PersonDetials';

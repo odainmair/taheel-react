@@ -1,5 +1,6 @@
 /* eslint-disable */
 import { APIRequest } from 'src/api/APIRequest';
+const documents= []
 
 const createFinalLicenseAPIFunc = async (values) => {
 	const requestBody = {
@@ -63,30 +64,43 @@ const validateCitizenFunc = async (idNumber, birthDate) => {
 	return response;
 }
 
+// const CentertDetails = async (licenseNumber) => {
+// 	const url = "taheel-apis-records-CentertDetails-v2"
+// 	const queryParams = { licenseNumber };
+// 	const response = await APIRequest({ url, queryParams });
+// 	return response;
+// }
 
 
-const uploadDocument = (image) => {
 
-	var reader = new FileReader();
-	reader.readAsDataURL(image);
-	reader.onloadend = async function () {
+const uploadDocumentApi = async(name,image) => {
 
-		var base64String = reader.result;
-		var n = base64String.indexOf("base64,") + 7;
-		base64String = reader.result.substr(n);
-		console.log("base64String", base64String)
-		const data = window.atob(base64String)
-		console.log("atob", data)
-		image = data
 
 		const url = "taheel-apis-utilities-uploadDocument-v2"
 		const requestBody = {
 			src: image
 		};
 		const response = await APIRequest({ requestBody, url });
+		console.log('responseresponse...>>',response)
+		// documents.push({[name]:response.responseBody.docID})
+		// console.log('documentsdocuments...>>',documents)
 		return response;
-	}
+	
 }
 
-export { validateCompanyFunc, createFinalLicenseAPIFunc, calculation, validateCitizenFunc, uploadDocument, getTempLicense, getMunicipalLicenseNoApi };
+
+const downloadDocument = async (DocID,attachment) => {
+	console.log('DocIDDocID',DocID)
+		const url = "taheel-apis-utilities-downloadDocument-v2"
+
+		const queryParams = {
+			 DocID: DocID,
+			attachment: attachment 
+		};
+		const response = await APIRequest({ url, queryParams });
+		return response;
+	}
+
+
+export { validateCompanyFunc, createFinalLicenseAPIFunc, calculation, validateCitizenFunc, uploadDocumentApi, getTempLicense, getMunicipalLicenseNoApi, downloadDocument,documents };
 

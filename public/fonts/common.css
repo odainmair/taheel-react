@@ -1,0 +1,7 @@
+/* FAQ Styling */
+.faq-row-wrapper { background-color: transparent !important; }
+.faq-row-wrapper .faq-title { background-color: #f0b843; display:none !important; }
+.faq-row-wrapper .faq-title h2 { text-indent: 25px; color: white }
+.faq-row-wrapper .faq-row { background-color: white; margin: 10px 0px; border-radius: 5px; }
+.faq-row-wrapper .row-title .icon-wrapper { right: unset !important; left: 12px; top: 21px !important }
+.faq-row-wrapper .row-title .row-title-text {padding-left:3em; padding-right:3em;}
