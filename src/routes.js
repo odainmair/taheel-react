@@ -55,7 +55,7 @@ const routes = (isLoggedIn) => [
     path: 'services',
     element: isLoggedIn !== "" ? <DashboardLayout /> : <Navigate to="/login" />,
     children: [
-      { path: 'survey', element: <CreateTemporaryLicense /> },
+      { path: 'templicense', element: <CreateTemporaryLicense /> },
       { path: 'finallicense', element: <CreatefinalLicense /> },
       { path: '*', element: <Navigate to="/404" /> }
     ]

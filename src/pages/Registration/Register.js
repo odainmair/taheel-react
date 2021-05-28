@@ -63,7 +63,7 @@ const Register = () => {
   const [open, setOpen] = React.useState(false);
   const [dialogContent, setDialogContent] = React.useState('');
   const [dialogTitle, setDialogTitle] = React.useState('');
- 
+
 
   let { otp, setOtp } = useContext(localContext);
   const { recipient, setRecipient } = useContext(localContext);
@@ -109,7 +109,7 @@ const Register = () => {
     return response;
   };
 
-  
+
   // OTP Checking
   const validateOtp = async (values) => {
     const { AbsherOtp } = values;
@@ -188,9 +188,9 @@ const Register = () => {
       {(value) => (is ? children : null)}
     </Field>
   )
-  const Condition2 = ({ when, children,is }) => (
+  const Condition2 = ({ when, children, is }) => (
     <Field name={when} subscription={{ value: true }}>
-        {({ input: { value } }) => (value == is ? children : null)}
+      {({ input: { value } }) => (value == is ? children : null)}
     </Field>
   )
   const handleClickOpen = (dialogContent, dialogTitle) => {
@@ -208,172 +208,173 @@ const Register = () => {
       sx={{
         backgroundColor: 'background.default',
         display: 'flex',
-        height:'100%',
+        height: '100%',
         flexDirection: 'column',
         justifyContent: 'center',
-        backgroundSize:"cover" 
+        backgroundSize: "cover"
       }}
     >
-    <>
+      <>
 
-      <DashboardNavbar onMobileNavOpen={() => setMobileNavOpen(true)} />
-      <MainNavbar
-        onMobileClose={() => setMobileNavOpen(false)}
-        openMobile={isMobileNavOpen}
-      />
-      <Box
-      sx={{
-        backgroundColor: '#fafafa',
-          width:'100%', 
-           position: 'fixed',
-           height:"100%",
-           backgroundSize:"cover"  
-      }}
-    >
-      <Container
-        maxWidth="sm"
-      >
-        <Box sx={{
-                    // backgroundColor: 'white',
-                    // borderRadius: 5,
-                    // padding: 8,
-                    mt: '2%',
-                    // mb: '2%',
-                    backgroundColor: 'white',
-                    borderRadius: 5,
-                    padding: 3,
-                    boxShadow: '5px 10px 18px #ecf1f5'
-        }}>
+        <DashboardNavbar onMobileNavOpen={() => setMobileNavOpen(true)} />
+        <MainNavbar
+          onMobileClose={() => setMobileNavOpen(false)}
+          openMobile={isMobileNavOpen}
+        />
         <Box
-                        className={classes.root}
-                        sx={{ mb: 5, mr: 1.5 }}
-                      >
-                        <Grid container spacing={3} sx={{margin: "0 auto", width:"auto"}}>
-                        <Grid item xs={6}>
-
-                        <Avatar
-                          className={classes.large + ' ' + classes.avatarHover}
-                          // onClick={() => setColor({ ...avtarColor, rightAvatar: '#214256', leftAvatar: '#c8d9d9' })}
-                          sx={{
-                            height: '85px', width: '85px', backgroundColor: '#c8d9d9', cursor: "pointer"
-                          }}
-                        >
-                          أفراد
-                        </Avatar>
-
-
-                        </Grid>  
-                        <Grid item xs={6}>
-                        <Avatar
-                          className={classes.large + ' ' + classes.avatarHover}
-                          // onClick={() => setColor({ ...avtarColor, leftAvatar: '#214256', rightAvatar: '#c8d9d9' })}
-                          sx={{
-                            height: '85px', width: '85px', backgroundColor: '#214256', cursor: "pointer"
-                          }}
-                        >
-                            مركز
-                        </Avatar>
-                        </Grid>  
-                        
-                        </Grid>  
-                        
-                        
-                      </Box>
-        <Box sx={{ mb: 3, textAlign: 'center' }}>
-          <Typography
-            color="textPrimary"
-            variant="h2"
+          sx={{
+            backgroundColor: '#fafafa',
+            width: '100%',
+            position: 'fixed',
+            height: "100%",
+            backgroundSize: "cover"
+          }}
+        >
+          <Container
+            maxWidth="sm"
           >
-            تسجيل جديد للمركز
-          </Typography>
-        </Box>
-        <CardContent sx={{padding:"0px"}}>
-          <FinalFromWizard // pass initialValues, onSubmit and 4 childrens
-            initialValues={{
-              disabledBackButt: true,
-              lastPageErrorHandling:false,
-              agree: [false]
-            }}
-            onSubmit={onSubmit}
-          // counter={counter}
-          >
+            <Box sx={{
+              // backgroundColor: 'white',
+              // borderRadius: 5,
+              // padding: 8,
+              mt: '2%',
+              // mb: '2%',
+              backgroundColor: 'white',
+              borderRadius: 5,
+              padding: 3,
+              boxShadow: '5px 10px 18px #ecf1f5'
+            }}>
+              <Box
+                className={classes.root}
+                sx={{ mb: 5, mr: 1.5 }}
+              >
+                <Grid container spacing={3} sx={{ margin: "0 auto", width: "auto" }}>
+                  <Grid item xs={6}>
 
-            <FinalFromWizard.Page
-              label=""
-              validate={CitizenValidate}
-            nextFun={(values) => validateAPIFunc(values)}
-            >
-              <CitizenInfo
-                Condition={Condition2}
-              />
-            </FinalFromWizard.Page>
-
-            <FinalFromWizard.Page
-              nextFun={(values) => validateOtp(values)}
-              validate = {absherValidate}
-              label=""
-            >
-              <AbsherOtp
-                Condition={Condition} />
-            </FinalFromWizard.Page>
-
-            <FinalFromWizard.Page label=""
-              validate={regitrationValidate}
-            >
-              <RegistrationInfo
-                Condition={Condition}
-              />
-            </FinalFromWizard.Page>
-
-            <FinalFromWizard.Page
-            validate={TaheelOtpValidate}
-              label=""
-            >
-              <TaheelOtp
-                Condition={Condition}
-              />
-            </FinalFromWizard.Page>
-          </FinalFromWizard>
-        </CardContent>
-        <Box
-                    textAlign="center"
-                    sx={{
-                      py: 2,
-                      justifyContent: 'center',
-                      display: 'flex',
-                      flexDirection: 'column',
-                    }}
-                  >
-                    <Typography
-                      color="textSecondary"
-                      variant="body1"
+                    <Avatar
+                      className={classes.large + ' ' + classes.avatarHover}
+                      // onClick={() => setColor({ ...avtarColor, rightAvatar: '#214256', leftAvatar: '#c8d9d9' })}
                       sx={{
-                        paddingTop: '16px',
+                        height: '85px', width: '85px', backgroundColor: '#c8d9d9', cursor: "pointer"
                       }}
                     >
-                      لديك حساب على المنصة ؟
-                    </Typography>
-                    <Typography
-                      color="textSecondary"
-                      variant="body1"
+                      أفراد
+                    </Avatar>
+
+
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Avatar
+                      className={classes.large + ' ' + classes.avatarHover}
+                      // onClick={() => setColor({ ...avtarColor, leftAvatar: '#214256', rightAvatar: '#c8d9d9' })}
+                      sx={{
+                        height: '85px', width: '85px', backgroundColor: '#214256', cursor: "pointer"
+                      }}
                     >
-                      <Link
-                        component={RouterLink}
-                        to="/login"
-                        variant="h6"
-                        sx={{
-                          textDecoration: 'underline'
-                        }}
-                      >
-                        تسجيل الدخول
-                      </Link>
-                    </Typography>
-                  </Box>
-        <AlertDialog dialogContent={dialogContent} dialogTitle={dialogTitle} open={open} onClose={handleClose} acceptBtnName="تم" />
+                      مركز
+                    </Avatar>
+                  </Grid>
+
+                </Grid>
+
+
+              </Box>
+              <Box sx={{ mb: 3, textAlign: 'center' }}>
+                <Typography
+                  color="textPrimary"
+                  variant="h2"
+                >
+                  تسجيل جديد للمركز
+                </Typography>
+              </Box>
+              <CardContent sx={{ padding: "0px" }}>
+                <FinalFromWizard // pass initialValues, onSubmit and 4 childrens
+                  initialValues={{
+                    disabledBackButt: true,
+                    lastPageErrorHandling: false,
+                    agree: [false]
+                  }}
+                  onSubmit={onSubmit}
+                // counter={counter}
+                >
+
+                  <FinalFromWizard.Page
+                    label=""
+                    validate={CitizenValidate}
+                    nextFun={(values) => validateAPIFunc(values)}
+                  >
+                    <CitizenInfo
+                      Condition={Condition2}
+                    />
+                  </FinalFromWizard.Page>
+
+                  <FinalFromWizard.Page
+                    nextFun={(values) => validateOtp(values)}
+                    validate={absherValidate}
+                    label=""
+                  >
+                    <AbsherOtp
+                      Condition={Condition} />
+                  </FinalFromWizard.Page>
+
+                  <FinalFromWizard.Page label=""
+                    validate={regitrationValidate}
+                  >
+                    <RegistrationInfo
+                      Condition={Condition}
+                    />
+                  </FinalFromWizard.Page>
+
+                  <FinalFromWizard.Page
+                    validate={TaheelOtpValidate}
+                    label=""
+                  >
+                    <TaheelOtp
+                      Condition={Condition}
+                    />
+                  </FinalFromWizard.Page>
+                </FinalFromWizard>
+              </CardContent>
+              <Box
+                textAlign="center"
+                sx={{
+                  py: 2,
+                  justifyContent: 'center',
+                  display: 'flex',
+                  flexDirection: 'column',
+                }}
+              >
+                <Typography
+                  color="textSecondary"
+                  variant="body1"
+                  sx={{
+                    paddingTop: '16px',
+                  }}
+                >
+                  لديك حساب على المنصة ؟
+                </Typography>
+                <Typography
+                  color="textSecondary"
+                  variant="body1"
+                >
+                  <Link
+                    component={RouterLink}
+                    to="/login"
+                    variant="h6"
+                    sx={{
+                      textDecoration: 'underline'
+                    }}
+                  >
+                    تسجيل الدخول
+                  </Link>
+                </Typography>
+              </Box>
+              <AlertDialog dialogContent={dialogContent} dialogTitle={dialogTitle} open={open} onClose={handleClose} acceptBtnName="تم" />
+            </Box>
+          </Container>
         </Box>
-      </Container>
+      </>
     </Box>
-    </>
   );
 };
 
