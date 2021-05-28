@@ -34,5 +34,6 @@ jobs:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
-        source: "./dist/*"
-        target: "/home/inspire-admin/apps/www-static/taheel-demo" 
+        overwrite: true
+        source: "dist/*"
+        target: "home/inspire-admin/apps/www-static/taheel-demo" 
