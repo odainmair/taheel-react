@@ -28,7 +28,7 @@ const CentersTable = (props) => {
     return '_';
   };
   const downloadFileFn = async (licenseDoc, name, licenceNumber) => {
-    const url = 'https://inspiredemo2.appiancloud.com/suite/webapi/taheel-apis-utilities-downloadDocument-v2';
+    const url = 'taheel-apis-utilities-downloadDocument-v2';
     const fileName = `${name}-${licenceNumber}`;
     const queryParams = {
       DocID: licenseDoc,

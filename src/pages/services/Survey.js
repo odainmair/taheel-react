@@ -24,7 +24,7 @@ import useRequest from '../../hooks/use-request';
 
 const Survey = () => {
   const { doRequest, errors } = useRequest({
-    url: 'https://inspiredemo2.appiancloud.com/suite/webapi/CreateTempt',
+    url: 'CreateTempt',
     method: 'post',
     body: {
 

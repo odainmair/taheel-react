@@ -5,39 +5,50 @@ import {
 	MenuItem,
 	Typography,
 	Alert,
-	Box,
+	CircularProgress,
 } from '@material-ui/core';
 import { Field } from 'react-final-form';
 import PropTypes from 'prop-types';
 import { TextField as TextFieldFinal, Select } from 'final-form-material-ui';
 import { useState, useEffect } from 'react';
 import { validateCompanyFunc } from '../services/finalLicenseAPI'
+import { getMunicipalLicenseNoApi } from '../services/finalLicenseAPI'
+
 import { CenterDetailsValidation } from '../services/finalLicenseUtil'
+import { getCurrentUser } from 'src/utils/UserLocalStorage';
 
 
-const CenterDetails = ({ Condition }) => {
-	useEffect(() => {
-		// SetTemporaryLicenses(data)
-	})
-	const [temporaryLicenses, SetTemporaryLicenses] = useState(['42323551', '5444418', '4811551'])
-	const [companyDetails, setCompanyDetails] = useState({ name: 'company name', description: 'description' })
+const CenterDetails = ({ Condition, values, temporaryLicenses, setField }) => {
+
+	console.log("props", temporaryLicenses)
+	const [companyDetails, setCompanyDetails] = useState({ name: '', activities: '' })
+	const [loading, setLoading] = useState(false)
 	const [checkData, setCheckData] = useState(false)
 	const [errMessage, SetErrMessage] = useState('')
 
-	const check = () => {
-		// response = validateCompanyFunc()
+	const check = async () => {
+		setLoading(true)
+		const response = await validateCompanyFunc(values.CRNumber)
+		if (!response.isSuccessful) {
+			SetErrMessage(response.message)
+			setCheckData(false)
+		}
+		else {
+			getMunicipalLicenseNo()
+			setCompanyDetails({ ...companyDetails, name: response.responseBody.data.CRName, activities: response.responseBody.data.Activities })
+			setCheckData(true)
+			SetErrMessage('')
+		}
+		setLoading(false)
+		values.companyName = companyDetails
+	}
 
-		// if (!response.isSuccessful)
-		// 	SetErrMessage(validateCitRs.message)
-		// else {
-		// 	setCheckData(true)
-		// 	setCompanyDetails(response)
-		// }
-setCheckData(true)
-		// const checkValidation = CenterDetailsValidation()
-		// const commRegistrNoError = checkValidation.commRegistrNo ? false : true
-		// const temporaryLicenceNumError = checkValidation.temporaryLicenceNum ? false : true
-		// const municipLicenseNoError = checkValidation.commRegistrNo ? false : true
+	const getMunicipalLicenseNo = async () => {
+		const response = await getMunicipalLicenseNoApi(values.CRNumber)
+		if (!response.isSuccessful) 
+			SetErrMessage(response.message)
+		else 
+			setField('municipLicenseNo',response.responseBody.data.UnifiedLicenseNumber)
 	}
 
 	return (
@@ -67,7 +78,6 @@ setCheckData(true)
 				>
 
 					<Field
-						// error={temporaryLicenceNumError}
 						fullWidth
 						label="رقم الترخيص المؤقت"
 						name="temporaryLicenceNum"
@@ -88,11 +98,10 @@ setCheckData(true)
 					className="custom-label-field"
 				>
 					<Field
-						// error={commRegistrNoError}
 						fullWidth
 						required
 						label="رقم السجل التجاري"
-						name="commRegistrNo"
+						name="CRNumber"
 						component={TextFieldFinal}
 						type="text"
 						variant="outlined"
@@ -100,31 +109,14 @@ setCheckData(true)
 						className="custom-field"
 					/>
 				</Grid>
-				<Grid
-					item
-					md={6}
-					xs={12}
-					className="custom-label-field"
-				>
-					<Field
-						// error={municipLicenseNoError}
-						fullWidth
-						required
-						label="رقم رخصة البلدية"
-						name="municipLicenseNo"
-						component={TextFieldFinal}
-						type="text"
-						variant="outlined"
-						dir="rtl"
-						className="custom-field"
-					/>
-				</Grid>
+
 				<Grid
 					item
 					md={6}
 					xs={12}
 				>
 					<Button
+						startIcon={loading ? <CircularProgress size="1rem" /> : null}
 						variant='outlined'
 						type="button"
 						sx={{
@@ -154,6 +146,26 @@ setCheckData(true)
 							mt={3}
 							mb={3}
 						>
+
+							<Grid
+								item
+								md={6}
+								xs={12}
+								className="custom-label-field"
+							>
+								<Field
+									fullWidth
+									required
+									label="رقم رخصة البلدية"
+									name="municipLicenseNo"
+									component={TextFieldFinal}
+									type="text"
+									variant="outlined"
+									dir="rtl"
+									className="custom-field"
+								/>
+							</Grid>
+
 							<Grid
 								item
 								lg={12}
@@ -163,7 +175,7 @@ setCheckData(true)
 								<Typography gutterBottom variant="body2" color="textSecondary" component="p">
 									اسم المركز
 							  </Typography>
-								<Typography gutterBottom variant="h5" component="h2">
+								<Typography name='companyName' gutterBottom variant="h5" component="h2">
 									{companyDetails.name}
 								</Typography>
 							</Grid>
@@ -177,7 +189,7 @@ setCheckData(true)
 									نشاط السجل التجاري
 							  </Typography>
 								<Typography gutterBottom variant="h5" component="h2">
-									{companyDetails.description}
+									{companyDetails.activities}
 								</Typography>
 							</Grid>
 						</Grid>
@@ -193,4 +205,7 @@ export default CenterDetails;
 
 CenterDetails.propTypes = {
 	Condition: PropTypes.func.isRequired,
+	values: PropTypes.func.isRequired,
+	temporaryLicenses: PropTypes.func.isRequired,
+	setField: PropTypes.func.isRequired,
 };

@@ -2,6 +2,7 @@
 import React from 'react';
 import { Form } from 'react-final-form';
 import { Alert, Box, Button, Card, CardContent, CircularProgress, Grid, Step, StepLabel, Stepper } from '@material-ui/core';
+import arrayMutators from "final-form-arrays";
 
 export default class FinalFromWizard extends React.Component {
   static Page = ({ children }) => children;
@@ -103,6 +104,7 @@ export default class FinalFromWizard extends React.Component {
         onSubmit={this.handleSubmit}
         mutators={{
           // expect (field, value) args from the mutator
+          ...arrayMutators,
           setValue: ([field, value], state, { changeValue }) => {
             changeValue(state, field, () => value)
           }
@@ -128,8 +130,11 @@ export default class FinalFromWizard extends React.Component {
               )}
               {React.cloneElement(activePage, {
                 setField: form.mutators.setValue,
-                values: values
+                pop: form.mutators.pop,
+                push: form.mutators.push,
+                values: values 
               })}
+
               <Grid container spacing={2} mt={3} justifyContent="flex-end">
                 {(page > 0 && !this.state.values.disabledBackButt) && (
                   <Grid item>
