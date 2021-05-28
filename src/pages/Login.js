@@ -34,6 +34,19 @@ const useStyles = makeStyles((theme) => ({
     width: theme.spacing(38),
     height: theme.spacing(38),
   },
+
+  avatarHover: {
+    "&:hover": {
+      backgroundColor: '#f6a923',
+      border: 'solid 5px #f6a923'
+    }
+  },
+
+  secondaryButton: {
+    "&:hover": {
+      color: 'white'
+    }
+  }
 }));
 
 const Login = (props) => {
@@ -50,14 +63,14 @@ const Login = (props) => {
 
   return (
     <>
+      <Helmet>
+        <title>Login</title>
+      </Helmet>
       <DashboardNavbar onMobileNavOpen={() => setMobileNavOpen(true)} />
       <MainNavbar
         onMobileClose={() => setMobileNavOpen(false)}
         openMobile={isMobileNavOpen}
       />
-      <Helmet>
-        <title>Login</title>
-      </Helmet>
       <Box
         sx={{
           backgroundColor: '#fafafa',
@@ -76,7 +89,7 @@ const Login = (props) => {
             }}
             validationSchema={Yup.object().shape({
               email: Yup.string().required('يجب تعبئة الحقل').test('max', 'رقم الهوية/الاقامة يجب ان تحتوي فقط على 10 ارقام او البريد الالكتروني غير صالح', (value) => value && (value.includes('@') || value.length == 10)),
-              password: Yup.string().min(8, 'حقل كلمة المرور يجب أن يحتوي على ٨ احرف على الاقل').required('يجب تعبئة الحقل')
+              password: Yup.string().required('يجب تعبئة الحقل')
             })}
             onSubmit={async (values) => {
               const requestBody = {
@@ -96,7 +109,7 @@ const Login = (props) => {
                 navigate('/otplogin', { state: { otp, requestBody } });
               } else {
 
-                setError('كلمة المرور او رقم الإقامه غير صحيح  ')
+                setError('كلمة المرور / اسم المستخدم غير صحيح  ')
 
               }
             }}
@@ -126,7 +139,6 @@ const Login = (props) => {
                 >
                   <Grid
                     container
-                    spacing={3}
                   >
                     <Grid
                       item
@@ -135,47 +147,57 @@ const Login = (props) => {
                     >
                       <Box
                         className={classes.root}
-                        sx={{ mb: 5, mr: 2 }}
+                        sx={{ mb: 5, mr: 1.5 }}
                       >
-                        <Avatar
-                          className={classes.large}
-                          // onClick={() => setColor({ ...avtarColor, rightAvatar: '#214256', leftAvatar: '#c8d9d9' })}
-                          sx={{
-                            height: '85px', width: '85px', marginLeft: '15%', backgroundColor: '#c8d9d9'
-                          }}
-                        >
-                          مستفيد
-                        </Avatar>
+                        <Grid container spacing={3} sx={{margin: "0 auto", width:"auto"}}>
+                        <Grid item xs={4}>
 
                         <Avatar
-                          className={classes.large}
-                          // onClick={() => setColor({ ...avtarColor, leftAvatar: '#214256', rightAvatar: '#c8d9d9' })}
+                          className={classes.large + ' ' + classes.avatarHover}
+                          // onClick={() => setColor({ ...avtarColor, rightAvatar: '#214256', leftAvatar: '#c8d9d9' })}
                           sx={{
-                            height: '85px', width: '85px', marginLeft: '15%', backgroundColor: '#214256'
+                            height: '85px', width: '85px', backgroundColor: '#c8d9d9', cursor: "pointer"
                           }}
                         >
-                          <a href="/login" style={{ color: 'white' }}>
-                            مركز
-                          </a>
+                          أفراد
                         </Avatar>
-                        <a href="https://inspiredemo2.appiancloud.com/suite/sites/takamol-taheel/page/request-Records">
+
+
+                        </Grid>  
+                        <Grid item xs={4}>
+                        <Avatar
+                          className={classes.large + ' ' + classes.avatarHover}
+                          // onClick={() => setColor({ ...avtarColor, leftAvatar: '#214256', rightAvatar: '#c8d9d9' })}
+                          sx={{
+                            height: '85px', width: '85px', backgroundColor: '#214256', cursor: "pointer"
+                          }}
+                        >
+                            مركز
+                        </Avatar>
+                        </Grid>  
+                        <Grid item xs={4}>
+                        <a href="https://inspiredemo2.appiancloud.com/suite/sites/takamol-taheel/page/request-Records" target="_blank">
                           <Avatar
-                            className={classes.large}
+                            className={classes.large + ' ' + classes.avatarHover}
                             // onClick={() => setColor({ ...avtarColor, leftAvatar: '#214256', rightAvatar: '#c8d9d9' })}
                             sx={{
-                              height: '85px', width: '85px', marginLeft: '15%', backgroundColor: '#f4a523'
+                              height: '85px', width: '85px', backgroundColor: '#c8d9d9', cursor: "pointer"
                             }}
                           >
                             موظف
                         </Avatar>
                         </a>
+                        </Grid>  
+                        </Grid>  
+                        
+                        
                       </Box>
                       <Box sx={{ mb: 3, textAlign: 'center' }}>
                         <Typography
                           color="textPrimary"
                           variant="h2"
                         >
-                          تسجيل الدخول
+                          تسجيل دخول المركز
                         </Typography>
                       </Box>
                     </Grid>
@@ -276,7 +298,7 @@ const Login = (props) => {
                         paddingTop: '16px',
                       }}
                     >
-                      ليس لديك رقم حساب ؟
+                      ليس لديك حساب على المنصة ؟
                     </Typography>
                     <Typography
                       color="textSecondary"
@@ -290,7 +312,7 @@ const Login = (props) => {
                           textDecoration: 'underline'
                         }}
                       >
-                        إنشاء حساب
+                        تسجيل جديد
                       </Link>
                     </Typography>
                   </Box>
