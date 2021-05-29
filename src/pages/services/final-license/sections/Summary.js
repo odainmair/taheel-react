@@ -88,6 +88,7 @@ const Summary = () => {
 
     const [open, setOpen] = React.useState(false);
     const { documents, SetDocuments } = useContext(localContext);
+    console.log('documents>>>',documents)
     const handleClickOpen = (dialogContent, dialogTitle) => {
         setOpen(true);
     };
@@ -179,7 +180,7 @@ const Summary = () => {
                 mb={3}
             >
 
-               { documents.map((document,index)=>
+               { Object.keys(documents.requirements).map((document,index)=>
                <Grid
                     item
                     key={index}
@@ -188,14 +189,14 @@ const Summary = () => {
                     xs={12}
                 >
                     <Typography gutterBottom variant="body2" color="textSecondary" component="p">
-                        {document.name}
+                        {document}
                     </Typography>
 
                     <Button
                         variant="contained"
                         color="primary"
                         startIcon={<CloudDownloadIcon />}
-                        onClick={() => downloadFileFn(document.docId)}
+                        onClick={() => downloadFileFn(documents[document])}
                     >
                         تنزيل
                     </Button>

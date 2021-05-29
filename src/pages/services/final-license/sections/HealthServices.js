@@ -11,7 +11,8 @@ import { Radio, Select } from 'final-form-material-ui';
 import PropTypes from 'prop-types';
 import FileUploader from 'src/components/FileUploader';
 
-const HealthServices = ({ Condition }) => (
+const HealthServices = ({ Condition }) => {
+    return (
     <>
         <Grid
             container
@@ -78,7 +79,7 @@ const HealthServices = ({ Condition }) => (
     </>
 
 );
-
+}
 export default HealthServices;
 
 HealthServices.propTypes = {

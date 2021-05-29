@@ -34,7 +34,7 @@ const CenterDetails = ({ Condition, values, temporaryLicenses, setField }) => {
 			setCheckData(false)
 		}
 		else {
-			getMunicipalLicenseNo()
+			// getMunicipalLicenseNo()
 			setCompanyDetails({ ...companyDetails, name: response.responseBody.data.CRName, activities: response.responseBody.data.Activities })
 			setCheckData(true)
 			SetErrMessage('')

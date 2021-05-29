@@ -133,6 +133,22 @@ export default
       }],
     },
 
+    {
+      id: uuid(),
+      label: {
+        ar: 'نوع الخدمة الصحية',
+        en: 'Type of health service'
+      },
+      name: 'healthServiceType',
+      type: 'Select',
+      gridSize: '6',
+      sectionName: 'HealthServices',
+      options: [
+        { value: 'license', label: { ar: 'رخصة وزارة الصحة', en: 'MOH License' } },
+        { value: 'contract', label: { ar: 'عقد شراكة مع منشأة رعاية صحية', en: 'Partnership contract with a Health Care Facility' } },
+      ],
+      validators: [],
+    },
 
 
 
