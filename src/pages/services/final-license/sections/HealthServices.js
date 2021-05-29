@@ -9,9 +9,31 @@ import {
 import { Field } from 'react-final-form';
 import { Radio, Select } from 'final-form-material-ui';
 import PropTypes from 'prop-types';
+import { useContext } from 'react';
+import localContext from 'src/localContext';
 import FileUploader from 'src/components/FileUploader';
 
+
 const HealthServices = ({ Condition }) => {
+    const { documents, SetDocuments } = useContext(localContext);
+    
+    const uploadDocument = async (name, file) => {
+        var reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onloadend = async function () {
+            var base64String = reader.result;
+            var n = base64String.indexOf("base64,") + 7;
+            base64String = reader.result.substr(n);
+            const image = base64String
+            const response = await uploadDocumentApi(name, image)
+            if (!response.isSuccessful)
+                SetErrMessage(response.message)
+            else
+                documents.push({ name:name, docId:response.responseBody.docID })
+            SetDocuments(documents)
+        }
+    }
+
     return (
     <>
         <Grid
