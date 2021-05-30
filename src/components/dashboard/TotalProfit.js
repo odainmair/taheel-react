@@ -6,12 +6,12 @@ import {
   Typography
 } from '@material-ui/core';
 import { indigo } from '@material-ui/core/colors';
-import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
+import ReplayIcon from '@material-ui/icons/Replay';
 import Skeleton from '@material-ui/lab/Skeleton';
 import PropTypes from 'prop-types';
 
 const TotalProfit = (props) => {
-  const { loading = false } = props;
+  const { loading = false, totalreturnrequests } = props;
   return (
     <Card>
       <CardContent>
@@ -27,7 +27,7 @@ const TotalProfit = (props) => {
                 gutterBottom
                 variant="h5"
               >
-                مجموع الرباح
+                 مجموع الطلبات المرتجعة
               </Typography>
             ) : (
               <Skeleton animation="wave" height={10} width={150} style={{ marginBottom: 6 }} />
@@ -37,7 +37,7 @@ const TotalProfit = (props) => {
                 color="textPrimary"
                 variant="h3"
               >
-                $23,200
+                {totalreturnrequests}
               </Typography>
             ) : (
               <Skeleton animation="wave" height={10} width={100} style={{ marginTop: 10 }} />
@@ -52,7 +52,7 @@ const TotalProfit = (props) => {
                   width: 56
                 }}
               >
-                <AttachMoneyIcon />
+                <ReplayIcon />
               </Avatar>
             ) : (
               <Skeleton animation="wave" variant="circle" height={56} width={56} />
@@ -68,4 +68,5 @@ export default TotalProfit;
 
 TotalProfit.propTypes = {
   loading: PropTypes.bool.isRequired,
+  totalreturnrequests: PropTypes.string
 };

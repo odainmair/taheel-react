@@ -51,6 +51,7 @@ const Dashboard = () => {
   const [totalCompletedRequests, setTotalCompletedRequests] = useState(0);
   const [totalRejectedRequests, setTotalRejectedRequests] = useState(0);
   const [totalTahelRequests, setTotalTahelRequests] = useState(0);
+  const [totalReturnRequests, setTotalReturnRequests] = useState(0);
   const [totalCenters, setTotalCenters] = useState(0);
 
   useEffect(async () => {
@@ -90,6 +91,7 @@ const Dashboard = () => {
       const { data } = getMyTasksRs.responseBody;
       console.log(JSON.stringify(data));
       setTaskRequests(data);
+      setTotalReturnRequests(data.length)
       setLoading(true);
     }
     return response;
@@ -145,7 +147,7 @@ const Dashboard = () => {
               xl={3}
               xs={12}
             >
-              <TotalProfit sx={{ height: '100%' }} loading={false} />
+              <TotalProfit sx={{ height: '100%' }} loading={loading} totalreturnrequests={totalReturnRequests} />
             </Grid>
             <Grid
               item

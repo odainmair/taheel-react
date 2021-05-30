@@ -271,7 +271,7 @@ const Login = (props) => {
                     >
                       <Link
                         component={RouterLink}
-                        to="/ForgetPwd"
+                        to="/forgetpassword"
                         variant="h6"
                       >
                         نسيت كلمة المرور

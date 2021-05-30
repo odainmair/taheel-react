@@ -18,6 +18,7 @@ import About from './pages/public/AboutUs';
 import Faq from './pages/public/faq';
 import Services from './pages/public/Services';
 import ContactUs from './pages/public/ContactUs';
+import ForgetPassword from './pages/forgetPassword/ForgetPassword';
 
 const routes = (isLoggedIn) => [
   {
@@ -31,6 +32,7 @@ const routes = (isLoggedIn) => [
       { path: '/faq', element: <Faq /> },
       { path: '/services', element: <Services /> },
       { path: '/contactus', element: <ContactUs /> },
+      { path: '/forgetpassword', element: <ForgetPassword /> },
       { path: 'register', element: isLoggedIn === "" ? <Register /> : <Navigate to="/app/dashboard" /> },
       { path: '404', element: <NotFound /> },
       {
