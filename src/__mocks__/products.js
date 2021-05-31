@@ -32,8 +32,8 @@ export default [
     description: ' تتيح هذه الخدمة للمركز اصدار ترخيص نهائي لمركز تأهيل أهلي',
     media: '/static/images/products/app.png',
     title: 'اصدار ترخيص نهائي لمركز تأهيل أهلي',
-    url: '/services/survey',
-    isActive: false
+    url: '/services/finallicense',
+    isActive: true
   },
   {
     id: uuid(),

@@ -40,6 +40,11 @@ const downloadFileAPI = async ({
     url, queryParams = {}, fileName,
     method
 }) => {
+    const response = {
+        isSuccessful: true,
+        data: {},
+        message: ''
+    };
     try {
         console.log(`----url :: ${url}`);
         console.log(`----queryParams :: ${queryParams}`);
@@ -47,14 +52,47 @@ const downloadFileAPI = async ({
             'Appian-API-Key': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2YWUxNjY4OC1kMjMxLTRmZTQtYWYyMy0yYjQ5MWUyMjk2NDkifQ.sVfHaN8hSbxpZuuhIjq1Dd9YOEh_ckc2Qk9pCrX_3Sw',
             'Content-Type': 'application/json; charset=utf-8'
         };
-        const apiResponse = await axios.get(url, { headers, responseType: 'blob', params: { ...queryParams } });
+        const apiResponse = await axios.get(`https://inspiredemo2.appiancloud.com/suite/webapi/${url}`, { headers, responseType: 'blob', params: { ...queryParams } });
+        response.responseBody =  { ...apiResponse.data };
         console.log(`----headers :: ${JSON.stringify(apiResponse.headers)}`);
         fileDownload(apiResponse.data, fileName, apiResponse.headers['content-type']);
     } catch (err) {
         console.log(`----requestBody err :: ${JSON.stringify(err.response)}`);
         throw (err);
     }
-
+    return response;
 };
 
-export { downloadFileAPI, APIRequest };
+
+
+const uploadFileAPI = async ( requestBody, fileName) =>{
+
+    const response = {
+        isSuccessful: true,
+        data: {},
+        message: ''
+    };
+    console.log('requestBody',requestBody)
+    var config = {
+      method: 'post',
+      url: 'https://inspiredemo2.appiancloud.com/suite/webapi/taheel-apis-utilities-uploadDocument-v2',
+      headers: { 
+        'Appian-API-Key': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2YWUxNjY4OC1kMjMxLTRmZTQtYWYyMy0yYjQ5MWUyMjk2NDkifQ.sVfHaN8hSbxpZuuhIjq1Dd9YOEh_ckc2Qk9pCrX_3Sw',
+        'Appian-Document-Name': 'Profile Picture.jpg', 
+        'Content-Type': 'text/plain'
+      },
+      data : requestBody.src
+    };
+    
+    const apiResponse= await axios(config)
+    .then(function (result) {
+        response.responseBody = result.data;
+      console.log(JSON.stringify(result.data));
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+    return response
+    }
+
+export { downloadFileAPI, APIRequest, uploadFileAPI };

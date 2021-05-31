@@ -2,7 +2,6 @@ import React from 'react';
 import {
     Divider,
     Grid,
-    InputAdornment,
     FormControl,
     Typography,
     FormControlLabel,
@@ -14,6 +13,7 @@ import {
     TableRow,
     TableCell,
     Button,
+    IconButton,
 } from '@material-ui/core';
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 import { Field } from 'react-final-form';
@@ -23,9 +23,14 @@ import { TextField as TextFieldFinal, Checkbox } from 'final-form-material-ui';
 import finalLicenseFieldSchema from '../models/finalLicenseFieldSchema';
 import TermsContent from './TermsContent';
 import TermsDialog from 'src/components/TermsDialog';
-import { downloadDocument } from '../services/finalLicenseAPI'
 import { useContext } from 'react';
 import localContext from 'src/localContext';
+import { DownloadButt } from '../services/finalLicenseUtil'
+import { downloadDocument } from '../services/finalLicenseAPI'
+import VisibilityIcon from '@material-ui/icons/Visibility';
+import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
+import Collapse from '@material-ui/core/Collapse';
+import { makeStyles } from '@material-ui/core/styles';
 
 const contentField = ({ input: { value, name }, label, type, inputType }) => (
     <>
@@ -37,28 +42,16 @@ const contentField = ({ input: { value, name }, label, type, inputType }) => (
         </Typography>
     </>
 )
-const downloadFileFn = async (licenseNumber) => {
-    console.log("responseresponse",licenseNumber)
-    const downloadDoc = downloadDocument(licenseNumber, false)
 
-}
+const useRowStyles = makeStyles({
+    root: {
+        '& > *': {
+            borderBottom: 'unset',
+        },
+    },
+});
 
 
-const calculate = async () => {
-    setLoading(true)
-
-    const response = await calculation(values.buildingArea, values.basementArea)
-    if (!response.isSuccessful) {
-        SetErrMessage(response.message)
-        setCalculatedData(false)
-    }
-    else {
-        setCompanyDetails({ ...companyDetails, Capacity: response.responseBody.body.carryingCapacity.toFixed(3), FinancialGuarantee: response.responseBody.body.financialGuarantee.toFixed(3) })
-        setCalculatedData(true)
-        SetErrMessage('')
-    }
-    setLoading(false)
-}
 const termsLabel = (openDialog) => (
     <>
         <Typography gutterBottom variant="h5" component="span">
@@ -69,32 +62,141 @@ const termsLabel = (openDialog) => (
     </>
 )
 const getFieldValue = ({ name, value }) => {
-    console.log("name", name);
-    console.log("value", value)
     if (value == '')
         return '';
     const filredFinal = finalLicenseFieldSchema.filter(fintalLicense => fintalLicense.name === name);
-    console.log("filredFinal/////////////////////////////", filredFinal)
     if (filredFinal.length > 0) {
         const filteredvalue = filredFinal[0].options.filter(option => option.value == value);
-        console.log("I'm Here in", name,);
         if (filteredvalue.length > 0)
             return filteredvalue[0].label.ar;
     }
     return '';
 }
+const downloadFileFn = async (licenseNumber) => {
+    console.log("responseresponse", licenseNumber)
+    const downloadDoc = downloadDocument(licenseNumber, true)
+}
 
-const Summary = () => {
+
+const Summary = ({ values }) => {
 
     const [open, setOpen] = React.useState(false);
     const { documents, SetDocuments } = useContext(localContext);
-    console.log('documents>>>',documents)
+    const { finalLicenseDetails, SetFinalLicenseDetails } = useContext(localContext);
+
+    console.log('documents>>>', documents)
     const handleClickOpen = (dialogContent, dialogTitle) => {
         setOpen(true);
     };
     const handleClose = (value) => {
         setOpen(false);
     };
+
+
+
+    const Row = ({ fields, name, index }) => {
+        const classes = useRowStyles();
+        const [showen, setShowen] = React.useState(false)
+        return (
+            <>
+                <TableRow className={classes.root} key={name}>
+                    {console.log("fields", fields.value)}
+
+                    <TableCell component="th" scope="row">
+                        {name.fullName}
+                    </TableCell>
+
+                    <TableCell component="th" scope="row">
+                        {name.idNumber ? name.idNumber : name.iqamaNo}
+                    </TableCell>
+
+                    <TableCell component="th" scope="row">
+                        {name.staffTypes}
+                    </TableCell>
+
+                    <TableCell component="th" scope="row">
+                        {name.gender}
+                    </TableCell>
+
+                    <TableCell component="th" scope="row">
+                        {name.nationality}
+                    </TableCell>
+                    <TableCell>
+                        <IconButton onClick={() => setShowen(!showen)}>
+                            {showen ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                        </IconButton>
+                    </TableCell>
+
+                </TableRow>
+                <TableRow >
+                <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={12}>
+                    <Collapse in={showen} className={`Attach${index}`} timeout="auto" unmountOnExit  >
+
+                        <Grid
+                            container
+                            spacing={3}
+                        >
+                            <Grid
+                                item
+                                lg={4}
+                                md={6}
+                                xs={12}
+                            >
+                                < DownloadButt docIDs={name.cv} name={`${name}.cv`} label='السيرة الذاتية' />
+                                {/* <Button
+                                    name={`${name}.cv`}
+                                    variant="contained"
+                                    color="primary"
+                                    startIcon={<CloudDownloadIcon />}
+                                    onClick={() => downloadFileFn(name.cv)}
+                                >
+                                    تنزيل
+                            </Button> */}
+                            </Grid>
+                            <Grid
+                                item
+                                lg={4}
+                                md={6}
+                                xs={12}
+                            >
+                                < DownloadButt docIDs={name.EducationalQualification} name={`${name}.EducationalQualification`} label='السيرة الذاتية' />
+                                {/* <Button
+                                    name={`${name}.EducationalQualification`}
+                                    variant="contained"
+                                    color="primary"
+                                    startIcon={<CloudDownloadIcon />}
+                                    onClick={() => downloadFileFn(name.EducationalQualification)}
+                                >
+                                    تنزيل
+                                </Button> */}
+                            </Grid>
+                            <Grid
+                                item
+                                lg={4}
+                                md={6}
+                                xs={12}
+                            >
+                                < DownloadButt docIDs={name.MedicalPractice} name={`${name}.MedicalPractice`} label='السيرة الذاتية' />
+
+                                {/* <Button
+                                    name={`${name}.MedicalPractice`}
+                                    variant="contained"
+                                    color="primary"
+                                    startIcon={<CloudDownloadIcon />}
+                                    onClick={() => downloadFileFn(name.MedicalPractice)}
+                                >
+                                    تنزيل
+                                 </Button> */}
+                            </Grid>
+                        </Grid>                                                         {/* </TableCell> */}
+                    </Collapse>
+                    </TableCell>
+                </TableRow>
+            </>
+        )
+    }
+
+
     return (
         <>
             <Typography
@@ -112,6 +214,7 @@ const Summary = () => {
                 mt={3}
                 mb={3}
             >
+
                 {finalLicenseFieldSchema.filter(fintalLicense => fintalLicense.sectionName === "CenterDetails" && !fintalLicense.dependOn).map(filteredFinalLicense => (
                     <Grid
                         item
@@ -120,6 +223,9 @@ const Summary = () => {
                         md={6}
                         xs={12}
                     >
+
+
+                        {console.log('finalLicenseDetails', finalLicenseDetails)}
                         <Field
                             label={filteredFinalLicense.label.ar}
                             name={filteredFinalLicense.name}
@@ -128,6 +234,7 @@ const Summary = () => {
                         />
                     </Grid>
                 ))}
+
             </Grid>
             <Divider />
             <Typography
@@ -175,116 +282,25 @@ const Summary = () => {
             </Typography>
             <Grid
                 container
-                spacing={3}
-                mt={3}
+                spacing={10}
+                // mt={3}
                 mb={3}
             >
-
-               { Object.keys(documents.requirements).map((document,index)=>
-               <Grid
-                    item
-                    key={index}
-                    lg={6}
-                    md={6}
-                    xs={12}
-                >
-                    <Typography gutterBottom variant="body2" color="textSecondary" component="p">
-                        {document}
-                    </Typography>
-
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        startIcon={<CloudDownloadIcon />}
-                        onClick={() => downloadFileFn(documents[document])}
+                {finalLicenseFieldSchema.filter(fintalLicense => fintalLicense.sectionName === "Requirements" && !fintalLicense.dependOn).map(filteredFinalLicense => (
+                    <Grid
+                        item
+                        key={filteredFinalLicense.id}
+                        lg={6}
+                        md={6}
+                        xs={12}
                     >
-                        تنزيل
-                    </Button>
 
-                </Grid> 
-                )}
-
-            </Grid>
-            <Divider />
-            <Typography
-                color="textPrimary"
-                gutterBottom
-                mb={4}
-                mt={6}
-                variant="h4"
-            >
-                معلومات الكوادر
-            </Typography>
-            <Grid
-                container
-                spacing={3}
-                mt={3}
-                mb={3}
-            >
-                {/* {finalLicenseFieldSchema.filter(fintalLicense => fintalLicense.sectionName === "staffInfo" && !fintalLicense.dependOn).map(filteredFinalLicense => ( */}
-                <Grid
-                    item
-                    // key={filteredFinalLicense.id}
-                    lg={12}
-                    md={12}
-                    xs={12}
-                >
-
-                    {/* ///////////////////////////////////////////// */}
-
-                    <TableContainer>
-                        <Table aria-label="simple table">
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell> الاسم الكامل </TableCell>
-                                    <TableCell> رقم الهوية/الاإقامة </TableCell>
-                                    <TableCell> نوع الكادر </TableCell>
-                                    <TableCell> الجنس </TableCell>
-                                    <TableCell> الجنسية</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                <FieldArray name="customers">
-
-                                    {({ fields }) => fields.value.map((name, index) => (
-                                        <TableRow key={name}>
-                                            {console.log("fields", fields.value)}
-
-                                            <TableCell component="th" scope="row">
-                                                {name.fullName}
-                                            </TableCell>
-
-                                            <TableCell component="th" scope="row">
-                                                {name.idNumber ? name.idNumber : name.iqamaNo}
-                                            </TableCell>
-
-                                            <TableCell component="th" scope="row">
-                                                {name.staffTypes}
-                                            </TableCell>
-
-                                            <TableCell component="th" scope="row">
-                                                {name.gender}
-                                            </TableCell>
-
-                                            <TableCell component="th" scope="row">
-                                                {name.nationality}
-                                            </TableCell>
-                                        </TableRow>
-                                    ))}
-                                </FieldArray>
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-
-
-
-                    {/* //////////////////////////////////////////////////// */}
-
-
-
-                </Grid>
-
-                {/* } */}
+                        {console.log('{values[filteredFinalLicense.name]', values[filteredFinalLicense.name])}
+                        {console.log('values', values)}
+                        {console.log('[filteredFinalLicense.name]', filteredFinalLicense.name)}
+                        < DownloadButt docIDs={values[filteredFinalLicense.name]} name={filteredFinalLicense.name} label={filteredFinalLicense.label.ar} />
+                    </Grid>
+                ))}
             </Grid>
 
             <Divider />
@@ -295,7 +311,7 @@ const Summary = () => {
                 mt={6}
                 variant="h4"
             >
-                الخدمات الضحية
+                الخدمات الصحية
             </Typography>
             <Grid
                 container
@@ -319,8 +335,66 @@ const Summary = () => {
                         />
                     </Grid>
                 ))}
+                <Grid
+                    item
+                    lg={6}
+                    md={6}
+                    xs={12}
+                >
+                    < DownloadButt docIDs={values.healthServiceAttachment} name='healthServiceAttachment' label='مرفقات الخدمات الصحية' />
+                </Grid>
+
             </Grid>
             <Divider />
+
+            <Typography
+                color="textPrimary"
+                gutterBottom
+                mb={4}
+                mt={6}
+                variant="h4"
+            >
+                معلومات الكوادر
+            </Typography>
+            <Grid
+                container
+                spacing={3}
+                mt={3}
+                mb={3}
+            >
+
+                <Grid
+                    item
+                    lg={12}
+                    md={12}
+                    xs={12}
+                >
+                    <TableContainer>
+                        <Table aria-label="simple table">
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell> الاسم الكامل </TableCell>
+                                    <TableCell> رقم الهوية/الاإقامة </TableCell>
+                                    <TableCell> نوع الكادر </TableCell>
+                                    <TableCell> الجنس </TableCell>
+                                    <TableCell> الجنسية</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                <FieldArray name="customers">
+
+                                    {({ fields }) => fields.value.map((name, index) => (
+                                        <Row key={index} fields={fields} name={name} index={index} />
+                                    ))}
+                                </FieldArray>
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+
+                </Grid>
+            </Grid>
+            <Divider />
+
             <Grid
                 container
                 lg={12}
@@ -352,8 +426,15 @@ const Summary = () => {
 }
 
 export default Summary;
-// Summary.propTypes = {
-// 	value: PropTypes.func.isRequired,
-// };
+Summary.propTypes = {
+    section: PropTypes.func.isRequired,
+    label: PropTypes.func.isRequired,
+    value: PropTypes.func.isRequired,
+    values: PropTypes.func.isRequired,
+    index: PropTypes.func.isRequired,
+    name: PropTypes.func.isRequired,
+    fields: PropTypes.func.isRequired,
+
+};
 
 

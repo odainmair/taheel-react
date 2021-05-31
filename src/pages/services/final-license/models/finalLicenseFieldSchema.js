@@ -1,7 +1,6 @@
 import { checkIsfilled } from 'src/utils/inputValidator';
-import { getCurrentUser } from 'src/utils/UserLocalStorage';
-import { getTempLicense } from '../services/finalLicenseAPI'
 import { v4 as uuid } from 'uuid';
+
 
 export default
 
@@ -104,7 +103,20 @@ export default
         ar: 'الضمان المالي',
         en: 'Financial Guarantee'
       },
-      name: 'FinancialGuarantee',
+      name: 'financialGuarantee',
+      type: 'Text',
+      gridSize: '6',
+      sectionName: 'Capacity',
+      options: [],
+      validators: [],
+    },
+    {
+      id: uuid(),
+      label: {
+        ar: 'الضمان المالي',
+        en: 'Financial Guarantee'
+      },
+      name: 'capacity',
       type: 'Text',
       gridSize: '6',
       sectionName: 'Capacity',
@@ -144,11 +156,99 @@ export default
       gridSize: '6',
       sectionName: 'HealthServices',
       options: [
-        { value: 'license', label: { ar: 'رخصة وزارة الصحة', en: 'MOH License' } },
-        { value: 'contract', label: { ar: 'عقد شراكة مع منشأة رعاية صحية', en: 'Partnership contract with a Health Care Facility' } },
+        { value: 1, label: { ar: 'رخصة وزارة الصحة', en: 'MOH License' } },
+        { value: 2, label: { ar: 'عقد شراكة مع منشأة رعاية صحية', en: 'Partnership contract with a Health Care Facility' } },
       ],
       validators: [],
     },
+
+
+    {
+      id: uuid(),
+      label: {
+        ar: 'ارفاق الخطة التشغيلية',
+        en: 'Operational Plan'
+      },
+      name: 'OperationalPlan',
+      type: 'file',
+      gridSize: '6',
+      sectionName: 'Requirements',
+      options: [ ],
+      validators: [],
+    },
+
+    {
+      id: uuid(),
+      label: {
+        ar: 'ارفاق الخطة التنفيذية',
+        en: 'Executive Plan'
+      },
+      name: 'ExecutivePlan',
+      type: 'file',
+      gridSize: '6',
+      sectionName: 'Requirements',
+      options: [ ],
+      validators: [],
+    },
+
+    {
+      id: uuid(),
+      label: {
+        ar: "ارفاق تقرير زيارة مكتب هندسي معتمد",
+        en: 'Office Report'
+      },
+      name: 'OfficeReport',
+      type: 'file',
+      gridSize: '6',
+      sectionName: 'Requirements',
+      options: [ ],
+      validators: [],
+    },
+
+
+    {
+      id: uuid(),
+      label: {
+        ar: "ارفاق تقرير المسح الأمني",
+        en: 'Security Report'
+      },
+      name: 'SecurityReport',
+      type: 'file',
+      gridSize: '6',
+      sectionName: 'Requirements',
+      options: [ ],
+      validators: [],
+    },
+
+
+    {
+      id: uuid(),
+      label: {
+        ar: "ارفاق صور الأثاث و الأجهزة الكهربائية",
+        en: 'Furniture'
+      },
+      name: 'Furniture',
+      type: 'file',
+      gridSize: '6',
+      sectionName: 'Requirements',
+      options: [ ],
+      validators: [],
+    },
+
+    {
+      id: uuid(),
+      label: {
+        ar: "ارفاق الضمان المالي",
+        en: 'Financial Guarantee'
+      },
+      name: 'FinancialGuaranteeAtt',
+      type: 'file',
+      gridSize: '6',
+      sectionName: 'Requirements',
+      options: [ ],
+      validators: [],
+    },
+
 
 
 

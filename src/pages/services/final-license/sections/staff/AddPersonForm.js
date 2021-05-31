@@ -8,7 +8,7 @@ import {
   Typography,
   Box,
   Alert,
-	CircularProgress,
+  CircularProgress,
 } from '@material-ui/core';
 import { Field } from 'react-final-form';
 import { TextField as TextFieldFinal, Radio } from 'final-form-material-ui';
@@ -16,16 +16,19 @@ import Calendar from 'src/components/calendar';
 import { validateCitizenFunc } from '../../services/finalLicenseAPI'
 import PersonForm from './PersonForm'
 
-const AddPersonForm = ({ fromEdit, StaffCondition, setField, pop, push, values, setOpenPopup, fieldName, Condition }) => {
-  console.log("fromEdit",fromEdit)
+const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push, values, setOpenPopup, fieldName, Condition }) => {
+  console.log("fromEdit", fromEdit)
   const [errMessage, setErrMessage] = useState('')
   const [loading, setLoading] = useState(false)
   const [forignForm, setForignForm] = useState(fromEdit ? true : false)
   const [SAForm, setSAForm] = useState(fromEdit ? true : false)
+  var [managersCount, setManagersCount] = React.useState(0);
+
   // fromEdit ? true : false
-  const [citizenInfo, setCitizenInfo] = useState(values ?  {Name:{ FirstName: values.fullName.split(" ")[0], LastName: values.fullName.split(" ")[1], }, staffTypes: values.staffTypes, Gender: values.gender} :{})
+  const [citizenInfo, setCitizenInfo] = useState(values ? { Name: { FirstName: values.fullName.split(" ")[0], LastName: values.fullName.split(" ")[1], }, staffTypes: values.staffTypes, Gender: values.gender, birthDate: values.birthDate, cv: values.cv, EducationalQualification: values.EducationalQualification, MedicalPractice: values.MedicalPractice } : {})
 
   const CitizenValidate_SA = async () => {
+
     setLoading(true)
     function numberToDay(day) {
       return ('0' + day).slice(-2);
@@ -37,8 +40,8 @@ const AddPersonForm = ({ fromEdit, StaffCondition, setField, pop, push, values, 
     else {
       setCitizenInfo(response.responseBody.data.Body)
       setSAForm(true)
-      console.log('response =>>>>>',response.responseBody.data.Body)
-     
+      console.log('response =>>>>>', response.responseBody.data.Body)
+
     }
     setLoading(false)
   }
@@ -87,14 +90,14 @@ const AddPersonForm = ({ fromEdit, StaffCondition, setField, pop, push, values, 
             <FormControlLabel
               label="سعودي"
               control={<Field
-              name={fieldName === null ? "nationality" : `${fieldName}.nationality`}
-              component={Radio} type="radio" value="سعودي" />}
+                name={fieldName === null ? "nationality" : `${fieldName}.nationality`}
+                component={Radio} type="radio" value="سعودي" />}
             />
             <FormControlLabel
               label="غير سعودي"
               control={<Field
-              name={fieldName === null ? "nationality" : `${fieldName}.nationality`}
-              component={Radio} type="radio" value="غير سعودي" />}
+                name={fieldName === null ? "nationality" : `${fieldName}.nationality`}
+                component={Radio} type="radio" value="غير سعودي" />}
             />
           </RadioGroup>
         </Grid>
@@ -135,7 +138,7 @@ const AddPersonForm = ({ fromEdit, StaffCondition, setField, pop, push, values, 
               xs={12}
             >
               <Button
-               startIcon={loading ? <CircularProgress size="1rem" /> : null}
+                startIcon={loading ? <CircularProgress size="1rem" /> : null}
                 variant='outlined'
                 type="button"
                 sx={{
@@ -163,7 +166,7 @@ const AddPersonForm = ({ fromEdit, StaffCondition, setField, pop, push, values, 
             </Grid>
 
             {SAForm &&
-              < PersonForm StaffCondition ={ StaffCondition } setField={setField} fieldName={fieldName} Condition={Condition} citizenInfo={citizenInfo} />
+              < PersonForm MedicalPracticeCondition={MedicalPracticeCondition} setField={setField} fieldName={fieldName} Condition={Condition} citizenInfo={citizenInfo} />
             }
 
           </Condition>
@@ -202,7 +205,7 @@ const AddPersonForm = ({ fromEdit, StaffCondition, setField, pop, push, values, 
               xs={12}
             >
               <Button
-              startIcon={loading ? <CircularProgress size="1rem" /> : null}
+                startIcon={loading ? <CircularProgress size="1rem" /> : null}
                 variant='outlined'
                 type="button"
                 sx={{
@@ -221,7 +224,7 @@ const AddPersonForm = ({ fromEdit, StaffCondition, setField, pop, push, values, 
 				</Button>
             </Grid>
             {forignForm &&
-              < PersonForm StaffCondition={ StaffCondition } setField={ setField } fieldName={fieldName} Condition={Condition} citizenInfo={ citizenInfo } />
+              < PersonForm MedicalPracticeCondition={MedicalPracticeCondition} setField={setField} fieldName={fieldName} Condition={Condition} citizenInfo={citizenInfo} />
             }
           </Condition>
         </Grid>
@@ -237,24 +240,29 @@ const AddPersonForm = ({ fromEdit, StaffCondition, setField, pop, push, values, 
           <Button
             style={{
               width: "100%",
-              height: "3.4375em"
+              height: "3.4375em",
+              backgroundColor: '#E2E8EB',
+              color: '#000',
             }}
             variant='contained'
-            color="primary"
             onClick={() => {
               values.fullName = "";
               values.idNumber = "";
               values.iqamaNo = ""
               values.staffTypes = "";
-              values.gender ="";
-              values.nationality ="";
+              values.gender = "";
+              values.birthDate = "";
+              values.nationality = "";
+              values.cv = "";
+              values.EducationalQualification = "";
+              values.MedicalPractice = "";
               setOpenPopup(false);
             }}
           >
             الغاء
         </Button>
         </Grid>
-        
+
         <Grid
           item
           md={3}
@@ -267,19 +275,30 @@ const AddPersonForm = ({ fromEdit, StaffCondition, setField, pop, push, values, 
             variant='contained'
             color="primary"
             onClick={() => {
-              const { fullName, staffTypes,idNumber, gender, iqamaNo, nationality, day, month, year } = values;
+              const { fullName, staffTypes, idNumber, gender, birthDate, iqamaNo, nationality, day, month, year, cv, EducationalQualification, MedicalPractice } = values;
               values.fullName = "";
               values.idNumber = "";
               values.iqamaNo = "";
               values.staffTypes = "";
-              values.gender ="";
-              values.nationality ="";
-              values.day ="";
-              values.month ="";
-              values.year ="";
-              
+              values.gender = "";
+              values.birthDate = "";
+              values.nationality = "";
+              values.day = "";
+              values.month = "";
+              values.year = "";
+              values.cv = "";
+              values.EducationalQualification = "";
+              values.MedicalPractice = "";
+
               if (fieldName === null) {
-                push("customers", {  fullName: fullName,  idNumber: idNumber, iqamaNo: iqamaNo, staffTypes: staffTypes, gender: gender, nationality:nationality, day:day, month:month, year:year });
+                push("customers", { fullName: fullName, idNumber: idNumber, iqamaNo: iqamaNo, staffTypes: staffTypes, gender: gender, birthDate: birthDate, nationality: nationality, day: day, month: month, year: year, cv: cv, EducationalQualification: EducationalQualification, MedicalPractice: MedicalPractice });
+              }
+              if (values.customers) {
+                var managersCount = values.customers.filter(customer => customer.staffTypes === "مدير").length
+                setField('managersCount', managersCount)
+                var teachersCount = values.customers.filter(customer => customer.staffTypes === "معلم تربية خاصة ").length
+                
+                setField('teachersCount',teachersCount)
               }
               setOpenPopup(false);
             }}
@@ -288,7 +307,7 @@ const AddPersonForm = ({ fromEdit, StaffCondition, setField, pop, push, values, 
         </Button>
         </Grid>
 
-        
+
       </Grid>
     </>
   )
