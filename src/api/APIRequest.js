@@ -15,7 +15,7 @@ const APIRequest = async ({
     };
     console.log(`----requestBody :: ${JSON.stringify(requestBody)}`);
     console.log(`----url :: ${url}`);
-    console.log(`----queryParams :: ${queryParams}`);
+    console.log(`----queryParams :: ${JSON.stringify(queryParams)}`);
     try {
         const headers = {
             'Appian-API-Key': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2YWUxNjY4OC1kMjMxLTRmZTQtYWYyMy0yYjQ5MWUyMjk2NDkifQ.sVfHaN8hSbxpZuuhIjq1Dd9YOEh_ckc2Qk9pCrX_3Sw',
@@ -47,7 +47,7 @@ const downloadFileAPI = async ({
     };
     try {
         console.log(`----url :: ${url}`);
-        console.log(`----queryParams :: ${queryParams}`);
+        console.log(`----queryParams :: ${JSON.stringify(queryParams)}`);
         const headers = {
             'Appian-API-Key': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2YWUxNjY4OC1kMjMxLTRmZTQtYWYyMy0yYjQ5MWUyMjk2NDkifQ.sVfHaN8hSbxpZuuhIjq1Dd9YOEh_ckc2Qk9pCrX_3Sw',
             'Content-Type': 'application/json; charset=utf-8'

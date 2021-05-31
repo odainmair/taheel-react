@@ -14,6 +14,7 @@ import RequestsChart from 'src/components/dashboard/RequestsChart';
 import { APIRequest } from 'src/api/APIRequest';
 import CentersTable from 'src/components/dashboard/CentersTable';
 import { getCurrentUser } from 'src/utils/UserLocalStorage';
+import MyTasksTable from 'src/components/dashboard/MyTasksTable';
 
 const Dashboard = () => {
   const getTaheelRequestsFun = async (userEmail) => {
@@ -28,8 +29,23 @@ const Dashboard = () => {
     const response = await APIRequest({ url, queryParams });
     return response;
   };
+  const getMyTasksFun = async (userEmail) => {
+    const url = 'taheel-apis-utilities-GetGetExternalUserTasks-v2';
+    const queryParams = { userEmail:"ahmad.albuthom@inspirejo.com", taskStatus:0 };
+    const response = await APIRequest({ url, queryParams });
+    return response;
+  };
   const [loading, setLoading] = useState(false);
   const [taheelRequests, setTaheelRequests] = useState([]);
+  const [taskRequests, setTaskRequests] = useState([{
+    "processID": 268457657,
+    "status": 0,
+    "centerLicenceNumber": "0101020029",
+    "requestNum": "CNTR-REQ-0119",
+    "userEmail": "ahmad.albuthom@inspirejo.com",
+    "name": "مراجعة طلب رقم CNTR-REQ-0119",
+    "ID": 8
+  }]);
   const [centerRequests, setCenterRequests] = useState([]);
   const [totalPendingRequests, setTotalPendingRequests] = useState(0);
   const [totalCompletedRequests, setTotalCompletedRequests] = useState(0);
@@ -65,6 +81,14 @@ const Dashboard = () => {
       const { Centers } = getCentersRs.responseBody.data;
       setTotalCenters(Centers.length);
       setCenterRequests(Centers);
+    }
+    const getMyTasksRs = await getMyTasksFun(email);
+    if (!getMyTasksRs.isSuccessful) {
+      setLoading(true);
+      response = { isSuccessful: false, message: getMyTasksRs.message };
+    } else {
+      const { data } = getCentersRs.responseBody;
+      setTaskRequests(data);
       setLoading(true);
     }
     return response;
@@ -154,8 +178,17 @@ const Dashboard = () => {
               xl={9}
               xs={12}
             >
-              <CentersTable loading={loading} centerRequests={centerRequests} />
+              <CentersTable loading={loading} centerRequests={centerRequests} />  
             </Grid>
+            <Grid
+                item
+                lg={4}
+                md={6}
+                xl={3}
+                xs={12}
+              >
+                <MyTasksTable loading={loading} taskRequests={taskRequests} />
+              </Grid>
           </Grid>
         </Container>
       </Box>

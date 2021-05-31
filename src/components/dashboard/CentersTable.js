@@ -31,7 +31,7 @@ const CentersTable = (props) => {
     const url = 'taheel-apis-utilities-downloadDocument-v2';
     const fileName = `${name}-${licenceNumber}`;
     const queryParams = {
-      DocID: licenseDoc.id,
+      DocID: licenseDoc,
       attachment: true,
     };
     try{
