@@ -204,16 +204,6 @@ const Register = () => {
     navigate('/login', { replace: true });
   };
   return (
-    <Box
-      sx={{
-        backgroundColor: 'background.default',
-        display: 'flex',
-        height:'100%',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        backgroundSize:"cover" 
-      }}
-    >
     <>
 
       <DashboardNavbar onMobileNavOpen={() => setMobileNavOpen(true)} />
