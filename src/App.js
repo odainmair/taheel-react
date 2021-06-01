@@ -17,10 +17,13 @@ const App = () => {
   const [otp, setOtp] = useState(Math.floor(Math.random() * (1000000 - 100000) + 100000));
   const [ recipient, setRecipient] = useState(null);
   const [users, setUser] = useState(null);
-  const [documents, SetDocuments] = useState([])
+  const [documents, SetDocuments] = useState({requirements:{}, healthServices:{}, staff:{}})
+  // const [finalLicenseDetails, SetFinalLicenseDetails ] = useState({companyName:null, Capacity:null, FinancialGuarantee:null})
+  const [finalLicenseDetails, SetFinalLicenseDetails ] = useState({})
+
 
   return (
-    <localContext.Provider value={{ users,setUser,otp, setOtp, recipient, setRecipient,documents, SetDocuments}}>
+    <localContext.Provider value={{ users,setUser,otp, setOtp, recipient, setRecipient,documents, SetDocuments, finalLicenseDetails, SetFinalLicenseDetails}}>
       <ThemeProvider theme={theme}>
         <GlobalStyles />
         {routing}

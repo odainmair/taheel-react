@@ -1,4 +1,5 @@
-/* eslint-disable no-unused-vars */
+/* eslint-disable */
+import { useState, useEffect } from 'react';
 import {
 	Grid,
 	Button,
@@ -10,25 +11,31 @@ import {
 import { Field } from 'react-final-form';
 import PropTypes from 'prop-types';
 import { TextField as TextFieldFinal, Select } from 'final-form-material-ui';
-import { useState } from 'react';
 import { calculation } from '../services/finalLicenseAPI'
-
-const Capacity = ({ Condition, values }) => {
+import { ContentField } from '../services/finalLicenseUtil'
+const Capacity = ({ Condition, values, setField }) => {
 
 	const [companyDetails, setCompanyDetails] = useState({ Capacity: '', FinancialGuarantee: '' })
 	const [calculatedData, setCalculatedData] = useState(false)
 	const [errMessage, SetErrMessage] = useState('')
 	const [loading, setLoading] = useState(false)
+
+	// useEffect(() => {
+	// 	console.log('hiiiiiiiiiiiiii')
+	// 	setField('isNextBtnDisabled',true)
+	// }, []);
+
 	const calculate = async () => {
 		setLoading(true)
-	
+
 		const response = await calculation(values.buildingArea, values.basementArea)
-		if (!response.isSuccessful){
-			SetErrMessage (response.message)
+		if (!response.isSuccessful) {
+			SetErrMessage(response.message)
 			setCalculatedData(false)
 		}
 		else {
-			setCompanyDetails({ ...companyDetails, Capacity: response.responseBody.body.carryingCapacity.toFixed(3), FinancialGuarantee: response.responseBody.body.financialGuarantee.toFixed(3) })
+			setField('capacity', response.responseBody.body.carryingCapacity.toFixed(0))
+			setField('financialGuarantee', `${response.responseBody.body.financialGuarantee.toFixed(3)} ر.س.`)
 			setCalculatedData(true)
 			SetErrMessage('')
 		}
@@ -115,7 +122,7 @@ const Capacity = ({ Condition, values }) => {
 					xs={12}
 				>
 					<Button
-					startIcon={loading ? <CircularProgress size="1rem" /> : null}
+						startIcon={loading ? <CircularProgress size="1rem" /> : null}
 						variant='outlined'
 						type="button"
 						sx={{
@@ -151,18 +158,16 @@ const Capacity = ({ Condition, values }) => {
 								md={12}
 								xs={12}
 							>
-								<Typography gutterBottom variant="body2" color="textSecondary" component="p">
-									الطاقة الاستعابية
-								</Typography>
-								<Typography gutterBottom variant="h5" component="h2">
-									{companyDetails.Capacity}
-								</Typography>
+								< ContentField label='الطاقة الاستعابية' value={values.capacity} />
 								<Box
 									direction='rtl'
 									className="custom-label-field"
 								>
 									<Alert severity="info" size="small">
-										الحد الأقصى لكل المستفيدين 10% من مساحة مسطح البناء ناقص الفبو حسب اللائحة التنفيذية
+									يتم حسابه من قبل المنصة:
+										(مساحة مسطح البناء - مساحة القبو/10)
+										
+										{/* الحد الأقصى لكل المستفيدين 10% من مساحة مسطح البناء ناقص القبو حسب اللائحة التنفيذية */}
 									</Alert>
 								</Box>
 							</Grid>
@@ -173,18 +178,13 @@ const Capacity = ({ Condition, values }) => {
 								md={12}
 								xs={12}
 							>
-								<Typography gutterBottom variant="body2" color="textSecondary" component="p">
-									الضمان المالي
-								</Typography>
-								<Typography gutterBottom variant="h5" component="h2">
-									{companyDetails.FinancialGuarantee} ر.س.
-								</Typography>
+								< ContentField label='الضمان المالي' value={values.financialGuarantee} />
 								<Box
 									direction='rtl'
 									className="custom-label-field"
 								>
 									<Alert severity="info" size="small" dir="rtl" >
-										2000 ريال لكل مستفيدفي مراكز الرعاية النهارية حسب اللائحة التنفيذية
+										يتم حسابه من قبل المنصة: (2000 ريال * عدد حقل " الطاقة الاستيعابية للمركز" ) لكل مستفيد من مراكز الرعاية النهارية أو التأهيل المهني حسب الطاقة الاستيعابية للمركز
 									</Alert>
 								</Box>
 							</Grid>
@@ -203,4 +203,5 @@ export default Capacity;
 Capacity.propTypes = {
 	Condition: PropTypes.func.isRequired,
 	values: PropTypes.func.isRequired,
+	setField: PropTypes.func.isRequired,
 };

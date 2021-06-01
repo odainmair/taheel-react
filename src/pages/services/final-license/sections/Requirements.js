@@ -8,29 +8,40 @@ import FileUploader from 'src/components/FileUploader';
 import { uploadDocumentApi } from '../services/finalLicenseAPI'
 import { useContext } from 'react';
 import localContext from 'src/localContext';
+import { uploadDocument } from '../services/finalLicenseUtil'
+import PropTypes from 'prop-types';
 
-
-const Requirements = () => {
+const Requirements = ({ setField, values }) => {
 
     const { documents, SetDocuments } = useContext(localContext);
     const [errMessage, SetErrMessage] = useState('')
-    const uploadDocument = async (name, file) => {
-        console.log('filefile...', file)
-        console.log('namename...', name)
-        var reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onloadend = async function () {
-            var base64String = reader.result;
-            var n = base64String.indexOf("base64,") + 7;
-            base64String = reader.result.substr(n);
-            const data = window.atob(base64String)
-            const image = data
-            const response = await uploadDocumentApi(name, image)
-            if (!response.isSuccessful)
-                SetErrMessage(response.message)
-            else
-                documents.push({ name:name, docId:response.responseBody.docID })
-            SetDocuments(documents)
+
+    // const uploadDocument = async (name, file) => {
+    //     console.log('filefile...', file)
+    //     console.log('namename...', name)
+    //         var reader = new FileReader();
+    //         reader.readAsDataURL(file);
+    //         reader.onloadend = async function () {
+    //             var base64String = reader.result;
+    //             var n = base64String.indexOf("base64,") + 7;
+    //             base64String = reader.result.substr(n);
+    //             // const data = window.atob(base64String)
+    //             const image = base64String
+    //             const response = await uploadDocumentApi(name, image)
+    //             if (!response.isSuccessful)
+    //                 SetErrMessage(response.message)
+    //             else
+    //                 documents[name] = response.responseBody.docID 
+    //             SetDocuments(documents)
+    //         }
+    // }
+    var multipleDocs =[]
+    const setDocument = (name, docID, multiple) => {
+        if (!multiple)
+            setField(name, [docID])
+        else {
+            multipleDocs.push(docID)
+            setField(name, multipleDocs)
         }
     }
 
@@ -59,9 +70,9 @@ const Requirements = () => {
                     xs={12}
                 >
                     <FileUploader
-                        handleFile={(file) => uploadDocument("الخطة التشغيلية", file[0])}
+                        handleFile={(file) => uploadDocument(setDocument, "OperationalPlan", file)}
                         label="ارفاق الخطة التشغيلية"
-                        name="OperationalPlan "
+                        name="OperationalPlan"
                         multiple={false}
                     />
                 </Grid>
@@ -71,7 +82,7 @@ const Requirements = () => {
                     xs={12}
                 >
                     <FileUploader
-                        handleFile={(file) => uploadDocument("الخطة التنفيذية", file[0])}
+                        handleFile={(file) => uploadDocument(setDocument, "ExecutivePlan", file)}
                         label="ارفاق الخطة التنفيذية"
                         name="ExecutivePlan"
                         multiple={false}
@@ -83,7 +94,7 @@ const Requirements = () => {
                     xs={12}
                 >
                     <FileUploader
-                        handleFile={(file) => uploadDocument(" تقرير زيارة مكتب هندسي معتمد", file[0])}
+                        handleFile={(file) => uploadDocument(setDocument, "OfficeReport", file)}
                         label="ارفاق تقرير زيارة مكتب هندسي معتمد"
                         name="OfficeReport"
                         multiple={false}
@@ -95,7 +106,7 @@ const Requirements = () => {
                     xs={12}
                 >
                     <FileUploader
-                        handleFile={(file) => uploadDocument("تقرير المسح الأمني", file[0])}
+                        handleFile={(file) => uploadDocument(setDocument, "SecurityReport", file)}
                         label="ارفاق تقرير المسح الأمني"
                         name="SecurityReport"
                         multiple={false}
@@ -107,10 +118,11 @@ const Requirements = () => {
                     xs={12}
                 >
                     <FileUploader
-                        handleFile={(file) => uploadDocument("صور الأثاث و الأجهزة الكهربائية", file[0])}
+                        handleFile={(file) => uploadDocument(setDocument, "Furniture", file, true)}
                         label="ارفاق صور الأثاث و الأجهزة الكهربائية"
                         name="Furniture"
                         multiple={true}
+
                     />
                 </Grid>
                 <Grid
@@ -119,9 +131,9 @@ const Requirements = () => {
                     xs={12}
                 >
                     <FileUploader
-                        handleFile={(file) => uploadDocument("الضمان المالي", file[0])}
+                        handleFile={(file) => uploadDocument(setDocument, "FinancialGuaranteeAtt", file)}
                         label="ارفاق الضمان المالي"
-                        name="FinancialGuarantee"
+                        name="FinancialGuaranteeAtt"
                         multiple={false}
                     />
                 </Grid>
@@ -133,3 +145,7 @@ const Requirements = () => {
 
 export default Requirements;
 
+Requirements.propTypes = {
+    setField: PropTypes.func.isRequired,
+    values: PropTypes.func.isRequired,
+};
