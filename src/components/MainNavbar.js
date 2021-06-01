@@ -153,6 +153,15 @@ const MainNavbar = ({ onMobileClose, openMobile }) => {
     <AppBar position="fixed">
       <Toolbar className={classes.toolbar}>
         <Grid container className={classes.left} spacing={1} >
+        <Grid item l={2} key={-1} >
+              <RouterLink to="/">
+                <img
+                  alt="Logo"
+                  src="/static/Taheel_logo-footer.png"
+                  width="150"
+                />
+              </RouterLink>
+         </Grid>
           {items.filter(item => item.side).map((element, index) => (
             <Grid item l={2} key={index} >
               <NavItem
