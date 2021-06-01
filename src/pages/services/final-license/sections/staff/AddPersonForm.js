@@ -162,7 +162,6 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
               xs={12}
               className="custom-label-field"
             >
-
             </Grid>
 
             {SAForm &&
@@ -289,20 +288,13 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
               values.cv = "";
               values.EducationalQualification = "";
               values.MedicalPractice = "";
-
-
+            
               if (fieldName === null) {
                 push("customers", { fullName: fullName, idNumber: idNumber, iqamaNo: iqamaNo, staffTypes: staffTypes, gender: gender, birthDate: birthDate, nationality: nationality, day: day, month: month, year: year, cv: cv, EducationalQualification: EducationalQualification, MedicalPractice: MedicalPractice });
-              }
-          
+              } 
+
               setOpenPopup(false);
-              if (values.customers) {
-                var managersCount = values.customers.filter(customer => customer.staffTypes === "مدير").length
-                setField('managersCount', managersCount)
-                var teachersCount = values.customers.filter(customer => customer.staffTypes === "معلم تربية خاصة ").length
-                
-                setField('teachersCount',teachersCount)
-              }
+           
             }}
           >
             اضافة

@@ -40,7 +40,7 @@ const useRowStyles = makeStyles({
   },
 });
 
-const Row = ({ managersCount, setManagersCount, SponsorName, setSponsorName, values, fromEdit, setFromEdit, fieldName, setFieldName, open, setOpen, setField, fields, name, index }) => {
+const Row = ({ SponsorName, setSponsorName, values, fromEdit, setFromEdit, fieldName, setFieldName, open, setOpen, setField, fields, name, index }) => {
   const classes = useRowStyles();
   const [showen, setShowen] = React.useState(false)
   const handleClickOpen = () => {
@@ -57,7 +57,7 @@ const Row = ({ managersCount, setManagersCount, SponsorName, setSponsorName, val
 
   return (
     <>
-
+      {console.log(JSON.stringify(fields))}
       <TableRow   >
         {console.log("name", fields.value[index].cv)}
         <Field
@@ -129,6 +129,7 @@ const Row = ({ managersCount, setManagersCount, SponsorName, setSponsorName, val
               setFromEdit(true)
               console.log("-- name :" + name);
               setFieldName(name);
+              setIndex(index);
               console.log('fields.value[index]', JSON.stringify(fields));
               const { idNumber, iqamaNo, lastName, nationality, day, month, year, fullName, gender, birthDate, staffTypes, cv } = fields.value[index];
 
@@ -154,18 +155,15 @@ const Row = ({ managersCount, setManagersCount, SponsorName, setSponsorName, val
             color="primary"
             component="span"
             onClick={() => {
-              var customers =[...values.customers]
+              var customers = [...values.customers]      
               fields.remove(index);
-              var managersCount = values.customers.filter(customer=>customer.staffTypes === "مدير" ).length
-              {console.log('Delete  values.customers.', values.customers)}
-              setField('managersCount', managersCount)
               setField("nationality", "")
               setField("idNumber", "");
               setField("iqamaNo", "");
               setField("day", "");
               setField("month", "");
               setField("year", "");
-              
+
             }}
           >
             <DeleteForeverIcon />
@@ -250,10 +248,57 @@ const Row = ({ managersCount, setManagersCount, SponsorName, setSponsorName, val
     </>)
 
 }
+const managersCountComp = ({ }) => (
+  <span>
+    <IconButton>
+      <FieldArray name="customers">
+        {({ fields }) => {
+          console.log(`fields`)
+          let count = 0;
+          if (fields.value) {
+            count = fields.value.filter(customer => customer.staffTypes === "مدير").length
+          }
+          if (count > 0) {
+            if (count === 1) {
+              return (<CheckCircleIcon style={{ color: '#04AA6D' }} />);
+            } else
+              return (<CheckCircleIcon style={{ color: 'red' }} />);
+          }
+          return (<CheckCircleIcon style={{ color: 'gray' }} />);
+        }}
+      </FieldArray>
+    </IconButton>
+  </span>
+
+)
+const teachersCountComp = ({ maxValue }) => (
+  <span>
+    <IconButton>
+      <FieldArray name="customers">
+        {({ fields }) => {
+          console.log(`fields`)
+          let count = 0;
+          if (fields.value) {
+            count = fields.value.filter(customer => customer.staffTypes === "معلم تربية خاصة").length
+          }
+          if (count >= 1) {
+            if (count / 8 <= maxValue) {
+              return (<CheckCircleIcon style={{ color: '#04AA6D' }} />);
+            } else
+              return (<CheckCircleIcon style={{ color: 'red' }} />);
+          }
+          return (<CheckCircleIcon style={{ color: 'gray' }} />);
+        }}
+      </FieldArray>
+    </IconButton>
+  </span>
+
+)
 
 const PersonDetials = ({ Condition, MedicalPracticeCondition, setField, pop, push, values }) => {
   const [open, setOpen] = React.useState(false);
   const [fieldName, setFieldName] = React.useState(null);
+  const [index, setIndex] = React.useState(0);
   const [fromEdit, setFromEdit] = React.useState(false)
   const [SponsorName, setSponsorName] = React.useState(false)
   const [dialogContent, setDialogContent] = React.useState("");
@@ -272,22 +317,12 @@ const PersonDetials = ({ Condition, MedicalPracticeCondition, setField, pop, pus
   //   console.log('Delete  values.customers.', values.customers) 
   //   // setManagersCount(managersCount)
   //             setField('managersCount', managersCount)
-    
+
   //   }
   // }
 
 
-  const managersCountComp = ({ input: { value, name }, label, type, inputType }) => (
-    <span>
-      <IconButton>
-        {console.log('.......managersCount??',value)}
-        {/* {value ==0  ?   < CheckCircleIcon style={{ color: '#04AA6D' }} />:  < CheckCircleIcon style={{ color: 'gray' }} />} */}
 
-        {value > 0 ? <>  {value === 1 ? < CheckCircleIcon style={{ color: '#04AA6D' }} /> : < CheckCircleIcon style={{ color: 'red' }} />} </> : < CheckCircleIcon style={{ color: 'gray' }} />}
-      </IconButton>
-    </span>
-
-  )
 
   const handleClickOpenInfo = (dialogContent, dialogTitle) => {
     setDialogContent(dialogContent);
@@ -319,8 +354,6 @@ const PersonDetials = ({ Condition, MedicalPracticeCondition, setField, pop, pus
           variant="h2"
 
         >متطلبات قائمة الكوادر</Typography>
-
-
         <Typography
           color="textSecondary"
           variant="body1"
@@ -329,13 +362,13 @@ const PersonDetials = ({ Condition, MedicalPracticeCondition, setField, pop, pus
           }}
 
         >
-               <Field
-                            label={'manager'}
-                            name={'managersCount'}
-                            component={managersCountComp}
-                        />
+          <Field
+            label={'manager'}
+            name={'managersCount'}
+            component={managersCountComp}
+          />
           مدير عدد 1
-        <Link
+          <Link
             onClick={() => handleClickOpenInfo(`يسمح بتحديد عدد مدير #1 فقط  `, '')}
             sx={{
               mt: 3,
@@ -345,7 +378,7 @@ const PersonDetials = ({ Condition, MedicalPracticeCondition, setField, pop, pus
             variant="h6"
           >
             المزيد من المعلومات
-        </Link>
+          </Link>
         </Typography>
 
         <Typography
@@ -353,15 +386,15 @@ const PersonDetials = ({ Condition, MedicalPracticeCondition, setField, pop, pus
           variant="body1"
 
         >
-          {/* '#04AA6D' */}
-          <span>
-            <IconButton>
-            
-            { values.teachersCount >=1  ? <>  {values.beneficiariesNum/8 <= values.teachersCount  ? < CheckCircleIcon style={{ color: '#04AA6D' }} /> : < CheckCircleIcon style={{ color: 'red' }} />} </> : < CheckCircleIcon style={{ color: 'gray' }} />}
-            </IconButton>
-          </span>
+          {/* '#04AA6D' teachersCountComp*/}
+          <Field
+            label={'teachers'}
+            name={'teachersCount'}
+            component={teachersCountComp}
+            maxValue={values.beneficiariesNum}
+          />
           معلم تربية خاصة نسبة 1 الى 8
-        <Link
+          <Link
             onClick={() => handleClickOpenInfo(`-تقوم المنصة باحتساب عدد # كادر معلم تربية خاصة وذلك حسب : 
 
          (على الاقل 1 لكل 8 مستفيد من عدد المستفيدين المطلوب )`, '')}
@@ -373,7 +406,7 @@ const PersonDetials = ({ Condition, MedicalPracticeCondition, setField, pop, pus
             variant="h6"
           >
             المزيد من المعلومات
-        </Link>
+          </Link>
         </Typography>
         <Button
           sx={{ mt: 5 }}
@@ -400,7 +433,7 @@ const PersonDetials = ({ Condition, MedicalPracticeCondition, setField, pop, pus
           }}
         >
           اضافة كادر
-          </Button>
+        </Button>
       </Grid>
       <Grid
         item
@@ -428,7 +461,7 @@ const PersonDetials = ({ Condition, MedicalPracticeCondition, setField, pop, pus
 
               <FieldArray name="customers">
                 {({ fields }) => fields.map((name, index) => (
-                  <Row managersCount={managersCount} setManagersCount={setManagersCount}  SponsorName={SponsorName} setSponsorName={setSponsorName} values={values} fromEdit={fromEdit} setFromEdit={setFromEdit} fieldName={fieldName} setFieldName={setFieldName} open={open} setOpen={setOpen} setField={setField} fields={fields} name={name} index={index} />
+                  <Row managersCount={managersCount}  setManagersCount={setManagersCount} SponsorName={SponsorName} setSponsorName={setSponsorName} values={values} fromEdit={fromEdit} setFromEdit={setFromEdit} fieldName={fieldName} setFieldName={setFieldName} open={open} setOpen={setOpen} setField={setField} fields={fields} name={name} index={index} />
                 ))}
               </FieldArray>
 
@@ -463,7 +496,7 @@ const PersonDetials = ({ Condition, MedicalPracticeCondition, setField, pop, pus
           setField("cv", "")
         }}
       >
-        <AddPersonForm fromEdit={fromEdit} MedicalPracticeCondition={MedicalPracticeCondition} setField={setField} pop={pop} push={push} values={values} setOpenPopup={setOpen} fieldName={fieldName} Condition={Condition} />
+        <AddPersonForm fromEdit={fromEdit} MedicalPracticeCondition={MedicalPracticeCondition} setField={setField} index={index} pop={pop} push={push} values={values} setOpenPopup={setOpen} fieldName={fieldName} Condition={Condition} />
       </FormDialog>
     </Grid>
   );

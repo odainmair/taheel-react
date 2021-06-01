@@ -28,25 +28,25 @@ import { MedicalPracticeComp } from './services/finalLicenseUtil'
 import { calculationConditionComp } from './services/finalLicenseUtil'
 
 const CreateFinalLicense = () => {
-	const [temporaryLicenses, SetTemporaryLicenses] = React.useState([])
+  const [temporaryLicenses, SetTemporaryLicenses] = React.useState([])
   const [open, setOpen] = React.useState(false);
   const [dialogContent, setDialogContent] = React.useState("");
   const [dialogTitle, setDialogTitle] = React.useState("");
   const navigate = useNavigate();
   const location = useLocation();
-  const centerLicenceNumber  = location.state ? location.state.centerLicenceNumber : null;
+  const centerLicenceNumber = location.state ? location.state.centerLicenceNumber : null;
 
 
   React.useEffect(async () => {
-		const userLicenses = []
-		const { email } = getCurrentUser();
-		const getCentersRs = await getTempLicense(email)
+    const userLicenses = []
+    const { email } = getCurrentUser();
+    const getCentersRs = await getTempLicense(email)
     const { Centers } = getCentersRs.responseBody.data;
-		// data.responseBody.data.map((LicenceNumber) => {
-		// 	userLicenses.push(LicenceNumber.centerLicenceNumber)
-		// })
-		SetTemporaryLicenses(Centers)
-	}, [])
+    // data.responseBody.data.map((LicenceNumber) => {
+    // 	userLicenses.push(LicenceNumber.centerLicenceNumber)
+    // })
+    SetTemporaryLicenses(Centers)
+  }, [])
 
   const onSubmit = async (values) => {
     console.log(JSON.stringify(values))
@@ -78,73 +78,24 @@ const CreateFinalLicense = () => {
           <FinalFromWizard
             initialValues={{
               agree: [],
-              isNextBtnDisabled:false,
-              managersCount:0
+              isNextBtnDisabled: false,
+              managersCount: 0,
+              teachersCount: 0,
+              beneficiariesNum: 0
             }}
             onSubmit={onSubmit}
           >
-            {/* <FinalFromWizard.Page
-              label="معلومات المركز"
+            <FinalFromWizardCenterDetailsPage
+              centerLicenceNumber={centerLicenceNumber}
               validate={CenterDetailsValidation}
-            >
-              <CenterDetails
-                Condition={calculationConditionComp} />
-            </FinalFromWizard.Page> */}
-
-            <FinalFromWizardCenterDetailsPage centerLicenceNumber={centerLicenceNumber} validate={CenterDetailsValidation} temporaryLicenses = {temporaryLicenses} label="معلومات المركز">
-
-            </FinalFromWizardCenterDetailsPage>
-
-
-            {/* <FinalFromWizard.Page
-              label="الطاقة الإستعابية والضمان المالي"
-              validate= {capacityValidation}
-            >
-                <Capacity 
-                  values={values}
-                  Condition={calculationConditionComp}/>
-            </FinalFromWizard.Page> */}
-
-            <FinalFromWizardCapacityPage  validate= {capacityValidation} label="الطاقة الإستعابية والضمان المالي">
-
-            </FinalFromWizardCapacityPage>
-
-            <FinalFromWizardRequirements  label="المتطلبات">
-
-            </FinalFromWizardRequirements>
-
-            {/* <FinalFromWizard.Page
-              label="المتطلبات"
-            >
-              <Requirements />
-            </FinalFromWizard.Page> */}
-
-            <FinalFromWizardHealthServices   label="الخدمات الضحية"></FinalFromWizardHealthServices>
-            {/* <FinalFromWizard.Page
-              label="الخدمات الضحية"
-            >
-              <HealthServices
-                Condition={ConditionComp} />
-            </FinalFromWizard.Page> */}
-            <FinalFromWizardPersonsPage validate= {personsValidation} label="معلومات الكوادر">
-
-            </FinalFromWizardPersonsPage>
-
-            {/* <FinalFromWizard.Page
-              label="معلومات الكوادر"
-            >
-            </FinalFromWizard.Page> */}
-
-<FinalFromWizardSummary label="الملخص">
-
-            </FinalFromWizardSummary>
-
-            {/* <FinalFromWizard.Page
-              label="الملخص"
-            >
-              <Summary dialog={handleClickOpen} />
-            </FinalFromWizard.Page> */}
-
+              temporaryLicenses={temporaryLicenses}
+              label="معلومات المركز"
+            />
+            <FinalFromWizardCapacityPage validate={capacityValidation} label="الطاقة الإستعابية والضمان المالي" />
+            <FinalFromWizardRequirements label="المتطلبات" />
+            <FinalFromWizardHealthServices label="الخدمات الضحية" />
+            <FinalFromWizardPersonsPage validate={personsValidation} label="معلومات الكوادر" />
+            <FinalFromWizardSummary label="الملخص" />
           </FinalFromWizard>
         </CardContent>
       </Card>
@@ -178,54 +129,54 @@ const FinalFromWizardCapacityPage = ({ values, setField }) => (
 
 );
 
-const FinalFromWizardCenterDetailsPage = ({setField,temporaryLicenses, values, centerLicenceNumber}) => (
+const FinalFromWizardCenterDetailsPage = ({ setField, temporaryLicenses, values, centerLicenceNumber }) => (
   <Box>
     <CenterDetails
       Condition={calculationConditionComp}
       values={values}
-      centerLicenceNumber ={centerLicenceNumber}
-      temporaryLicenses = {temporaryLicenses} 
+      centerLicenceNumber={centerLicenceNumber}
+      temporaryLicenses={temporaryLicenses}
       setField={(fieldName, fieldValue) => setField(fieldName, fieldValue)}
-      
+
     />
   </Box>
 
 );
 
 
-const FinalFromWizardRequirements = ({setField,temporaryLicenses, values }) => (
+const FinalFromWizardRequirements = ({ setField, temporaryLicenses, values }) => (
   <Box>
     <Requirements
       Condition={ConditionComp}
       values={values}
-      temporaryLicenses = {temporaryLicenses} 
+      temporaryLicenses={temporaryLicenses}
       setField={(fieldName, fieldValue) => setField(fieldName, fieldValue)}
-      
+
     />
   </Box>
 )
 
-const FinalFromWizardHealthServices = ({setField,temporaryLicenses, values }) => (
+const FinalFromWizardHealthServices = ({ setField, temporaryLicenses, values }) => (
   <Box>
     <HealthServices
       Condition={ConditionComp}
       values={values}
-      temporaryLicenses = {temporaryLicenses} 
+      temporaryLicenses={temporaryLicenses}
       setField={(fieldName, fieldValue) => setField(fieldName, fieldValue)}
-      
+
     />
   </Box>
 
 );
 
-const FinalFromWizardSummary = ({setField,temporaryLicenses, values }) => (
+const FinalFromWizardSummary = ({ setField, temporaryLicenses, values }) => (
   <Box>
     <Summary
       // dialog={handleClickOpen}
       values={values}
-      temporaryLicenses = {temporaryLicenses} 
+      temporaryLicenses={temporaryLicenses}
       setField={(fieldName, fieldValue) => setField(fieldName, fieldValue)}
-      
+
     />
   </Box>
 
