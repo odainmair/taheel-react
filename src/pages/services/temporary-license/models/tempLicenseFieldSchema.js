@@ -1,4 +1,4 @@
-import { checkIsfilled,checkMobilePattern } from 'src/utils/inputValidator';
+import { checkIsfilled,checkIsNumber,checkMobilePattern } from 'src/utils/inputValidator';
 import { v4 as uuid } from 'uuid';
 
 export default [
@@ -355,6 +355,10 @@ export default [
       id: 'centerCap-required',
       isValidFun: checkIsfilled,
       alert: 'هذا الحقل مطلوب'
+    },{
+      id: 'centerCap-required',
+      isValidFun: checkIsNumber,
+      alert: 'يرجى ادخل رقم صحيح'
     }],
   },
   {

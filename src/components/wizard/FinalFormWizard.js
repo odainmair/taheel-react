@@ -111,7 +111,6 @@ export default class FinalFromWizard extends React.Component {
         }}
       >
         {({ handleSubmit, pristine, form, submitting, values }) => {
-          if (!window.setFormValue) window.setFormValue = form.mutators.setValue
           return (
             <form onSubmit={handleSubmit} autoComplete="off" noValidate>
               <Stepper className="custom-wizard" alternativeLabel activeStep={page}>
@@ -150,7 +149,7 @@ export default class FinalFromWizard extends React.Component {
                     </Button>
                   </Grid>
                 )}
-                {!isLastPage && (
+                {!isLastPage  && (
                   <Grid item>
                     <Button
                       startIcon={submitting ? <CircularProgress size="1rem" /> : null}
