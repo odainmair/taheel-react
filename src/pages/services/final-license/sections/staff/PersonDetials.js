@@ -154,16 +154,18 @@ const Row = ({ managersCount, setManagersCount, SponsorName, setSponsorName, val
             color="primary"
             component="span"
             onClick={() => {
+              var customers =[...values.customers]
               fields.remove(index);
+              var managersCount = values.customers.filter(customer=>customer.staffTypes === "مدير" ).length
+              {console.log('Delete  values.customers.', values.customers)}
+              setField('managersCount', managersCount)
               setField("nationality", "")
               setField("idNumber", "");
               setField("iqamaNo", "");
               setField("day", "");
               setField("month", "");
               setField("year", "");
-              // var managersCount = values.customers.filter(customer=>customer.staffTypes === "مدير" ).length
-              // {console.log('Delete  values.customers.', values.customers)}
-              // setField('managersCount', managersCount)
+              
             }}
           >
             <DeleteForeverIcon />
@@ -261,8 +263,9 @@ const PersonDetials = ({ Condition, MedicalPracticeCondition, setField, pop, pus
 
   // React.useEffect( () => {
   //   console.log("I'mmmm Here ppppppoooooooooooooopuuuuuuuup")
-  //   handleClickOpenInfo(`يسمح بتحديد عدد مدير #1 فقط  `, '')
+  //   handleClickOpenInfo(`في حال مطالبة المركز لأخذ الترخيص للعمل في فترتين (صباحية و مسائية) فيجب مراعاة أن يتم توفير كوادر مختلفة لكل فترة" قبل ادخال الكادر`, '')
   // })
+
   // const getMangersAcount = () => {
   //   if(values.customers){
   //    managersCount = values.customers.filter(customer => customer.staffTypes === "مدير").length
@@ -272,6 +275,20 @@ const PersonDetials = ({ Condition, MedicalPracticeCondition, setField, pop, pus
     
   //   }
   // }
+
+
+  const managersCountComp = ({ input: { value, name }, label, type, inputType }) => (
+    <span>
+      <IconButton>
+        {console.log('.......managersCount??',value)}
+        {/* {value ==0  ?   < CheckCircleIcon style={{ color: '#04AA6D' }} />:  < CheckCircleIcon style={{ color: 'gray' }} />} */}
+
+        {value > 0 ? <>  {value === 1 ? < CheckCircleIcon style={{ color: '#04AA6D' }} /> : < CheckCircleIcon style={{ color: 'red' }} />} </> : < CheckCircleIcon style={{ color: 'gray' }} />}
+      </IconButton>
+    </span>
+
+  )
+
   const handleClickOpenInfo = (dialogContent, dialogTitle) => {
     setDialogContent(dialogContent);
     setDialogTitle(dialogTitle)
@@ -312,12 +329,11 @@ const PersonDetials = ({ Condition, MedicalPracticeCondition, setField, pop, pus
           }}
 
         >
-          <span>
-
-            <IconButton>
-              {values.managersCount > 0 ? <>  {values.managersCount == 1 ? < CheckCircleIcon style={{ color: '#04AA6D' }} /> : < CheckCircleIcon style={{ color: 'red' }} />} </> : < CheckCircleIcon style={{ color: 'gray' }} />}
-            </IconButton>
-          </span>
+               <Field
+                            label={'manager'}
+                            name={'managersCount'}
+                            component={managersCountComp}
+                        />
           مدير عدد 1
         <Link
             onClick={() => handleClickOpenInfo(`يسمح بتحديد عدد مدير #1 فقط  `, '')}

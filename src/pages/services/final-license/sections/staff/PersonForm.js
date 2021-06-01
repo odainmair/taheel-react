@@ -18,7 +18,7 @@ const PersonForm = ({ MedicalPracticeCondition, fieldName, setField, pop, push, 
     useEffect(() => {
         setField('fullName', `${citizenInfo.Name.FirstName} ${citizenInfo.Name.LastName}`)
         setField('gender', citizenInfo.Gender === 'F' ? 'انثى' : "ذكر")
-        setField('birthDate', citizenInfo.BirthHijriDate)
+        setField('birthDate', citizenInfo.BirthDateH)
         // moment(`${citizenInfo.BirthHijriDate}`, 'iYYYYiMMiDD').format('iDD/iMM/iYYYY')
         
     }, [])
@@ -45,6 +45,7 @@ const PersonForm = ({ MedicalPracticeCondition, fieldName, setField, pop, push, 
                         fullWidth
                         required
                         label="الاسم الكامل"
+                        disabled
                         name={fieldName === null ? "fullName" : `${fieldName}.fullName`}
                         component={TextFieldFinal}
                         type="text"
@@ -64,6 +65,7 @@ const PersonForm = ({ MedicalPracticeCondition, fieldName, setField, pop, push, 
                         fullWidth
                         required
                         label="الجنس"
+                        disabled
                         name={fieldName === null ? "gender" : `${fieldName}.gender`}
                         component={TextFieldFinal}
                         type="text"

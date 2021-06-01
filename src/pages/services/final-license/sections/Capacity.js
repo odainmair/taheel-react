@@ -1,4 +1,5 @@
 /* eslint-disable */
+import { useState, useEffect } from 'react';
 import {
 	Grid,
 	Button,
@@ -10,7 +11,6 @@ import {
 import { Field } from 'react-final-form';
 import PropTypes from 'prop-types';
 import { TextField as TextFieldFinal, Select } from 'final-form-material-ui';
-import { useState } from 'react';
 import { calculation } from '../services/finalLicenseAPI'
 import { ContentField } from '../services/finalLicenseUtil'
 const Capacity = ({ Condition, values, setField }) => {
@@ -19,6 +19,12 @@ const Capacity = ({ Condition, values, setField }) => {
 	const [calculatedData, setCalculatedData] = useState(false)
 	const [errMessage, SetErrMessage] = useState('')
 	const [loading, setLoading] = useState(false)
+
+	// useEffect(() => {
+	// 	console.log('hiiiiiiiiiiiiii')
+	// 	setField('isNextBtnDisabled',true)
+	// }, []);
+
 	const calculate = async () => {
 		setLoading(true)
 

@@ -281,7 +281,7 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
               values.iqamaNo = "";
               values.staffTypes = "";
               values.gender = "";
-              values.birthDate = "";
+              // values.birthDate = "";
               values.nationality = "";
               values.day = "";
               values.month = "";
@@ -290,9 +290,12 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
               values.EducationalQualification = "";
               values.MedicalPractice = "";
 
+
               if (fieldName === null) {
                 push("customers", { fullName: fullName, idNumber: idNumber, iqamaNo: iqamaNo, staffTypes: staffTypes, gender: gender, birthDate: birthDate, nationality: nationality, day: day, month: month, year: year, cv: cv, EducationalQualification: EducationalQualification, MedicalPractice: MedicalPractice });
               }
+          
+              setOpenPopup(false);
               if (values.customers) {
                 var managersCount = values.customers.filter(customer => customer.staffTypes === "مدير").length
                 setField('managersCount', managersCount)
@@ -300,7 +303,6 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
                 
                 setField('teachersCount',teachersCount)
               }
-              setOpenPopup(false);
             }}
           >
             اضافة

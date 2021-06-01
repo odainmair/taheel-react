@@ -3,6 +3,7 @@ import { APIRequest } from 'src/api/APIRequest';
 import { uploadFileAPI } from 'src/api/APIRequest';
 import { downloadFileAPI } from 'src/api/APIRequest';
 import moment from 'moment-hijri';
+import { getCurrentUser } from 'src/utils/UserLocalStorage'
 
 const staffTypesNo = {}
 
@@ -58,9 +59,10 @@ const createFinalLicenseAPIFunc = async (values) => {
 
 
 	const requestBody = {
+		"userCreationEmail": getCurrentUser().email,
 		"staff": staff,
 		"center": {
-			"licenceNumber": values.temporaryLicenceNum[0],
+			"licenceNumber": values.temporaryLicenceNum,
 			"centerParentType": values.centerParentType,
 			"centerFirstSubType": values.centerFirstSubType,
 			"centerSecondSubType": values.centerSecondSubType,
@@ -95,21 +97,27 @@ const createFinalLicenseAPIFunc = async (values) => {
 		}
 	}
 console.log('>>>>>>>>>>>>>requestBody>>>>>>>>>',requestBody)
-	const url = "taheel-apis-services-createTempLicense-v2"
+	const url = "taheel-apis-services-createFinalLicense-v2"
 	const response = await APIRequest({ requestBody, url });
 	return response;
 }
 
 const getTempLicense = async (userEmail) => {
-	const url = 'taheel-apis-records-getRequests-v2';
-	const queryParams = { userEmail };
-	const response = await APIRequest({ url, queryParams });
-	return response;
+
+	const url = 'taheel-apis-records-getCenters-v2';
+    const queryParams = { userEmail };
+	const requestBody={isExpired:false,licenseType:'رخصة مؤقتة'}
+    const response = await APIRequest({ url, queryParams,requestBody });
+    return response;
+	// const url = 'taheel-apis-records-getRequests-v2';
+	// const queryParams = { userEmail };
+	// const response = await APIRequest({ url, queryParams });
+	// return response;
 };
 
 const getMunicipalLicenseNoApi = async (CRNumber) => {
 	const url = 'tt-api-utilities-getmomralicense';
-	const requestBody = { CRNumber };
+	const requestBody = { CrNumber:CRNumber };
 	const response = await APIRequest({ url, requestBody });
 	return response;
 };

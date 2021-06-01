@@ -3,12 +3,18 @@ import { v4 as uuid } from 'uuid';
 export default [
   {
     id: uuid(),
-    createdAt: '03/04/2019',
     description: ' تتيح هذه الخدمة للمركز اصدار ترخيص مؤقت لمركز تأهيل أهلي',
     media: '/static/images/products/clock.png',
     title: 'اصدار ترخيص مؤقت لمركز تأهيل أهلي',
-    totalDownloads: '857',
-    url: '/services/survey',
+    url: '/services/templicense',
+    isActive: true
+  },
+  {
+    id: uuid(),
+    description: ' تتيح هذه الخدمة للمركز اصدار ترخيص نهائي لمركز تأهيل أهلي',
+    media: '/static/images/products/app.png',
+    title: 'اصدار ترخيص نهائي لمركز تأهيل أهلي',
+    url: '/services/finallicense',
     isActive: true
   },
   {

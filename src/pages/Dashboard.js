@@ -51,12 +51,13 @@ const Dashboard = () => {
   const [totalCompletedRequests, setTotalCompletedRequests] = useState(0);
   const [totalRejectedRequests, setTotalRejectedRequests] = useState(0);
   const [totalTahelRequests, setTotalTahelRequests] = useState(0);
+  const [totalReturnRequests, setTotalReturnRequests] = useState(0);
   const [totalCenters, setTotalCenters] = useState(0);
 
   useEffect(async () => {
     // Update the document title using the browser API
     // const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-    // await sleep(1000);
+    // await sleep(1000); odai odaio
     const { email } = getCurrentUser();
     const getTaheelRequestsRs = await getTaheelRequestsFun(email);
     let response = {};
@@ -87,8 +88,10 @@ const Dashboard = () => {
       setLoading(true);
       response = { isSuccessful: false, message: getMyTasksRs.message };
     } else {
-      const { data } = getCentersRs.responseBody;
+      const { data } = getMyTasksRs.responseBody;
+      console.log(JSON.stringify(data));
       setTaskRequests(data);
+      setTotalReturnRequests(data.length)
       setLoading(true);
     }
     return response;
@@ -144,7 +147,7 @@ const Dashboard = () => {
               xl={3}
               xs={12}
             >
-              <TotalProfit sx={{ height: '100%' }} loading={false} />
+              <TotalProfit sx={{ height: '100%' }} loading={loading} totalreturnrequests={totalReturnRequests} />
             </Grid>
             <Grid
               item

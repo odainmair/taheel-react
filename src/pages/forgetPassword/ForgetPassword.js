@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const Register = () => {
+const ForgetPassword = () => {
 
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
@@ -284,7 +284,7 @@ const Register = () => {
                   color="textPrimary"
                   variant="h2"
                 >
-                  تسجيل جديد للمركز
+                  إعادة تعيين كلمة السر الخاصة بك
                 </Typography>
               </Box>
               <CardContent sx={{ padding: "0px" }}>
@@ -378,4 +378,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default ForgetPassword;

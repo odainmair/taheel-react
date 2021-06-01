@@ -17,24 +17,38 @@ import { CentertDetails } from '../services/finalLicenseAPI'
 import { ContentField } from '../services/finalLicenseUtil'
 
 
-const CenterDetails = ({ Condition, values, temporaryLicenses, setField }) => {
+const CenterDetails = ({ centerLicenceNumber, Condition, values, temporaryLicenses, setField }) => {
 
 	console.log("props", temporaryLicenses)
 	const [loading, setLoading] = useState(false)
 	const [checkData, setCheckData] = useState(false)
 	const [errMessage, SetErrMessage] = useState('')
 
+	useEffect(() => {
+		setField('isNextBtnDisabled',true)
+		// CentertDetails = getCentertDetails()
+		// if (centerLicenceNumber) {
+		// 	setField('CRNumber', '5555555')
+		// 	setField('temporaryLicenceNum', '5555555')
+		// 	setField('companyName', '5555555')
+		// 	setField('activities', '5555555')
+		// 	setField('municipLicenseNo', '5555555')
+		// 	setField('beneficiariesNum', '577777777')
+		// }
+	}, []);
+
 	const check = async () => {
-		getMunicipalLicenseNo()
-		getCentertDetails()
 		setLoading(true)
+		await getMunicipalLicenseNo()
+		// await getCentertDetails()
 		const response = await validateCompanyFunc(values.CRNumber)
 		if (!response.isSuccessful) {
 			SetErrMessage(response.message)
 			setCheckData(false)
 		}
 		else {
-			console.log('temporaryLicenceNum',values.temporaryLicenceNum)
+			setField('isNextBtnDisabled',false)
+			console.log('temporaryLicenceNum', values.temporaryLicenceNum)
 			setField('companyName', response.responseBody.data.CRName)
 			setField('activities', response.responseBody.data.Activities)
 			setField('crIssueDate', response.responseBody.data.IssueDate)
@@ -42,7 +56,7 @@ const CenterDetails = ({ Condition, values, temporaryLicenses, setField }) => {
 			setCheckData(true)
 			SetErrMessage('')
 		}
-		
+
 		setLoading(false)
 	}
 
@@ -55,19 +69,22 @@ const CenterDetails = ({ Condition, values, temporaryLicenses, setField }) => {
 	}
 
 	const getCentertDetails = async () => {
-		const response = await CentertDetails(values.temporaryLicenceNum[0])
-		console.log('>>>>>>>>>>>>response',response.responseBody)
-		if (!response.isSuccessful)
-			SetErrMessage(response.message)
-		else
-			setField('centerParentType', response.responseBody.data.center.centerParentType)
-			setField('centerFirstSubType', response.responseBody.data.center.centerFirstSubType)
-			setField('centerSecondSubType', response.responseBody.data.center.centerSecondSubType)
-			setField('crInfo_r', response.responseBody.data.center.crInfo_r.ID)
-			setField('centerInfo_r', response.responseBody.data.center.centerInfo_r.ID)
-			// setField('healthCareServices_r', response.responseBody.data.center.healthCareServices_r.ID)
-			setField('healthCareServices_r', response.responseBody.data.center.healthCareServices_r)
-
+		if (values.temporaryLicenceNum) {
+			const response = await CentertDetails(values.temporaryLicenceNum[0])
+			console.log('>>>>>>>>>>>>response', response.responseBody)
+			if (!response.isSuccessful)
+				SetErrMessage(response.message)
+			else {
+				setField('centerParentType', response.responseBody.data.center.centerParentType)
+				setField('centerFirstSubType', response.responseBody.data.center.centerFirstSubType)
+				setField('centerSecondSubType', response.responseBody.data.center.centerSecondSubType)
+				setField('crInfo_r', response.responseBody.data.center.crInfo_r.ID)
+				setField('centerInfo_r', response.responseBody.data.center.centerInfo_r.ID)
+				// setField('healthCareServices_r', response.responseBody.data.center.healthCareServices_r.ID)
+				setField('healthCareServices_r', response.responseBody.data.center.healthCareServices_r)
+			}
+		}
+		// return response.responseBody.data
 	}
 
 	return (
@@ -107,7 +124,7 @@ const CenterDetails = ({ Condition, values, temporaryLicenses, setField }) => {
 						className="custom-field"
 						formControlProps={{ fullWidth: true }}
 					>
-						{temporaryLicenses.map((license, index) => <MenuItem key={index} value={license}>{license}</MenuItem>)}
+						{temporaryLicenses.map((license, index) => <MenuItem key={index} value={license.licenceNumber}>{license.licenceNumber}</MenuItem>)}
 					</Field>
 				</Grid>
 				<Grid
@@ -175,6 +192,7 @@ const CenterDetails = ({ Condition, values, temporaryLicenses, setField }) => {
 								<Field
 									fullWidth
 									required
+									disabled
 									label="رقم رخصة البلدية"
 									name="municipLicenseNo"
 									component={TextFieldFinal}
@@ -192,20 +210,20 @@ const CenterDetails = ({ Condition, values, temporaryLicenses, setField }) => {
 							>
 								<Grid
 									item
-									lg={6}
+									lg={12}
 									md={12}
 									xs={12}
 								>
-									< ContentField label= 'اسم المركز' value = {values.companyName} />
+									< ContentField label='اسم المركز' value={values.companyName} />
 								</Grid>
 								<Grid
 									item
-									lg={6}
+									lg={12}
 									md={12}
 									xs={12}
 								>
-									< ContentField label= 'نشاط السجل التجاري' value = {values.activities} />
-				
+									< ContentField label='نشاط السجل التجاري' value={values.activities} />
+
 								</Grid>
 							</Grid>
 						</Grid>
@@ -226,4 +244,5 @@ CenterDetails.propTypes = {
 	setField: PropTypes.func.isRequired,
 	value: PropTypes.func.isRequired,
 	label: PropTypes.func.isRequired,
+	centerLicenceNumber: PropTypes.func.isRequired,
 };

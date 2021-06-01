@@ -13,7 +13,7 @@ import {
 	IconButton
 } from '@material-ui/core';
 import Skeleton from '@material-ui/lab/Skeleton';
-import EditIcon from '@material-ui/icons/Edit';
+import VisibilityIcon from '@material-ui/icons/Visibility';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router';
 
@@ -81,7 +81,7 @@ const MyTasksTable = (props) => {
 														navigate('/services/finallicense', { state: { centerLicenceNumber:request.centerLicenceNumber } });
 													}}
 												>	
-													<EditIcon />
+													<VisibilityIcon />
 												</IconButton>
 											)}
 									</TableCell>
