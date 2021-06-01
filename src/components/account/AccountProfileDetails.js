@@ -77,6 +77,7 @@ const AccountProfileDetails = (props) => {
                 variant="outlined"
                 dir="rtl"
                 className="custom-field"
+                disabled
               />
             </Grid>
             <Grid
@@ -93,6 +94,7 @@ const AccountProfileDetails = (props) => {
                 value={values.lastName}
                 variant="outlined"
                 className="custom-field"
+                disabled
               />
             </Grid>
             <Grid
@@ -121,7 +123,6 @@ const AccountProfileDetails = (props) => {
                 label="رقم الجوال"
                 name="phone"
                 onChange={handleChange}
-                type="number"
                 value={values.phone}
                 variant="outlined"
                 className="custom-field"
@@ -141,6 +142,7 @@ const AccountProfileDetails = (props) => {
                 value={values.country}
                 variant="outlined"
                 className="custom-field"
+                disabled
               />
             </Grid>
             <Grid
