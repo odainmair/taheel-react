@@ -58,7 +58,7 @@ const Row = ({ managersCount, setManagersCount, SponsorName, setSponsorName, val
   return (
     <>
 
-      <TableRow   >
+      <TableRow className={classes.root}  >
         {console.log("name", fields.value[index].cv)}
         <Field
           label="fullName"
@@ -107,72 +107,98 @@ const Row = ({ managersCount, setManagersCount, SponsorName, setSponsorName, val
 
         {SponsorName &&
           <Field
-            label="SponsorName"
-            name={`${name}.SponsorName`}
+            label="sponsorName"
+            name={`${name}.sponsorName`}
             component={CustomTableCell}
           />
 
         }
 
 
-        <TableCell>
-          <IconButton onClick={() => setShowen(!showen)}>
-            {showen ? <VisibilityIcon /> : <VisibilityOffIcon />}
-          </IconButton>
-        </TableCell>
-
-        <TableCell>
-          <IconButton
-            color="primary"
-            component="span"
-            onClick={() => {
-              setFromEdit(true)
-              console.log("-- name :" + name);
-              setFieldName(name);
-              console.log('fields.value[index]', JSON.stringify(fields));
-              const { idNumber, iqamaNo, lastName, nationality, day, month, year, fullName, gender, birthDate, staffTypes, cv } = fields.value[index];
-
-              // setField("fullName", fullName);
-              setField("idNumber", idNumber);
-              setField("iqamaNo", iqamaNo);
-              setField("nationality", nationality)
-              setField("day", day);
-              setField("month", month);
-              setField("year", year);
-              setField("fullName", fullName)
-              setField("gender", gender)
-              setField("birthDate", birthDate)
-              setField("staffTypes", staffTypes)
-              setField("cv", cv)
-
-              handleClickOpen();
-            }}
+        <TableCell >
+          <Grid
+            container
+            spacing={2}
           >
-            <EditIcon />
-          </IconButton>
-          <IconButton
-            color="primary"
-            component="span"
-            onClick={() => {
-              var customers =[...values.customers]
-              fields.remove(index);
-              var managersCount = values.customers.filter(customer=>customer.staffTypes === "مدير" ).length
-              {console.log('Delete  values.customers.', values.customers)}
-              setField('managersCount', managersCount)
-              setField("nationality", "")
-              setField("idNumber", "");
-              setField("iqamaNo", "");
-              setField("day", "");
-              setField("month", "");
-              setField("year", "");
-              
-            }}
-          >
-            <DeleteForeverIcon />
-          </IconButton>
+            <Grid
+              item
+              lg={3}
+              md={6}
+              xs={12}
+            >
+              <IconButton onClick={() => setShowen(!showen)}>
+                {showen ? <VisibilityIcon /> : <VisibilityOffIcon />}
+              </IconButton>
+            </Grid>
+            <Grid
+              item
+              lg={3}
+              md={6}
+              xs={12}
+            >
+              <IconButton
+                color="primary"
+                component="span"
+                onClick={() => {
+                  setFromEdit(true)
+                  console.log("-- name :" + name);
+                  setFieldName(name);
+                  console.log('fields.value[index]', JSON.stringify(fields));
+                  const { idNumber, iqamaNo, lastName, nationality, day, month, year, fullName, gender, birthDate, staffTypes, cv, EducationalQualification, MedicalPractice, sponsorName } = fields.value[index];
+                  console.log('>>>>>>--EducationalQualification....', fields.value[index])
+                  // setField("fullName", fullName);
+                  setField("idNumber", idNumber);
+                  setField("iqamaNo", iqamaNo);
+                  setField("nationality", nationality)
+                  setField("day", day);
+                  setField("month", month);
+                  setField("year", year);
+                  setField("fullName", fullName)
+                  setField("gender", gender)
+                  setField("sponsorName", sponsorName)
+                  setField("birthDate", birthDate)
+                  setField("staffTypes", staffTypes)
+                  setField("cv", cv)
+                  setField("EducationalQualification", EducationalQualification)
+                  setField("MedicalPractice", MedicalPractice)
+
+                  handleClickOpen();
+                }}
+              >
+                <EditIcon />
+              </IconButton>
+            </Grid>
+            <Grid
+              item
+              lg={3}
+              md={6}
+              xs={12}
+            >
+              <IconButton
+                color="primary"
+                component="span"
+                onClick={() => {
+                  var customers = [...values.customers]
+                  fields.remove(index);
+                  var managersCount = values.customers.filter(customer => customer.staffTypes === "مدير").length
+                  { console.log('Delete  values.customers.', values.customers) }
+                  setField('managersCount', managersCount)
+                  setField("nationality", "")
+                  setField("idNumber", "");
+                  setField("iqamaNo", "");
+                  setField("day", "");
+                  setField("month", "");
+                  setField("year", "");
+
+                }}
+              >
+                <DeleteForeverIcon />
+              </IconButton>
+            </Grid>
+          </Grid>
         </TableCell>
       </TableRow>
-      <TableRow className={classes.root}>
+      <TableRow >
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={12}>
           <Collapse in={showen} timeout="auto" unmountOnExit  >
 
@@ -261,10 +287,10 @@ const PersonDetials = ({ Condition, MedicalPracticeCondition, setField, pop, pus
   const [openInfo, setOpenInfo] = React.useState(false);
   var [managersCount, setManagersCount] = React.useState(0);
 
-  // React.useEffect( () => {
-  //   console.log("I'mmmm Here ppppppoooooooooooooopuuuuuuuup")
-  //   handleClickOpenInfo(`في حال مطالبة المركز لأخذ الترخيص للعمل في فترتين (صباحية و مسائية) فيجب مراعاة أن يتم توفير كوادر مختلفة لكل فترة" قبل ادخال الكادر`, '')
-  // })
+  React.useEffect(() => {
+    console.log("I'mmmm Here ppppppoooooooooooooopuuuuuuuup")
+    handleClickOpenInfo(`في حال مطالبة المركز لأخذ الترخيص للعمل في فترتين (صباحية و مسائية) فيجب مراعاة أن يتم توفير كوادر مختلفة لكل فترة" قبل ادخال الكادر`, '')
+  }, [])
 
   // const getMangersAcount = () => {
   //   if(values.customers){
@@ -272,7 +298,7 @@ const PersonDetials = ({ Condition, MedicalPracticeCondition, setField, pop, pus
   //   console.log('Delete  values.customers.', values.customers) 
   //   // setManagersCount(managersCount)
   //             setField('managersCount', managersCount)
-    
+
   //   }
   // }
 
@@ -280,7 +306,7 @@ const PersonDetials = ({ Condition, MedicalPracticeCondition, setField, pop, pus
   const managersCountComp = ({ input: { value, name }, label, type, inputType }) => (
     <span>
       <IconButton>
-        {console.log('.......managersCount??',value)}
+        {console.log('.......managersCount??', value)}
         {/* {value ==0  ?   < CheckCircleIcon style={{ color: '#04AA6D' }} />:  < CheckCircleIcon style={{ color: 'gray' }} />} */}
 
         {value > 0 ? <>  {value === 1 ? < CheckCircleIcon style={{ color: '#04AA6D' }} /> : < CheckCircleIcon style={{ color: 'red' }} />} </> : < CheckCircleIcon style={{ color: 'gray' }} />}
@@ -329,11 +355,11 @@ const PersonDetials = ({ Condition, MedicalPracticeCondition, setField, pop, pus
           }}
 
         >
-               <Field
-                            label={'manager'}
-                            name={'managersCount'}
-                            component={managersCountComp}
-                        />
+          <Field
+            label={'manager'}
+            name={'managersCount'}
+            component={managersCountComp}
+          />
           مدير عدد 1
         <Link
             onClick={() => handleClickOpenInfo(`يسمح بتحديد عدد مدير #1 فقط  `, '')}
@@ -356,8 +382,8 @@ const PersonDetials = ({ Condition, MedicalPracticeCondition, setField, pop, pus
           {/* '#04AA6D' */}
           <span>
             <IconButton>
-            
-            { values.teachersCount >=1  ? <>  {values.beneficiariesNum/8 <= values.teachersCount  ? < CheckCircleIcon style={{ color: '#04AA6D' }} /> : < CheckCircleIcon style={{ color: 'red' }} />} </> : < CheckCircleIcon style={{ color: 'gray' }} />}
+
+              {values.teachersCount >= 1 ? <>  {values.beneficiariesNum / 8 <= values.teachersCount ? < CheckCircleIcon style={{ color: '#04AA6D' }} /> : < CheckCircleIcon style={{ color: 'red' }} />} </> : < CheckCircleIcon style={{ color: 'gray' }} />}
             </IconButton>
           </span>
           معلم تربية خاصة نسبة 1 الى 8
@@ -392,9 +418,12 @@ const PersonDetials = ({ Condition, MedicalPracticeCondition, setField, pop, pus
             setField("year", "");
             setField("fullName", "")
             setField("gender", "")
+            setField("sponsorName", "")
             setField("birthDate", "")
             setField("staffTypes", "")
             setField("cv", "")
+            setField("EducationalQualification", "")
+            setField("MedicalPractice", "")
             setFieldName(null);
             handleClickOpen();
           }}
@@ -421,14 +450,13 @@ const PersonDetials = ({ Condition, MedicalPracticeCondition, setField, pop, pus
                 {SponsorName &&
                   <TableCell > اسم الكفيل</TableCell>
                 }
-                <TableCell >المرفقات</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
 
               <FieldArray name="customers">
                 {({ fields }) => fields.map((name, index) => (
-                  <Row managersCount={managersCount} setManagersCount={setManagersCount}  SponsorName={SponsorName} setSponsorName={setSponsorName} values={values} fromEdit={fromEdit} setFromEdit={setFromEdit} fieldName={fieldName} setFieldName={setFieldName} open={open} setOpen={setOpen} setField={setField} fields={fields} name={name} index={index} />
+                  <Row managersCount={managersCount} setManagersCount={setManagersCount} SponsorName={SponsorName} setSponsorName={setSponsorName} values={values} fromEdit={fromEdit} setFromEdit={setFromEdit} fieldName={fieldName} setFieldName={setFieldName} open={open} setOpen={setOpen} setField={setField} fields={fields} name={name} index={index} />
                 ))}
               </FieldArray>
 
@@ -458,9 +486,12 @@ const PersonDetials = ({ Condition, MedicalPracticeCondition, setField, pop, pus
           setField("year", "");
           setField("fullName", "")
           setField("gender", "")
+          setField("sponsorName", "")
           setField("birthDate", "")
           setField("staffTypes", "")
           setField("cv", "")
+          setField("EducationalQualification", "")
+          setField("MedicalPractice", "")
         }}
       >
         <AddPersonForm fromEdit={fromEdit} MedicalPracticeCondition={MedicalPracticeCondition} setField={setField} pop={pop} push={push} values={values} setOpenPopup={setOpen} fieldName={fieldName} Condition={Condition} />

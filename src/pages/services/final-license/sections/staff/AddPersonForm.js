@@ -48,10 +48,11 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
 
   const CitizenValidate_Forign = async () => {
     setLoading(true)
-    const response = await validateCitizenFunc(values.idNumber)
+    const response = await validateCitizenFunc(values.iqamaNo)
     if (!response.isSuccessful)
       setErrMessage(response.message)
     else {
+      setCitizenInfo(response.responseBody.data.Body)
       setForignForm(true)
       setErrMessage('')
     }
@@ -166,7 +167,7 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
             </Grid>
 
             {SAForm &&
-              < PersonForm MedicalPracticeCondition={MedicalPracticeCondition} setField={setField} fieldName={fieldName} Condition={Condition} citizenInfo={citizenInfo} />
+              < PersonForm fromEdit={fromEdit} isSaudi ={true} MedicalPracticeCondition={MedicalPracticeCondition} setField={setField} fieldName={fieldName} Condition={Condition} citizenInfo={citizenInfo} />
             }
 
           </Condition>
@@ -224,7 +225,7 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
 				</Button>
             </Grid>
             {forignForm &&
-              < PersonForm MedicalPracticeCondition={MedicalPracticeCondition} setField={setField} fieldName={fieldName} Condition={Condition} citizenInfo={citizenInfo} />
+              < PersonForm fromEdit={fromEdit} isSaudi ={false} MedicalPracticeCondition={MedicalPracticeCondition} setField={setField} fieldName={fieldName} Condition={Condition} citizenInfo={citizenInfo} />
             }
           </Condition>
         </Grid>
@@ -275,7 +276,7 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
             variant='contained'
             color="primary"
             onClick={() => {
-              const { fullName, staffTypes, idNumber, gender, birthDate, iqamaNo, nationality, day, month, year, cv, EducationalQualification, MedicalPractice } = values;
+              const { fullName, staffTypes, idNumber, gender, birthDate, iqamaNo, nationality, day, month, year, cv, EducationalQualification, MedicalPractice,sponsorName } = values;
               values.fullName = "";
               values.idNumber = "";
               values.iqamaNo = "";
@@ -289,20 +290,23 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
               values.cv = "";
               values.EducationalQualification = "";
               values.MedicalPractice = "";
+              values.sponsorName = "";
 
 
               if (fieldName === null) {
-                push("customers", { fullName: fullName, idNumber: idNumber, iqamaNo: iqamaNo, staffTypes: staffTypes, gender: gender, birthDate: birthDate, nationality: nationality, day: day, month: month, year: year, cv: cv, EducationalQualification: EducationalQualification, MedicalPractice: MedicalPractice });
+                push("customers", { fullName: fullName, idNumber: idNumber, iqamaNo: iqamaNo, staffTypes: staffTypes, gender: gender, birthDate: birthDate, nationality: nationality, day: day, month: month, year: year, cv: cv, EducationalQualification: EducationalQualification, MedicalPractice: MedicalPractice, sponsorName: sponsorName });
               }
-          
+             
               setOpenPopup(false);
-              if (values.customers) {
-                var managersCount = values.customers.filter(customer => customer.staffTypes === "مدير").length
-                setField('managersCount', managersCount)
-                var teachersCount = values.customers.filter(customer => customer.staffTypes === "معلم تربية خاصة ").length
+              setField('managersCount', values.managersCount++)
+              console.log('--customers',values.customers)
+              // if (values.customers) {
+              //   var managersCount = values.customers.filter(customer => customer.staffTypes === "مدير").length
+              //   setField('managersCount', managersCount)
+              //   var teachersCount = values.customers.filter(customer => customer.staffTypes === "معلم تربية خاصة ").length
                 
-                setField('teachersCount',teachersCount)
-              }
+              //   setField('teachersCount',teachersCount)
+              // }
             }}
           >
             اضافة

@@ -22,6 +22,7 @@ import FinalFromWizard from '../../../components/wizard/FinalFormWizard';
 import AlertDialog from 'src/components/AlertDialog';
 import { CenterDetailsValidation } from './services/finalLicenseUtil';
 import { capacityValidation } from './services/finalLicenseUtil'
+import { RequirementsValidation } from './services/finalLicenseUtil'
 import { personsValidation } from './services/finalLicenseUtil'
 import { ConditionComp } from './services/finalLicenseUtil'
 import { MedicalPracticeComp } from './services/finalLicenseUtil'
@@ -52,7 +53,7 @@ const CreateFinalLicense = () => {
     console.log(JSON.stringify(values))
     const response = await createFinalLicenseAPIFunc(values);
     console.log(JSON.stringify(response));
-    handleClickOpen('تم تقديم طلبك بنجاح', '');
+    handleClickOpen(` تم تقديم طلب ${values.temporaryLicenceNum} لإصدار الترخيص النهائي رقم ${response.responseBody.data.requestNumber} يرجى تسليم أصل الضمان البنكي إلى وكالة التأهيل والتوجيه الإجتماعي بوزارة الموارد البشرية والتنمية الإجتماعية لانهاء إجراءات الطلب خلال 3 أيام عمل`, '');
   };
 
   const handleClickOpen = (dialogContent, dialogTitle) => {
@@ -109,7 +110,7 @@ const CreateFinalLicense = () => {
 
             </FinalFromWizardCapacityPage>
 
-            <FinalFromWizardRequirements  label="المتطلبات">
+            <FinalFromWizardRequirements  validate= {RequirementsValidation} label="المتطلبات">
 
             </FinalFromWizardRequirements>
 

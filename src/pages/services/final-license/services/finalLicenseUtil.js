@@ -19,15 +19,15 @@ import {
 } from '@material-ui/core';
 
 
-const downloadFileFn = async (setLoading,loading, licenseNumber) => {
+const downloadFileFn = async (setLoading, loading, licenseNumber) => {
     setLoading(true)
     console.log("responseresponse", licenseNumber)
     const downloadDoc = await downloadDocument(licenseNumber, true)
-    if (downloadDoc.isSuccessful){
+    if (downloadDoc.isSuccessful) {
         setLoading(false)
     }
     // else
-    
+
 }
 
 const CenterDetailsValidation = values => {
@@ -45,7 +45,7 @@ const CenterDetailsValidation = values => {
     return msg
 }
 
-const uploadDocument = async (setDocument, name, file, multiple) => {
+const uploadDocument = async (setDocument, name, file, multiple,setLoading) => {
     var reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onloadend = async function () {
@@ -64,8 +64,10 @@ const uploadDocument = async (setDocument, name, file, multiple) => {
         console.log('...response...', response)
         if (!response.isSuccessful)
             SetErrMessage(response.message)
-        else
+        else{
             setDocument(name, response.responseBody.docID, multiple)
+            setLoading(false)
+        }
         // setDocument(name, response.docID, multiple)
 
     }
@@ -73,8 +75,8 @@ const uploadDocument = async (setDocument, name, file, multiple) => {
 
 const capacityValidation = values => {
     var msg = {}
-    console.log(' values.beneficiariesNum', typeof(values.beneficiariesNum) ,'values.capacity',typeof(values.capacity))
-    console.log(' values.buildingArea',typeof( values.buildingArea),'values.basementArea',typeof(values.basementArea))
+    console.log(' values.beneficiariesNum', typeof (values.beneficiariesNum), 'values.capacity', typeof (values.capacity))
+    console.log(' values.buildingArea', typeof (values.buildingArea), 'values.basementArea', typeof (values.basementArea))
     if (!values.beneficiariesNum)
         msg.beneficiariesNum = required
     if (!values.buildingArea)
@@ -88,12 +90,29 @@ const capacityValidation = values => {
     return msg
 }
 
+const RequirementsValidation = values => {
+    var msg = {}
+    // if (!values.OperationalPlan)
+    //     msg.OperationalPlan = required
+    // if (!values.ExecutivePlan)
+    //     msg.ExecutivePlan = required
+    // if (!values.OfficeReport)
+    //     msg.OfficeReport = required
+    // if (!values.SecurityReport)
+    //     msg.SecurityReport = required
+    // if (!values.Furniture)
+    //     msg.Furniture = required
+    // if (!values.FinancialGuaranteeAtt)
+    //     msg.FinancialGuaranteeAtt = required
+    return msg
+}
+
 const personsValidation = values => {
     var msg = {}
-    if (values.managersCount > 1 )
-        msg.managersCount = ''
-    if (values.beneficiariesNum/8 > values.teachersCount  )
-        msg.managersCount = ''
+    // if (values.managersCount > 1)
+    //     msg.managersCount = ''
+    // if (values.beneficiariesNum / 8 > values.teachersCount)
+    //     msg.managersCount = ''
     return msg
 }
 
@@ -130,14 +149,14 @@ const ContentField = ({ value, label }) => (
 
 
 const DownloadButt = ({ docIDs, name, label }) => {
-  const [loading,setLoading] = React.useState(false)
-    return(
-    <>
-        { docIDs &&
-            <>
+    const [loading, setLoading] = React.useState(false)
+    return (
+        <>
+            { docIDs &&
+                <>
 
-                {/* { docIDs.map((docID, index) => ( */}
-                {/* <Grid
+                    {/* { docIDs.map((docID, index) => ( */}
+                    {/* <Grid
                     container
                     spacing={3}
                     mt={3}
@@ -159,35 +178,35 @@ const DownloadButt = ({ docIDs, name, label }) => {
                                     md={6}
                                     xs={12}
                                 > */}
-                                    {docIDs.map((docID, index) => (
-                                        <TableRow>
-                                            <TableCell> ملف رقم {index + 1} </TableCell>
-                                            <TableCell>
-                                                <Button
-                                                 startIcon={loading ? <CircularProgress size="1rem" /> : <CloudDownloadIcon />}
-                                                    key={index}
-                                                    name={name}
-                                                    variant="contained"
-                                                    color="primary"
-                                                    sx={{
-                                                        backgroundColor: '#3c8084',
-                                                      }}
-                                                    // startIcon={<CloudDownloadIcon />}
-                                                    onClick={() => downloadFileFn(setLoading,loading,docID)}
-                                                >
-                                                    تنزيل
+                                {docIDs.map((docID, index) => (
+                                    <TableRow>
+                                        <TableCell> ملف رقم {index + 1} </TableCell>
+                                        <TableCell>
+                                            <Button
+                                                startIcon={loading ? <CircularProgress size="1rem" /> : <CloudDownloadIcon />}
+                                                key={index}
+                                                name={name}
+                                                variant="contained"
+                                                color="primary"
+                                                sx={{
+                                                    backgroundColor: '#3c8084',
+                                                }}
+                                                // startIcon={<CloudDownloadIcon />}
+                                                onClick={() => downloadFileFn(setLoading, loading, docID)}
+                                            >
+                                                تنزيل
                                                 </Button>
-                                            </TableCell>
-                                        </TableRow>
-                                    ))}
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
                                 {/* </Grid> */}
                             </TableBody>
                         </Table>
                     </TableContainer>
 
-                {/* </Grid> */}
-                <>
-                    {/* <Typography gutterBottom variant="body2" color="textSecondary" component="p">
+                    {/* </Grid> */}
+                    <>
+                        {/* <Typography gutterBottom variant="body2" color="textSecondary" component="p">
                             {label}
                         </Typography>
                         <Button
@@ -200,14 +219,17 @@ const DownloadButt = ({ docIDs, name, label }) => {
                         >
                             تنزيل
                        </Button> */}
+                    </>
+
                 </>
+            }
+        </>
+    )
 
-            </>
-        }
-    </>
-)
-
-    }
+}
 
 
-export { CenterDetailsValidation, capacityValidation, ConditionComp, MedicalPracticeComp, calculationConditionComp, uploadDocument, DownloadButt, ContentField, personsValidation };
+
+
+
+export { CenterDetailsValidation, capacityValidation, RequirementsValidation, ConditionComp, MedicalPracticeComp, calculationConditionComp, uploadDocument, DownloadButt, ContentField, personsValidation };

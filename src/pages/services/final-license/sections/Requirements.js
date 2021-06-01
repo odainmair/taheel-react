@@ -3,6 +3,7 @@ import {
     Grid,
     Alert
 } from '@material-ui/core';
+import { Field } from 'react-final-form';
 import { useState } from 'react';
 import FileUploader from 'src/components/FileUploader';
 import { uploadDocumentApi } from '../services/finalLicenseAPI'
@@ -35,7 +36,7 @@ const Requirements = ({ setField, values }) => {
     //             SetDocuments(documents)
     //         }
     // }
-    var multipleDocs =[]
+    var multipleDocs = []
     const setDocument = (name, docID, multiple) => {
         if (!multiple)
             setField(name, [docID])
@@ -44,6 +45,19 @@ const Requirements = ({ setField, values }) => {
             setField(name, multipleDocs)
         }
     }
+
+    const FileUploaderComp = ({ input: { value, name }, label, inputType }) => (
+        <>
+
+            <FileUploader
+                handleFile={(file,setLoading) => uploadDocument(setDocument, name, file, inputType , setLoading)}
+                label={label}
+                name= {name} 
+                inputType={inputType}
+                fileName= {(file) => file}
+            />
+        </>
+    )
 
     return (
         <>
@@ -69,11 +83,11 @@ const Requirements = ({ setField, values }) => {
                     md={6}
                     xs={12}
                 >
-                    <FileUploader
-                        handleFile={(file) => uploadDocument(setDocument, "OperationalPlan", file)}
+                    <Field
                         label="ارفاق الخطة التشغيلية"
-                        name="OperationalPlan"
-                        multiple={false}
+                        name="OperationalPlan" 
+                        component={FileUploaderComp}
+                        inputType={false}
                     />
                 </Grid>
                 <Grid
@@ -81,11 +95,11 @@ const Requirements = ({ setField, values }) => {
                     md={6}
                     xs={12}
                 >
-                    <FileUploader
-                        handleFile={(file) => uploadDocument(setDocument, "ExecutivePlan", file)}
+                    <Field
                         label="ارفاق الخطة التنفيذية"
                         name="ExecutivePlan"
-                        multiple={false}
+                        component={FileUploaderComp}
+                        inputType={false}
                     />
                 </Grid>
                 <Grid
@@ -93,11 +107,11 @@ const Requirements = ({ setField, values }) => {
                     md={6}
                     xs={12}
                 >
-                    <FileUploader
-                        handleFile={(file) => uploadDocument(setDocument, "OfficeReport", file)}
+                    <Field
                         label="ارفاق تقرير زيارة مكتب هندسي معتمد"
                         name="OfficeReport"
-                        multiple={false}
+                        component={FileUploaderComp}
+                        inputType={false}
                     />
                 </Grid>
                 <Grid
@@ -105,11 +119,11 @@ const Requirements = ({ setField, values }) => {
                     md={6}
                     xs={12}
                 >
-                    <FileUploader
-                        handleFile={(file) => uploadDocument(setDocument, "SecurityReport", file)}
+                    <Field
                         label="ارفاق تقرير المسح الأمني"
                         name="SecurityReport"
-                        multiple={false}
+                        component={FileUploaderComp}
+                        inputType={false}
                     />
                 </Grid>
                 <Grid
@@ -117,24 +131,24 @@ const Requirements = ({ setField, values }) => {
                     md={6}
                     xs={12}
                 >
-                    <FileUploader
-                        handleFile={(file) => uploadDocument(setDocument, "Furniture", file, true)}
+                    <Field
                         label="ارفاق صور الأثاث و الأجهزة الكهربائية"
                         name="Furniture"
-                        multiple={true}
-
+                        component={FileUploaderComp}
+                        inputType={true}
                     />
+
                 </Grid>
                 <Grid
                     item
                     md={6}
                     xs={12}
                 >
-                    <FileUploader
-                        handleFile={(file) => uploadDocument(setDocument, "FinancialGuaranteeAtt", file)}
+                    <Field
                         label="ارفاق الضمان المالي"
                         name="FinancialGuaranteeAtt"
-                        multiple={false}
+                        component={FileUploaderComp}
+                        inputType={false}
                     />
                 </Grid>
             </Grid>
@@ -148,4 +162,7 @@ export default Requirements;
 Requirements.propTypes = {
     setField: PropTypes.func.isRequired,
     values: PropTypes.func.isRequired,
+    label: PropTypes.func.isRequired,
+  input: PropTypes.func.isRequired,
+  inputType: PropTypes.bool.isRequired,
 };

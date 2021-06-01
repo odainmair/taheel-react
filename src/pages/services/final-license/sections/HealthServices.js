@@ -19,8 +19,20 @@ const HealthServices = ({ Condition, values, setField }) => {
     const { documents, SetDocuments } = useContext(localContext);
 
     const setDocument = (name, docID, multiple) => {
-        setField(name,[docID])
+        setField(name, [docID])
     }
+
+    const FileUploaderComp = ({ input: { value, name }, label, inputType }) => (
+        <>
+            <FileUploader
+                handleFile={(file,setLoading) => uploadDocument(setDocument, name, file, inputType , setLoading)}
+                label={label}
+                name= {name} 
+                inputType={inputType}
+                fileName
+            />
+        </>
+    )
 
     return (
         <>
@@ -68,8 +80,8 @@ const HealthServices = ({ Condition, values, setField }) => {
                             className="custom-field"
                             formControlProps={{ fullWidth: true }}
                         >
-                            <MenuItem value= {1}> رخصة وزارة الصحة </MenuItem>
-                            <MenuItem value= {2}> عقد شراكة مع منشأة رعاية صحية </MenuItem>
+                            <MenuItem value={1}> رخصة وزارة الصحة </MenuItem>
+                            <MenuItem value={2}> عقد شراكة مع منشأة رعاية صحية </MenuItem>
                         </Field>
                     </Grid>
                     <Grid
@@ -77,12 +89,14 @@ const HealthServices = ({ Condition, values, setField }) => {
                         md={6}
                         xs={12}
                     >
-                        <FileUploader
-                            handleFile={(file) => uploadDocument(setDocument, "healthServiceAttachment", file)}
-                            label={values.healthServiceType ? values.healthServiceType === 1? 'ارفاق رخصة وزارة الصحة' : 'ارفاق عقد الشراكة' : 'ارفاق الخدمة الصحية'}
+                        <Field
+                            label={values.healthServiceType ? values.healthServiceType === 1 ? 'ارفاق رخصة وزارة الصحة' : 'ارفاق عقد الشراكة' : 'ارفاق الخدمة الصحية'}
+
                             name="healthServiceAttachment"
-                            multiple={false}
+                            component={FileUploaderComp}
+                            inputType={false}
                         />
+
                     </Grid>
                 </Condition>
             </Grid>
@@ -96,4 +110,8 @@ HealthServices.propTypes = {
     Condition: PropTypes.func.isRequired,
     values: PropTypes.func.isRequired,
     setField: PropTypes.func.isRequired,
+    input: PropTypes.func.isRequired,
+    label: PropTypes.func.isRequired,
+    inputType: PropTypes.bool.isRequired,
+    fileName: PropTypes.func.isRequired,
 };

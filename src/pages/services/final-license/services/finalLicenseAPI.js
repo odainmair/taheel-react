@@ -47,6 +47,9 @@ const createFinalLicenseAPIFunc = async (values) => {
 				delete customer.month
 				delete customer.year
 			}
+			else if (['MedicalPractice','EducationalQualification','cv'].includes(key)) {
+				customer[newKey] = customer[key][0]
+			}
 			else
 				customer[newKey] = customer[key];
 			if (!customer[newKey] || newKey !== key)
@@ -85,7 +88,7 @@ const createFinalLicenseAPIFunc = async (values) => {
 				"financialGuarbteeAtt": values.FinancialGuaranteeAtt[0],
 				"executivePlan": values.ExecutivePlan[0],
 				"engineeringPlan": values.OperationalPlan[0],
-				"securityReport": values.SecurityReport[0],
+				"securityReport": values.SecurityReport,
 				"beneficiaryCount": values.beneficiariesNum, 
 				"furniturePhoto_r": furnitures
 			},
