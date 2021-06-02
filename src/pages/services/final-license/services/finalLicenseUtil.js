@@ -45,7 +45,7 @@ const CenterDetailsValidation = values => {
     return msg
 }
 
-const uploadDocument = async (setDocument, name, file, multiple,setLoading) => {
+const uploadDocument = async (setDocument, name, file, multiple, setLoading) => {
     var reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onloadend = async function () {
@@ -64,7 +64,7 @@ const uploadDocument = async (setDocument, name, file, multiple,setLoading) => {
         console.log('...response...', response)
         if (!response.isSuccessful)
             SetErrMessage(response.message)
-        else{
+        else {
             setDocument(name, response.responseBody.docID, multiple)
             setLoading(false)
         }
@@ -107,13 +107,21 @@ const RequirementsValidation = values => {
     return msg
 }
 
-const personsValidation = values => {
-    var msg = {}
-    // if (values.managersCount > 1)
-    //     msg.managersCount = ''
-    // if (values.beneficiariesNum / 8 > values.teachersCount)
-    //     msg.managersCount = ''
-    return msg
+const personsValidation = async values => {
+    const response = { isSuccessful: true, message: '' };
+console.log(">>>>>>>>>>>I'm hereeeeee")
+    if (!values.customers || values.customers.length ===0 ) {
+        return { isSuccessful: false, message: "يرجى استيفاء الشروط" };
+
+    }
+    const TeachersCount = values.customers.filter(customer => customer.staffTypes === "معلم تربية خاصة ").length
+    const managersCount = values.customers.filter(customer => customer.staffTypes === "مدير").length
+    if (managersCount > 0 && managersCount !== 1)
+        return { isSuccessful: false, message: "يرجى استيفاء الشروط" };
+
+    if (values.beneficiariesNum / 8 >= TeachersCount && TeachersCount >= 1)
+        return { isSuccessful: false, message: "يرجى استيفاء الشروط" };
+    return response
 }
 
 
@@ -145,23 +153,37 @@ const ContentField = ({ value, label }) => (
         </Typography>
     </>
 )
-
-
-
-const DownloadButt = ({ docIDs, name, label }) => {
+const DownloadButt = ({ index, docID, name, label }) => {
     const [loading, setLoading] = React.useState(false)
+    return (
+        <>
+            <TableRow>
+                <TableCell> ملف رقم {index + 1} </TableCell>
+                <TableCell>
+                    <Button
+                        startIcon={loading ? <CircularProgress size="1rem" /> : <CloudDownloadIcon />}
+                        key={index}
+                        name={name}
+                        variant="contained"
+                        color="primary"
+                        sx={{
+                            backgroundColor: '#3c8084',
+                        }}
+                        // startIcon={<CloudDownloadIcon />}
+                        onClick={() => downloadFileFn(setLoading, loading, docID)}
+                    >
+                        تنزيل
+                                                </Button>
+                </TableCell>
+            </TableRow>
+        </>)
+}
+const DownloadButtTable = ({ docIDs, name, label }) => {
+
     return (
         <>
             { docIDs &&
                 <>
-
-                    {/* { docIDs.map((docID, index) => ( */}
-                    {/* <Grid
-                    container
-                    spacing={3}
-                    mt={3}
-                    mb={3}
-                > */}
                     <TableContainer >
                         <Table aria-label="simple table">
                             <TableHead>
@@ -172,53 +194,16 @@ const DownloadButt = ({ docIDs, name, label }) => {
                             </TableHead>
                             <TableBody>
 
-                                {/* <Grid
-                                    item
-                                    lg={6}
-                                    md={6}
-                                    xs={12}
-                                > */}
                                 {docIDs.map((docID, index) => (
-                                    <TableRow>
-                                        <TableCell> ملف رقم {index + 1} </TableCell>
-                                        <TableCell>
-                                            <Button
-                                                startIcon={loading ? <CircularProgress size="1rem" /> : <CloudDownloadIcon />}
-                                                key={index}
-                                                name={name}
-                                                variant="contained"
-                                                color="primary"
-                                                sx={{
-                                                    backgroundColor: '#3c8084',
-                                                }}
-                                                // startIcon={<CloudDownloadIcon />}
-                                                onClick={() => downloadFileFn(setLoading, loading, docID)}
-                                            >
-                                                تنزيل
-                                                </Button>
-                                        </TableCell>
-                                    </TableRow>
+                                    < DownloadButt index={index} docID={docID} name={name} label={label} />
                                 ))}
                                 {/* </Grid> */}
                             </TableBody>
                         </Table>
                     </TableContainer>
 
-                    {/* </Grid> */}
                     <>
-                        {/* <Typography gutterBottom variant="body2" color="textSecondary" component="p">
-                            {label}
-                        </Typography>
-                        <Button
-                            key={index}
-                            name={name}
-                            variant="contained"
-                            color="primary"
-                            startIcon={<CloudDownloadIcon />}
-                            onClick={() => downloadFileFn(docID)}
-                        >
-                            تنزيل
-                       </Button> */}
+
                     </>
 
                 </>
@@ -232,4 +217,4 @@ const DownloadButt = ({ docIDs, name, label }) => {
 
 
 
-export { CenterDetailsValidation, capacityValidation, RequirementsValidation, ConditionComp, MedicalPracticeComp, calculationConditionComp, uploadDocument, DownloadButt, ContentField, personsValidation };
+export { CenterDetailsValidation, capacityValidation, RequirementsValidation, ConditionComp, MedicalPracticeComp, calculationConditionComp, uploadDocument, DownloadButt, ContentField, personsValidation, DownloadButtTable };

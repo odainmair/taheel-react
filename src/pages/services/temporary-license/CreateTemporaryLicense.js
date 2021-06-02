@@ -88,7 +88,13 @@ const CreateTemporaryLicense = () => {
             />
             <FinalFromWizard.Page
               label="تفاصيل المركز"
-              validate={(values) => sectionValidateInput(tempLicenseFieldSchema, "CenterDetails", values)}
+              validate={(values) => {
+                const error = sectionValidateInput(tempLicenseFieldSchema, "CenterDetails", values);
+                if(values['targetedGender'] === "b" && values['ageGroup'] !== "2-12"){
+                  error['ageGroup']= "يرجى ختيار الفئة العمرية من سنتين الى ١٢سنة"
+                }
+                return error;
+              }}
             >
               <CenterDetails Condition={ConditionComp} />
             </FinalFromWizard.Page>

@@ -19,7 +19,7 @@ const newKeys = {
 	MedicalPractice: 'professionalLicense',
 }
 
-const staffTypes = ["معلم تربية خاصة ", "أخصائي اجتماعي", "مراقب اجتماعي", "حارس", "عامل تنظيفات", "مشرف فني عام", "اخصائي نفسي و توجيه اجتماعي", "عامل رعاية شخصية", "مدير", "سائق", "مرافق سائق", "أخصائي علاج طبيعي", "أخصائي علاج وظيفي", "أخصائي نطق و تخاطب", "ممرض"]
+const staffTypes = ["معلم تربية خاصة", "أخصائي اجتماعي", "مراقب اجتماعي", "حارس", "عامل تنظيفات", "مشرف فني عام", "اخصائي نفسي و توجيه اجتماعي", "عامل رعاية شخصية", "مدير", "سائق", "مرافق سائق", "أخصائي علاج طبيعي", "أخصائي علاج وظيفي", "أخصائي نطق و تخاطب", "ممرض"]
 staffTypes.map((staffType, index) => {
 	staffTypesNo[staffType] = index + 1
 })
@@ -34,6 +34,7 @@ const createFinalLicenseAPIFunc = async (values) => {
 
 	staff.map((customer) => {
 		Object.keys(customer).map((key) => {
+			console.log('........nationalitynationality',customer.nationality)
 			const newKey = newKeys[key] || key;
 			if (key === 'gender')
 				customer[newKey] = customer[key] === 'انثى' ? 'f' : 'm'
@@ -108,9 +109,8 @@ console.log('>>>>>>>>>>>>>requestBody>>>>>>>>>',requestBody)
 const getTempLicense = async (userEmail) => {
 
 	const url = 'taheel-apis-records-getCenters-v2';
-    const queryParams = { userEmail };
-	const requestBody={isExpired:false,licenseType:'رخصة مؤقتة'}
-    const response = await APIRequest({ url, queryParams,requestBody });
+    const queryParams = { userEmail,isExpired:false,licenseType:'رخصة مؤقتة' };
+    const response = await APIRequest({ url, queryParams });
     return response;
 	// const url = 'taheel-apis-records-getRequests-v2';
 	// const queryParams = { userEmail };

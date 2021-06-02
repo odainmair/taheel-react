@@ -22,6 +22,7 @@ const PersonForm = ({ fromEdit, isSaudi, MedicalPracticeCondition, fieldName, se
         setField('fullName', isSaudi || fromEdit ? `${citizenInfo.Name.FirstName} ${citizenInfo.Name.LastName}` : `${citizenInfo.NameT.FirstName} ${citizenInfo.NameT.LastName}`)
         setField('gender', citizenInfo.Gender === 'F' ? 'انثى' : "ذكر")
         setField('birthDate', isSaudi || fromEdit ? citizenInfo.BirthDateH : citizenInfo.BirthDate.HijriDate)
+        setField('nationality', isSaudi  ? 'سعودي' : 'غير سعودي')
         if (!isSaudi || !fromEdit) {
             setField('sponsorName', citizenInfo.SponsorName)
         }

@@ -60,7 +60,7 @@ const FileUploader = ({ handleFile, name, label, inputType, fileName }) => {
         style={{ display: 'none' }}
       />
       {console.log('>>>>>>>fileName',fileName)}
-    <Typography variant="caption" display="block" color="error" gutterBottom> sucsess {fileName}</Typography>
+    {/* <Typography variant="caption" display="block" color="error" gutterBottom>  {fileName}</Typography> */}
       
     </>
   );

@@ -20,10 +20,10 @@ const Capacity = ({ Condition, values, setField }) => {
 	const [errMessage, SetErrMessage] = useState('')
 	const [loading, setLoading] = useState(false)
 
-	// useEffect(() => {
-	// 	console.log('hiiiiiiiiiiiiii')
-	// 	setField('isNextBtnDisabled',true)
-	// }, []);
+	useEffect(() => {
+		console.log('hiiiiiiiiiiiiii')
+		setField('isNextBtnDisabled',true)
+	}, [values.isNextBtnDisabled]);
 
 	const calculate = async () => {
 		setLoading(true)
@@ -34,6 +34,7 @@ const Capacity = ({ Condition, values, setField }) => {
 			setCalculatedData(false)
 		}
 		else {
+			setField('isNextBtnDisabled',false)
 			setField('capacity', response.responseBody.body.carryingCapacity.toFixed(0))
 			setField('financialGuarantee', `${response.responseBody.body.financialGuarantee.toFixed(3)} ر.س.`)
 			setCalculatedData(true)

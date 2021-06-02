@@ -91,13 +91,13 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
             <FormControlLabel
               label="سعودي"
               control={<Field
-                name={fieldName === null ? "nationality" : `${fieldName}.nationality`}
+                name={fieldName === null ? "nationalityBtn" : `${fieldName}.nationalityBtn`}
                 component={Radio} type="radio" value="سعودي" />}
             />
             <FormControlLabel
               label="غير سعودي"
               control={<Field
-                name={fieldName === null ? "nationality" : `${fieldName}.nationality`}
+                name={fieldName === null ? "nationalityBtn" : `${fieldName}.nationalityBtn`}
                 component={Radio} type="radio" value="غير سعودي" />}
             />
           </RadioGroup>
@@ -109,7 +109,7 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
           className="custom-label-field"
         >
 
-          <Condition when="nationality" is='سعودي'>
+          <Condition when="nationalityBtn" is='سعودي'>
 
             <Grid
               item
@@ -163,7 +163,6 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
               xs={12}
               className="custom-label-field"
             >
-
             </Grid>
 
             {SAForm &&
@@ -180,7 +179,7 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
           spacing={1}
           className="custom-label-field"
         >
-          <Condition when="nationality" is='غير سعودي'>
+          <Condition when="nationalityBtn" is='غير سعودي'>
             <Grid
               item
               md={6}
@@ -292,21 +291,13 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
               values.MedicalPractice = "";
               values.sponsorName = "";
 
-
+            
               if (fieldName === null) {
-                push("customers", { fullName: fullName, idNumber: idNumber, iqamaNo: iqamaNo, staffTypes: staffTypes, gender: gender, birthDate: birthDate, nationality: nationality, day: day, month: month, year: year, cv: cv, EducationalQualification: EducationalQualification, MedicalPractice: MedicalPractice, sponsorName: sponsorName });
-              }
-             
+                push("customers", { fullName: fullName, idNumber: idNumber, iqamaNo: iqamaNo, staffTypes: staffTypes, gender: gender, birthDate: birthDate, nationality: nationality, day: day, month: month, year: year, cv: cv, EducationalQualification: EducationalQualification, MedicalPractice: MedicalPractice });
+              } 
+
               setOpenPopup(false);
-              setField('managersCount', values.managersCount++)
-              console.log('--customers',values.customers)
-              // if (values.customers) {
-              //   var managersCount = values.customers.filter(customer => customer.staffTypes === "مدير").length
-              //   setField('managersCount', managersCount)
-              //   var teachersCount = values.customers.filter(customer => customer.staffTypes === "معلم تربية خاصة ").length
-                
-              //   setField('teachersCount',teachersCount)
-              // }
+           
             }}
           >
             اضافة

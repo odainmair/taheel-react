@@ -13,3 +13,7 @@ export const checkMobilePattern = mobile => {
     const regex = /^(5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$/;
     return regex.test(mobile);
 }
+export const checkIsNumber = number => {
+    const regex = /^[+]?\d+$/
+    return regex.test(number);
+}

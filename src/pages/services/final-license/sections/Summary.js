@@ -25,7 +25,7 @@ import TermsContent from './TermsContent';
 import TermsDialog from 'src/components/TermsDialog';
 import { useContext } from 'react';
 import localContext from 'src/localContext';
-import { DownloadButt } from '../services/finalLicenseUtil'
+import { DownloadButtTable } from '../services/finalLicenseUtil'
 import { downloadDocument } from '../services/finalLicenseAPI'
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
@@ -157,7 +157,7 @@ const Summary = ({ values }) => {
                                     md={6}
                                     xs={12}
                                 >
-                                    < DownloadButt docIDs={name.cv} name={`${name}.cv`} label='السيرة الذاتية' />
+                                    < DownloadButtTable docIDs={name.cv} name={`${name}.cv`} label='السيرة الذاتية' />
                                     {/* <Button
                                     name={`${name}.cv`}
                                     variant="contained"
@@ -174,7 +174,7 @@ const Summary = ({ values }) => {
                                     md={6}
                                     xs={12}
                                 >
-                                    < DownloadButt docIDs={name.EducationalQualification} name={`${name}.EducationalQualification`} label='السيرة الذاتية' />
+                                    < DownloadButtTable docIDs={name.EducationalQualification} name={`${name}.EducationalQualification`} label='السيرة الذاتية' />
                                     {/* <Button
                                     name={`${name}.EducationalQualification`}
                                     variant="contained"
@@ -191,7 +191,7 @@ const Summary = ({ values }) => {
                                     md={6}
                                     xs={12}
                                 >
-                                    < DownloadButt docIDs={name.MedicalPractice} name={`${name}.MedicalPractice`} label='السيرة الذاتية' />
+                                    < DownloadButtTable docIDs={name.MedicalPractice} name={`${name}.MedicalPractice`} label='السيرة الذاتية' />
 
                                     {/* <Button
                                     name={`${name}.MedicalPractice`}
@@ -311,9 +311,9 @@ const Summary = ({ values }) => {
                     >
 
                         {console.log('{values[filteredFinalLicense.name]', values[filteredFinalLicense.name])}
-                        {console.log('values', values)}
+                        {/* {console.log('values', values[filteredFinalLicense.name].length)} */}
                         {console.log('[filteredFinalLicense.name]', filteredFinalLicense.name)}
-                        < DownloadButt docIDs={values[filteredFinalLicense.name]} name={filteredFinalLicense.name} label={filteredFinalLicense.label.ar} />
+                        < DownloadButtTable docIDs={values[filteredFinalLicense.name]} name={filteredFinalLicense.name} label={filteredFinalLicense.label.ar} />
                     </Grid>
                 ))}
             </Grid>
@@ -356,7 +356,7 @@ const Summary = ({ values }) => {
                     md={6}
                     xs={12}
                 >
-                    < DownloadButt docIDs={values.healthServiceAttachment} name='healthServiceAttachment' label='مرفقات الخدمات الصحية' />
+                    < DownloadButtTable docIDs={values.healthServiceAttachment} name='healthServiceAttachment' label='مرفقات الخدمات الصحية' />
                 </Grid>
 
             </Grid>

@@ -17,7 +17,7 @@ import questionnaireSectionTwo from '../models/questionnaireSectionTwo';
 import questionnaireSectionThree from '../models/questionnaireSectionThree';
 import questionnaireSectionFour from '../models/questionnaireSectionFour';
 import questionnaireSectionFive from '../models/questionnaireSectionFive';
-
+const required = value => (value ? undefined : 'هذا الحقل مطلوب')
 const questionComponent = (name, label) => (
     <Grid
         key={name}
@@ -26,7 +26,7 @@ const questionComponent = (name, label) => (
         md={12}
         xs={12}
     >
-        <Field name={name}>
+        <Field name={name} validate={required}>
             {({ input, meta }) => ( // eslint-disable-line no-unused-vars
                 <Grid
                     container
@@ -39,7 +39,7 @@ const questionComponent = (name, label) => (
                         pl={2}
                     >
                         <FormLabel component="legend">{label}</FormLabel>
-                        {meta.error && meta.touched && <FormHelperText dir="rtl">{meta.error}</FormHelperText>}
+                        {meta.error && meta.touched && <FormHelperText style={{color:'#ec2956',textAlign:'right'}} dir="rtl">{meta.error}</FormHelperText>}
                     </Grid>
                     <Grid
                         item
