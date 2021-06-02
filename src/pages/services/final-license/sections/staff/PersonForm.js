@@ -12,22 +12,36 @@ import { uploadDocument } from '../../services/finalLicenseUtil'
 import { useContext } from 'react';
 import localContext from 'src/localContext';
 
-const PersonForm = ({ MedicalPracticeCondition, fieldName, setField, pop, push, values, Condition, citizenInfo }) => {
-    console.log("citizenInfo", citizenInfo)
+const PersonForm = ({ fromEdit, isSaudi, MedicalPracticeCondition, fieldName, setField, pop, push, values, Condition, citizenInfo }) => {
+    console.log("///////////citizenInfo", citizenInfo)
+    console.log("///////////isSaudi", isSaudi)
+    console.log("///////////fromEdit", fromEdit)
     const { documents, SetDocuments } = useContext(localContext);
     useEffect(() => {
-        setField('fullName', `${citizenInfo.Name.FirstName} ${citizenInfo.Name.LastName}`)
+
+        setField('fullName', isSaudi || fromEdit ? `${citizenInfo.Name.FirstName} ${citizenInfo.Name.LastName}` : `${citizenInfo.NameT.FirstName} ${citizenInfo.NameT.LastName}`)
         setField('gender', citizenInfo.Gender === 'F' ? 'انثى' : "ذكر")
-        setField('birthDate', citizenInfo.BirthDateH)
-        // moment(`${citizenInfo.BirthHijriDate}`, 'iYYYYiMMiDD').format('iDD/iMM/iYYYY')
-        
+        setField('birthDate', isSaudi || fromEdit ? citizenInfo.BirthDateH : citizenInfo.BirthDate.HijriDate)
+        setField('nationality', isSaudi  ? 'سعودي' : 'غير سعودي')
+        if (!isSaudi || !fromEdit) {
+            setField('sponsorName', citizenInfo.SponsorName)
+        }
     }, [])
 
     const setDocument = (name, docID, multiple) => {
-        setField(name,[docID])
+        setField(name, [docID])
     }
-
-    const staffTypes = ["معلم تربية خاصة", "أخصائي اجتماعي", "مراقب اجتماعي", "حارس", "عامل تنظيفات", "مشرف فني عام", "اخصائي نفسي و توجيه اجتماعي", "عامل رعاية شخصية", "مدير", "سائق", "مرافق سائق", "أخصائي علاج طبيعي", "أخصائي علاج وظيفي", "أخصائي نطق و تخاطب", "ممرض"]
+    const FileUploaderComp = ({ input: { value, name }, label, inputType }) => (
+        <>
+            <FileUploader
+                handleFile={(file,setLoading) => uploadDocument(setDocument, name, file, inputType , setLoading)}
+                label={label}
+                name= {name} 
+                inputType={inputType}
+            />
+        </>
+    )
+    const staffTypes = ["معلم تربية خاصة ", "أخصائي اجتماعي", "مراقب اجتماعي", "حارس", "عامل تنظيفات", "مشرف فني عام", "اخصائي نفسي و توجيه اجتماعي", "عامل رعاية شخصية", "مدير", "سائق", "مرافق سائق", "أخصائي علاج طبيعي", "أخصائي علاج وظيفي", "أخصائي نطق و تخاطب", "ممرض"]
     return (
         <>
             <Grid
@@ -75,6 +89,27 @@ const PersonForm = ({ MedicalPracticeCondition, fieldName, setField, pop, push, 
                     />
                 </Grid>
 
+                {!isSaudi &&
+                    <Grid
+                        item
+                        md={6}
+                        xs={12}
+                        className="custom-label-field"
+                    >
+                        <Field
+                            fullWidth
+                            required
+                            label="اسم الكفيل"
+                            disabled
+                            name={fieldName === null ? "sponsorName" : `${fieldName}.sponsorName`}
+                            component={TextFieldFinal}
+                            type="text"
+                            variant="outlined"
+                            dir="rtl"
+                            className="custom-field"
+                        />
+                    </Grid>
+                }
                 <Grid
                     item
                     md={6}
@@ -106,11 +141,12 @@ const PersonForm = ({ MedicalPracticeCondition, fieldName, setField, pop, push, 
                     md={6}
                     xs={12}
                 >
-                    <FileUploader
-                        handleFile={(file) => uploadDocument(setDocument, "cv", file)}
+
+                    <Field
                         label="السيرة الذاتية"
                         name={fieldName === null ? "cv" : `${fieldName}.cv`}
-                        multiple={false}
+                        component={FileUploaderComp}
+                        inputType={false}
                     />
                 </Grid>
 
@@ -119,25 +155,25 @@ const PersonForm = ({ MedicalPracticeCondition, fieldName, setField, pop, push, 
                     md={6}
                     xs={12}
                 >
-                    <FileUploader
-                        handleFile={(file) => uploadDocument(setDocument, "EducationalQualification", file)}
+                    <Field
                         label="المؤهلات التعليمية"
                         name={fieldName === null ? "EducationalQualification" : `${fieldName}.EducationalQualification`}
-                        multiple={false}
+                        component={FileUploaderComp}
+                        inputType={false}
                     />
                 </Grid>
+                
                 <MedicalPracticeCondition when={fieldName === null ? "staffTypes" : `${fieldName}.staffTypes`} is={['أخصائي علاج طبيعي', 'أخصائي علاج وظيفي', 'أخصائي نطق و تخاطب']}>
                     <Grid
                         item
                         md={6}
                         xs={12}
                     >
-                        <FileUploader
-                            handleFile={(file) => uploadDocument(setDocument, "MedicalPractice", file)}
+                        <Field
                             label="رخصة المزاولة"
                             name={fieldName === null ? "MedicalPractice" : `${fieldName}.MedicalPractice`}
-                            // name="FinancialGuarantee"
-                            multiple={false}
+                            component={FileUploaderComp}
+                            inputType={false}
                         />
                     </Grid>
                 </MedicalPracticeCondition>

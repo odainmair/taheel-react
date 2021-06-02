@@ -25,7 +25,7 @@ import TermsContent from './TermsContent';
 import TermsDialog from 'src/components/TermsDialog';
 import { useContext } from 'react';
 import localContext from 'src/localContext';
-import { DownloadButt } from '../services/finalLicenseUtil'
+import { DownloadButtTable } from '../services/finalLicenseUtil'
 import { downloadDocument } from '../services/finalLicenseAPI'
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
@@ -83,7 +83,7 @@ const Summary = ({ values }) => {
     const [open, setOpen] = React.useState(false);
     const { documents, SetDocuments } = useContext(localContext);
     const { finalLicenseDetails, SetFinalLicenseDetails } = useContext(localContext);
-
+    const [SponsorName, setSponsorName] = React.useState(false)
     console.log('documents>>>', documents)
     const handleClickOpen = (dialogContent, dialogTitle) => {
         setOpen(true);
@@ -94,9 +94,10 @@ const Summary = ({ values }) => {
 
 
 
-    const Row = ({ fields, name, index }) => {
+    const Row = ({ fields, setSponsorName, name, index }) => {
         const classes = useRowStyles();
         const [showen, setShowen] = React.useState(false)
+
         return (
             <>
                 <TableRow className={classes.root} key={name}>
@@ -108,6 +109,9 @@ const Summary = ({ values }) => {
 
                     <TableCell component="th" scope="row">
                         {name.idNumber ? name.idNumber : name.iqamaNo}
+                    </TableCell>
+                    <TableCell component="th" scope="row">
+                        {name.birthDate}
                     </TableCell>
 
                     <TableCell component="th" scope="row">
@@ -121,6 +125,17 @@ const Summary = ({ values }) => {
                     <TableCell component="th" scope="row">
                         {name.nationality}
                     </TableCell>
+                    {name.iqamaNo ?
+                        <>
+                            {setSponsorName(true)}
+                            <TableCell component="th" scope="row">
+                                {name.sponsorName}
+                            </TableCell>
+                        </>
+                        :
+                        <TableCell></TableCell>
+                    }
+
                     <TableCell>
                         <IconButton onClick={() => setShowen(!showen)}>
                             {showen ? <VisibilityIcon /> : <VisibilityOffIcon />}
@@ -129,21 +144,21 @@ const Summary = ({ values }) => {
 
                 </TableRow>
                 <TableRow >
-                <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={12}>
-                    <Collapse in={showen} className={`Attach${index}`} timeout="auto" unmountOnExit  >
+                    <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={12}>
+                        <Collapse in={showen} className={`Attach${index}`} timeout="auto" unmountOnExit  >
 
-                        <Grid
-                            container
-                            spacing={3}
-                        >
                             <Grid
-                                item
-                                lg={4}
-                                md={6}
-                                xs={12}
+                                container
+                                spacing={3}
                             >
-                                < DownloadButt docIDs={name.cv} name={`${name}.cv`} label='السيرة الذاتية' />
-                                {/* <Button
+                                <Grid
+                                    item
+                                    lg={4}
+                                    md={6}
+                                    xs={12}
+                                >
+                                    < DownloadButtTable docIDs={name.cv} name={`${name}.cv`} label='السيرة الذاتية' />
+                                    {/* <Button
                                     name={`${name}.cv`}
                                     variant="contained"
                                     color="primary"
@@ -152,15 +167,15 @@ const Summary = ({ values }) => {
                                 >
                                     تنزيل
                             </Button> */}
-                            </Grid>
-                            <Grid
-                                item
-                                lg={4}
-                                md={6}
-                                xs={12}
-                            >
-                                < DownloadButt docIDs={name.EducationalQualification} name={`${name}.EducationalQualification`} label='السيرة الذاتية' />
-                                {/* <Button
+                                </Grid>
+                                <Grid
+                                    item
+                                    lg={4}
+                                    md={6}
+                                    xs={12}
+                                >
+                                    < DownloadButtTable docIDs={name.EducationalQualification} name={`${name}.EducationalQualification`} label='السيرة الذاتية' />
+                                    {/* <Button
                                     name={`${name}.EducationalQualification`}
                                     variant="contained"
                                     color="primary"
@@ -169,16 +184,16 @@ const Summary = ({ values }) => {
                                 >
                                     تنزيل
                                 </Button> */}
-                            </Grid>
-                            <Grid
-                                item
-                                lg={4}
-                                md={6}
-                                xs={12}
-                            >
-                                < DownloadButt docIDs={name.MedicalPractice} name={`${name}.MedicalPractice`} label='السيرة الذاتية' />
+                                </Grid>
+                                <Grid
+                                    item
+                                    lg={4}
+                                    md={6}
+                                    xs={12}
+                                >
+                                    < DownloadButtTable docIDs={name.MedicalPractice} name={`${name}.MedicalPractice`} label='السيرة الذاتية' />
 
-                                {/* <Button
+                                    {/* <Button
                                     name={`${name}.MedicalPractice`}
                                     variant="contained"
                                     color="primary"
@@ -187,9 +202,9 @@ const Summary = ({ values }) => {
                                 >
                                     تنزيل
                                  </Button> */}
-                            </Grid>
-                        </Grid>                                                         {/* </TableCell> */}
-                    </Collapse>
+                                </Grid>
+                            </Grid>                                                         {/* </TableCell> */}
+                        </Collapse>
                     </TableCell>
                 </TableRow>
             </>
@@ -296,9 +311,9 @@ const Summary = ({ values }) => {
                     >
 
                         {console.log('{values[filteredFinalLicense.name]', values[filteredFinalLicense.name])}
-                        {console.log('values', values)}
+                        {/* {console.log('values', values[filteredFinalLicense.name].length)} */}
                         {console.log('[filteredFinalLicense.name]', filteredFinalLicense.name)}
-                        < DownloadButt docIDs={values[filteredFinalLicense.name]} name={filteredFinalLicense.name} label={filteredFinalLicense.label.ar} />
+                        < DownloadButtTable docIDs={values[filteredFinalLicense.name]} name={filteredFinalLicense.name} label={filteredFinalLicense.label.ar} />
                     </Grid>
                 ))}
             </Grid>
@@ -341,7 +356,7 @@ const Summary = ({ values }) => {
                     md={6}
                     xs={12}
                 >
-                    < DownloadButt docIDs={values.healthServiceAttachment} name='healthServiceAttachment' label='مرفقات الخدمات الصحية' />
+                    < DownloadButtTable docIDs={values.healthServiceAttachment} name='healthServiceAttachment' label='مرفقات الخدمات الصحية' />
                 </Grid>
 
             </Grid>
@@ -375,16 +390,20 @@ const Summary = ({ values }) => {
                                 <TableRow>
                                     <TableCell> الاسم الكامل </TableCell>
                                     <TableCell> رقم الهوية/الاإقامة </TableCell>
+                                    <TableCell > تاريخ الميلاد </TableCell>
                                     <TableCell> نوع الكادر </TableCell>
                                     <TableCell> الجنس </TableCell>
                                     <TableCell> الجنسية</TableCell>
+                                    {SponsorName &&
+                                        <TableCell > اسم الكفيل</TableCell>
+                                    }
                                 </TableRow>
                             </TableHead>
                             <TableBody>
                                 <FieldArray name="customers">
 
                                     {({ fields }) => fields.value.map((name, index) => (
-                                        <Row key={index} fields={fields} name={name} index={index} />
+                                        <Row key={index} setSponsorName={setSponsorName} fields={fields} name={name} index={index} />
                                     ))}
                                 </FieldArray>
                             </TableBody>
@@ -434,6 +453,7 @@ Summary.propTypes = {
     index: PropTypes.func.isRequired,
     name: PropTypes.func.isRequired,
     fields: PropTypes.func.isRequired,
+    setSponsorName: PropTypes.func.isRequired,
 
 };
 

@@ -17,30 +17,19 @@ import { CentertDetails } from '../services/finalLicenseAPI'
 import { ContentField } from '../services/finalLicenseUtil'
 
 
-const CenterDetails = ({ centerLicenceNumber, Condition, values, temporaryLicenses, setField }) => {
+const CenterDetails = ({  centerLicenceNumber, Condition, values, temporaryLicenses, setField }) => {
 
 	console.log("props", temporaryLicenses)
 	const [loading, setLoading] = useState(false)
 	const [checkData, setCheckData] = useState(false)
 	const [errMessage, SetErrMessage] = useState('')
+	const editMode = centerLicenceNumber ? true :false
 
-	useEffect(() => {
-		setField('isNextBtnDisabled',true)
-		// CentertDetails = getCentertDetails()
-		// if (centerLicenceNumber) {
-		// 	setField('CRNumber', '5555555')
-		// 	setField('temporaryLicenceNum', '5555555')
-		// 	setField('companyName', '5555555')
-		// 	setField('activities', '5555555')
-		// 	setField('municipLicenseNo', '5555555')
-		// 	setField('beneficiariesNum', '577777777')
-		// }
-	}, []);
 
 	const check = async () => {
 		setLoading(true)
 		await getMunicipalLicenseNo()
-		// await getCentertDetails()
+		await getCentertDetails()
 		const response = await validateCompanyFunc(values.CRNumber)
 		if (!response.isSuccessful) {
 			SetErrMessage(response.message)
@@ -69,9 +58,9 @@ const CenterDetails = ({ centerLicenceNumber, Condition, values, temporaryLicens
 	}
 
 	const getCentertDetails = async () => {
-		if (values.temporaryLicenceNum) {
-			const response = await CentertDetails(values.temporaryLicenceNum[0])
-			console.log('>>>>>>>>>>>>response', response.responseBody)
+		if (values.temporaryLicenceNum ||editMode ) {
+					console.log('>>>>>>>>alues.temporaryLicenceNum****************************************************************',values.temporaryLicenceNum)
+			const response = await CentertDetails(values.temporaryLicenceNum ? values.temporaryLicenceNum  : centerLicenceNumber)
 			if (!response.isSuccessful)
 				SetErrMessage(response.message)
 			else {
@@ -82,9 +71,11 @@ const CenterDetails = ({ centerLicenceNumber, Condition, values, temporaryLicens
 				setField('centerInfo_r', response.responseBody.data.center.centerInfo_r.ID)
 				// setField('healthCareServices_r', response.responseBody.data.center.healthCareServices_r.ID)
 				setField('healthCareServices_r', response.responseBody.data.center.healthCareServices_r)
+				return response.responseBody.data
 			}
+			
 		}
-		// return response.responseBody.data
+		
 	}
 
 	return (
@@ -175,7 +166,7 @@ const CenterDetails = ({ centerLicenceNumber, Condition, values, temporaryLicens
 					md={12}
 					xs={12}
 				>
-					<Condition is={checkData}>
+					<Condition is={checkData || editMode}>
 						<Grid
 							container
 							spacing={3}
@@ -245,4 +236,5 @@ CenterDetails.propTypes = {
 	value: PropTypes.func.isRequired,
 	label: PropTypes.func.isRequired,
 	centerLicenceNumber: PropTypes.func.isRequired,
+	editMode: PropTypes.bool.isRequired,
 };

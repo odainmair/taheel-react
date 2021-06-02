@@ -1,20 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { TextField, InputAdornment,Typography } from '@material-ui/core';
+import { TextField, InputAdornment,Typography, CircularProgress } from '@material-ui/core';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 // import { useContext } from 'react';
 // import localContext from 'src/localContext';
 import { uploadDocumentApi } from 'src/pages/services/final-license/services/finalLicenseAPI'
 
-const FileUploader = ({ handleFile, name, label, multiple }) => {
+const FileUploader = ({ handleFile, name, label, inputType, fileName }) => {
   // const { documents, SetDocuments } = useContext(localContext);
+  const [loading, setLoading] = React.useState(false)
 
   const hiddenFileInput = React.useRef(null);
-  const [fileName,setFileName] = React.useState('')
+  // const [fileName,setFileName] = React.useState('')
   const handleClick = () => {
     hiddenFileInput.current.click();
+    // setFileName(fileName)
   };
   const handleChange = (event) => {
+    setLoading(true)
     // if (multiple) {
     //   console.log("documents['requirements'][name]>>>>", section, documents['requirements'][sectionFile])
     //   documents[section][sectionFile] = [] // reset the value in case update the attachments
@@ -23,11 +26,12 @@ const FileUploader = ({ handleFile, name, label, multiple }) => {
     const fileUploaded = event.target.files;
     console.log('>>fileUploaded...', fileUploaded)
     for (let i = 0; i < fileUploaded.length; i++) {
-      setFileName(fileUploaded[i].name)
-      handleFile(fileUploaded[i]);
+      {console.log('>>>>>>>hhhhhhhhhhhhhhhhhiiiii from fileUploaded',fileName)}
+      handleFile(fileUploaded[i], setLoading);
+      fileName = fileUploaded[i].name
     }
   };
-
+ 
   return (
     <>
       <TextField
@@ -42,19 +46,20 @@ const FileUploader = ({ handleFile, name, label, multiple }) => {
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
-              <CloudUploadIcon />
+              {loading ? <CircularProgress size="1rem" /> : <CloudUploadIcon />}
+              {/* <CloudUploadIcon /> */}
             </InputAdornment>
           ),
         }}
       />
       <input
-        multiple={multiple}
+        multiple={inputType}
         type="file"
         ref={hiddenFileInput}
         onChange={handleChange}
         style={{ display: 'none' }}
       />
-    <Typography variant="caption" display="block" color="error" gutterBottom>{fileName}</Typography>
+    {/* <Typography variant="caption" display="block" color="error" gutterBottom>  {fileName}</Typography> */}
       
     </>
   );
@@ -65,6 +70,7 @@ FileUploader.propTypes = {
   handleFile: PropTypes.func.isRequired,
   name: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
-  multiple: PropTypes.bool.isRequired,
+  inputType: PropTypes.string.isRequired,
+  fileName: PropTypes.func.isRequired,
 
 };

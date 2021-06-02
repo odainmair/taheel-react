@@ -29,7 +29,7 @@ import { downloadDocument } from '../../services/finalLicenseAPI'
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 import { makeStyles } from '@material-ui/core/styles';
-import { DownloadButt } from '../../services/finalLicenseUtil'
+import { DownloadButtTable } from '../../services/finalLicenseUtil'
 import moment from 'moment-hijri';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 const useRowStyles = makeStyles({
@@ -57,8 +57,8 @@ const Row = ({ SponsorName, setSponsorName, values, fromEdit, setFromEdit, field
 
   return (
     <>
-      {console.log(JSON.stringify(fields))}
-      <TableRow   >
+
+      <TableRow className={classes.root}  >
         {console.log("name", fields.value[index].cv)}
         <Field
           label="fullName"
@@ -107,70 +107,98 @@ const Row = ({ SponsorName, setSponsorName, values, fromEdit, setFromEdit, field
 
         {SponsorName &&
           <Field
-            label="SponsorName"
-            name={`${name}.SponsorName`}
+            label="sponsorName"
+            name={`${name}.sponsorName`}
             component={CustomTableCell}
           />
 
         }
 
 
-        <TableCell>
-          <IconButton onClick={() => setShowen(!showen)}>
-            {showen ? <VisibilityIcon /> : <VisibilityOffIcon />}
-          </IconButton>
-        </TableCell>
-
-        <TableCell>
-          <IconButton
-            color="primary"
-            component="span"
-            onClick={() => {
-              setFromEdit(true)
-              console.log("-- name :" + name);
-              setFieldName(name);
-              setIndex(index);
-              console.log('fields.value[index]', JSON.stringify(fields));
-              const { idNumber, iqamaNo, lastName, nationality, day, month, year, fullName, gender, birthDate, staffTypes, cv } = fields.value[index];
-
-              // setField("fullName", fullName);
-              setField("idNumber", idNumber);
-              setField("iqamaNo", iqamaNo);
-              setField("nationality", nationality)
-              setField("day", day);
-              setField("month", month);
-              setField("year", year);
-              setField("fullName", fullName)
-              setField("gender", gender)
-              setField("birthDate", birthDate)
-              setField("staffTypes", staffTypes)
-              setField("cv", cv)
-
-              handleClickOpen();
-            }}
+        <TableCell >
+          <Grid
+            container
+            spacing={2}
           >
-            <EditIcon />
-          </IconButton>
-          <IconButton
-            color="primary"
-            component="span"
-            onClick={() => {
-              var customers = [...values.customers]      
-              fields.remove(index);
-              setField("nationality", "")
-              setField("idNumber", "");
-              setField("iqamaNo", "");
-              setField("day", "");
-              setField("month", "");
-              setField("year", "");
+            <Grid
+              item
+              lg={3}
+              md={3}
+              xs={12}
+            >
+              <IconButton onClick={() => setShowen(!showen)}>
+                {showen ? <VisibilityIcon /> : <VisibilityOffIcon />}
+              </IconButton>
+            </Grid>
+            <Grid
+              item
+              lg={3}
+              md={3}
+              xs={12}
+            >
+              <IconButton
+                color="primary"
+                component="span"
+                onClick={() => {
+                  setFromEdit(true)
+                  console.log("-- name :" + name);
+                  setFieldName(name);
+                  console.log('fields.value[index]', JSON.stringify(fields));
+                  const { idNumber, iqamaNo, lastName, nationality, day, month, year, fullName, gender, birthDate, staffTypes, cv, EducationalQualification, MedicalPractice, sponsorName } = fields.value[index];
+                  console.log('>>>>>>--EducationalQualification....', fields.value[index])
+                  // setField("fullName", fullName);
+                  setField("idNumber", idNumber);
+                  setField("iqamaNo", iqamaNo);
+                  setField("nationality", nationality)
+                  setField("day", day);
+                  setField("month", month);
+                  setField("year", year);
+                  setField("fullName", fullName)
+                  setField("gender", gender)
+                  setField("sponsorName", sponsorName)
+                  setField("birthDate", birthDate)
+                  setField("staffTypes", staffTypes)
+                  setField("cv", cv)
+                  setField("EducationalQualification", EducationalQualification)
+                  setField("MedicalPractice", MedicalPractice)
 
-            }}
-          >
-            <DeleteForeverIcon />
-          </IconButton>
+                  handleClickOpen();
+                }}
+              >
+                <EditIcon />
+              </IconButton>
+            </Grid>
+            <Grid
+              item
+              lg={3}
+              md={3}
+              xs={12}
+            >
+              <IconButton
+                color="primary"
+                component="span"
+                onClick={() => {
+                  var customers = [...values.customers]
+                  fields.remove(index);
+                  var managersCount = values.customers.filter(customer => customer.staffTypes === "مدير").length
+                  { console.log('Delete  values.customers.', values.customers) }
+                  setField('managersCount', managersCount)
+                  setField("nationality", "")
+                  setField("idNumber", "");
+                  setField("iqamaNo", "");
+                  setField("day", "");
+                  setField("month", "");
+                  setField("year", "");
+
+                }}
+              >
+                <DeleteForeverIcon />
+              </IconButton>
+            </Grid>
+          </Grid>
         </TableCell>
       </TableRow>
-      <TableRow className={classes.root}>
+      <TableRow >
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={12}>
           <Collapse in={showen} timeout="auto" unmountOnExit  >
 
@@ -184,7 +212,7 @@ const Row = ({ SponsorName, setSponsorName, values, fromEdit, setFromEdit, field
                 md={6}
                 xs={12}
               >
-                < DownloadButt docIDs={fields.value[index].cv} name={`${name}.cv`} label='السيرة الذاتية' />
+                < DownloadButtTable docIDs={fields.value[index].cv} name={`${name}.cv`} label='السيرة الذاتية' />
 
 
                 {/* <Button
@@ -205,7 +233,7 @@ const Row = ({ SponsorName, setSponsorName, values, fromEdit, setFromEdit, field
                 xs={12}
 
               >
-                < DownloadButt docIDs={fields.value[index].EducationalQualification} name={`${name}.EducationalQualification`} label='المؤهلات التعليمية' />
+                < DownloadButtTable docIDs={fields.value[index].EducationalQualification} name={`${name}.EducationalQualification`} label='المؤهلات التعليمية' />
 
                 {/* <Button
                 name={`${name}.EducationalQualification`}
@@ -227,7 +255,7 @@ const Row = ({ SponsorName, setSponsorName, values, fromEdit, setFromEdit, field
               >
                 {console.log('fields.value[index].staffTypes', fields.value[index].staffTypes)}
                 {['أخصائي علاج طبيعي', 'أخصائي علاج وظيفي', 'أخصائي نطق و تخاطب'].includes(fields.value[index].staffTypes) &&
-                  < DownloadButt docIDs={fields.value[index].MedicalPractice} name={`${name}.MedicalPractice`} label='رخضة المزاولة' />
+                  < DownloadButtTable docIDs={fields.value[index].MedicalPractice} name={`${name}.MedicalPractice`} label='رخضة المزاولة' />
 
                   //   <Button
                   //     name={`${name}.MedicalPractice`}
@@ -279,10 +307,10 @@ const teachersCountComp = ({ maxValue }) => (
           console.log(`fields`)
           let count = 0;
           if (fields.value) {
-            count = fields.value.filter(customer => customer.staffTypes === "معلم تربية خاصة").length
+            count = fields.value.filter(customer => customer.staffTypes === "معلم تربية خاصة ").length
           }
           if (count >= 1) {
-            if (count / 8 <= maxValue) {
+            if ( maxValue/ 8 <= count) {
               return (<CheckCircleIcon style={{ color: '#04AA6D' }} />);
             } else
               return (<CheckCircleIcon style={{ color: 'red' }} />);
@@ -306,10 +334,10 @@ const PersonDetials = ({ Condition, MedicalPracticeCondition, setField, pop, pus
   const [openInfo, setOpenInfo] = React.useState(false);
   var [managersCount, setManagersCount] = React.useState(0);
 
-  // React.useEffect( () => {
-  //   console.log("I'mmmm Here ppppppoooooooooooooopuuuuuuuup")
-  //   handleClickOpenInfo(`في حال مطالبة المركز لأخذ الترخيص للعمل في فترتين (صباحية و مسائية) فيجب مراعاة أن يتم توفير كوادر مختلفة لكل فترة" قبل ادخال الكادر`, '')
-  // })
+  React.useEffect(() => {
+    console.log("I'mmmm Here ppppppoooooooooooooopuuuuuuuup")
+    handleClickOpenInfo(`في حال مطالبة المركز لأخذ الترخيص للعمل في فترتين (صباحية و مسائية) فيجب مراعاة أن يتم توفير كوادر مختلفة لكل فترة" قبل ادخال الكادر`, '')
+  }, [])
 
   // const getMangersAcount = () => {
   //   if(values.customers){
@@ -386,6 +414,7 @@ const PersonDetials = ({ Condition, MedicalPracticeCondition, setField, pop, pus
           variant="body1"
 
         >
+        
           {/* '#04AA6D' teachersCountComp*/}
           <Field
             label={'teachers'}
@@ -425,9 +454,12 @@ const PersonDetials = ({ Condition, MedicalPracticeCondition, setField, pop, pus
             setField("year", "");
             setField("fullName", "")
             setField("gender", "")
+            setField("sponsorName", "")
             setField("birthDate", "")
             setField("staffTypes", "")
             setField("cv", "")
+            setField("EducationalQualification", "")
+            setField("MedicalPractice", "")
             setFieldName(null);
             handleClickOpen();
           }}
@@ -454,7 +486,6 @@ const PersonDetials = ({ Condition, MedicalPracticeCondition, setField, pop, pus
                 {SponsorName &&
                   <TableCell > اسم الكفيل</TableCell>
                 }
-                <TableCell >المرفقات</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -491,9 +522,12 @@ const PersonDetials = ({ Condition, MedicalPracticeCondition, setField, pop, pus
           setField("year", "");
           setField("fullName", "")
           setField("gender", "")
+          setField("sponsorName", "")
           setField("birthDate", "")
           setField("staffTypes", "")
           setField("cv", "")
+          setField("EducationalQualification", "")
+          setField("MedicalPractice", "")
         }}
       >
         <AddPersonForm fromEdit={fromEdit} MedicalPracticeCondition={MedicalPracticeCondition} setField={setField} index={index} pop={pop} push={push} values={values} setOpenPopup={setOpen} fieldName={fieldName} Condition={Condition} />

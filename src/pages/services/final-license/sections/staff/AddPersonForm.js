@@ -48,10 +48,11 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
 
   const CitizenValidate_Forign = async () => {
     setLoading(true)
-    const response = await validateCitizenFunc(values.idNumber)
+    const response = await validateCitizenFunc(values.iqamaNo)
     if (!response.isSuccessful)
       setErrMessage(response.message)
     else {
+      setCitizenInfo(response.responseBody.data.Body)
       setForignForm(true)
       setErrMessage('')
     }
@@ -90,13 +91,13 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
             <FormControlLabel
               label="سعودي"
               control={<Field
-                name={fieldName === null ? "nationality" : `${fieldName}.nationality`}
+                name={fieldName === null ? "nationalityBtn" : `${fieldName}.nationalityBtn`}
                 component={Radio} type="radio" value="سعودي" />}
             />
             <FormControlLabel
               label="غير سعودي"
               control={<Field
-                name={fieldName === null ? "nationality" : `${fieldName}.nationality`}
+                name={fieldName === null ? "nationalityBtn" : `${fieldName}.nationalityBtn`}
                 component={Radio} type="radio" value="غير سعودي" />}
             />
           </RadioGroup>
@@ -108,7 +109,7 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
           className="custom-label-field"
         >
 
-          <Condition when="nationality" is='سعودي'>
+          <Condition when="nationalityBtn" is='سعودي'>
 
             <Grid
               item
@@ -165,7 +166,7 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
             </Grid>
 
             {SAForm &&
-              < PersonForm MedicalPracticeCondition={MedicalPracticeCondition} setField={setField} fieldName={fieldName} Condition={Condition} citizenInfo={citizenInfo} />
+              < PersonForm fromEdit={fromEdit} isSaudi ={true} MedicalPracticeCondition={MedicalPracticeCondition} setField={setField} fieldName={fieldName} Condition={Condition} citizenInfo={citizenInfo} />
             }
 
           </Condition>
@@ -178,7 +179,7 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
           spacing={1}
           className="custom-label-field"
         >
-          <Condition when="nationality" is='غير سعودي'>
+          <Condition when="nationalityBtn" is='غير سعودي'>
             <Grid
               item
               md={6}
@@ -223,7 +224,7 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
 				</Button>
             </Grid>
             {forignForm &&
-              < PersonForm MedicalPracticeCondition={MedicalPracticeCondition} setField={setField} fieldName={fieldName} Condition={Condition} citizenInfo={citizenInfo} />
+              < PersonForm fromEdit={fromEdit} isSaudi ={false} MedicalPracticeCondition={MedicalPracticeCondition} setField={setField} fieldName={fieldName} Condition={Condition} citizenInfo={citizenInfo} />
             }
           </Condition>
         </Grid>
@@ -274,7 +275,7 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
             variant='contained'
             color="primary"
             onClick={() => {
-              const { fullName, staffTypes, idNumber, gender, birthDate, iqamaNo, nationality, day, month, year, cv, EducationalQualification, MedicalPractice } = values;
+              const { fullName, staffTypes, idNumber, gender, birthDate, iqamaNo, nationality, day, month, year, cv, EducationalQualification, MedicalPractice,sponsorName } = values;
               values.fullName = "";
               values.idNumber = "";
               values.iqamaNo = "";
@@ -288,6 +289,8 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
               values.cv = "";
               values.EducationalQualification = "";
               values.MedicalPractice = "";
+              values.sponsorName = "";
+
             
               if (fieldName === null) {
                 push("customers", { fullName: fullName, idNumber: idNumber, iqamaNo: iqamaNo, staffTypes: staffTypes, gender: gender, birthDate: birthDate, nationality: nationality, day: day, month: month, year: year, cv: cv, EducationalQualification: EducationalQualification, MedicalPractice: MedicalPractice });
