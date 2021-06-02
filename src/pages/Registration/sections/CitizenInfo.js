@@ -70,7 +70,7 @@ const CitizenInfo = ({ Condition }) => {
             >
               <Typography> تاريخ الميلاد</Typography>
             </Grid>
-            < Calendar FeiledWidth={4} />
+            < Calendar FeiledWidth={4} fieldName={null}/>
 
           </Grid>
         </Condition>
