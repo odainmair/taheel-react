@@ -59,7 +59,6 @@ const FileUploader = ({ handleFile, name, label, inputType, fileName }) => {
         onChange={handleChange}
         style={{ display: 'none' }}
       />
-      {console.log('>>>>>>>fileName',fileName)}
     {/* <Typography variant="caption" display="block" color="error" gutterBottom>  {fileName}</Typography> */}
       
     </>
