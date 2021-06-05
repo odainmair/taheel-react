@@ -25,7 +25,7 @@ export default function AlertDialog(props) {
         >
             <DialogTitle id="alert-dialog-title">{dialogTitle}</DialogTitle>
             <DialogContent>
-                <DialogContentText id="alert-dialog-description">
+                <DialogContentText style ={{  textAlign: 'center'}}id="alert-dialog-description">
                     {dialogContent}
                 </DialogContentText>
             </DialogContent>

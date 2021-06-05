@@ -16,20 +16,19 @@ import FileUploader from 'src/components/FileUploader';
 
 
 const HealthServices = ({ Condition, values, setField }) => {
-    const { documents, SetDocuments } = useContext(localContext);
-
-    const setDocument = (name, docID, multiple) => {
+    const setDocument = (name, docID) => {
         setField(name, [docID])
     }
 
     const FileUploaderComp = ({ input: { value, name }, label, inputType }) => (
         <>
             <FileUploader
-                handleFile={(file,setLoading) => uploadDocument(setDocument, name, file, inputType , setLoading)}
+                handleFile={(file, setLoading) => uploadDocument(setDocument, name, file, inputType, setLoading)}
                 label={label}
-                name= {name} 
+                name={name}
                 inputType={inputType}
-                fileName
+                setField={setField}
+                values={values}
             />
         </>
     )
@@ -95,6 +94,8 @@ const HealthServices = ({ Condition, values, setField }) => {
                             name="healthServiceAttachment"
                             component={FileUploaderComp}
                             inputType={false}
+                            setField={setField}
+                            values={values}
                         />
 
                     </Grid>
@@ -113,5 +114,4 @@ HealthServices.propTypes = {
     input: PropTypes.func.isRequired,
     label: PropTypes.func.isRequired,
     inputType: PropTypes.bool.isRequired,
-    fileName: PropTypes.func.isRequired,
 };

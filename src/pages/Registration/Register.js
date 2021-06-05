@@ -77,7 +77,7 @@ const Register = () => {
 
   const navigate = useNavigate();
   const validateCitizenFunc = async (idNumber, birthDate) => {
-    const url = '/taheel-apis-utilities-validateCitizen-v2';
+    const url = '/taheel-apis-utilities-validateCitizen-v3';
     const requestBody = {
       IDNo: idNumber,
       HijriDateOfBirth: birthDate
@@ -86,6 +86,7 @@ const Register = () => {
     return response;
   };
   const validateAPIFunc = async (values) => {
+    console.log('HIIIIIIIIIII')
     const { idNumber, day, month, year } = values;
     function numberToDay(day) {
       return ('0' + day).slice(-2);

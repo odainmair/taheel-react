@@ -17,15 +17,11 @@ import { validateCitizenFunc } from '../../services/finalLicenseAPI'
 import PersonForm from './PersonForm'
 
 const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push, values, setOpenPopup, fieldName, Condition }) => {
-  console.log("fromEdit", fromEdit)
   const [errMessage, setErrMessage] = useState('')
   const [loading, setLoading] = useState(false)
   const [forignForm, setForignForm] = useState(fromEdit ? true : false)
   const [SAForm, setSAForm] = useState(fromEdit ? true : false)
-  var [managersCount, setManagersCount] = React.useState(0);
-
-  // fromEdit ? true : false
-  const [citizenInfo, setCitizenInfo] = useState(values ? { Name: { FirstName: values.fullName.split(" ")[0], LastName: values.fullName.split(" ")[1], }, staffTypes: values.staffTypes, Gender: values.gender, birthDate: values.birthDate, cv: values.cv, EducationalQualification: values.EducationalQualification, MedicalPractice: values.MedicalPractice } : {})
+  const [citizenInfo, setCitizenInfo] = useState(values ? { Name: { FirstName: values.fullName.split(" ")[0], LastName: values.fullName.split(" ")[1], }, staffTypes: values.staffTypes, Gender: values.gender, birthDate: values.birthDate, cv: values.cv, cvAtt: values.cvAtt, EducationalQualification: values.EducationalQualification,  MedicalPractice: values.MedicalPractice,  EducationalQualificationAtt: values.EducationalQualificationAtt,  MedicalPracticeAtt: values.MedicalPracticeAtt, sponsorName: values.sponsorName } : {})
 
   const CitizenValidate_SA = async () => {
 
@@ -40,8 +36,6 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
     else {
       setCitizenInfo(response.responseBody.data.Body)
       setSAForm(true)
-      console.log('response =>>>>>', response.responseBody.data.Body)
-
     }
     setLoading(false)
   }
@@ -122,7 +116,6 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
                 required
                 label="رقم الهوية "
                 name={fieldName === null ? "idNumber" : `${fieldName}.idNumber`}
-                // name="idNumber"
                 component={TextFieldFinal}
                 type="text"
                 variant="outlined"
@@ -165,14 +158,12 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
             >
             </Grid>
 
-            {SAForm &&
+            {SAForm  &&
               < PersonForm fromEdit={fromEdit} isSaudi ={true} MedicalPracticeCondition={MedicalPracticeCondition} setField={setField} fieldName={fieldName} Condition={Condition} citizenInfo={citizenInfo} />
             }
 
           </Condition>
         </Grid>
-
-
         <Grid
           container
           mt={4}
@@ -191,7 +182,6 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
                 required
                 label="رقم الإقامة "
                 name={fieldName === null ? "iqamaNo" : `${fieldName}.iqamaNo`}
-                // name="idNumber"
                 component={TextFieldFinal}
                 type="text"
                 variant="outlined"
@@ -224,7 +214,7 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
 				</Button>
             </Grid>
             {forignForm &&
-              < PersonForm fromEdit={fromEdit} isSaudi ={false} MedicalPracticeCondition={MedicalPracticeCondition} setField={setField} fieldName={fieldName} Condition={Condition} citizenInfo={citizenInfo} />
+              < PersonForm values={values}fromEdit={fromEdit} isSaudi ={false} MedicalPracticeCondition={MedicalPracticeCondition} setField={setField} fieldName={fieldName} Condition={Condition} citizenInfo={citizenInfo} />
             }
           </Condition>
         </Grid>
@@ -253,9 +243,14 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
               values.gender = "";
               values.birthDate = "";
               values.nationality = "";
+              values.nationalityBtn = "";
               values.cv = "";
+              values.cvAtt = "";
               values.EducationalQualification = "";
               values.MedicalPractice = "";
+              values.EducationalQualificationAtt = "";
+              values.MedicalPracticeAtt = "";
+              values.sponsorName = "";
               setOpenPopup(false);
             }}
           >
@@ -275,25 +270,28 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
             variant='contained'
             color="primary"
             onClick={() => {
-              const { fullName, staffTypes, idNumber, gender, birthDate, iqamaNo, nationality, day, month, year, cv, EducationalQualification, MedicalPractice,sponsorName } = values;
+              const { fullName, staffTypes, idNumber, gender, birthDate, iqamaNo, nationality,nationalityBtn, day, month, year, cv, cvAtt, EducationalQualification, MedicalPractice, EducationalQualificationAtt, MedicalPracticeAtt,sponsorName } = values;
               values.fullName = "";
               values.idNumber = "";
               values.iqamaNo = "";
               values.staffTypes = "";
               values.gender = "";
-              // values.birthDate = "";
               values.nationality = "";
+              values.nationalityBtn = "";
               values.day = "";
               values.month = "";
               values.year = "";
               values.cv = "";
+              values.cvAtt = "";
               values.EducationalQualification = "";
               values.MedicalPractice = "";
+              values.EducationalQualificationAtt = "";
+              values.MedicalPracticeAtt = "";
               values.sponsorName = "";
 
             
               if (fieldName === null) {
-                push("customers", { fullName: fullName, idNumber: idNumber, iqamaNo: iqamaNo, staffTypes: staffTypes, gender: gender, birthDate: birthDate, nationality: nationality, day: day, month: month, year: year, cv: cv, EducationalQualification: EducationalQualification, MedicalPractice: MedicalPractice });
+                push("customers", { fullName: fullName, idNumber: idNumber, iqamaNo: iqamaNo, staffTypes: staffTypes, gender: gender, birthDate: birthDate, nationality: nationality, day: day, month: month, year: year,  sponsorName: sponsorName, cv: cv, cvAtt: cvAtt, EducationalQualification: EducationalQualification, MedicalPractice: MedicalPractice,  EducationalQualificationAtt: EducationalQualificationAtt, MedicalPracticeAtt: MedicalPracticeAtt });
               } 
 
               setOpenPopup(false);

@@ -12,10 +12,8 @@ import {
     TableHead,
     TableRow,
     TableCell,
-    Button,
     IconButton,
 } from '@material-ui/core';
-import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 import { Field } from 'react-final-form';
 import { FieldArray } from "react-final-form-arrays";
 import PropTypes from 'prop-types';
@@ -26,13 +24,12 @@ import TermsDialog from 'src/components/TermsDialog';
 import { useContext } from 'react';
 import localContext from 'src/localContext';
 import { DownloadButtTable } from '../services/finalLicenseUtil'
-import { downloadDocument } from '../services/finalLicenseAPI'
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 import Collapse from '@material-ui/core/Collapse';
 import { makeStyles } from '@material-ui/core/styles';
 
-const contentField = ({ input: { value, name }, label, type, inputType }) => (
+const contentField = ({ input: { value, name }, label, inputType }) => (
     <>
         <Typography gutterBottom variant="body2" color="textSecondary" component="p">
             {label}
@@ -50,7 +47,6 @@ const useRowStyles = makeStyles({
         },
     },
 });
-
 
 const termsLabel = (openDialog) => (
     <>
@@ -72,19 +68,11 @@ const getFieldValue = ({ name, value }) => {
     }
     return '';
 }
-const downloadFileFn = async (licenseNumber) => {
-    console.log("responseresponse", licenseNumber)
-    const downloadDoc = downloadDocument(licenseNumber, true)
-}
-
 
 const Summary = ({ values }) => {
 
     const [open, setOpen] = React.useState(false);
-    const { documents, SetDocuments } = useContext(localContext);
-    const { finalLicenseDetails, SetFinalLicenseDetails } = useContext(localContext);
     const [SponsorName, setSponsorName] = React.useState(false)
-    console.log('documents>>>', documents)
     const handleClickOpen = (dialogContent, dialogTitle) => {
         setOpen(true);
     };
@@ -101,7 +89,6 @@ const Summary = ({ values }) => {
         return (
             <>
                 <TableRow className={classes.root} key={name}>
-                    {console.log("fields", fields.value)}
 
                     <TableCell component="th" scope="row">
                         {name.fullName}
@@ -158,15 +145,7 @@ const Summary = ({ values }) => {
                                     xs={12}
                                 >
                                     < DownloadButtTable docIDs={name.cv} name={`${name}.cv`} label='السيرة الذاتية' />
-                                    {/* <Button
-                                    name={`${name}.cv`}
-                                    variant="contained"
-                                    color="primary"
-                                    startIcon={<CloudDownloadIcon />}
-                                    onClick={() => downloadFileFn(name.cv)}
-                                >
-                                    تنزيل
-                            </Button> */}
+                         
                                 </Grid>
                                 <Grid
                                     item
@@ -174,16 +153,8 @@ const Summary = ({ values }) => {
                                     md={6}
                                     xs={12}
                                 >
-                                    < DownloadButtTable docIDs={name.EducationalQualification} name={`${name}.EducationalQualification`} label='السيرة الذاتية' />
-                                    {/* <Button
-                                    name={`${name}.EducationalQualification`}
-                                    variant="contained"
-                                    color="primary"
-                                    startIcon={<CloudDownloadIcon />}
-                                    onClick={() => downloadFileFn(name.EducationalQualification)}
-                                >
-                                    تنزيل
-                                </Button> */}
+                                    < DownloadButtTable docIDs={name.EducationalQualification} name={`${name}.EducationalQualification`} label='المؤهلات التعليمية' />
+                              
                                 </Grid>
                                 <Grid
                                     item
@@ -191,19 +162,10 @@ const Summary = ({ values }) => {
                                     md={6}
                                     xs={12}
                                 >
-                                    < DownloadButtTable docIDs={name.MedicalPractice} name={`${name}.MedicalPractice`} label='السيرة الذاتية' />
+                                    < DownloadButtTable docIDs={name.MedicalPractice} name={`${name}.MedicalPractice`} label='رخضة المزاولة' />
 
-                                    {/* <Button
-                                    name={`${name}.MedicalPractice`}
-                                    variant="contained"
-                                    color="primary"
-                                    startIcon={<CloudDownloadIcon />}
-                                    onClick={() => downloadFileFn(name.MedicalPractice)}
-                                >
-                                    تنزيل
-                                 </Button> */}
                                 </Grid>
-                            </Grid>                                                         {/* </TableCell> */}
+                            </Grid>                                                         
                         </Collapse>
                     </TableCell>
                 </TableRow>
@@ -237,10 +199,7 @@ const Summary = ({ values }) => {
                         lg={6}
                         md={6}
                         xs={12}
-                    >
-
-
-                        {console.log('finalLicenseDetails', finalLicenseDetails)}
+                    >                        
                         <Field
                             label={filteredFinalLicense.label.ar}
                             name={filteredFinalLicense.name}
@@ -298,7 +257,6 @@ const Summary = ({ values }) => {
             <Grid
                 container
                 spacing={10}
-                // mt={3}
                 mb={3}
             >
                 {finalLicenseFieldSchema.filter(fintalLicense => fintalLicense.sectionName === "Requirements" && !fintalLicense.dependOn).map(filteredFinalLicense => (
@@ -309,10 +267,6 @@ const Summary = ({ values }) => {
                         md={6}
                         xs={12}
                     >
-
-                        {console.log('{values[filteredFinalLicense.name]', values[filteredFinalLicense.name])}
-                        {/* {console.log('values', values[filteredFinalLicense.name].length)} */}
-                        {console.log('[filteredFinalLicense.name]', filteredFinalLicense.name)}
                         < DownloadButtTable docIDs={values[filteredFinalLicense.name]} name={filteredFinalLicense.name} label={filteredFinalLicense.label.ar} />
                     </Grid>
                 ))}

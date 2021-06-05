@@ -10,21 +10,16 @@ import {
 import { Field } from 'react-final-form';
 import PropTypes from 'prop-types';
 import { TextField as TextFieldFinal, Select } from 'final-form-material-ui';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { validateCompanyFunc } from '../services/finalLicenseAPI'
 import { getMunicipalLicenseNoApi } from '../services/finalLicenseAPI'
 import { CentertDetails } from '../services/finalLicenseAPI'
 import { ContentField } from '../services/finalLicenseUtil'
 
-
-const CenterDetails = ({  centerLicenceNumber, Condition, values, temporaryLicenses, setField }) => {
-
-	console.log("props", temporaryLicenses)
+const CenterDetails = ({ editMode, setEditMode, Condition, values, temporaryLicenses, setField }) => {
 	const [loading, setLoading] = useState(false)
 	const [checkData, setCheckData] = useState(false)
 	const [errMessage, SetErrMessage] = useState('')
-	const editMode = centerLicenceNumber ? true :false
-
 
 	const check = async () => {
 		setLoading(true)
@@ -32,12 +27,12 @@ const CenterDetails = ({  centerLicenceNumber, Condition, values, temporaryLicen
 		await getCentertDetails()
 		const response = await validateCompanyFunc(values.CRNumber)
 		if (!response.isSuccessful) {
+
 			SetErrMessage(response.message)
 			setCheckData(false)
 		}
 		else {
-			setField('isNextBtnDisabled',false)
-			console.log('temporaryLicenceNum', values.temporaryLicenceNum)
+			setField('isNextBtnDisabled', false)
 			setField('companyName', response.responseBody.data.CRName)
 			setField('activities', response.responseBody.data.Activities)
 			setField('crIssueDate', response.responseBody.data.IssueDate)
@@ -58,9 +53,8 @@ const CenterDetails = ({  centerLicenceNumber, Condition, values, temporaryLicen
 	}
 
 	const getCentertDetails = async () => {
-		if (values.temporaryLicenceNum ||editMode ) {
-					console.log('>>>>>>>>alues.temporaryLicenceNum****************************************************************',values.temporaryLicenceNum)
-			const response = await CentertDetails(values.temporaryLicenceNum ? values.temporaryLicenceNum  : centerLicenceNumber)
+		if (values.temporaryLicenceNum) {
+			const response = await CentertDetails(values.temporaryLicenceNum)
 			if (!response.isSuccessful)
 				SetErrMessage(response.message)
 			else {
@@ -69,17 +63,14 @@ const CenterDetails = ({  centerLicenceNumber, Condition, values, temporaryLicen
 				setField('centerSecondSubType', response.responseBody.data.center.centerSecondSubType)
 				setField('crInfo_r', response.responseBody.data.center.crInfo_r.ID)
 				setField('centerInfo_r', response.responseBody.data.center.centerInfo_r.ID)
-				// setField('healthCareServices_r', response.responseBody.data.center.healthCareServices_r.ID)
-				setField('healthCareServices_r', response.responseBody.data.center.healthCareServices_r)
+				setField('healthCareServices_r', response.responseBody.data.center.healthCareServices_r.ID)
+				// setField('healthCareServices_r', response.responseBody.data.center.healthCareServices_r)
 				return response.responseBody.data
 			}
-			
 		}
-		
 	}
 
 	return (
-
 		<>
 			<Grid
 				container
@@ -103,20 +94,34 @@ const CenterDetails = ({  centerLicenceNumber, Condition, values, temporaryLicen
 					xs={12}
 					className="custom-label-field"
 				>
-
-					<Field
-						fullWidth
-						label="رقم الترخيص المؤقت"
-						name="temporaryLicenceNum"
-						component={Select}
-						required
-						dir="rtl"
-						variant="outlined"
-						className="custom-field"
-						formControlProps={{ fullWidth: true }}
-					>
-						{temporaryLicenses.map((license, index) => <MenuItem key={index} value={license.licenceNumber}>{license.licenceNumber}</MenuItem>)}
-					</Field>
+					{!editMode ?
+						<Field
+							fullWidth
+							label="رقم الترخيص المؤقت"
+							name="temporaryLicenceNum"
+							component={Select}
+							required
+							dir="rtl"
+							variant="outlined"
+							className="custom-field"
+							formControlProps={{ fullWidth: true }}
+						>
+							{temporaryLicenses.map((license, index) => <MenuItem key={index} value={license.licenceNumber}>{license.licenceNumber}</MenuItem>)}
+						</Field>
+						:
+						<Field
+							disabled
+							fullWidth
+							required
+							label="رقم الترخيص المؤقت"
+							name="temporaryLicenceNum"
+							component={TextFieldFinal}
+							type="text"
+							variant="outlined"
+							dir="rtl"
+							className="custom-field"
+						/>
+					}
 				</Grid>
 				<Grid
 					item
@@ -214,7 +219,6 @@ const CenterDetails = ({  centerLicenceNumber, Condition, values, temporaryLicen
 									xs={12}
 								>
 									< ContentField label='نشاط السجل التجاري' value={values.activities} />
-
 								</Grid>
 							</Grid>
 						</Grid>
@@ -235,6 +239,6 @@ CenterDetails.propTypes = {
 	setField: PropTypes.func.isRequired,
 	value: PropTypes.func.isRequired,
 	label: PropTypes.func.isRequired,
-	centerLicenceNumber: PropTypes.func.isRequired,
 	editMode: PropTypes.bool.isRequired,
+	setEditMode: PropTypes.bool.isRequired,
 };

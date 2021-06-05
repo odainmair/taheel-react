@@ -1,37 +1,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { TextField, InputAdornment,Typography, CircularProgress } from '@material-ui/core';
+import { TextField, InputAdornment, Typography, CircularProgress } from '@material-ui/core';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
-// import { useContext } from 'react';
-// import localContext from 'src/localContext';
-import { uploadDocumentApi } from 'src/pages/services/final-license/services/finalLicenseAPI'
 
-const FileUploader = ({ handleFile, name, label, inputType, fileName }) => {
-  // const { documents, SetDocuments } = useContext(localContext);
+const FileUploader = ({ values, setField, handleFile, name, label, inputType, fileName }) => {
   const [loading, setLoading] = React.useState(false)
-
   const hiddenFileInput = React.useRef(null);
-  // const [fileName,setFileName] = React.useState('')
   const handleClick = () => {
     hiddenFileInput.current.click();
-    // setFileName(fileName)
   };
-  const handleChange = (event) => {
+
+  const handleChange = async (event) => {
     setLoading(true)
-    // if (multiple) {
-    //   console.log("documents['requirements'][name]>>>>", section, documents['requirements'][sectionFile])
-    //   documents[section][sectionFile] = [] // reset the value in case update the attachments
-    //   SetDocuments(documents)
-    // }
     const fileUploaded = event.target.files;
-    console.log('>>fileUploaded...', fileUploaded)
     for (let i = 0; i < fileUploaded.length; i++) {
-      {console.log('>>>>>>>hhhhhhhhhhhhhhhhhiiiii from fileUploaded',fileName)}
       handleFile(fileUploaded[i], setLoading);
-      fileName = fileUploaded[i].name
+      setField(`${name}Att`, fileUploaded[i].name)
     }
   };
- 
+
   return (
     <>
       <TextField
@@ -47,7 +34,6 @@ const FileUploader = ({ handleFile, name, label, inputType, fileName }) => {
           endAdornment: (
             <InputAdornment position="end">
               {loading ? <CircularProgress size="1rem" /> : <CloudUploadIcon />}
-              {/* <CloudUploadIcon /> */}
             </InputAdornment>
           ),
         }}
@@ -59,8 +45,12 @@ const FileUploader = ({ handleFile, name, label, inputType, fileName }) => {
         onChange={handleChange}
         style={{ display: 'none' }}
       />
-    {/* <Typography variant="caption" display="block" color="error" gutterBottom>  {fileName}</Typography> */}
-      
+
+      { values && values[`${name}Att`] &&
+        <>
+          <Typography name= {`${name}Att`} variant="caption" display="block" color="error" gutterBottom> {values[`${name}Att`]} </Typography>
+        </>
+      }
     </>
   );
 };
@@ -72,5 +62,8 @@ FileUploader.propTypes = {
   label: PropTypes.string.isRequired,
   inputType: PropTypes.string.isRequired,
   fileName: PropTypes.func.isRequired,
+  value: PropTypes.func.isRequired,
+  setField: PropTypes.func.isRequired,
+  values: PropTypes.func.isRequired,
 
 };
