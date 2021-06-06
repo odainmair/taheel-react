@@ -65,7 +65,7 @@ const FileUploader = ({ handleFile, name, label, inputType, fileName }) => {
       </>
     );
   };
-}Í
+}
 export default FileUploader;
 
 FileUploader.propTypes = {
