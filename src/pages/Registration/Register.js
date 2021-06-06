@@ -301,7 +301,7 @@ const Register = () => {
 
                   <FinalFromWizard.Page
                     label=""
-                    validate={(values) => CitizenValidate(values)}
+                    validate={CitizenValidate}
                     nextFun={(values) => validateAPIFunc(values)}
                   >
                     <CitizenInfo
@@ -319,7 +319,7 @@ const Register = () => {
                   </FinalFromWizard.Page>
 
                   <FinalFromWizard.Page label=""
-                    validate={(values) =>regitrationValidate(values)}
+                    validate={regitrationValidate}
                   >
                     <RegistrationInfo
                       Condition={Condition}

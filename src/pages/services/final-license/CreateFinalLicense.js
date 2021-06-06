@@ -2,7 +2,7 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { getCurrentUser } from 'src/utils/UserLocalStorage';
-import {  useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import CenterDetails from './sections/CenterDetails'
 import Requirements from './sections/Requirements'
 import Capacity from './sections/Capacity';
@@ -26,9 +26,10 @@ import {
 } from '@material-ui/core';
 import FinalFromWizard from '../../../components/wizard/FinalFormWizard';
 import AlertDialog from 'src/components/AlertDialog';
-import { CenterDetailsValidation } from './services/finalLicenseUtil';
+import { CenterDetailsValidation, getStaff } from './services/finalLicenseUtil';
 import { capacityValidation } from './services/finalLicenseUtil'
 import { RequirementsValidation } from './services/finalLicenseUtil'
+import { healthServicesValidation } from './services/finalLicenseUtil'
 import { personsValidation } from './services/finalLicenseUtil'
 import { ConditionComp } from './services/finalLicenseUtil'
 import { MedicalPracticeComp } from './services/finalLicenseUtil'
@@ -38,74 +39,56 @@ import zIndex from '@material-ui/core/styles/zIndex';
 const CreateFinalLicense = () => {
   const [temporaryLicenses, SetTemporaryLicenses] = useState([])
   const [open, setOpen] = useState(false);
+  const [isEnableNextBtn, setIsEnableNextBtn] = useState(false);
   const [dialogContent, setDialogContent] = useState("");
   const [dialogTitle, setDialogTitle] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
   const centerLicenceNumber = location.state ? location.state.centerLicenceNumber : null;
-  const editMode = centerLicenceNumber ? true :false
-
-
-
-  React.useEffect(async () => {
-    const userLicenses = []
-    const { email } = getCurrentUser();
-    const getCentersRs = await getTempLicense(email)
-    const { Centers } = getCentersRs.responseBody.data;
-    SetTemporaryLicenses(Centers)
-		// if (editMode) {
-		// 	const respone = await getCentertDetails()
-		// 	setField('CRNumber', respone.center.crNumber)
-		// 	setField('temporaryLicenceNum', respone.center.licenceNumber)
-		// 	setField('companyName', respone.center.crInfo_r.entityName)
-		// 	setField('activities', respone.center.crActivityType)
-		// 	setField('municipLicenseNo', respone.center.crInfo_r.MoMRA_Licence)
-		// 	setField('beneficiariesNum', respone.center.centerInfo_r.beneficiaryCount)
-		// }
+  const [editMode, setEditMode] = useState(false);
+  const [editInitValues, setEditInitValues] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
+  const [errMessage, SetErrMessage] = useState('')
+  const taskID = location.state ? location.state.taskID : null;
+  useEffect(async () => {
+    const { email } = await getCurrentUser();
+    const getCentersRs = await getTempLicense(email);
+    SetErrMessage("");
+    if (!getCentersRs.isSuccessful) {
+      SetErrMessage(getCentersRs.message);
+    } else {
+      const { Centers } = getCentersRs.responseBody.data;
+      SetTemporaryLicenses(Centers);
+    }
+    if (centerLicenceNumber) {
+      const response = await getTaskDetails()
+    }
+    else
+      setIsLoading(false)
   }, [])
 
-
-  const getCentertDetails = async () => {
-		if (values.temporaryLicenceNum ||editMode ) {
-			const response = await CentertDetails(values.temporaryLicenceNum ? values.temporaryLicenceNum  : centerLicenceNumber)
-			if (!response.isSuccessful)
-				SetErrMessage(response.message)
-			else {
-				setField('centerParentType', response.responseBody.data.center.centerParentType)
-				setField('centerFirstSubType', response.responseBody.data.center.centerFirstSubType)
-				setField('centerSecondSubType', response.responseBody.data.center.centerSecondSubType)
-				setField('crInfo_r', response.responseBody.data.center.crInfo_r.ID)
-				setField('centerInfo_r', response.responseBody.data.center.centerInfo_r.ID)
-				// setField('healthCareServices_r', response.responseBody.data.center.healthCareServices_r.ID)
-				setField('healthCareServices_r', response.responseBody.data.center.healthCareServices_r)
-				return response.responseBody.data
-			}
-			
-		}
-		
-	}
-
-
-  // useEffect( async () => {
-	// 	setField('isNextBtnDisabled',true)
-	// 	console.log('>>>>>>>>editMode****************************************************************',editMode)
-	// 	if (editMode) {
-	// 		const respone = await getCentertDetails()
-	// 		console.log('>>>>>>>>respone****************************************************************',respone)
-	// 		setField('CRNumber', respone.center.crNumber)
-	// 		setField('temporaryLicenceNum', respone.center.licenceNumber)
-	// 		setField('companyName', respone.center.crInfo_r.entityName)
-	// 		setField('activities', respone.center.crActivityType)
-	// 		setField('municipLicenseNo', respone.center.crInfo_r.MoMRA_Licence)
-	// 		setField('beneficiariesNum', respone.center.centerInfo_r.beneficiaryCount)
-	// 	}
-	// }, []);
+  const getTaskDetails = async () => {
+    setEditMode(true)
+    SetErrMessage("");
+    const response = await TaskDetails(taskID)
+    if (!response.isSuccessful)
+      SetErrMessage(response.message)
+    else {
+      setEditInitValues(response.responseBody.data)
+      setIsLoading(false)
+      return response.responseBody.data
+    }
+  }
 
   const onSubmit = async (values) => {
-    console.log(JSON.stringify(values))
-    const response = await createFinalLicenseAPIFunc(values);
-    console.log(JSON.stringify(response));
-    handleClickOpen(` تم تقديم طلب ${values.temporaryLicenceNum} لإصدار الترخيص النهائي رقم ${response.responseBody.data.requestNumber} يرجى تسليم أصل الضمان البنكي إلى وكالة التأهيل والتوجيه الإجتماعي بوزارة الموارد البشرية والتنمية الإجتماعية لانهاء إجراءات الطلب خلال 3 أيام عمل`, '');
+    let response = null
+    if (!editMode) {
+      response = await createFinalLicenseAPIFunc(values);
+      handleClickOpen(` تم تقديم طلب ${response.responseBody.data.requestNumber} لإصدار الترخيص النهائي رقم ${values.temporaryLicenceNum} يرجى تسليم أصل الضمان البنكي إلى وكالة التأهيل والتوجيه الإجتماعي بوزارة الموارد البشرية والتنمية الإجتماعية لانهاء إجراءات الطلب خلال 3 أيام عمل`, '');
+    }
+    else
+      response = await updateFinalLicenseAPIFunc(values, taskID);
+    handleClickOpen(` تم تقديم طلب ${response.responseBody.data.requestNumber} لإصدار الترخيص النهائي رقم ${values.temporaryLicenceNum} يرجى تسليم أصل الضمان البنكي إلى وكالة التأهيل والتوجيه الإجتماعي بوزارة الموارد البشرية والتنمية الإجتماعية لانهاء إجراءات الطلب خلال 3 أيام عمل`, '');
   };
 
   const handleClickOpen = (dialogContent, dialogTitle) => {
@@ -131,24 +114,86 @@ const CreateFinalLicense = () => {
           </Alert>
         )}
         <CardContent>
-          <FinalFromWizard
-            initialValues={{
-              agree: [],
-              isNextBtnDisabled: false,
-              managersCount: 0,
-              teachersCount: 0,
-              beneficiariesNum: 0,
-              // centerParentType: response.responseBody.data.center.centerParentType
-            }}
-            onSubmit={onSubmit}
-          >
-            <FinalFromWizardCenterDetailsPage centerLicenceNumber={centerLicenceNumber} validate={CenterDetailsValidation} temporaryLicenses = {temporaryLicenses} label="معلومات المركز"/>
-            <FinalFromWizardCapacityPage  validate= {capacityValidation} label="الطاقة الإستعابية والضمان المالي"/>
-            <FinalFromWizardRequirements  validate= {RequirementsValidation} label="المتطلبات"/>
-            <FinalFromWizardHealthServices   label="الخدمات الضحية"/>
-            <FinalFromWizardPersonsPage nextFun= {(values) =>personsValidation(values)} label="معلومات الكوادر"/>
-            <FinalFromWizardSummary label="الملخص"/>
-          </FinalFromWizard>
+          {!isLoading ?
+            <>
+              {editMode &&
+                <Alert severity="error" style={{ position: 'fixed', color: 'white', background: 'red', top: 50, right: 0, width: '100%', zIndex: 100, opacity: 0.8 }}>
+                  {editInitValues.chairmanComment.comment}
+                </Alert>
+              }
+              <FinalFromWizard
+                initialValues={!editMode ? {
+                  agree: [],
+                  isNextBtnDisabled: false,
+                  managersCount: 0,
+                  teachersCount: 0,
+                  beneficiariesNum: 0,
+                } : {
+                  agree: [],
+                  isNextBtnDisabled: false,
+                  managersCount: 0,
+                  teachersCount: 0,
+                  CRNumber: editInitValues.center[0].crInfo_r.crNumber,
+                  temporaryLicenceNum: editInitValues.center[0].licenceNumber,
+                  companyName: editInitValues.center[0].crInfo_r.entityName,
+                  activities: editInitValues.center[0].crInfo_r.crActivityType,
+                  municipLicenseNo: editInitValues.center[0].crInfo_r.MoMRA_Licence,
+                  beneficiariesNum: editInitValues.center[0].centerInfo_r.beneficiaryCount,
+                  capacity: editInitValues.center[0].centerInfo_r.carryingnumber,
+                  financialGuarantee: `${editInitValues.center[0].centerInfo_r.financialGuarantee} ر.س.`,
+                  buildingArea: editInitValues.center[0].centerInfo_r.buildingArea,
+                  basementArea: editInitValues.center[0].centerInfo_r.basementArea,
+                  // OperationalPlan: [editInitValues.center[0].centerInfo_r.operationPlan.id],
+                  OperationalPlan: [12403],
+                  ExecutivePlan: [editInitValues.center[0].centerInfo_r.executivePlan.id],
+                  OfficeReport: [editInitValues.center[0].centerInfo_r.engineeringPlan.id],
+                  SecurityReport: [editInitValues.center[0].centerInfo_r.securityReport.id],
+                  // Furniture: editInitValues.center[0].centerInfo_r.carryingnumber,
+                  Furniture: [1202],
+                  FinancialGuaranteeAtt: [editInitValues.center[0].centerInfo_r.financialGuarbteeAtt.id],
+                  healthServices: editInitValues.center[0].isHealthCareServices ? "yes" : "no",
+                  healthServiceType: editInitValues.center[0].healthCareServices_r.type,
+                  // healthServiceAttachment: editInitValues.center[0].centerInfo_r.financialGuarbteeAtt,
+                  healthServiceAttachment: [1202],
+                  customers: getStaff(editInitValues.staff),
+                }}
+                isEnableNextBtn={isEnableNextBtn}
+                onSubmit={onSubmit}
+              >
+                <FinalFromWizardCenterDetailsPage
+                  centerLicenceNumber={centerLicenceNumber}
+                  validate={CenterDetailsValidation}
+                  temporaryLicenses={temporaryLicenses}
+                  editMode={editMode}
+                  setEditMode={setEditMode}
+                  setIsEnableNextBtn={(isEnable)=>setIsEnableNextBtn(isEnable)}
+                  label="معلومات المركز" />
+                <FinalFromWizardCapacityPage
+                  validate={capacityValidation}
+                  editMode={editMode}
+                  label="الطاقة الإستعابية والضمان المالي" />
+                <FinalFromWizardRequirements
+                  nextFun={(values) => RequirementsValidation(values)}
+                  label="المتطلبات" />
+                <FinalFromWizardHealthServices
+                  nextFun={(values) => healthServicesValidation(values)}
+                  label="الخدمات الضحية"
+                  editMode={editMode} />
+                <FinalFromWizardPersonsPage
+                  nextFun={(values) => personsValidation(values)}
+                  label="معلومات الكوادر"
+                  editMode={editMode} />
+                <FinalFromWizardSummary
+                  label="الملخص" />
+              </FinalFromWizard>
+            </>
+            :
+            <CircularProgress size="15rem" style={{
+              display: 'block',
+              marginLeft: 'auto',
+              marginRight: 'auto', color: '#E2E8EB'
+            }} />
+          }
         </CardContent>
       </Card>
       <AlertDialog dialogContent={dialogContent} dialogTitle={dialogTitle} open={open} onClose={handleClose} acceptBtnName="تم" />
@@ -156,8 +201,15 @@ const CreateFinalLicense = () => {
   );
 };
 
-const FinalFromWizardCenterDetailsPage = ({ setField, temporaryLicenses, editMode, setEditMode, values, centerLicenceNumber }) => (
-  <Box>
+const FinalFromWizardCenterDetailsPage = ({ 
+  setField, 
+  temporaryLicenses, 
+  editMode, 
+  setEditMode, 
+  values, 
+  centerLicenceNumber,
+  setIsEnableNextBtn }) => (
+  <>
     <CenterDetails
       Condition={calculationConditionComp}
       values={values}
@@ -165,35 +217,36 @@ const FinalFromWizardCenterDetailsPage = ({ setField, temporaryLicenses, editMod
       temporaryLicenses={temporaryLicenses}
       setField={(fieldName, fieldValue) => setField(fieldName, fieldValue)}
       editMode={editMode}
+      setIsEnableNextBtn={(isEnable)=>setIsEnableNextBtn(isEnable)}
       setEditMode={setEditMode}
     />
-  </Box>
+  </>
 );
 
 const FinalFromWizardCapacityPage = ({ editMode, values, setField }) => (
-  <Box>
+  <>
     <Capacity
       Condition={calculationConditionComp}
       values={values}
       setField={(fieldName, fieldValue) => setField(fieldName, fieldValue)}
       editMode={editMode}
     />
-  </Box>
+  </>
 );
 
 const FinalFromWizardRequirements = ({ setField, temporaryLicenses, values }) => (
-  <Box>
+  <>
     <Requirements
       Condition={ConditionComp}
       values={values}
       temporaryLicenses={temporaryLicenses}
       setField={(fieldName, fieldValue) => setField(fieldName, fieldValue)}
     />
-  </Box>
+  </>
 )
 
 const FinalFromWizardHealthServices = ({ editMode, setField, temporaryLicenses, values }) => (
-  <Box>
+  <>
     <HealthServices
       Condition={ConditionComp}
       values={values}
@@ -201,11 +254,11 @@ const FinalFromWizardHealthServices = ({ editMode, setField, temporaryLicenses, 
       setField={(fieldName, fieldValue) => setField(fieldName, fieldValue)}
       editMode={editMode}
     />
-  </Box>
+  </>
 );
 
 const FinalFromWizardPersonsPage = ({ editMode, label, validate, setField, pop, push, values }) => (
-  <Box>
+  <>
     <PersonDetials
       MedicalPracticeCondition={MedicalPracticeComp}
       Condition={ConditionComp}
@@ -215,17 +268,17 @@ const FinalFromWizardPersonsPage = ({ editMode, label, validate, setField, pop, 
       values={values}
       editMode={editMode}
     />
-  </Box>
+  </>
 );
 
 const FinalFromWizardSummary = ({ setField, temporaryLicenses, values }) => (
-  <Box>
+  <>
     <Summary
       values={values}
       temporaryLicenses={temporaryLicenses}
       setField={(fieldName, fieldValue) => setField(fieldName, fieldValue)}
     />
-  </Box>
+  </>
 );
 
 export default CreateFinalLicense;

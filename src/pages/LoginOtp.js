@@ -18,7 +18,7 @@ import {
   Alert,
   Link
 } from '@material-ui/core';
-import{ APIRequest }from 'src/api/APIRequest';
+import { APIRequest } from 'src/api/APIRequest';
 import DashboardNavbar from '../components/DashboardNavbar';
 import MainNavbar from '../components/MainNavbar';
 import { setCurrentUser } from 'src/utils/UserLocalStorage'
@@ -61,7 +61,7 @@ const LoginOtp = () => {
   const { requestBody } = location.state;
 
   useEffect(async () => {
-    const response = await APIRequest({ requestBody, url });  
+    const response = await APIRequest({ requestBody, url });
   })
   return (
     <>
@@ -69,17 +69,17 @@ const LoginOtp = () => {
         <title>Login</title>
       </Helmet>
       <DashboardNavbar onMobileNavOpen={() => setMobileNavOpen(true)} />
-            <MainNavbar
-                onMobileClose={() => setMobileNavOpen(false)}
-                openMobile={isMobileNavOpen}
-            />
+      <MainNavbar
+        onMobileClose={() => setMobileNavOpen(false)}
+        openMobile={isMobileNavOpen}
+      />
       <Box
         sx={{
           backgroundColor: '#fafafa',
-          width:'100%', 
-           position: 'fixed',
-           height:"100%",
-           backgroundSize:"cover" 
+          width: '100%',
+          position: 'fixed',
+          height: "100%",
+          backgroundSize: "cover"
         }}
       >
         <Container maxWidth="sm">
@@ -99,7 +99,7 @@ const LoginOtp = () => {
                 setError('رمز التحقق المدخل غير صحيح')
               }
 
-              
+
             }
             }
           >
@@ -138,48 +138,48 @@ const LoginOtp = () => {
                         className={classes.root}
                         sx={{ mb: 5, mr: 1.5 }}
                       >
-                        <Grid container spacing={3} sx={{margin: "0 auto", width:"auto"}}>
-                        <Grid item xs={4}>
+                        <Grid container spacing={3} sx={{ margin: "0 auto", width: "auto" }}>
+                          <Grid item xs={4}>
 
-                        <Avatar
-                          className={classes.large}
-                          // onClick={() => setColor({ ...avtarColor, rightAvatar: '#214256', leftAvatar: '#c8d9d9' })}
-                          sx={{
-                            height: '85px', width: '85px', backgroundColor: '#c8d9d9'
-                          }}
-                        >
-                          أفراد
-                        </Avatar>
+                            <Avatar
+                              className={classes.large}
+                              // onClick={() => setColor({ ...avtarColor, rightAvatar: '#214256', leftAvatar: '#c8d9d9' })}
+                              sx={{
+                                height: '85px', width: '85px', backgroundColor: '#c8d9d9'
+                              }}
+                            >
+                              أفراد
+                            </Avatar>
 
 
-                        </Grid>  
-                        <Grid item xs={4}>
-                        <Avatar
-                          className={classes.large}
-                          // onClick={() => setColor({ ...avtarColor, leftAvatar: '#214256', rightAvatar: '#c8d9d9' })}
-                          sx={{
-                            height: '85px', width: '85px', backgroundColor: '#214256'
-                          }}
-                        >
-                            مركز
-                        </Avatar>
-                        </Grid>  
-                        <Grid item xs={4}>
-                        <a href="https://inspiredemo2.appiancloud.com/suite/sites/takamol-taheel/page/request-Records" target="_blank">
-                          <Avatar
-                            className={classes.large + ' ' + classes.avatarHover}
-                            // onClick={() => setColor({ ...avtarColor, leftAvatar: '#214256', rightAvatar: '#c8d9d9' })}
-                            sx={{
-                              height: '85px', width: '85px', backgroundColor: '#c8d9d9'
-                            }}
-                          >
-                            موظف
-                        </Avatar>
-                        </a>
-                        </Grid>  
-                        </Grid>  
-                        
-                        
+                          </Grid>
+                          <Grid item xs={4}>
+                            <Avatar
+                              className={classes.large}
+                              // onClick={() => setColor({ ...avtarColor, leftAvatar: '#214256', rightAvatar: '#c8d9d9' })}
+                              sx={{
+                                height: '85px', width: '85px', backgroundColor: '#214256'
+                              }}
+                            >
+                              مركز
+                            </Avatar>
+                          </Grid>
+                          <Grid item xs={4}>
+                            <a href="https://inspiredemo2.appiancloud.com/suite/sites/takamol-taheel/page/request-Records" target="_blank">
+                              <Avatar
+                                className={classes.large + ' ' + classes.avatarHover}
+                                // onClick={() => setColor({ ...avtarColor, leftAvatar: '#214256', rightAvatar: '#c8d9d9' })}
+                                sx={{
+                                  height: '85px', width: '85px', backgroundColor: '#c8d9d9'
+                                }}
+                              >
+                                موظف
+                              </Avatar>
+                            </a>
+                          </Grid>
+                        </Grid>
+
+
                       </Box>
                       <Box sx={{ mb: 3, textAlign: 'center' }}>
                         <Typography
@@ -262,49 +262,49 @@ const LoginOtp = () => {
                     </Typography>
                     <Grid container>
                       <Grid item xs={6}>
-                      <Link
-                        component={RouterLink}
-                        to="/login"
-                      >
-                        
-                      <Button 
-                      className={classes.secondaryButton}
-                      color="primary"
-                      size="large"
-                      type="button"
-                      variant="contained"
-                      sx={{
-                        borderRadius: '5em',
-                        width: '50%',
-                        margin: '0 auto',
-                        border: 'solid 1px #214255',
-                        backgroundColor: 'white',
-                        color: '#214256'
-                      }}
-                    >
-                      الرجوع
-                    </Button>
-                    </Link>
+                        <Link
+                          component={RouterLink}
+                          to="/login"
+                        >
+
+                          <Button
+                            className={classes.secondaryButton}
+                            color="primary"
+                            size="large"
+                            type="button"
+                            variant="contained"
+                            sx={{
+                              borderRadius: '5em',
+                              width: '50%',
+                              margin: '0 auto',
+                              border: 'solid 1px #214255',
+                              backgroundColor: 'white',
+                              color: '#214256'
+                            }}
+                          >
+                            الرجوع
+                          </Button>
+                        </Link>
                       </Grid>
                       <Grid item xs={6}>
-                      <Button
-                      color="primary"
-                      disabled={isSubmitting}
-                      size="large"
-                      type="submit"
-                      variant="contained"
-                      sx={{
-                        borderRadius: '5em',
-                        width: '50%',
-                        margin: '0 auto',                       
-                      }}
-                    >
-                      التالي
-                    </Button>
+                        <Button
+                          color="primary"
+                          disabled={isSubmitting}
+                          size="large"
+                          type="submit"
+                          variant="contained"
+                          sx={{
+                            borderRadius: '5em',
+                            width: '50%',
+                            margin: '0 auto',
+                          }}
+                        >
+                          التالي
+                        </Button>
                       </Grid>
                     </Grid>
-                    
-                   
+
+
                   </Box>
                 </Box>
               </form>

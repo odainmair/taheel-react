@@ -137,7 +137,7 @@ const Capacity = ({ editMode, Condition, values, setField }) => {
 						onClick={calculate}
 					>
 						احتساب
-				</Button>
+					</Button>
 				</Grid>
 				<Grid
 					item

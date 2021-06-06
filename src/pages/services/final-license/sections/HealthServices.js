@@ -1,10 +1,10 @@
 /* eslint-disable no-unused-vars */
 import {
-    Grid,
-    Typography,
-    RadioGroup,
-    FormControlLabel,
-    MenuItem,
+  Grid,
+  Typography,
+  RadioGroup,
+  FormControlLabel,
+  MenuItem,
 } from '@material-ui/core';
 import { Field } from 'react-final-form';
 import { Radio, Select } from 'final-form-material-ui';
@@ -16,102 +16,102 @@ import FileUploader from 'src/components/FileUploader';
 
 
 const HealthServices = ({ Condition, values, setField }) => {
-    const { documents, SetDocuments } = useContext(localContext);
+  const setDocument = (name, docID) => {
+    setField(name, [docID])
+  }
 
-    const setDocument = (name, docID, multiple) => {
-        setField(name, [docID])
-    }
+  const FileUploaderComp = ({ input: { value, name }, label, inputType }) => (
+    <>
+      <FileUploader
+        handleFile={(file, setLoading) => uploadDocument(setDocument, name, file, inputType, setLoading)}
+        label={label}
+        name={name}
+        inputType={inputType}
+        setField={setField}
+        values={values}
+      />
+    </>
+  )
 
-    const FileUploaderComp = ({ input: { value, name }, label, inputType }) => (
-        <>
-            <FileUploader
-                handleFile={(file,setLoading) => uploadDocument(setDocument, name, file, inputType , setLoading)}
-                label={label}
-                name= {name} 
-                inputType={inputType}
-                fileName
+  return (
+    <>
+      <Grid
+        container
+        spacing={3}
+        mt={3}
+      >
+
+        <Grid
+          item
+          md={12}
+          xs={12}
+        >
+          <Typography> هل المركز يقدم خدمات صحية؟</Typography>
+          <RadioGroup >
+            <FormControlLabel
+              label="نعم"
+              control={<Field name="healthServices" component={Radio} type="radio" value="yes" />}
             />
-        </>
-    )
+            <FormControlLabel
+              label="لا"
+              control={<Field name="healthServices" component={Radio} type="radio" value="no" />}
+            />
+          </RadioGroup>
 
-    return (
-        <>
-            <Grid
-                container
-                spacing={3}
-                mt={3}
+
+        </Grid>
+        <Condition when='healthServices' is='yes' >
+          <Grid
+            item
+            md={6}
+            xs={12}
+            className="custom-label-field"
+          >
+
+            <Field
+              fullWidth
+              label="نوع الخدمة الصحية"
+              name="healthServiceType"
+              component={Select}
+              required
+              dir="rtl"
+              variant="outlined"
+              className="custom-field"
+              formControlProps={{ fullWidth: true }}
             >
+              <MenuItem value={1}> رخصة وزارة الصحة </MenuItem>
+              <MenuItem value={2}> عقد شراكة مع منشأة رعاية صحية </MenuItem>
+            </Field>
+          </Grid>
+          <Grid
+            item
+            md={6}
+            xs={12}
+          >
+            <Field
+              label={values.healthServiceType ? values.healthServiceType === 1 ? 'ارفاق رخصة وزارة الصحة' : 'ارفاق عقد الشراكة' : 'ارفاق الخدمة الصحية'}
 
-                <Grid
-                    item
-                    md={12}
-                    xs={12}
-                >
-                    <Typography> هل المركز يقدم خدمات صحية؟</Typography>
-                    <RadioGroup >
-                        <FormControlLabel
-                            label="نعم"
-                            control={<Field name="healthServices" component={Radio} type="radio" value="yes" />}
-                        />
-                        <FormControlLabel
-                            label="لا"
-                            control={<Field name="healthServices" component={Radio} type="radio" value="no" />}
-                        />
-                    </RadioGroup>
+              name="healthServiceAttachment"
+              component={FileUploaderComp}
+              inputType={false}
+              setField={setField}
+              values={values}
+            />
 
+          </Grid>
+        </Condition>
+      </Grid>
+    </>
 
-                </Grid>
-                <Condition when='healthServices' is='yes' >
-                    <Grid
-                        item
-                        md={6}
-                        xs={12}
-                        className="custom-label-field"
-                    >
-
-                        <Field
-                            fullWidth
-                            label="نوع الخدمة الصحية"
-                            name="healthServiceType"
-                            component={Select}
-                            required
-                            dir="rtl"
-                            variant="outlined"
-                            className="custom-field"
-                            formControlProps={{ fullWidth: true }}
-                        >
-                            <MenuItem value={1}> رخصة وزارة الصحة </MenuItem>
-                            <MenuItem value={2}> عقد شراكة مع منشأة رعاية صحية </MenuItem>
-                        </Field>
-                    </Grid>
-                    <Grid
-                        item
-                        md={6}
-                        xs={12}
-                    >
-                        <Field
-                            label={values.healthServiceType ? values.healthServiceType === 1 ? 'ارفاق رخصة وزارة الصحة' : 'ارفاق عقد الشراكة' : 'ارفاق الخدمة الصحية'}
-
-                            name="healthServiceAttachment"
-                            component={FileUploaderComp}
-                            inputType={false}
-                        />
-
-                    </Grid>
-                </Condition>
-            </Grid>
-        </>
-
-    );
+  );
 }
 export default HealthServices;
 
 HealthServices.propTypes = {
-    Condition: PropTypes.func.isRequired,
-    values: PropTypes.func.isRequired,
-    setField: PropTypes.func.isRequired,
-    input: PropTypes.func.isRequired,
-    label: PropTypes.func.isRequired,
-    inputType: PropTypes.bool.isRequired,
-    fileName: PropTypes.func.isRequired,
+  Condition: PropTypes.func.isRequired,
+  values: PropTypes.func.isRequired,
+  setField: PropTypes.func.isRequired,
+  input: PropTypes.func.isRequired,
+  label: PropTypes.func.isRequired,
+  inputType: PropTypes.bool.isRequired,
 };

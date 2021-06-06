@@ -3,6 +3,7 @@ import React from 'react';
 import { Form } from 'react-final-form';
 import { Alert, Box, Button, Card, CardContent, CircularProgress, Grid, Step, StepLabel, Stepper } from '@material-ui/core';
 import arrayMutators from "final-form-arrays";
+import { TramRounded } from '@material-ui/icons';
 
 export default class FinalFromWizard extends React.Component {
   static Page = ({ children }) => children;
@@ -92,7 +93,7 @@ export default class FinalFromWizard extends React.Component {
   }
 
   render() {
-    const { children } = this.props;
+    const { children, isEnableNextBtn = true } = this.props;
     const childrenArray = React.Children.toArray(children);
     const { page, values, completed, isNextCallBackFunSuccess, errMessage } = this.state;
     const activePage = React.Children.toArray(children)[page];
@@ -131,7 +132,7 @@ export default class FinalFromWizard extends React.Component {
                 setField: form.mutators.setValue,
                 pop: form.mutators.pop,
                 push: form.mutators.push,
-                values: values 
+                values: values
               })}
 
               <Grid container spacing={2} mt={3} justifyContent="flex-end">
@@ -149,11 +150,11 @@ export default class FinalFromWizard extends React.Component {
                     </Button>
                   </Grid>
                 )}
-                {!isLastPage  && (
+                {!isLastPage && (
                   <Grid item>
                     <Button
                       startIcon={submitting ? <CircularProgress size="1rem" /> : null}
-                      disabled={submitting}
+                      disabled={!isEnableNextBtn || submitting}
                       variant="contained"
                       color="primary"
                       type="submit"

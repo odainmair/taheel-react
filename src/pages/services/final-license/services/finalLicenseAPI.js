@@ -3,26 +3,13 @@ import { APIRequest } from 'src/api/APIRequest';
 import { uploadFileAPI } from 'src/api/APIRequest';
 import { downloadFileAPI } from 'src/api/APIRequest';
 import { getCurrentUser } from 'src/utils/UserLocalStorage'
-
-const staffTypesNo = {}
-
-const newKeys = {
-	idNumber: 'idNumIqamaNum',
-	day: 'birthDate',
-	fullName: 'name',
-	gender: 'gender',
-	nationality: 'nationality',
-	staffTypes: 'StaffType',
-	cv: 'CV',
-	EducationalQualification: 'educationQualifications',
-	MedicalPractice: 'professionalLicense',
+const getFurnitures = (values) => {
+	const furnitures = []
+	values.Furniture.map((docId, index) => {
+		furnitures.push({ Document: { id: docId } })
+	})
+	return furnitures
 }
-
-const staffTypes = ["معلم تربية خاصة", "أخصائي اجتماعي", "مراقب اجتماعي", "حارس", "عامل تنظيفات", "مشرف فني عام", "اخصائي نفسي و توجيه اجتماعي", "عامل رعاية شخصية", "مدير", "سائق", "مرافق سائق", "أخصائي علاج طبيعي", "أخصائي علاج وظيفي", "أخصائي نطق و تخاطب", "ممرض"]
-staffTypes.map((staffType, index) => {
-	staffTypesNo[staffType] = index + 1
-})
-
 const getStaff = (values) => {
 
 	const staffTypesNo = {}
@@ -50,7 +37,6 @@ const getStaff = (values) => {
 
 	staff.map((customer) => {
 		Object.keys(customer).map((key) => {
-			console.log('........nationalitynationality',customer.nationality)
 			const newKey = newKeys[key] || key;
 			if (key === 'gender')
 				customer[newKey] = customer[key] === 'انثى' ? 'f' : 'm'
@@ -64,7 +50,7 @@ const getStaff = (values) => {
 				delete customer.month
 				delete customer.year
 			}
-			else if (['MedicalPractice','EducationalQualification','cv'].includes(key)) {
+			else if (['MedicalPractice', 'EducationalQualification', 'cv'].includes(key)) {
 				customer[newKey] = customer[key][0]
 			}
 			else
@@ -109,10 +95,10 @@ const createFinalLicenseAPIFunc = async (values) => {
 				"financialGuarantee": values.financialGuarantee.substring(0, values.financialGuarantee.length - 5),
 				"financialGuarbteeAtt": values.FinancialGuaranteeAtt[0],
 				"executivePlan": values.ExecutivePlan[0],
-				"engineeringPlan": values.OperationalPlan[0],
-				"securityReport": values.SecurityReport,
-				"beneficiaryCount": values.beneficiariesNum, 
-				"furniturePhoto_r": furnitures
+				"engineeringPlan": values.OfficeReport[0],
+				"securityReport": values.SecurityReport[0],
+				"beneficiaryCount": values.beneficiariesNum,
+				"furniturePhoto_r": getFurnitures(values),
 			},
 			"isHealthCareServices": values.healthServices === 'yes' ? true : false,
 			"healthCareServices_r": {
@@ -185,13 +171,9 @@ const updateFinalLicenseAPIFunc = async (values, TaskID) => {
 
 const getTempLicense = async (userEmail) => {
 	const url = 'taheel-apis-records-getCenters-v2';
-    const queryParams = { userEmail,isExpired:false,licenseType:'رخصة مؤقتة' };
-    const response = await APIRequest({ url, queryParams });
-    return response;
-	// const url = 'taheel-apis-records-getRequests-v2';
-	// const queryParams = { userEmail };
-	// const response = await APIRequest({ url, queryParams });
-	// return response;
+	const queryParams = { userEmail, isExpired: false, licenseType: 'رخصة مؤقتة' };
+	const response = await APIRequest({ url, queryParams });
+	return response;
 };
 
 const getMunicipalLicenseNoApi = async (CRNumber) => {
@@ -267,4 +249,3 @@ const downloadDocument = async (DocID, attachment) => {
 
 
 export { validateCompanyFunc, createFinalLicenseAPIFunc, updateFinalLicenseAPIFunc, calculation, validateCitizenFunc, uploadDocumentApi, getTempLicense, getMunicipalLicenseNoApi, downloadDocument, TaskDetails, CentertDetails };
-
