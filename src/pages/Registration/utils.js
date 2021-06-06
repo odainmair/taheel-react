@@ -10,8 +10,7 @@ const CitizenValidate = values =>{
       msg.month = required;
     if (!values.year) 
       msg.year = required;
-    if (!values.year) 
-      msg.year = required;   
+    console.log(`mssssss ${JSON.stringify(msg)}`);
     return msg
   }
   const absherValidate = values =>{

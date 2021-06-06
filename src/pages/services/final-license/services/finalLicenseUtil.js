@@ -19,7 +19,16 @@ import {
 } from '@material-ui/core';
 
 
+const downloadFileFn = async (setLoading, loading, licenseNumber) => {
+    setLoading(true)
+    console.log("responseresponse", licenseNumber)
+    const downloadDoc = await downloadDocument(licenseNumber, true)
+    if (downloadDoc.isSuccessful) {
+        setLoading(false)
+    }
+    // else
 
+}
 
 const CenterDetailsValidation = values => {
     console.log("values", isNaN(values.CRNumber))
@@ -31,72 +40,6 @@ const CenterDetailsValidation = values => {
     if (values.CRNumber && isNaN(values.CRNumber))
         msg.CRNumber = "يجب ان يحتوي فقط على ارقام والا يزيد عددها عن 10 خانات"
     return msg
-}
-
-const capacityValidation = values => {
-    var msg = {}
-    console.log(' values.beneficiariesNum', typeof (values.beneficiariesNum), 'values.capacity', typeof (values.capacity))
-    console.log(' values.buildingArea', typeof (values.buildingArea), 'values.basementArea', typeof (values.basementArea))
-    if (!values.beneficiariesNum)
-        msg.beneficiariesNum = required
-    if (!values.buildingArea)
-        msg.buildingArea = required
-    if (!values.basementArea)
-        msg.basementArea = required
-    if (parseInt(values.buildingArea) < parseInt(values.basementArea))
-        msg.basementArea = 'مساحة القبو يجب ان تكون أقل من مساحة مسطح البناء'
-    if (values.beneficiariesNum > parseInt(values.capacity))
-        msg.beneficiariesNum = 'عدد المستفيدين يجب ان لا يتجاوز الطاقة الاستعابية'
-    return msg
-}
-
-const RequirementsValidation = values => {
-    const response = { isSuccessful: true, message: '' };
-    if (!values.OperationalPlan || !values.ExecutivePlan || !values.OfficeReport || !values.SecurityReport || !values.Furniture || !values.FinancialGuaranteeAtt)
-        return { isSuccessful: false, message: "يرجى ارفاق جميع المتطلبات المذكورة" };
-    return response
-}
-
-const healthServicesValidation = async values => {
-    const response = { isSuccessful: true, message: '' };
-    if (!values.healthServices)
-        return { isSuccessful: false, message: "يرجى تحديد ما ان كان المركز يقدم خدمات صحية ام لا" };
-    if (values.healthServices === 'yes') {
-        if (!values.healthServiceType)
-            return { isSuccessful: false, message: "يرجى تحديد نوع الخدمة الصحية" };
-        if (!values.healthServiceAttachment)
-            if (values.healthServiceType === 1)
-                return { isSuccessful: false, message: " يرجى ارفاق رخصة وزارة الصحة" };
-            else
-                return { isSuccessful: false, message: " يرجى ارفاق عقد الشراكة" };
-    }
-    return response
-
-}
-
-const personsValidation = async values => {
-    const response = { isSuccessful: true, message: '' };
-    if (!values.customers || values.customers.length === 0) {
-        return { isSuccessful: false, message: "يرجى استيفاء الشروط" };
-
-    }
-    const TeachersCount = values.customers.filter(customer => customer.staffTypes === "معلم تربية خاصة ").length
-    const managersCount = values.customers.filter(customer => customer.staffTypes === "مدير").length
-    if (managersCount > 0 && managersCount !== 1)
-        return { isSuccessful: false, message: "يرجى استيفاء الشروط" };
-
-    if (values.beneficiariesNum / 8 >= TeachersCount && TeachersCount >= 1)
-        return { isSuccessful: false, message: "يرجى استيفاء الشروط" };
-    return response
-}
-
-const downloadFileFn = async (setLoading, loading, licenseNumber) => {
-    setLoading(true)
-    console.log("responseresponse", licenseNumber)
-    const downloadDoc = await downloadDocument(licenseNumber, true)
-    if (downloadDoc.isSuccessful) {
-        setLoading(false)
-    }
 }
 
 const uploadDocument = async (setDocument, name, file, multiple, setLoading) => {
@@ -122,9 +65,61 @@ const uploadDocument = async (setDocument, name, file, multiple, setLoading) => 
             setDocument(name, response.responseBody.docID, multiple)
             setLoading(false)
         }
+        // setDocument(name, response.docID, multiple)
+
     }
 }
 
+const capacityValidation = values => {
+    var msg = {}
+    console.log(' values.beneficiariesNum', typeof (values.beneficiariesNum), 'values.capacity', typeof (values.capacity))
+    console.log(' values.buildingArea', typeof (values.buildingArea), 'values.basementArea', typeof (values.basementArea))
+    if (!values.beneficiariesNum)
+        msg.beneficiariesNum = required
+    if (!values.buildingArea)
+        msg.buildingArea = required
+    if (!values.basementArea)
+        msg.basementArea = required
+    if (parseInt(values.buildingArea) < parseInt(values.basementArea))
+        msg.basementArea = 'مساحة القبو يجب ان تكون أقل من مساحة مسطح البناء'
+    if (values.beneficiariesNum > parseInt(values.capacity))
+        msg.beneficiariesNum = 'عدد المستفيدين يجب ان لا يتجاوز الطاقة الاستعابية'
+    return msg
+}
+
+const RequirementsValidation = values => {
+    var msg = {}
+    // if (!values.OperationalPlan)
+    //     msg.OperationalPlan = required
+    // if (!values.ExecutivePlan)
+    //     msg.ExecutivePlan = required
+    // if (!values.OfficeReport)
+    //     msg.OfficeReport = required
+    // if (!values.SecurityReport)
+    //     msg.SecurityReport = required
+    // if (!values.Furniture)
+    //     msg.Furniture = required
+    // if (!values.FinancialGuaranteeAtt)
+    //     msg.FinancialGuaranteeAtt = required
+    return msg
+}
+
+const personsValidation = async values => {
+    const response = { isSuccessful: true, message: '' };
+console.log(">>>>>>>>>>>I'm hereeeeee")
+    if (!values.customers || values.customers.length ===0 ) {
+        return { isSuccessful: false, message: "يرجى استيفاء الشروط" };
+
+    }
+    const TeachersCount = values.customers.filter(customer => customer.staffTypes === "معلم تربية خاصة ").length
+    const managersCount = values.customers.filter(customer => customer.staffTypes === "مدير").length
+    if (managersCount > 0 && managersCount !== 1)
+        return { isSuccessful: false, message: "يرجى استيفاء الشروط" };
+
+    if (values.beneficiariesNum / 8 >= TeachersCount && TeachersCount >= 1)
+        return { isSuccessful: false, message: "يرجى استيفاء الشروط" };
+    return response
+}
 
 
 const ConditionComp = ({ when, is, children }) => (
@@ -171,6 +166,7 @@ const DownloadButt = ({ index, docID, name, label }) => {
                         sx={{
                             backgroundColor: '#3c8084',
                         }}
+                        // startIcon={<CloudDownloadIcon />}
                         onClick={() => downloadFileFn(setLoading, loading, docID)}
                     >
                         تنزيل
@@ -198,6 +194,7 @@ const DownloadButtTable = ({ docIDs, name, label }) => {
                                 {docIDs.map((docID, index) => (
                                     < DownloadButt index={index} docID={docID} name={name} label={label} />
                                 ))}
+                                {/* </Grid> */}
                             </TableBody>
                         </Table>
                     </TableContainer>
@@ -217,4 +214,4 @@ const DownloadButtTable = ({ docIDs, name, label }) => {
 
 
 
-export { CenterDetailsValidation, capacityValidation, RequirementsValidation, healthServicesValidation, personsValidation, ConditionComp, MedicalPracticeComp, calculationConditionComp, uploadDocument, DownloadButt, ContentField, DownloadButtTable };
+export { CenterDetailsValidation, capacityValidation, RequirementsValidation, ConditionComp, MedicalPracticeComp, calculationConditionComp, uploadDocument, DownloadButt, ContentField, personsValidation, DownloadButtTable };

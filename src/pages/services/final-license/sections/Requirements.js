@@ -3,11 +3,35 @@ import {
     Grid,
 } from '@material-ui/core';
 import { Field } from 'react-final-form';
+import { useState } from 'react';
 import FileUploader from 'src/components/FileUploader';
 import { uploadDocument } from '../services/finalLicenseUtil'
 import PropTypes from 'prop-types';
 
 const Requirements = ({ setField, values }) => {
+
+    const { documents, SetDocuments } = useContext(localContext);
+    const [errMessage, SetErrMessage] = useState('')
+
+    // const uploadDocument = async (name, file) => {
+    //     console.log('filefile...', file)
+    //     console.log('namename...', name)
+    //         var reader = new FileReader();
+    //         reader.readAsDataURL(file);
+    //         reader.onloadend = async function () {
+    //             var base64String = reader.result;
+    //             var n = base64String.indexOf("base64,") + 7;
+    //             base64String = reader.result.substr(n);
+    //             // const data = window.atob(base64String)
+    //             const image = base64String
+    //             const response = await uploadDocumentApi(name, image)
+    //             if (!response.isSuccessful)
+    //                 SetErrMessage(response.message)
+    //             else
+    //                 documents[name] = response.responseBody.docID 
+    //             SetDocuments(documents)
+    //         }
+    // }
     var multipleDocs = []
     const setDocument = (name, docID, multiple) => {
         if (!multiple)
@@ -18,16 +42,15 @@ const Requirements = ({ setField, values }) => {
         }
     }
 
-    const FileUploaderComp = ({ input: { value, name }, label, inputType, setField, values }) => (
+    const FileUploaderComp = ({ input: { value, name }, label, inputType }) => (
         <>
+
             <FileUploader
-                handleFile={(file, setLoading) => uploadDocument(setDocument, name, file, inputType, setLoading)}
+                handleFile={(file,setLoading) => uploadDocument(setDocument, name, file, inputType , setLoading)}
                 label={label}
-                name={name}
+                name= {name} 
                 inputType={inputType}
-                fileName={(file) => file}
-                setField={setField}
-                values={values}
+                fileName= {(file) => file}
             />
         </>
     )
@@ -52,11 +75,9 @@ const Requirements = ({ setField, values }) => {
                 >
                     <Field
                         label="ارفاق الخطة التشغيلية"
-                        name="OperationalPlan"
+                        name="OperationalPlan" 
                         component={FileUploaderComp}
                         inputType={false}
-                        setField={setField}
-                        values={values}
                     />
                 </Grid>
                 <Grid
@@ -69,8 +90,6 @@ const Requirements = ({ setField, values }) => {
                         name="ExecutivePlan"
                         component={FileUploaderComp}
                         inputType={false}
-                        setField={setField}
-                        values={values}
                     />
                 </Grid>
                 <Grid
@@ -83,8 +102,6 @@ const Requirements = ({ setField, values }) => {
                         name="OfficeReport"
                         component={FileUploaderComp}
                         inputType={false}
-                        setField={setField}
-                        values={values}
                     />
                 </Grid>
                 <Grid
@@ -97,8 +114,6 @@ const Requirements = ({ setField, values }) => {
                         name="SecurityReport"
                         component={FileUploaderComp}
                         inputType={false}
-                        setField={setField}
-                        values={values}
                     />
                 </Grid>
                 <Grid
@@ -111,8 +126,6 @@ const Requirements = ({ setField, values }) => {
                         name="Furniture"
                         component={FileUploaderComp}
                         inputType={true}
-                        setField={setField}
-                        values={values}
                     />
 
                 </Grid>
@@ -126,8 +139,6 @@ const Requirements = ({ setField, values }) => {
                         name="FinancialGuaranteeAtt"
                         component={FileUploaderComp}
                         inputType={false}
-                        setField={setField}
-                        values={values}
                     />
                 </Grid>
             </Grid>
@@ -140,6 +151,6 @@ Requirements.propTypes = {
     setField: PropTypes.func.isRequired,
     values: PropTypes.func.isRequired,
     label: PropTypes.func.isRequired,
-    input: PropTypes.func.isRequired,
-    inputType: PropTypes.bool.isRequired,
+  input: PropTypes.func.isRequired,
+  inputType: PropTypes.bool.isRequired,
 };

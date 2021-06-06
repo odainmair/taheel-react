@@ -158,7 +158,7 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
             >
             </Grid>
 
-            {SAForm  &&
+            {SAForm &&
               < PersonForm fromEdit={fromEdit} isSaudi ={true} MedicalPracticeCondition={MedicalPracticeCondition} setField={setField} fieldName={fieldName} Condition={Condition} citizenInfo={citizenInfo} />
             }
 
@@ -214,7 +214,7 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
 				</Button>
             </Grid>
             {forignForm &&
-              < PersonForm values={values}fromEdit={fromEdit} isSaudi ={false} MedicalPracticeCondition={MedicalPracticeCondition} setField={setField} fieldName={fieldName} Condition={Condition} citizenInfo={citizenInfo} />
+              < PersonForm fromEdit={fromEdit} isSaudi ={false} MedicalPracticeCondition={MedicalPracticeCondition} setField={setField} fieldName={fieldName} Condition={Condition} citizenInfo={citizenInfo} />
             }
           </Condition>
         </Grid>
@@ -270,7 +270,7 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
             variant='contained'
             color="primary"
             onClick={() => {
-              const { fullName, staffTypes, idNumber, gender, birthDate, iqamaNo, nationality,nationalityBtn, day, month, year, cv, cvAtt, EducationalQualification, MedicalPractice, EducationalQualificationAtt, MedicalPracticeAtt,sponsorName } = values;
+              const { fullName, staffTypes, idNumber, gender, birthDate, iqamaNo, nationality, day, month, year, cv, EducationalQualification, MedicalPractice,sponsorName } = values;
               values.fullName = "";
               values.idNumber = "";
               values.iqamaNo = "";
@@ -285,8 +285,6 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
               values.cvAtt = "";
               values.EducationalQualification = "";
               values.MedicalPractice = "";
-              values.EducationalQualificationAtt = "";
-              values.MedicalPracticeAtt = "";
               values.sponsorName = "";
 
             

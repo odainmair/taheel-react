@@ -16,10 +16,14 @@ import { getMunicipalLicenseNoApi } from '../services/finalLicenseAPI'
 import { CentertDetails } from '../services/finalLicenseAPI'
 import { ContentField } from '../services/finalLicenseUtil'
 
-const CenterDetails = ({ editMode, setEditMode, Condition, values, temporaryLicenses, setField }) => {
+
+const CenterDetails = ({  centerLicenceNumber, Condition, values, temporaryLicenses, setField }) => {
+
+	console.log("props", temporaryLicenses)
 	const [loading, setLoading] = useState(false)
 	const [checkData, setCheckData] = useState(false)
 	const [errMessage, SetErrMessage] = useState('')
+	const editMode = centerLicenceNumber ? true :false
 
 	const check = async () => {
 		setLoading(true)
@@ -53,8 +57,9 @@ const CenterDetails = ({ editMode, setEditMode, Condition, values, temporaryLice
 	}
 
 	const getCentertDetails = async () => {
-		if (values.temporaryLicenceNum) {
-			const response = await CentertDetails(values.temporaryLicenceNum)
+		if (values.temporaryLicenceNum ||editMode ) {
+					console.log('>>>>>>>>alues.temporaryLicenceNum****************************************************************',values.temporaryLicenceNum)
+			const response = await CentertDetails(values.temporaryLicenceNum ? values.temporaryLicenceNum  : centerLicenceNumber)
 			if (!response.isSuccessful)
 				SetErrMessage(response.message)
 			else {
@@ -63,11 +68,13 @@ const CenterDetails = ({ editMode, setEditMode, Condition, values, temporaryLice
 				setField('centerSecondSubType', response.responseBody.data.center.centerSecondSubType)
 				setField('crInfo_r', response.responseBody.data.center.crInfo_r.ID)
 				setField('centerInfo_r', response.responseBody.data.center.centerInfo_r.ID)
-				setField('healthCareServices_r', response.responseBody.data.center.healthCareServices_r.ID)
-				// setField('healthCareServices_r', response.responseBody.data.center.healthCareServices_r)
+				// setField('healthCareServices_r', response.responseBody.data.center.healthCareServices_r.ID)
+				setField('healthCareServices_r', response.responseBody.data.center.healthCareServices_r)
 				return response.responseBody.data
 			}
+			
 		}
+		
 	}
 
 	return (
@@ -239,6 +246,6 @@ CenterDetails.propTypes = {
 	setField: PropTypes.func.isRequired,
 	value: PropTypes.func.isRequired,
 	label: PropTypes.func.isRequired,
+	centerLicenceNumber: PropTypes.func.isRequired,
 	editMode: PropTypes.bool.isRequired,
-	setEditMode: PropTypes.bool.isRequired,
 };

@@ -12,15 +12,17 @@ import { useContext } from 'react';
 import localContext from 'src/localContext';
 
 const PersonForm = ({ fromEdit, isSaudi, MedicalPracticeCondition, fieldName, setField, pop, push, values, Condition, citizenInfo }) => {
-
+    console.log("///////////citizenInfo", citizenInfo)
+    console.log("///////////isSaudi", isSaudi)
+    console.log("///////////fromEdit", fromEdit)
     const { documents, SetDocuments } = useContext(localContext);
     useEffect(() => {
+
         setField('fullName', isSaudi || fromEdit ? `${citizenInfo.Name.FirstName} ${citizenInfo.Name.LastName}` : `${citizenInfo.NameT.FirstName} ${citizenInfo.NameT.LastName}`)
         setField('gender', citizenInfo.Gender === 'F' ? 'انثى' : "ذكر")
         setField('birthDate', isSaudi || fromEdit ? citizenInfo.BirthDateH : citizenInfo.BirthDate.HijriDate)
-        setField('nationality', isSaudi || fromEdit ? 'سعودي' : 'غير سعودي')
-
-        if (!isSaudi) {
+        setField('nationality', isSaudi  ? 'سعودي' : 'غير سعودي')
+        if (!isSaudi || !fromEdit) {
             setField('sponsorName', citizenInfo.SponsorName)
         }
     }, [])
@@ -28,19 +30,17 @@ const PersonForm = ({ fromEdit, isSaudi, MedicalPracticeCondition, fieldName, se
     const setDocument = (name, docID, multiple) => {
         setField(name, [docID])
     }
-    const FileUploaderComp = ({ input: { value, name }, label, inputType, values, setField }) => (
+    const FileUploaderComp = ({ input: { value, name }, label, inputType }) => (
         <>
             <FileUploader
-                handleFile={(file, setLoading) => uploadDocument(setDocument, name, file, inputType, setLoading)}
+                handleFile={(file,setLoading) => uploadDocument(setDocument, name, file, inputType , setLoading)}
                 label={label}
-                name={name}
+                name= {name} 
                 inputType={inputType}
-                setField={setField}
-                values={values}
             />
         </>
     )
-    const staffTypes = ["معلم تربية خاصة", "أخصائي اجتماعي", "مراقب اجتماعي", "حارس", "عامل تنظيفات", "مشرف فني عام", "اخصائي نفسي و توجيه اجتماعي", "عامل رعاية شخصية", "مدير", "سائق", "مرافق سائق", "أخصائي علاج طبيعي", "أخصائي علاج وظيفي", "أخصائي نطق و تخاطب", "ممرض"]
+    const staffTypes = ["معلم تربية خاصة ", "أخصائي اجتماعي", "مراقب اجتماعي", "حارس", "عامل تنظيفات", "مشرف فني عام", "اخصائي نفسي و توجيه اجتماعي", "عامل رعاية شخصية", "مدير", "سائق", "مرافق سائق", "أخصائي علاج طبيعي", "أخصائي علاج وظيفي", "أخصائي نطق و تخاطب", "ممرض"]
     return (
         <>
             <Grid
@@ -158,8 +158,6 @@ const PersonForm = ({ fromEdit, isSaudi, MedicalPracticeCondition, fieldName, se
                         name={fieldName === null ? "cv" : `${fieldName}.cv`}
                         component={FileUploaderComp}
                         inputType={false}
-                        setField={setField}
-                        values={values}
                     />
                 </Grid>
 
@@ -173,11 +171,9 @@ const PersonForm = ({ fromEdit, isSaudi, MedicalPracticeCondition, fieldName, se
                         name={fieldName === null ? "EducationalQualification" : `${fieldName}.EducationalQualification`}
                         component={FileUploaderComp}
                         inputType={false}
-                        setField={setField}
-                        values={values}
                     />
                 </Grid>
-
+                
                 <MedicalPracticeCondition when={fieldName === null ? "staffTypes" : `${fieldName}.staffTypes`} is={['أخصائي علاج طبيعي', 'أخصائي علاج وظيفي', 'أخصائي نطق و تخاطب']}>
                     <Grid
                         item
@@ -189,8 +185,6 @@ const PersonForm = ({ fromEdit, isSaudi, MedicalPracticeCondition, fieldName, se
                             name={fieldName === null ? "MedicalPractice" : `${fieldName}.MedicalPractice`}
                             component={FileUploaderComp}
                             inputType={false}
-                            setField={setField}
-                            values={values}
                         />
                     </Grid>
                 </MedicalPracticeCondition>

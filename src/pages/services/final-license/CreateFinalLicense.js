@@ -2,7 +2,7 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { getCurrentUser } from 'src/utils/UserLocalStorage';
-import { useState, useEffect } from 'react';
+import {  useEffect } from 'react';
 import CenterDetails from './sections/CenterDetails'
 import Requirements from './sections/Requirements'
 import Capacity from './sections/Capacity';
@@ -29,7 +29,6 @@ import AlertDialog from 'src/components/AlertDialog';
 import { CenterDetailsValidation } from './services/finalLicenseUtil';
 import { capacityValidation } from './services/finalLicenseUtil'
 import { RequirementsValidation } from './services/finalLicenseUtil'
-import { healthServicesValidation } from './services/finalLicenseUtil'
 import { personsValidation } from './services/finalLicenseUtil'
 import { ConditionComp } from './services/finalLicenseUtil'
 import { MedicalPracticeComp } from './services/finalLicenseUtil'
@@ -44,88 +43,72 @@ const CreateFinalLicense = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const centerLicenceNumber = location.state ? location.state.centerLicenceNumber : null;
-  const [editMode, setEditMode] = useState(false);
-  const [editInitValues, setEditInitValues] = useState({});
-  const [isLoading, setIsLoading] = useState(true);
-  const [errMessage, SetErrMessage] = useState('')
-  const taskID = location.state ? location.state.taskID : null;
-  useEffect(async () => {
-    const { email } = await getCurrentUser();
+  const editMode = centerLicenceNumber ? true :false
+
+
+
+  React.useEffect(async () => {
+    const userLicenses = []
+    const { email } = getCurrentUser();
     const getCentersRs = await getTempLicense(email)
     const { Centers } = getCentersRs.responseBody.data;
     SetTemporaryLicenses(Centers)
 
-    if (centerLicenceNumber) {
-      const response = await getTaskDetails()
-    }
-    else
-      setIsLoading(false)
+  
+		
+		// if (editMode) {
+		// 	const respone = await getCentertDetails()
+		// 	setField('CRNumber', respone.center.crNumber)
+		// 	setField('temporaryLicenceNum', respone.center.licenceNumber)
+		// 	setField('companyName', respone.center.crInfo_r.entityName)
+		// 	setField('activities', respone.center.crActivityType)
+		// 	setField('municipLicenseNo', respone.center.crInfo_r.MoMRA_Licence)
+		// 	setField('beneficiariesNum', respone.center.centerInfo_r.beneficiaryCount)
+		// }
   }, [])
 
 
-  const getStaff = (data) => {
-    const newKeys = {
-      idNumIqamaNum: 'idNumber',
-      birthDate: 'birthDate',
-      name: 'fullName',
-      gender: 'gender',
-      nationality: 'nationality',
-      StaffType: 'staffTypes',
-      CV: 'cv',
-      educationQualifications: 'EducationalQualification',
-      professionalLicense: 'MedicalPractice',
-    }
+  const getCentertDetails = async () => {
+		if (values.temporaryLicenceNum ||editMode ) {
+			const response = await CentertDetails(values.temporaryLicenceNum ? values.temporaryLicenceNum  : centerLicenceNumber)
+			if (!response.isSuccessful)
+				SetErrMessage(response.message)
+			else {
+				setField('centerParentType', response.responseBody.data.center.centerParentType)
+				setField('centerFirstSubType', response.responseBody.data.center.centerFirstSubType)
+				setField('centerSecondSubType', response.responseBody.data.center.centerSecondSubType)
+				setField('crInfo_r', response.responseBody.data.center.crInfo_r.ID)
+				setField('centerInfo_r', response.responseBody.data.center.centerInfo_r.ID)
+				// setField('healthCareServices_r', response.responseBody.data.center.healthCareServices_r.ID)
+				setField('healthCareServices_r', response.responseBody.data.center.healthCareServices_r)
+				return response.responseBody.data
+			}
+			
+		}
+		
+	}
 
-    const staffTypes = ["معلم تربية خاصة", "أخصائي اجتماعي", "مراقب اجتماعي", "حارس", "عامل تنظيفات", "مشرف فني عام", "اخصائي نفسي و توجيه اجتماعي", "عامل رعاية شخصية", "مدير", "سائق", "مرافق سائق", "أخصائي علاج طبيعي", "أخصائي علاج وظيفي", "أخصائي نطق و تخاطب", "ممرض"]
-    var staff = JSON.parse(JSON.stringify(data))
 
-    staff.map((customer) => {
-      Object.keys(customer).map((key) => {
-        if (customer[key]) {
-          const newKey = newKeys[key] || key;
-          if (key === 'gender')
-            customer[newKey] = customer[key] === 'f' ? 'انثى' : 'ذكر'
-          else if (key === 'idNumIqamaNum') {
-            if (key === 'سعودي')
-              customer['idNumber'] = customer[key]
-            else
-              customer['iqamaNo'] = customer[key]
-          }
-          else if (key === 'StaffType')
-            customer[newKey] = staffTypes[customer[key] - 1]
-          else if (['professionalLicense', 'educationQualifications', 'CV'].includes(key))
-            customer[newKey] = [customer[key].id]
-          else
-            customer[newKey] = customer[key];
-          if (!customer[newKey] || newKey !== key)
-            delete customer[key]
-        }
-      })
-    });
-    return staff
-  }
-
-  const getTaskDetails = async () => {
-    setEditMode(true)
-    const response = await TaskDetails(taskID)
-    if (!response.isSuccessful)
-      SetErrMessage(response.message)
-    else {
-      setEditInitValues(response.responseBody.data)
-      setIsLoading(false)
-      return response.responseBody.data
-    }
-  }
+  // useEffect( async () => {
+	// 	setField('isNextBtnDisabled',true)
+	// 	console.log('>>>>>>>>editMode****************************************************************',editMode)
+	// 	if (editMode) {
+	// 		const respone = await getCentertDetails()
+	// 		console.log('>>>>>>>>respone****************************************************************',respone)
+	// 		setField('CRNumber', respone.center.crNumber)
+	// 		setField('temporaryLicenceNum', respone.center.licenceNumber)
+	// 		setField('companyName', respone.center.crInfo_r.entityName)
+	// 		setField('activities', respone.center.crActivityType)
+	// 		setField('municipLicenseNo', respone.center.crInfo_r.MoMRA_Licence)
+	// 		setField('beneficiariesNum', respone.center.centerInfo_r.beneficiaryCount)
+	// 	}
+	// }, []);
 
   const onSubmit = async (values) => {
-    let response = null
-    if (!editMode) {
-      response = await createFinalLicenseAPIFunc(values);
-      handleClickOpen(` تم تقديم طلب ${response.responseBody.data.requestNumber} لإصدار الترخيص النهائي رقم ${values.temporaryLicenceNum} يرجى تسليم أصل الضمان البنكي إلى وكالة التأهيل والتوجيه الإجتماعي بوزارة الموارد البشرية والتنمية الإجتماعية لانهاء إجراءات الطلب خلال 3 أيام عمل`, '');
-    }
-    else
-      response = await updateFinalLicenseAPIFunc(values, taskID);
-    handleClickOpen(` تم تقديم طلب ${response.responseBody.data.requestNumber} لإصدار الترخيص النهائي رقم ${values.temporaryLicenceNum} يرجى تسليم أصل الضمان البنكي إلى وكالة التأهيل والتوجيه الإجتماعي بوزارة الموارد البشرية والتنمية الإجتماعية لانهاء إجراءات الطلب خلال 3 أيام عمل`, '');
+    console.log(JSON.stringify(values))
+    const response = await createFinalLicenseAPIFunc(values);
+    console.log(JSON.stringify(response));
+    handleClickOpen(` تم تقديم طلب ${values.temporaryLicenceNum} لإصدار الترخيص النهائي رقم ${response.responseBody.data.requestNumber} يرجى تسليم أصل الضمان البنكي إلى وكالة التأهيل والتوجيه الإجتماعي بوزارة الموارد البشرية والتنمية الإجتماعية لانهاء إجراءات الطلب خلال 3 أيام عمل`, '');
   };
 
   const handleClickOpen = (dialogContent, dialogTitle) => {
@@ -152,104 +135,46 @@ const CreateFinalLicense = () => {
         )}
 
         <CardContent>
-          {!isLoading ?
-            <>
-              {editMode &&
-                <Alert severity="error" style={{ position: 'fixed', color:'white', background: 'red', top: 50, right: 0, width: '100%', zIndex: 100, opacity: 0.8 }}>
-                  {editInitValues.chairmanComment.comment}
-                </Alert>
-              }
-              <FinalFromWizard
-                initialValues={!editMode ? {
-                  agree: [],
-                  isNextBtnDisabled: false,
-                  managersCount: 0,
-                  teachersCount: 0,
-                  beneficiariesNum: 0, ////////
-                }
-                  :
-                  {
-                    agree: [],
-                    isNextBtnDisabled: false,
-                    managersCount: 0,
-                    teachersCount: 0,
-                    CRNumber: editInitValues.center[0].crInfo_r.crNumber,
-                    temporaryLicenceNum: editInitValues.center[0].licenceNumber,
-                    companyName: editInitValues.center[0].crInfo_r.entityName,
-                    activities: editInitValues.center[0].crInfo_r.crActivityType,
-                    municipLicenseNo: editInitValues.center[0].crInfo_r.MoMRA_Licence,
-
-                    beneficiariesNum: editInitValues.center[0].centerInfo_r.beneficiaryCount, //////////////
-                    capacity: editInitValues.center[0].centerInfo_r.carryingnumber,
-                    financialGuarantee: `${editInitValues.center[0].centerInfo_r.financialGuarantee} ر.س.`,
-                    buildingArea: editInitValues.center[0].centerInfo_r.buildingArea,
-                    basementArea: editInitValues.center[0].centerInfo_r.basementArea,
-
-                    // OperationalPlan: [editInitValues.center[0].centerInfo_r.operationPlan.id],
-                    OperationalPlan: [12403],
-                    ExecutivePlan: [editInitValues.center[0].centerInfo_r.executivePlan.id],
-                    OfficeReport: [editInitValues.center[0].centerInfo_r.engineeringPlan.id],
-                    SecurityReport: [editInitValues.center[0].centerInfo_r.securityReport.id],
-                    // Furniture: editInitValues.center[0].centerInfo_r.carryingnumber,
-                    Furniture: [1202],
-                    FinancialGuaranteeAtt: [editInitValues.center[0].centerInfo_r.financialGuarbteeAtt.id],
+          <FinalFromWizard
+            initialValues={{
+              agree: [],
+              isNextBtnDisabled: false,
+              managersCount: 0,
+              teachersCount: 0,
+              beneficiariesNum: 0,
+              // centerParentType: response.responseBody.data.center.centerParentType
+            }}
+            onSubmit={onSubmit}
+          >
 
 
-                    healthServices: editInitValues.center[0].isHealthCareServices ? "yes" : "no",
-                    healthServiceType: editInitValues.center[0].healthCareServices_r.type,
-                    // healthServiceAttachment: editInitValues.center[0].centerInfo_r.financialGuarbteeAtt,
-                    healthServiceAttachment: [1202],
-                    customers: getStaff(editInitValues.staff),
-                  }
-                }
-                onSubmit={onSubmit}
-              >
+            <FinalFromWizardCenterDetailsPage centerLicenceNumber={centerLicenceNumber} validate={CenterDetailsValidation} temporaryLicenses = {temporaryLicenses} label="معلومات المركز">
 
-                <FinalFromWizardCenterDetailsPage
-                  centerLicenceNumber={centerLicenceNumber}
-                  validate={CenterDetailsValidation}
-                  temporaryLicenses={temporaryLicenses}
-                  editMode={editMode}
-                  setEditMode={setEditMode}
-                  label="معلومات المركز">
-                </FinalFromWizardCenterDetailsPage>
+            </FinalFromWizardCenterDetailsPage>
 
-                <FinalFromWizardCapacityPage
-                  validate={capacityValidation}
-                  editMode={editMode}
-                  label="الطاقة الإستعابية والضمان المالي">
-                </FinalFromWizardCapacityPage>
 
-                <FinalFromWizardRequirements
-                  nextFun={(values) => RequirementsValidation(values)}
-                  label="المتطلبات">
-                </FinalFromWizardRequirements>
 
-                <FinalFromWizardHealthServices
-                  nextFun={(values) => healthServicesValidation(values)}
-                  label="الخدمات الضحية"
-                  editMode={editMode}>
-                </FinalFromWizardHealthServices>
+            <FinalFromWizardCapacityPage  validate= {capacityValidation} label="الطاقة الإستعابية والضمان المالي">
 
-                <FinalFromWizardPersonsPage
-                  nextFun={(values) => personsValidation(values)}
-                  label="معلومات الكوادر"
-                  editMode={editMode}>
-                </FinalFromWizardPersonsPage>
+            </FinalFromWizardCapacityPage>
 
-                <FinalFromWizardSummary
-                  label="الملخص">
-                </FinalFromWizardSummary>
+            <FinalFromWizardRequirements  validate= {RequirementsValidation} label="المتطلبات">
 
-              </FinalFromWizard>
-            </>
-            :
-            <CircularProgress size="15rem" style={{
-              display: 'block',
-              marginLeft: 'auto',
-              marginRight: 'auto', color: '#E2E8EB'
-            }} />
-          }
+            </FinalFromWizardRequirements>
+
+    
+
+            <FinalFromWizardHealthServices   label="الخدمات الضحية"></FinalFromWizardHealthServices>
+      
+            <FinalFromWizardPersonsPage nextFun= {(values) =>personsValidation(values)} label="معلومات الكوادر">
+
+            </FinalFromWizardPersonsPage>
+
+<FinalFromWizardSummary label="الملخص">
+
+            </FinalFromWizardSummary>
+
+          </FinalFromWizard>
         </CardContent>
       </Card>
       <AlertDialog dialogContent={dialogContent} dialogTitle={dialogTitle} open={open} onClose={handleClose} acceptBtnName="تم" />

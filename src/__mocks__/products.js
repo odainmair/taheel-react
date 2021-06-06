@@ -39,7 +39,7 @@ export default [
     media: '/static/images/products/app.png',
     title: 'اصدار ترخيص نهائي لمركز تأهيل أهلي',
     url: '/services/finallicense',
-    isActive: true
+    isActive: false
   },
   {
     id: uuid(),
