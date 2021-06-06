@@ -22,13 +22,7 @@ const staffTypes = ["معلم تربية خاصة", "أخصائي اجتماعي
 staffTypes.map((staffType, index) => {
 	staffTypesNo[staffType] = index + 1
 })
-const createFinalLicenseAPIFunc = async (values) => {
-	var furnitures = []
-	values.Furniture.map((docId, index) => {
-		furnitures.push({ Document: { id: docId } })
-	})
-	return furnitures
-}
+
 const getStaff = (values) => {
 
 	const staffTypesNo = {}
