@@ -53,9 +53,6 @@ const CreateFinalLicense = () => {
     const getCentersRs = await getTempLicense(email)
     const { Centers } = getCentersRs.responseBody.data;
     SetTemporaryLicenses(Centers)
-
-  
-		
 		// if (editMode) {
 		// 	const respone = await getCentertDetails()
 		// 	setField('CRNumber', respone.center.crNumber)
@@ -133,7 +130,6 @@ const CreateFinalLicense = () => {
             {errMessage}
           </Alert>
         )}
-
         <CardContent>
           <FinalFromWizard
             initialValues={{
@@ -146,34 +142,12 @@ const CreateFinalLicense = () => {
             }}
             onSubmit={onSubmit}
           >
-
-
-            <FinalFromWizardCenterDetailsPage centerLicenceNumber={centerLicenceNumber} validate={CenterDetailsValidation} temporaryLicenses = {temporaryLicenses} label="معلومات المركز">
-
-            </FinalFromWizardCenterDetailsPage>
-
-
-
-            <FinalFromWizardCapacityPage  validate= {capacityValidation} label="الطاقة الإستعابية والضمان المالي">
-
-            </FinalFromWizardCapacityPage>
-
-            <FinalFromWizardRequirements  validate= {RequirementsValidation} label="المتطلبات">
-
-            </FinalFromWizardRequirements>
-
-    
-
-            <FinalFromWizardHealthServices   label="الخدمات الضحية"></FinalFromWizardHealthServices>
-      
-            <FinalFromWizardPersonsPage nextFun= {(values) =>personsValidation(values)} label="معلومات الكوادر">
-
-            </FinalFromWizardPersonsPage>
-
-<FinalFromWizardSummary label="الملخص">
-
-            </FinalFromWizardSummary>
-
+            <FinalFromWizardCenterDetailsPage centerLicenceNumber={centerLicenceNumber} validate={CenterDetailsValidation} temporaryLicenses = {temporaryLicenses} label="معلومات المركز"/>
+            <FinalFromWizardCapacityPage  validate= {capacityValidation} label="الطاقة الإستعابية والضمان المالي"/>
+            <FinalFromWizardRequirements  validate= {RequirementsValidation} label="المتطلبات"/>
+            <FinalFromWizardHealthServices   label="الخدمات الضحية"/>
+            <FinalFromWizardPersonsPage nextFun= {(values) =>personsValidation(values)} label="معلومات الكوادر"/>
+            <FinalFromWizardSummary label="الملخص"/>
           </FinalFromWizard>
         </CardContent>
       </Card>
