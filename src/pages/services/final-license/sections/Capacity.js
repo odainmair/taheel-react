@@ -13,16 +13,14 @@ import PropTypes from 'prop-types';
 import { TextField as TextFieldFinal, Select } from 'final-form-material-ui';
 import { calculation } from '../services/finalLicenseAPI'
 import { ContentField } from '../services/finalLicenseUtil'
-const Capacity = ({ Condition, values, setField }) => {
+const Capacity = ({ editMode, Condition, values, setField }) => {
 
-	const [companyDetails, setCompanyDetails] = useState({ Capacity: '', FinancialGuarantee: '' })
 	const [calculatedData, setCalculatedData] = useState(false)
 	const [errMessage, SetErrMessage] = useState('')
 	const [loading, setLoading] = useState(false)
 
 	useEffect(() => {
-		console.log('hiiiiiiiiiiiiii')
-		setField('isNextBtnDisabled',true)
+		setField('isNextBtnDisabled', true)
 	}, [values.isNextBtnDisabled]);
 
 	const calculate = async () => {
@@ -34,7 +32,7 @@ const Capacity = ({ Condition, values, setField }) => {
 			setCalculatedData(false)
 		}
 		else {
-			setField('isNextBtnDisabled',false)
+			setField('isNextBtnDisabled', false)
 			setField('capacity', response.responseBody.body.carryingCapacity.toFixed(0))
 			setField('financialGuarantee', `${response.responseBody.body.financialGuarantee.toFixed(3)} ر.س.`)
 			setCalculatedData(true)
@@ -146,7 +144,7 @@ const Capacity = ({ Condition, values, setField }) => {
 					md={12}
 					xs={12}
 				>
-					<Condition is={calculatedData}>
+					<Condition is={calculatedData || editMode}>
 						<Grid
 							container
 							spacing={3}
@@ -165,10 +163,8 @@ const Capacity = ({ Condition, values, setField }) => {
 									className="custom-label-field"
 								>
 									<Alert severity="info" size="small">
-									يتم حسابه من قبل المنصة:
+										يتم حسابه من قبل المنصة:
 										(مساحة مسطح البناء - مساحة القبو/10)
-										
-										{/* الحد الأقصى لكل المستفيدين 10% من مساحة مسطح البناء ناقص القبو حسب اللائحة التنفيذية */}
 									</Alert>
 								</Box>
 							</Grid>

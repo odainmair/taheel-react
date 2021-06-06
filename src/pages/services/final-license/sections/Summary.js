@@ -12,10 +12,8 @@ import {
     TableHead,
     TableRow,
     TableCell,
-    Button,
     IconButton,
 } from '@material-ui/core';
-import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 import { Field } from 'react-final-form';
 import { FieldArray } from "react-final-form-arrays";
 import PropTypes from 'prop-types';
@@ -32,7 +30,7 @@ import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 import Collapse from '@material-ui/core/Collapse';
 import { makeStyles } from '@material-ui/core/styles';
 
-const contentField = ({ input: { value, name }, label, type, inputType }) => (
+const contentField = ({ input: { value, name }, label, inputType }) => (
     <>
         <Typography gutterBottom variant="body2" color="textSecondary" component="p">
             {label}
@@ -50,7 +48,6 @@ const useRowStyles = makeStyles({
         },
     },
 });
-
 
 const termsLabel = (openDialog) => (
     <>
@@ -72,11 +69,6 @@ const getFieldValue = ({ name, value }) => {
     }
     return '';
 }
-const downloadFileFn = async (licenseNumber) => {
-    console.log("responseresponse", licenseNumber)
-    const downloadDoc = downloadDocument(licenseNumber, true)
-}
-
 
 const Summary = ({ values }) => {
 
@@ -101,7 +93,6 @@ const Summary = ({ values }) => {
         return (
             <>
                 <TableRow className={classes.root} key={name}>
-                    {console.log("fields", fields.value)}
 
                     <TableCell component="th" scope="row">
                         {name.fullName}
@@ -237,10 +228,7 @@ const Summary = ({ values }) => {
                         lg={6}
                         md={6}
                         xs={12}
-                    >
-
-
-                        {console.log('finalLicenseDetails', finalLicenseDetails)}
+                    >                        
                         <Field
                             label={filteredFinalLicense.label.ar}
                             name={filteredFinalLicense.name}
@@ -298,7 +286,6 @@ const Summary = ({ values }) => {
             <Grid
                 container
                 spacing={10}
-                // mt={3}
                 mb={3}
             >
                 {finalLicenseFieldSchema.filter(fintalLicense => fintalLicense.sectionName === "Requirements" && !fintalLicense.dependOn).map(filteredFinalLicense => (

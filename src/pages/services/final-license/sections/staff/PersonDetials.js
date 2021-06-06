@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Button,
   Grid,
@@ -32,6 +32,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { DownloadButtTable } from '../../services/finalLicenseUtil'
 import moment from 'moment-hijri';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import CancelIcon from '@material-ui/icons/Cancel';
 const useRowStyles = makeStyles({
   root: {
     '& > *': {
@@ -40,20 +41,12 @@ const useRowStyles = makeStyles({
   },
 });
 
-const Row = ({ SponsorName, setSponsorName, values, fromEdit, setFromEdit, fieldName, setFieldName, open, setOpen, setField, fields, name, index }) => {
+const Row = ({ editMode, SponsorName, setSponsorName, values, fromEdit, setFromEdit, fieldName, setFieldName, open, setOpen, setField, fields, name, index }) => {
   const classes = useRowStyles();
-  const [showen, setShowen] = React.useState(false)
+  const [showen, setShowen] = useState(false)
   const handleClickOpen = () => {
     setOpen(true);
   };
-  const downloadFileFn = async (licenseNumber) => {
-    console.log("responseresponse", licenseNumber)
-    const downloadDoc = downloadDocument(licenseNumber, true)
-  }
-
-
-
-
 
   return (
     <>
@@ -104,7 +97,6 @@ const Row = ({ SponsorName, setSponsorName, values, fromEdit, setFromEdit, field
           name={`${name}.nationality`}
           component={CustomTableCell}
         />
-
         {SponsorName &&
           <Field
             label="sponsorName"
@@ -189,7 +181,6 @@ const Row = ({ SponsorName, setSponsorName, values, fromEdit, setFromEdit, field
                   setField("day", "");
                   setField("month", "");
                   setField("year", "");
-
                 }}
               >
                 <DeleteForeverIcon />
@@ -253,7 +244,6 @@ const Row = ({ SponsorName, setSponsorName, values, fromEdit, setFromEdit, field
                 xs={12}
 
               >
-                {console.log('fields.value[index].staffTypes', fields.value[index].staffTypes)}
                 {['أخصائي علاج طبيعي', 'أخصائي علاج وظيفي', 'أخصائي نطق و تخاطب'].includes(fields.value[index].staffTypes) &&
                   < DownloadButtTable docIDs={fields.value[index].MedicalPractice} name={`${name}.MedicalPractice`} label='رخضة المزاولة' />
 
@@ -281,7 +271,6 @@ const managersCountComp = ({ }) => (
     <IconButton>
       <FieldArray name="customers">
         {({ fields }) => {
-          console.log(`fields`)
           let count = 0;
           if (fields.value) {
             count = fields.value.filter(customer => customer.staffTypes === "مدير").length
@@ -290,7 +279,7 @@ const managersCountComp = ({ }) => (
             if (count === 1) {
               return (<CheckCircleIcon style={{ color: '#04AA6D' }} />);
             } else
-              return (<CheckCircleIcon style={{ color: 'red' }} />);
+              return (<CancelIcon style={{ color: 'red' }} />);
           }
           return (<CheckCircleIcon style={{ color: 'gray' }} />);
         }}
@@ -304,7 +293,6 @@ const teachersCountComp = ({ maxValue }) => (
     <IconButton>
       <FieldArray name="customers">
         {({ fields }) => {
-          console.log(`fields`)
           let count = 0;
           if (fields.value) {
             count = fields.value.filter(customer => customer.staffTypes === "معلم تربية خاصة ").length
@@ -313,7 +301,7 @@ const teachersCountComp = ({ maxValue }) => (
             if ( maxValue/ 8 <= count) {
               return (<CheckCircleIcon style={{ color: '#04AA6D' }} />);
             } else
-              return (<CheckCircleIcon style={{ color: 'red' }} />);
+              return (<CancelIcon style={{ color: 'red' }} />);
           }
           return (<CheckCircleIcon style={{ color: 'gray' }} />);
         }}
@@ -350,6 +338,9 @@ const PersonDetials = ({ Condition, MedicalPracticeCondition, setField, pop, pus
   // }
 
 
+  useEffect(() => {
+    handleClickOpenInfo(`في حال مطالبة المركز لأخذ الترخيص للعمل في فترتين (صباحية و مسائية) فيجب مراعاة أن يتم توفير كوادر مختلفة لكل فترة" قبل ادخال الكادر`, '')
+  }, [])
 
 
   const handleClickOpenInfo = (dialogContent, dialogTitle) => {
@@ -364,7 +355,6 @@ const PersonDetials = ({ Condition, MedicalPracticeCondition, setField, pop, pus
   const handleClickOpen = () => {
     setOpen(true);
   };
-  // getMangersAcount()
   return (
     <Grid
       container
@@ -428,7 +418,6 @@ const PersonDetials = ({ Condition, MedicalPracticeCondition, setField, pop, pus
 
          (على الاقل 1 لكل 8 مستفيد من عدد المستفيدين المطلوب )`, '')}
             sx={{
-              // paddingBottom: '16px',
               textDecoration: 'underline',
               cursor: 'pointer',
             }}
@@ -444,9 +433,9 @@ const PersonDetials = ({ Condition, MedicalPracticeCondition, setField, pop, pus
           fullWidth
           endIcon={<AddIcon style={{ marginRight: 10 }} />}
           onClick={() => {
-            // setField("fullName", fullName);
             setFromEdit(false)
             setField("nationality", "")
+            setField("nationalityBtn", "")
             setField("idNumber", "");
             setField("iqamaNo", "");
             setField("day", "");
@@ -492,7 +481,7 @@ const PersonDetials = ({ Condition, MedicalPracticeCondition, setField, pop, pus
 
               <FieldArray name="customers">
                 {({ fields }) => fields.map((name, index) => (
-                  <Row managersCount={managersCount}  setManagersCount={setManagersCount} SponsorName={SponsorName} setSponsorName={setSponsorName} values={values} fromEdit={fromEdit} setFromEdit={setFromEdit} fieldName={fieldName} setFieldName={setFieldName} open={open} setOpen={setOpen} setField={setField} fields={fields} name={name} index={index} />
+                  <Row editMode={editMode} managersCount={managersCount} setManagersCount={setManagersCount} SponsorName={SponsorName} setSponsorName={setSponsorName} values={values} fromEdit={fromEdit} setFromEdit={setFromEdit} fieldName={fieldName} setFieldName={setFieldName} open={open} setOpen={setOpen} setField={setField} fields={fields} name={name} index={index} />
                 ))}
               </FieldArray>
 
@@ -513,8 +502,8 @@ const PersonDetials = ({ Condition, MedicalPracticeCondition, setField, pop, pus
         openPopup={open}
         setOpenPopup={setOpen}
         onClose={() => {
-          // setField("lastName", "");
           setField("nationality", "")
+          setField("nationalityBtn", "")
           setField("idNumber", "");
           setField("iqamaNo", "");
           setField("day", "");
@@ -539,7 +528,6 @@ const CustomTableCell = ({ input: { value, name }, label }) => (
   <>
     <TableCell component="th" scope="row">
       {value}
-      {/* {name === 'customers[3].idNumber' && !value? 4 : value} */}
     </TableCell>
   </>
 )

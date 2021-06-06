@@ -1,14 +1,10 @@
 /* eslint-disable no-unused-vars */
 import {
     Grid,
-    Alert
 } from '@material-ui/core';
 import { Field } from 'react-final-form';
 import { useState } from 'react';
 import FileUploader from 'src/components/FileUploader';
-import { uploadDocumentApi } from '../services/finalLicenseAPI'
-import { useContext } from 'react';
-import localContext from 'src/localContext';
 import { uploadDocument } from '../services/finalLicenseUtil'
 import PropTypes from 'prop-types';
 
@@ -71,13 +67,7 @@ const Requirements = ({ setField, values }) => {
                     md={12}
                     xs={12}
                 >
-                    {errMessage && (
-                        <Alert variant="outlined" severity="error">
-                            {errMessage}
-                        </Alert>
-                    )}
                 </Grid>
-
                 <Grid
                     item
                     md={6}
@@ -152,13 +142,11 @@ const Requirements = ({ setField, values }) => {
                     />
                 </Grid>
             </Grid>
-
         </>
     )
 };
 
 export default Requirements;
-
 Requirements.propTypes = {
     setField: PropTypes.func.isRequired,
     values: PropTypes.func.isRequired,

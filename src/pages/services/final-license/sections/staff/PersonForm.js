@@ -1,7 +1,6 @@
 /* eslint-disable */
 import React, { useEffect, useState } from 'react';
 import FileUploader from 'src/components/FileUploader';
-import moment from 'moment-hijri';
 import {
     Grid,
     MenuItem,
@@ -132,6 +131,19 @@ const PersonForm = ({ fromEdit, isSaudi, MedicalPracticeCondition, fieldName, se
                         {staffTypes.map((staff, index) =>
                             <MenuItem key={index} value={staff}>{staff}</MenuItem>
                         )}
+                        {/* {console.log('************************ values.healthServices ',values.healthServices )}
+                        {values.healthServices === "yes" ?
+                            <>
+                                {staffTypes.map((staff, index) =>
+                                    <MenuItem key={index} value={staff}>{staff}</MenuItem>
+                                )}
+                            </> :
+                            <>
+                                {staffTypes.filter( (staffType,index) => ![14, 13, 12, 11].includes(index)).map((filtered,index) =>
+                                    <MenuItem key={index} value={filtered}>{filtered}</MenuItem>
+                                )}
+                            </>
+                        } */}
 
                     </Field>
                 </Grid>
@@ -141,7 +153,6 @@ const PersonForm = ({ fromEdit, isSaudi, MedicalPracticeCondition, fieldName, se
                     md={6}
                     xs={12}
                 >
-
                     <Field
                         label="السيرة الذاتية"
                         name={fieldName === null ? "cv" : `${fieldName}.cv`}

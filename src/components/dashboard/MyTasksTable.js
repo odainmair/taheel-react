@@ -78,7 +78,7 @@ const MyTasksTable = (props) => {
 													component="span"
 													onClick={() => {
 														console.log("edit function");
-														navigate('/services/finallicense', { state: { centerLicenceNumber:request.centerLicenceNumber } });
+														navigate('/services/finallicense', { state: { centerLicenceNumber:request.centerLicenceNumber, taskID:request.ID} });
 													}}
 												>	
 													<VisibilityIcon />

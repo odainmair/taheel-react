@@ -10,7 +10,9 @@ import HealthServices from './sections/HealthServices';
 import PersonDetials from './sections/staff/PersonDetials';
 import Summary from './sections/Summary'
 import { createFinalLicenseAPIFunc } from './services/finalLicenseAPI'
+import { updateFinalLicenseAPIFunc } from './services/finalLicenseAPI'
 import { getTempLicense } from './services/finalLicenseAPI'
+import { TaskDetails } from './services/finalLicenseAPI'
 import {
   Box,
   Card,
@@ -18,6 +20,9 @@ import {
   CardHeader,
   Divider,
   Container,
+  Alert,
+  CircularProgress,
+  Grid,
 } from '@material-ui/core';
 import FinalFromWizard from '../../../components/wizard/FinalFormWizard';
 import AlertDialog from 'src/components/AlertDialog';
@@ -28,12 +33,13 @@ import { personsValidation } from './services/finalLicenseUtil'
 import { ConditionComp } from './services/finalLicenseUtil'
 import { MedicalPracticeComp } from './services/finalLicenseUtil'
 import { calculationConditionComp } from './services/finalLicenseUtil'
+import zIndex from '@material-ui/core/styles/zIndex';
 
 const CreateFinalLicense = () => {
-  const [temporaryLicenses, SetTemporaryLicenses] = React.useState([])
-  const [open, setOpen] = React.useState(false);
-  const [dialogContent, setDialogContent] = React.useState("");
-  const [dialogTitle, setDialogTitle] = React.useState("");
+  const [temporaryLicenses, SetTemporaryLicenses] = useState([])
+  const [open, setOpen] = useState(false);
+  const [dialogContent, setDialogContent] = useState("");
+  const [dialogTitle, setDialogTitle] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
   const centerLicenceNumber = location.state ? location.state.centerLicenceNumber : null;
@@ -115,8 +121,6 @@ const CreateFinalLicense = () => {
     setOpen(false);
     navigate('/app/dashboard', { replace: true });
   };
-
-  console.log('ttest');
   return (
     <Container maxWidth="md">
       <Card>
@@ -124,6 +128,12 @@ const CreateFinalLicense = () => {
           title="اصدار ترخيص نهائي لمركز تأهيل أهلي"
         />
         <Divider />
+        {errMessage && (
+          <Alert variant="outlined" severity="error">
+            {errMessage}
+          </Alert>
+        )}
+
         <CardContent>
           <FinalFromWizard
             initialValues={{
@@ -171,33 +181,8 @@ const CreateFinalLicense = () => {
     </Container>
   );
 };
-const FinalFromWizardPersonsPage = ({ label, validate, setField, pop, push, values }) => (
-  <Box>
-    <PersonDetials
-      MedicalPracticeCondition={MedicalPracticeComp}
-      Condition={ConditionComp}
-      setField={(fieldName, fieldValue) => setField(fieldName, fieldValue)}
-      pop={pop}
-      push={push}
-      values={values}
 
-    />
-  </Box>
-
-);
-
-const FinalFromWizardCapacityPage = ({ values, setField }) => (
-  <Box>
-    <Capacity
-      Condition={calculationConditionComp}
-      values={values}
-      setField={(fieldName, fieldValue) => setField(fieldName, fieldValue)}
-    />
-  </Box>
-
-);
-
-const FinalFromWizardCenterDetailsPage = ({ setField, temporaryLicenses, values, centerLicenceNumber }) => (
+const FinalFromWizardCenterDetailsPage = ({ setField, temporaryLicenses, editMode, setEditMode, values, centerLicenceNumber }) => (
   <Box>
     <CenterDetails
       Condition={calculationConditionComp}
@@ -205,12 +190,22 @@ const FinalFromWizardCenterDetailsPage = ({ setField, temporaryLicenses, values,
       centerLicenceNumber={centerLicenceNumber}
       temporaryLicenses={temporaryLicenses}
       setField={(fieldName, fieldValue) => setField(fieldName, fieldValue)}
-
+      editMode={editMode}
+      setEditMode={setEditMode}
     />
   </Box>
-
 );
 
+const FinalFromWizardCapacityPage = ({ editMode, values, setField }) => (
+  <Box>
+    <Capacity
+      Condition={calculationConditionComp}
+      values={values}
+      setField={(fieldName, fieldValue) => setField(fieldName, fieldValue)}
+      editMode={editMode}
+    />
+  </Box>
+);
 
 const FinalFromWizardRequirements = ({ setField, temporaryLicenses, values }) => (
   <Box>
@@ -219,35 +214,44 @@ const FinalFromWizardRequirements = ({ setField, temporaryLicenses, values }) =>
       values={values}
       temporaryLicenses={temporaryLicenses}
       setField={(fieldName, fieldValue) => setField(fieldName, fieldValue)}
-
     />
   </Box>
 )
 
-const FinalFromWizardHealthServices = ({ setField, temporaryLicenses, values }) => (
+const FinalFromWizardHealthServices = ({ editMode, setField, temporaryLicenses, values }) => (
   <Box>
     <HealthServices
       Condition={ConditionComp}
       values={values}
       temporaryLicenses={temporaryLicenses}
       setField={(fieldName, fieldValue) => setField(fieldName, fieldValue)}
-
+      editMode={editMode}
     />
   </Box>
+);
 
+const FinalFromWizardPersonsPage = ({ editMode, label, validate, setField, pop, push, values }) => (
+  <Box>
+    <PersonDetials
+      MedicalPracticeCondition={MedicalPracticeComp}
+      Condition={ConditionComp}
+      setField={(fieldName, fieldValue) => setField(fieldName, fieldValue)}
+      pop={pop}
+      push={push}
+      values={values}
+      editMode={editMode}
+    />
+  </Box>
 );
 
 const FinalFromWizardSummary = ({ setField, temporaryLicenses, values }) => (
   <Box>
     <Summary
-      // dialog={handleClickOpen}
       values={values}
       temporaryLicenses={temporaryLicenses}
       setField={(fieldName, fieldValue) => setField(fieldName, fieldValue)}
-
     />
   </Box>
-
 );
 
 export default CreateFinalLicense;
