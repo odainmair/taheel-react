@@ -57,8 +57,6 @@ const HealthServices = ({ Condition, values, setField }) => {
               control={<Field name="healthServices" component={Radio} type="radio" value="no" />}
             />
           </RadioGroup>
-
-
         </Grid>
         <Condition when='healthServices' is='yes' >
           <Grid
@@ -90,14 +88,12 @@ const HealthServices = ({ Condition, values, setField }) => {
           >
             <Field
               label={values.healthServiceType ? values.healthServiceType === 1 ? 'ارفاق رخصة وزارة الصحة' : 'ارفاق عقد الشراكة' : 'ارفاق الخدمة الصحية'}
-
               name="healthServiceAttachment"
               component={FileUploaderComp}
               inputType={false}
               setField={setField}
               values={values}
             />
-
           </Grid>
         </Condition>
       </Grid>

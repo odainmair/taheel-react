@@ -15,30 +15,29 @@ import { calculation } from '../services/finalLicenseAPI'
 import { ContentField } from '../services/finalLicenseUtil'
 const Capacity = ({ editMode, Condition, values, setField }) => {
 
-	const [calculatedData, setCalculatedData] = useState(false)
-	const [errMessage, SetErrMessage] = useState('')
-	const [loading, setLoading] = useState(false)
+	const [calculatedData, setCalculatedData] = useState(false);
+	const [errMessage, SetErrMessage] = useState('');
+	const [loading, setLoading] = useState(false);
 
 	useEffect(() => {
 		setField('isNextBtnDisabled', true)
-	}, [values.isNextBtnDisabled]);
+	}, []);
 
 	const calculate = async () => {
-		setLoading(true)
-
-		const response = await calculation(values.buildingArea, values.basementArea)
+		setLoading(true);
+		SetErrMessage('');
+		const response = await calculation(values.buildingArea, values.basementArea);
 		if (!response.isSuccessful) {
-			SetErrMessage(response.message)
-			setCalculatedData(false)
+			SetErrMessage(response.message);
+			setCalculatedData(false);
 		}
 		else {
-			setField('isNextBtnDisabled', false)
-			setField('capacity', response.responseBody.body.carryingCapacity.toFixed(0))
-			setField('financialGuarantee', `${response.responseBody.body.financialGuarantee.toFixed(3)} ر.س.`)
-			setCalculatedData(true)
-			SetErrMessage('')
+			setField('capacity', response.responseBody.body.carryingCapacity.toFixed(0));
+			setField('financialGuarantee', `${response.responseBody.body.financialGuarantee.toFixed(3)} ر.س.`);
+			setCalculatedData(true);
+		
 		}
-		setLoading(false)
+		setLoading(false);
 	}
 
 	return (
@@ -186,10 +185,8 @@ const Capacity = ({ editMode, Condition, values, setField }) => {
 								</Box>
 							</Grid>
 						</Grid>
-
 					</Condition>
 				</Grid>
-
 			</Grid>
 		</>
 	)

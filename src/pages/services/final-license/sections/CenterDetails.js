@@ -19,44 +19,50 @@ import { ContentField } from '../services/finalLicenseUtil'
 const CenterDetails = ({ editMode, setEditMode, Condition, values, temporaryLicenses, setField, setIsEnableNextBtn}) => {
   const [loading, setLoading] = useState(false)
   const [checkData, setCheckData] = useState(false)
-  const [errMessage, SetErrMessage] = useState('')
+  const [errMessage, setErrMessage] = useState('')
 
-  const check = async () => {
-    setLoading(true)
-    await getMunicipalLicenseNo()
-    await getCentertDetails()
-    const response = await validateCompanyFunc(values.CRNumber)
-    if (!response.isSuccessful) {
+  const checkLicenseCert = async () => {
+    setLoading(true);
+    setErrMessage('');
+    const  getMunicipalLicenseRs= await getMunicipalLicenseNoApi(values.CRNumber);
+    if (!getMunicipalLicenseRs.isSuccessful){
+      setErrMessage(response.message);
+      return;
+    }
+    setField('municipLicenseNo', getMunicipalLicenseRs.responseBody.MomraLicense);
 
-      SetErrMessage(response.message)
-      setCheckData(false)
+    const  isSuccessgetCentertDetailsRs = await  getCentertDetails();
+    if (!isSuccessgetCentertDetailsRs)
+      return;
+
+
+    const validateCompanyRs = await validateCompanyFunc(values.CRNumber)
+    if (!validateCompanyRs.isSuccessful) {
+
+      setErrMessage(validateCompanyRs.message);
+      setCheckData(false);
+    } else {
+      const {CRName,Activities,IssueDate,ExpiryDate} = validateCompanyRs.responseBody.data;
+      setField('companyName', CRName);
+      setField('activities', Activities);
+      setField('crIssueDate', IssueDate);
+      setField('crExpirationDate', ExpiryDate);
+      setCheckData(true);
+      setIsEnableNextBtn(true);
+     
     }
-    else {
-      setField('companyName', response.responseBody.data.CRName)
-      setField('activities', response.responseBody.data.Activities)
-      setField('crIssueDate', response.responseBody.data.IssueDate)
-      setField('crExpirationDate', response.responseBody.data.ExpiryDate)
-      setCheckData(true)
-      SetErrMessage('')
-    }
-    setIsEnableNextBtn(true);
-    setLoading(false)
+ 
+    setLoading(false);
   }
 
-  const getMunicipalLicenseNo = async () => {
-    const response = await getMunicipalLicenseNoApi(values.CRNumber)
-    if (!response.isSuccessful)
-      SetErrMessage(response.message)
-    else
-      setField('municipLicenseNo', response.responseBody.MomraLicense)
-  }
 
   const getCentertDetails = async () => {
     if (values.temporaryLicenceNum) {
       const response = await CentertDetails(values.temporaryLicenceNum)
-      if (!response.isSuccessful)
-        SetErrMessage(response.message)
-      else {
+      if (!response.isSuccessful){
+        setErrMessage(response.message)
+        return false;
+      } else {
         setField('centerParentType', response.responseBody.data.center.centerParentType)
         setField('centerFirstSubType', response.responseBody.data.center.centerFirstSubType)
         setField('centerSecondSubType', response.responseBody.data.center.centerSecondSubType)
@@ -66,7 +72,7 @@ const CenterDetails = ({ editMode, setEditMode, Condition, values, temporaryLice
           setField('healthCareServices_r', response.responseBody.data.center.healthCareServices_r.ID)
         }
         // setField('healthCareServices_r', response.responseBody.data.center.healthCareServices_r)
-        return response.responseBody.data
+        return true;
       }
     }
   }
@@ -162,7 +168,7 @@ const CenterDetails = ({ editMode, setEditMode, Condition, values, temporaryLice
                 color: 'white',
               }
             }}
-            onClick={check}
+            onClick={checkLicenseCert}
           >
             تحقق
           </Button>
