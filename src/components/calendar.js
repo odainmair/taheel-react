@@ -8,7 +8,7 @@ import {
 } from '@material-ui/core';
 
 
-const Calendar = ({ FeiledWidth, fieldName  }) => {
+const Calendar = ({ FeiledWidth, fieldName }) => {
     const calendar = {
         days: [],
         months: [],
@@ -31,13 +31,13 @@ const Calendar = ({ FeiledWidth, fieldName  }) => {
                 mt={4}
                 spacing={1}
             > */}
-                 {/* <Grid
+            {/* <Grid
               item
               md={6}
               xs={12}
             //   mx={50}
             > */}
-              {/* <Typography> تاريخ الميلاد</Typography> */}
+            {/* <Typography> تاريخ الميلاد</Typography> */}
             {/* </Grid> */}
             <Grid
                 item
@@ -103,7 +103,6 @@ const Calendar = ({ FeiledWidth, fieldName  }) => {
                     {calendar.years.map((year, index) => <MenuItem key={index} value={year}>{year}</MenuItem>)}
                 </Field>
             </Grid>
-            {/* </Grid> */}
         </>
     )
 }
@@ -111,6 +110,6 @@ const Calendar = ({ FeiledWidth, fieldName  }) => {
 
 export default Calendar
 Calendar.propTypes = {
-    FeiledWidth: PropTypes.func.isRequired,
-    fieldName : PropTypes.func.isRequired,
+    FeiledWidth: PropTypes.number.isRequired,
+    fieldName: PropTypes.object,
 };

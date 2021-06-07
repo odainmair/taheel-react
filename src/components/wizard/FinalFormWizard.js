@@ -116,7 +116,7 @@ export default class FinalFromWizard extends React.Component {
             <form onSubmit={handleSubmit} autoComplete="off" noValidate>
               <Stepper className="custom-wizard" alternativeLabel activeStep={page}>
                 {childrenArray.map((child, index) => (
-                  <Step key={child.props.label} completed={page > index || completed}>
+                  <Step key={child.props.label||index} completed={page > index || completed}>
                     <StepLabel>{child.props.label}</StepLabel>
                   </Step>
                 ))}
