@@ -16,7 +16,7 @@ import { getMunicipalLicenseNoApi } from '../services/finalLicenseAPI'
 import { CentertDetails } from '../services/finalLicenseAPI'
 import { ContentField } from '../services/finalLicenseUtil'
 
-const CenterDetails = ({ editMode, setEditMode, Condition, values, temporaryLicenses, setField, setIsEnableNextBtn}) => {
+const CenterDetails = ({ editMode, setEditMode, Condition, values, temporaryLicenses, setField, setIsEnableNextBtn }) => {
   const [loading, setLoading] = useState(false)
   const [checkData, setCheckData] = useState(false)
   const [errMessage, setErrMessage] = useState('')
@@ -24,16 +24,20 @@ const CenterDetails = ({ editMode, setEditMode, Condition, values, temporaryLice
   const checkLicenseCert = async () => {
     setLoading(true);
     setErrMessage('');
-    const  getMunicipalLicenseRs= await getMunicipalLicenseNoApi(values.CRNumber);
-    if (!getMunicipalLicenseRs.isSuccessful){
-      setErrMessage(response.message);
+    const getMunicipalLicenseRs = await getMunicipalLicenseNoApi(values.CRNumber);
+    if (!getMunicipalLicenseRs.isSuccessful) {
+      setErrMessage(getMunicipalLicenseRs.message);
+      setLoading(false);
       return;
     }
     setField('municipLicenseNo', getMunicipalLicenseRs.responseBody.MomraLicense);
 
-    const  isSuccessgetCentertDetailsRs = await  getCentertDetails();
-    if (!isSuccessgetCentertDetailsRs)
+    const isSuccessgetCentertDetailsRs = await getCentertDetails();
+    if (!isSuccessgetCentertDetailsRs) {
+      setLoading(false);
       return;
+    }
+
 
 
     const validateCompanyRs = await validateCompanyFunc(values.CRNumber)
@@ -42,16 +46,16 @@ const CenterDetails = ({ editMode, setEditMode, Condition, values, temporaryLice
       setErrMessage(validateCompanyRs.message);
       setCheckData(false);
     } else {
-      const {CRName,Activities,IssueDate,ExpiryDate} = validateCompanyRs.responseBody.data;
+      const { CRName, Activities, IssueDate, ExpiryDate } = validateCompanyRs.responseBody.data;
       setField('companyName', CRName);
       setField('activities', Activities);
       setField('crIssueDate', IssueDate);
       setField('crExpirationDate', ExpiryDate);
       setCheckData(true);
       setIsEnableNextBtn(true);
-     
+
     }
- 
+
     setLoading(false);
   }
 
@@ -59,7 +63,7 @@ const CenterDetails = ({ editMode, setEditMode, Condition, values, temporaryLice
   const getCentertDetails = async () => {
     if (values.temporaryLicenceNum) {
       const response = await CentertDetails(values.temporaryLicenceNum)
-      if (!response.isSuccessful){
+      if (!response.isSuccessful) {
         setErrMessage(response.message)
         return false;
       } else {

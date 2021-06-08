@@ -109,7 +109,7 @@ const Login = (props) => {
                 navigate('/otplogin', { state: { otp, requestBody } });
               } else {
 
-                setError('كلمة المرور / اسم المستخدم غير صحيح  ')
+                setError('كلمة المرور او رقم الإقامه او رقم الهوية او البريد الالكتروني غير صحيح')
 
               }
             }}

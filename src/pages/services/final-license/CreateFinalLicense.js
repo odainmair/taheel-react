@@ -39,7 +39,7 @@ import zIndex from '@material-ui/core/styles/zIndex';
 const CreateFinalLicense = () => {
   const [temporaryLicenses, SetTemporaryLicenses] = useState([])
   const [open, setOpen] = useState(false);
-  const [isEnableNextBtn, setIsEnableNextBtn] = useState(false);
+  const [isEnableNextBtn, setIsEnableNextBtn] = useState(true);
   const [dialogContent, setDialogContent] = useState("");
   const [dialogTitle, setDialogTitle] = useState("");
   const navigate = useNavigate();
@@ -171,6 +171,7 @@ const CreateFinalLicense = () => {
                 <FinalFromWizardCapacityPage
                   validate={capacityValidation}
                   editMode={editMode}
+                  setIsEnableNextBtn={(isEnable)=>setIsEnableNextBtn(isEnable)}
                   label="الطاقة الإستعابية والضمان المالي" />
                 <FinalFromWizardRequirements
                   nextFun={(values) => RequirementsValidation(values)}
@@ -223,12 +224,13 @@ const FinalFromWizardCenterDetailsPage = ({
   </>
 );
 
-const FinalFromWizardCapacityPage = ({ editMode, values, setField }) => (
+const FinalFromWizardCapacityPage = ({ editMode, values, setField, setIsEnableNextBtn }) => (
   <>
     <Capacity
       Condition={calculationConditionComp}
       values={values}
       setField={(fieldName, fieldValue) => setField(fieldName, fieldValue)}
+      setIsEnableNextBtn={(isEnable)=>setIsEnableNextBtn(isEnable)}
       editMode={editMode}
     />
   </>

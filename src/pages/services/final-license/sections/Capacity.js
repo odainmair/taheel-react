@@ -13,14 +13,14 @@ import PropTypes from 'prop-types';
 import { TextField as TextFieldFinal, Select } from 'final-form-material-ui';
 import { calculation } from '../services/finalLicenseAPI'
 import { ContentField } from '../services/finalLicenseUtil'
-const Capacity = ({ editMode, Condition, values, setField }) => {
+const Capacity = ({ editMode, Condition, values, setField, setIsEnableNextBtn }) => {
 
 	const [calculatedData, setCalculatedData] = useState(false);
 	const [errMessage, SetErrMessage] = useState('');
 	const [loading, setLoading] = useState(false);
 
 	useEffect(() => {
-		setField('isNextBtnDisabled', true)
+		setIsEnableNextBtn(false);
 	}, []);
 
 	const calculate = async () => {
@@ -35,6 +35,7 @@ const Capacity = ({ editMode, Condition, values, setField }) => {
 			setField('capacity', response.responseBody.body.carryingCapacity.toFixed(0));
 			setField('financialGuarantee', `${response.responseBody.body.financialGuarantee.toFixed(3)} ر.س.`);
 			setCalculatedData(true);
+			setIsEnableNextBtn(true);
 		
 		}
 		setLoading(false);
@@ -196,6 +197,7 @@ export default Capacity;
 
 Capacity.propTypes = {
 	Condition: PropTypes.func.isRequired,
-	values: PropTypes.func.isRequired,
+	values: PropTypes.object.isRequired,
 	setField: PropTypes.func.isRequired,
+	setIsEnableNextBtn: PropTypes.func.isRequired,
 };
