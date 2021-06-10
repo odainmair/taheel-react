@@ -7,14 +7,15 @@ import {
 } from '@material-ui/core';
 import { Field } from 'react-final-form';
 import { TextField as TextFieldFinal, Select } from 'final-form-material-ui';
-import { uploadDocument } from '../../services/finalLicenseUtil'
+import FileUploaderComp from '../../components/FileUploader';
 import { useContext } from 'react';
 import localContext from 'src/localContext';
 
-const PersonForm = ({ fromEdit, isSaudi, MedicalPracticeCondition, fieldName, setField, pop, push, values, Condition, citizenInfo }) => {
+const PersonForm = ({ fromEdit, isSaudi, MedicalPracticeCondition, fieldName, setField, pop, push, values, Condition, citizenInfo,rowIndex}) => {
 
   const { documents, SetDocuments } = useContext(localContext);
   useEffect(() => {
+    console.log(`-- PersonForm rowIndex ${rowIndex}`);
     setField('fullName', isSaudi || fromEdit ? `${citizenInfo.Name.FirstName} ${citizenInfo.Name.LastName}` : `${citizenInfo.NameT.FirstName} ${citizenInfo.NameT.LastName}`)
     setField('gender', citizenInfo.Gender === 'F' ? 'انثى' : "ذكر")
     setField('birthDate', isSaudi || fromEdit ? citizenInfo.BirthDateH : citizenInfo.BirthDate.HijriDate)
@@ -26,20 +27,14 @@ const PersonForm = ({ fromEdit, isSaudi, MedicalPracticeCondition, fieldName, se
   }, [])
 
   const setDocument = (name, docID, multiple) => {
-    setField(name, [docID])
+    if (!multiple)
+      setField(name, [docID])
+    else {
+      multipleDocs.push(docID)
+      setField(name, multipleDocs)
+    }
   }
-  const FileUploaderComp = ({ input: { value, name }, label, inputType, values, setField }) => (
-    <>
-      <FileUploader
-        handleFile={(file, setLoading) => uploadDocument(setDocument, name, file, inputType, setLoading)}
-        label={label}
-        name={name}
-        inputType={inputType}
-        setField={setField}
-        values={values}
-      />
-    </>
-  )
+
   const staffTypes = ["معلم تربية خاصة", "أخصائي اجتماعي", "مراقب اجتماعي", "حارس", "عامل تنظيفات", "مشرف فني عام", "اخصائي نفسي و توجيه اجتماعي", "عامل رعاية شخصية", "مدير", "سائق", "مرافق سائق", "أخصائي علاج طبيعي", "أخصائي علاج وظيفي", "أخصائي نطق و تخاطب", "ممرض"]
   return (
     <>
@@ -130,21 +125,7 @@ const PersonForm = ({ fromEdit, isSaudi, MedicalPracticeCondition, fieldName, se
           >
             {staffTypes.map((staff, index) =>
               <MenuItem key={index} value={staff}>{staff}</MenuItem>
-            )}
-            {/* {console.log('************************ values.healthServices ',values.healthServices )}
-                        {values.healthServices === "yes" ?
-                            <>
-                                {staffTypes.map((staff, index) =>
-                                    <MenuItem key={index} value={staff}>{staff}</MenuItem>
-                                )}
-                            </> :
-                            <>
-                                {staffTypes.filter( (staffType,index) => ![14, 13, 12, 11].includes(index)).map((filtered,index) =>
-                                    <MenuItem key={index} value={filtered}>{filtered}</MenuItem>
-                                )}
-                            </>
-                        } */}
-
+            )}     
           </Field>
         </Grid>
 
@@ -160,6 +141,7 @@ const PersonForm = ({ fromEdit, isSaudi, MedicalPracticeCondition, fieldName, se
             inputType={false}
             setField={setField}
             values={values}
+            rowIndex={rowIndex}
           />
         </Grid>
 
@@ -174,7 +156,9 @@ const PersonForm = ({ fromEdit, isSaudi, MedicalPracticeCondition, fieldName, se
             component={FileUploaderComp}
             inputType={false}
             setField={setField}
+            setDocument={setDocument}
             values={values}
+            rowIndex={rowIndex}
           />
         </Grid>
 
@@ -190,7 +174,9 @@ const PersonForm = ({ fromEdit, isSaudi, MedicalPracticeCondition, fieldName, se
               component={FileUploaderComp}
               inputType={false}
               setField={setField}
+              setDocument={setDocument}
               values={values}
+              rowIndex={rowIndex}
             />
           </Grid>
         </MedicalPracticeCondition>

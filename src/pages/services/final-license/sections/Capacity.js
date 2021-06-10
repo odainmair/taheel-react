@@ -20,14 +20,35 @@ const Capacity = ({ editMode, Condition, values, setField, setIsEnableNextBtn })
 	const [loading, setLoading] = useState(false);
 
 	useEffect(() => {
-		setIsEnableNextBtn(false);
+		if (values.capacity) {
+			setIsEnableNextBtn(true);
+			setCalculatedData(true);
+		} else {
+			setIsEnableNextBtn(false);
+		}
 	}, []);
 
 	const calculate = async () => {
 		setLoading(true);
 		SetErrMessage('');
+		if (!values.beneficiariesNum && values.beneficiariesNum === 0) {
+      SetErrMessage('يرجى ادخال عدد المستفيدين الفعلي');
+      setLoading(false);
+      return;
+    }
+		if (!values.buildingArea) {
+      SetErrMessage('يرجى ادخال مساحة مسطح البناء');
+      setLoading(false);
+      return;
+    }
+		if (!values.basementArea) {
+      SetErrMessage('يرجى ادخال مساحة القبو');
+      setLoading(false);
+      return;
+    }
 		const response = await calculation(values.buildingArea, values.basementArea);
 		if (!response.isSuccessful) {
+			setIsEnableNextBtn(false);
 			SetErrMessage(response.message);
 			setCalculatedData(false);
 		}
@@ -36,7 +57,7 @@ const Capacity = ({ editMode, Condition, values, setField, setIsEnableNextBtn })
 			setField('financialGuarantee', `${response.responseBody.body.financialGuarantee.toFixed(3)} ر.س.`);
 			setCalculatedData(true);
 			setIsEnableNextBtn(true);
-		
+
 		}
 		setLoading(false);
 	}
@@ -71,7 +92,7 @@ const Capacity = ({ editMode, Condition, values, setField, setIsEnableNextBtn })
 						required
 						name="beneficiariesNum"
 						component={TextFieldFinal}
-						type="text"
+						type="number"
 						variant="outlined"
 						dir="rtl"
 						className="custom-field"
@@ -89,7 +110,7 @@ const Capacity = ({ editMode, Condition, values, setField, setIsEnableNextBtn })
 						label="مساحة مسطح البناء"
 						name="buildingArea"
 						component={TextFieldFinal}
-						type="text"
+						type="number"
 						variant="outlined"
 						dir="rtl"
 						className="custom-field"
@@ -107,7 +128,7 @@ const Capacity = ({ editMode, Condition, values, setField, setIsEnableNextBtn })
 						label="مساحة القبو"
 						name="basementArea"
 						component={TextFieldFinal}
-						type="text"
+						type="number"
 						variant="outlined"
 						dir="rtl"
 						className="custom-field"

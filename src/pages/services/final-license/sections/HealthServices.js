@@ -1,38 +1,31 @@
 /* eslint-disable no-unused-vars */
 import {
   Grid,
-  Typography,
   RadioGroup,
+  FormLabel,
+  FormControl,
   FormControlLabel,
+  FormHelperText,
   MenuItem,
 } from '@material-ui/core';
 import { Field } from 'react-final-form';
 import { Radio, Select } from 'final-form-material-ui';
 import PropTypes from 'prop-types';
-import { useContext } from 'react';
-import { uploadDocument } from '../services/finalLicenseUtil'
-import localContext from 'src/localContext';
-import FileUploader from 'src/components/FileUploader';
+import FileUploaderComp from '../components/FileUploader';
+
 
 
 const HealthServices = ({ Condition, values, setField }) => {
-  const setDocument = (name, docID) => {
-    setField(name, [docID])
+
+  var multipleDocs = []
+  const setDocument = (name, docID, multiple) => {
+    if (!multiple)
+      setField(name, [docID])
+    else {
+      multipleDocs.push(docID)
+      setField(name, multipleDocs)
+    }
   }
-
-  const FileUploaderComp = ({ input: { value, name }, label, inputType }) => (
-    <>
-      <FileUploader
-        handleFile={(file, setLoading) => uploadDocument(setDocument, name, file, inputType, setLoading)}
-        label={label}
-        name={name}
-        inputType={inputType}
-        setField={setField}
-        values={values}
-      />
-    </>
-  )
-
   return (
     <>
       <Grid
@@ -46,17 +39,27 @@ const HealthServices = ({ Condition, values, setField }) => {
           md={12}
           xs={12}
         >
-          <Typography> هل المركز يقدم خدمات صحية؟</Typography>
-          <RadioGroup >
-            <FormControlLabel
-              label="نعم"
-              control={<Field name="healthServices" component={Radio} type="radio" value="yes" />}
-            />
-            <FormControlLabel
-              label="لا"
-              control={<Field name="healthServices" component={Radio} type="radio" value="no" />}
-            />
-          </RadioGroup>
+          <Field name="healthServices" >
+            {({ input, meta }) => {
+              const showError = ((meta.submitError && !meta.dirtySinceLastSubmit) || meta.error) && meta.touched; return ( // eslint-disable-line no-unused-vars
+
+                <FormControl component="fieldset" error={showError ? meta.error || meta.submitError : undefined} required>
+                  <FormLabel component="legend">هل المركز يقدم خدمات صحية؟</FormLabel>
+                  <RadioGroup >
+                    <FormControlLabel
+                      label="نعم"
+                      control={<Field name="healthServices" component={Radio} type="radio" value="yes" />}
+                    />
+                    <FormControlLabel
+                      label="لا"
+                      control={<Field name="healthServices" component={Radio} type="radio" value="no" />}
+                    />
+                  </RadioGroup>
+                  {showError && <FormHelperText dir="rtl">{showError ? meta.error || meta.submitError : undefined}</FormHelperText>}
+                </FormControl>
+              )
+            }}
+          </Field>
         </Grid>
         <Condition when='healthServices' is='yes' >
           <Grid
@@ -92,6 +95,7 @@ const HealthServices = ({ Condition, values, setField }) => {
               component={FileUploaderComp}
               inputType={false}
               setField={setField}
+              setDocument={setDocument}
               values={values}
             />
           </Grid>

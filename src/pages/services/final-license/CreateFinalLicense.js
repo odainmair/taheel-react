@@ -39,7 +39,7 @@ import zIndex from '@material-ui/core/styles/zIndex';
 const CreateFinalLicense = () => {
   const [temporaryLicenses, SetTemporaryLicenses] = useState([])
   const [open, setOpen] = useState(false);
-  const [isEnableNextBtn, setIsEnableNextBtn] = useState(true);
+  const [isEnableNextBtn, setIsEnableNextBtn] = useState(false);
   const [dialogContent, setDialogContent] = useState("");
   const [dialogTitle, setDialogTitle] = useState("");
   const navigate = useNavigate();
@@ -160,24 +160,25 @@ const CreateFinalLicense = () => {
                 isEnableNextBtn={isEnableNextBtn}
                 onSubmit={onSubmit}
               >
+
                 <FinalFromWizardCenterDetailsPage
                   centerLicenceNumber={centerLicenceNumber}
                   validate={CenterDetailsValidation}
                   temporaryLicenses={temporaryLicenses}
                   editMode={editMode}
                   setEditMode={setEditMode}
-                  setIsEnableNextBtn={(isEnable)=>setIsEnableNextBtn(isEnable)}
+                  setIsEnableNextBtn={(isEnable) => setIsEnableNextBtn(isEnable)}
                   label="معلومات المركز" />
                 <FinalFromWizardCapacityPage
                   validate={capacityValidation}
                   editMode={editMode}
-                  setIsEnableNextBtn={(isEnable)=>setIsEnableNextBtn(isEnable)}
+                  setIsEnableNextBtn={(isEnable) => setIsEnableNextBtn(isEnable)}
                   label="الطاقة الإستعابية والضمان المالي" />
                 <FinalFromWizardRequirements
-                  nextFun={(values) => RequirementsValidation(values)}
+                  validate={(values) => RequirementsValidation(values)}
                   label="المتطلبات" />
                 <FinalFromWizardHealthServices
-                  nextFun={(values) => healthServicesValidation(values)}
+                  validate={(values) => healthServicesValidation(values)}
                   label="الخدمات الضحية"
                   editMode={editMode} />
                 <FinalFromWizardPersonsPage
@@ -202,12 +203,12 @@ const CreateFinalLicense = () => {
   );
 };
 
-const FinalFromWizardCenterDetailsPage = ({ 
-  setField, 
-  temporaryLicenses, 
-  editMode, 
-  setEditMode, 
-  values, 
+const FinalFromWizardCenterDetailsPage = ({
+  setField,
+  temporaryLicenses,
+  editMode,
+  setEditMode,
+  values,
   centerLicenceNumber,
   setIsEnableNextBtn }) => (
   <>
@@ -218,7 +219,7 @@ const FinalFromWizardCenterDetailsPage = ({
       temporaryLicenses={temporaryLicenses}
       setField={(fieldName, fieldValue) => setField(fieldName, fieldValue)}
       editMode={editMode}
-      setIsEnableNextBtn={(isEnable)=>setIsEnableNextBtn(isEnable)}
+      setIsEnableNextBtn={(isEnable) => setIsEnableNextBtn(isEnable)}
       setEditMode={setEditMode}
     />
   </>
@@ -230,7 +231,7 @@ const FinalFromWizardCapacityPage = ({ editMode, values, setField, setIsEnableNe
       Condition={calculationConditionComp}
       values={values}
       setField={(fieldName, fieldValue) => setField(fieldName, fieldValue)}
-      setIsEnableNextBtn={(isEnable)=>setIsEnableNextBtn(isEnable)}
+      setIsEnableNextBtn={(isEnable) => setIsEnableNextBtn(isEnable)}
       editMode={editMode}
     />
   </>

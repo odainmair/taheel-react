@@ -4,19 +4,21 @@ import { TextField, InputAdornment, Typography, CircularProgress } from '@materi
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import { uploadDocumentApi } from 'src/pages/services/final-license/services/finalLicenseAPI'
 
-const FileUploader = ({ handleFile, name, label, inputType, fileName }) => {
-  const [loading, setLoading] = React.useState(false)
+const FileUploader = ({ handleFile, name, label, inputType, fileName,helperText,error }) => {
+  const [loading, setLoading] = React.useState(false);
   const hiddenFileInput = React.useRef(null);
+  const [uploadedFileName, setUploadedFileName] = React.useState("");
+
   const handleClick = () => {
     hiddenFileInput.current.click();
   };
-  const handleChange = (event) => {
+  const handleChange = async (event) => {
     setLoading(true)
     const fileUploaded = event.target.files;
     for (let i = 0; i < fileUploaded.length; i++) {
-      { console.log('>>>>>>>hhhhhhhhhhhhhhhhhiiiii from fileUploaded', fileName) }
-      handleFile(fileUploaded[i], setLoading);
+      await handleFile(fileUploaded[i], setLoading);
       fileName = fileUploaded[i].name
+      setUploadedFileName(`(${fileName})`);
     }
   };
 
@@ -24,12 +26,14 @@ const FileUploader = ({ handleFile, name, label, inputType, fileName }) => {
     <>
       <TextField
         fullWidth
-        label={label}
+        label={`${label} ${uploadedFileName}`}
         name={name}
         onClick={handleClick}
         variant="outlined"
         dir="rtl"
         disabled
+        helperText={helperText}
+        error={error}
         className="custom-field"
         InputProps={{
           endAdornment: (
@@ -43,7 +47,7 @@ const FileUploader = ({ handleFile, name, label, inputType, fileName }) => {
         multiple={inputType}
         type="file"
         ref={hiddenFileInput}
-        onChange={handleChange}
+        onChange={(event)=>{handleChange(event)}}
         style={{ display: 'none' }}
       />
 
@@ -59,4 +63,6 @@ FileUploader.propTypes = {
   label: PropTypes.string,
   inputType: PropTypes.string,
   fileName: PropTypes.func,
+  error: PropTypes.bool,
+  helperText: PropTypes.object,
 }

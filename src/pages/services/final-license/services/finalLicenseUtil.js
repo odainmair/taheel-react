@@ -48,26 +48,44 @@ const capacityValidation = values => {
 }
 
 const RequirementsValidation = values => {
-  const response = { isSuccessful: true, message: '' };
-  if (!values.OperationalPlan || !values.ExecutivePlan || !values.OfficeReport || !values.SecurityReport || !values.Furniture || !values.FinancialGuaranteeAtt)
-    return { isSuccessful: false, message: "يرجى ارفاق جميع المتطلبات المذكورة" };
-  return response
+  var msg = {}
+  if (!values.OperationalPlan)
+    msg.OperationalPlan = "يرجى ارفاق هذا الملف";
+
+  if (!values.ExecutivePlan)
+    msg.ExecutivePlan = "يرجى ارفاق هذا الملف";
+
+  if (!values.OfficeReport)
+    msg.OfficeReport = "يرجى ارفاق هذا الملف";
+
+  if (!values.SecurityReport)
+    msg.SecurityReport = "يرجى ارفاق هذا الملف";
+
+  if (!values.Furniture)
+    msg.Furniture = "يرجى ارفاق هذا الملف";
+
+  if (!values.FinancialGuaranteeAtt)
+    msg.FinancialGuaranteeAtt = "يرجى ارفاق هذا الملف";
+
+  return msg;
 }
 
-const healthServicesValidation = async values => {
-  const response = { isSuccessful: true, message: '' };
+const healthServicesValidation = values => {
+  var msg = {}
+  console.log(JSON.stringify(values))
   if (!values.healthServices)
-    return { isSuccessful: false, message: "يرجى تحديد ما ان كان المركز يقدم خدمات صحية ام لا" };
-  if (values.healthServices === 'yes') {
+    msg.healthServices = "يرجى تحديد ما ان كان المركز يقدم خدمات صحية ام لا";
+  if (values.healthServices && values.healthServices === 'yes') {
     if (!values.healthServiceType)
-      return { isSuccessful: false, message: "يرجى تحديد نوع الخدمة الصحية" };
-    if (!values.healthServiceAttachment)
+      msg.healthServiceType = "يرجى تحديد نوع الخدمة الصحية";
+    if (!values.healthServiceAttachment) {
       if (values.healthServiceType === 1)
-        return { isSuccessful: false, message: " يرجى ارفاق رخصة وزارة الصحة" };
+        msg.healthServiceAttachment = " يرجى ارفاق رخصة وزارة الصحة";
       else
-        return { isSuccessful: false, message: " يرجى ارفاق عقد الشراكة" };
+        msg.healthServiceAttachment = " يرجى ارفاق عقد الشراكة";
+    }
   }
-  return response
+  return msg
 
 }
 
@@ -96,174 +114,210 @@ const downloadFileFn = async (setLoading, loading, licenseNumber) => {
   }
 }
 
-const uploadDocument = async (setDocument, name, file, multiple, setLoading) => {
-  var reader = new FileReader();
-  reader.readAsDataURL(file);
-  reader.onloadend = async function () {
-    var base64String = reader.result;
-    var n = base64String.indexOf("base64,") + 7;
-    base64String = reader.result.substr(n);
-    const data = window.atob(base64String)
-    const image = data
+const uploadDocument = (file) => {
+  return new Promise((resolve) => {
+    var reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      var base64String = reader.result;
+      var n = base64String.indexOf("base64,") + 7;
+      base64String = reader.result.substr(n);
+      const data = window.atob(base64String)
+      const image = data
 
-    const buf = new Uint8Array(image.length);
-    for (let i = 0; i < image.length; i++) {
-      buf[i] = image.charCodeAt(i);
+      const buf = new Uint8Array(image.length);
+      for (let i = 0; i < image.length; i++) {
+        buf[i] = image.charCodeAt(i);
+      }
+      return resolve(buf);
     }
 
-    const response = await uploadDocumentApi(name, buf)
-    console.log('...response...', response)
-    if (!response.isSuccessful)
-      SetErrMessage(response.message)
-    else {
-      setDocument(name, response.responseBody.docID, multiple)
-      setLoading(false)
-    }
-  }
+  })
 }
+
 
 
 
 const ConditionComp = ({ when, is, children }) => (
-  <Field name={when} subscription={{ value: true }}>
-    {({ input: { value } }) => (value == is ? children : null)}
-  </Field>
-)
-
-const MedicalPracticeComp = ({ when, is, children }) => (
-  <Field name={when} subscription={{ value: true }}>
-    {({ input: { value } }) => (is.includes(value) ? children : null)}
-  </Field>
-)
-
-const calculationConditionComp = ({ is, children }) => (
-  <Field subscription={{ value: true }}>
-    {(value) => (is ? children : null)}
-  </Field>
-)
-
-const ContentField = ({ value, label }) => (
-  <>
-    <Typography gutterBottom variant="body2" color="textSecondary" component="p">
-      {label}
-    </Typography>
-    <Typography gutterBottom variant="h5" component="h2">
-      {value}
-    </Typography>
-  </>
-)
-const DownloadButt = ({ index, docID, name, label }) => {
-  const [loading, setLoading] = React.useState(false)
-  return (
-    <>
-      <TableRow>
-        <TableCell> ملف رقم {index + 1} </TableCell>
-        <TableCell>
-          <Button
-            startIcon={loading ? <CircularProgress size="1rem" /> : <CloudDownloadIcon />}
-            key={index}
-            name={name}
-            variant="contained"
-            color="primary"
-            sx={{
-              backgroundColor: '#3c8084',
-            }}
-            onClick={() => downloadFileFn(setLoading, loading, docID)}
-          >
-            تنزيل
-          </Button>
-        </TableCell>
-      </TableRow>
-    </>)
-}
-const DownloadButtTable = ({ docIDs, name, label }) => {
-
-  return (
-    <>
-      {docIDs &&
-        <>
-          <TableContainer >
-            <Table aria-label="simple table">
-              <TableHead>
-                <TableRow>
-                  <TableCell> الرقم</TableCell>
-                  <TableCell> {label} </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-
-                {docIDs.map((docID, index) => (
-                  < DownloadButt index={index} docID={docID} name={name} label={label} />
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-
-          <>
-
-          </>
-
-        </>
-      }
-    </>
+    <Field name={when} subscription={{ value: true }}>
+      {({ input: { value } }) => (value == is ? children : null)}
+    </Field>
   )
 
-}
+  const MedicalPracticeComp = ({ when, is, children }) => (
+    <Field name={when} subscription={{ value: true }}>
+      {({ input: { value } }) => (is.includes(value) ? children : null)}
+    </Field>
+  )
 
-const getStaff = (data) => {
-  const newKeys = {
-    idNumIqamaNum: 'idNumber',
-    birthDate: 'birthDate',
-    name: 'fullName',
-    gender: 'gender',
-    nationality: 'nationality',
-    StaffType: 'staffTypes',
-    CV: 'cv',
-    educationQualifications: 'EducationalQualification',
-    professionalLicense: 'MedicalPractice',
+  const calculationConditionComp = ({ is, children }) => (
+    <Field subscription={{ value: true }}>
+      {(value) => (is ? children : null)}
+    </Field>
+  )
+
+  const ContentField = ({ value, label }) => (
+    <>
+      <Typography gutterBottom variant="body2" color="textSecondary" component="p">
+        {label}
+      </Typography>
+      <Typography gutterBottom variant="h5" component="h2">
+        {value}
+      </Typography>
+    </>
+  )
+  const DownloadButt = ({ index, docID, name, label }) => {
+    const [loading, setLoading] = React.useState(false)
+    return (
+      <>
+        <TableRow>
+          <TableCell> ملف رقم {index + 1} </TableCell>
+          <TableCell>
+            <Button
+              startIcon={loading ? <CircularProgress size="1rem" /> : <CloudDownloadIcon />}
+              key={index}
+              name={name}
+              variant="contained"
+              color="primary"
+              sx={{
+                backgroundColor: '#3c8084',
+              }}
+              onClick={() => downloadFileFn(setLoading, loading, docID)}
+            >
+              تنزيل
+            </Button>
+          </TableCell>
+        </TableRow>
+      </>)
+  }
+  const DownloadButtTable = ({ docIDs, name, label }) => {
+
+    return (
+      <>
+        {docIDs &&
+          <>
+            <TableContainer >
+              <Table aria-label="simple table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell> الرقم</TableCell>
+                    <TableCell> {label} </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+
+                  {docIDs.map((docID, index) => (
+                    < DownloadButt index={index} docID={docID} name={name} label={label} />
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+
+            <>
+
+            </>
+
+          </>
+        }
+      </>
+    )
+
+  }
+  const validateAddStaffForm = (values, rowIndex, SAForm, forignForm) => {
+    console.log(`-- rowIndex :: ${rowIndex}`)
+    console.log(`-- SAForm :: ${SAForm}`)
+    console.log(`-- forignForm :: ${forignForm}`)
+    console.log(`-- rowIndex :: ${!rowIndex || rowIndex !== -1 ? JSON.stringify(values.customers[rowIndex]) : values}`)
+    const { nationality, year, month, day, idNumber, iqamaNo, staffTypes } = !rowIndex || rowIndex !== -1 ? values.customers[rowIndex] : values;
+    console.log(`-- nationality :: ${nationality}`);
+    console.log(`-- idNumber :: ${idNumber}`);
+    console.log(`-- year :: ${year}`);
+
+    if (!nationality) {
+      return "يرجى اختيار الجنسية";
+    }
+    if (nationality === "سعودي") {
+      if (!idNumber) {
+        return "يرجى ادخال رقم الهوية";
+      }
+      if (!year || !month || !day) {
+        return "يرجى ادخال تاريخ ميلاد صحيح";
+      }
+    }
+    if (nationality === "غير سعودي") {
+      if (!iqamaNo) {
+        return "يرجى ادخال رقم الاقامة";
+      }
+    }
+    if (!SAForm && !forignForm) {
+
+      return "يرجى تحقق من هوية الشخص";
+
+
+    }
+    if (SAForm || forignForm) {
+      if (!staffTypes) {
+        return "يرجى اختيار نوع الكادر";
+      }
+
+    }
+    return null;
+  }
+  const getStaff = (data) => {
+    const newKeys = {
+      idNumIqamaNum: 'idNumber',
+      birthDate: 'birthDate',
+      name: 'fullName',
+      gender: 'gender',
+      nationality: 'nationality',
+      StaffType: 'staffTypes',
+      CV: 'cv',
+      educationQualifications: 'EducationalQualification',
+      professionalLicense: 'MedicalPractice',
+    }
+
+    const staffTypes = ["معلم تربية خاصة", "أخصائي اجتماعي", "مراقب اجتماعي", "حارس", "عامل تنظيفات", "مشرف فني عام", "اخصائي نفسي و توجيه اجتماعي", "عامل رعاية شخصية", "مدير", "سائق", "مرافق سائق", "أخصائي علاج طبيعي", "أخصائي علاج وظيفي", "أخصائي نطق و تخاطب", "ممرض"]
+    var staff = JSON.parse(JSON.stringify(data))
+
+    staff.map((customer) => {
+      Object.keys(customer).map((key) => {
+        if (customer[key]) {
+          const newKey = newKeys[key] || key;
+          if (key === 'gender')
+            customer[newKey] = customer[key] === 'f' ? 'انثى' : 'ذكر'
+          else if (key === 'idNumIqamaNum') {
+            if (key === 'سعودي')
+              customer['idNumber'] = customer[key]
+            else
+              customer['iqamaNo'] = customer[key]
+          }
+          else if (key === 'StaffType')
+            customer[newKey] = staffTypes[customer[key] - 1]
+          else if (['professionalLicense', 'educationQualifications', 'CV'].includes(key))
+            customer[newKey] = [customer[key].id]
+          else
+            customer[newKey] = customer[key];
+          if (!customer[newKey] || newKey !== key)
+            delete customer[key]
+        }
+      })
+    });
+    return staff
   }
 
-  const staffTypes = ["معلم تربية خاصة", "أخصائي اجتماعي", "مراقب اجتماعي", "حارس", "عامل تنظيفات", "مشرف فني عام", "اخصائي نفسي و توجيه اجتماعي", "عامل رعاية شخصية", "مدير", "سائق", "مرافق سائق", "أخصائي علاج طبيعي", "أخصائي علاج وظيفي", "أخصائي نطق و تخاطب", "ممرض"]
-  var staff = JSON.parse(JSON.stringify(data))
-
-  staff.map((customer) => {
-    Object.keys(customer).map((key) => {
-      if (customer[key]) {
-        const newKey = newKeys[key] || key;
-        if (key === 'gender')
-          customer[newKey] = customer[key] === 'f' ? 'انثى' : 'ذكر'
-        else if (key === 'idNumIqamaNum') {
-          if (key === 'سعودي')
-            customer['idNumber'] = customer[key]
-          else
-            customer['iqamaNo'] = customer[key]
-        }
-        else if (key === 'StaffType')
-          customer[newKey] = staffTypes[customer[key] - 1]
-        else if (['professionalLicense', 'educationQualifications', 'CV'].includes(key))
-          customer[newKey] = [customer[key].id]
-        else
-          customer[newKey] = customer[key];
-        if (!customer[newKey] || newKey !== key)
-          delete customer[key]
-      }
-    })
-  });
-  return staff
-}
-
-export { 
-  CenterDetailsValidation, 
-  capacityValidation, 
-  RequirementsValidation, 
-  healthServicesValidation, 
-  personsValidation, 
-  ConditionComp, 
-  MedicalPracticeComp, 
-  calculationConditionComp, 
-  uploadDocument, 
-  DownloadButt, 
-  ContentField, 
-  DownloadButtTable,
-  getStaff, 
-};
+  export {
+    CenterDetailsValidation,
+    capacityValidation,
+    RequirementsValidation,
+    healthServicesValidation,
+    personsValidation,
+    ConditionComp,
+    MedicalPracticeComp,
+    calculationConditionComp,
+    uploadDocument,
+    DownloadButt,
+    ContentField,
+    DownloadButtTable,
+    getStaff,
+    validateAddStaffForm
+  };

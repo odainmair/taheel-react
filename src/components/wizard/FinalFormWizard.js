@@ -180,7 +180,6 @@ export default class FinalFromWizard extends React.Component {
                   </Grid>
                 )}
               </Grid>
-              {/* <pre>{JSON.stringify(values, 0, 2)}</pre> */}
             </form>
           )
         }}

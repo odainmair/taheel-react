@@ -3,9 +3,8 @@ import {
   Grid,
 } from '@material-ui/core';
 import { Field } from 'react-final-form';
-import FileUploader from 'src/components/FileUploader';
-import { uploadDocument } from '../services/finalLicenseUtil'
 import PropTypes from 'prop-types';
+import FileUploaderComp from '../components/FileUploader';
 
 const Requirements = ({ setField, values }) => {
   var multipleDocs = []
@@ -17,21 +16,6 @@ const Requirements = ({ setField, values }) => {
       setField(name, multipleDocs)
     }
   }
-
-  const FileUploaderComp = ({ input: { value, name }, label, inputType, setField, values }) => (
-    <>
-      <FileUploader
-        handleFile={(file, setLoading) => uploadDocument(setDocument, name, file, inputType, setLoading)}
-        label={label}
-        name={name}
-        inputType={inputType}
-        fileName={(file) => file}
-        setField={setField}
-        values={values}
-      />
-    </>
-  )
-
   return (
     <>
       <Grid
@@ -56,6 +40,7 @@ const Requirements = ({ setField, values }) => {
             component={FileUploaderComp}
             inputType={false}
             setField={setField}
+            setDocument={setDocument}
             values={values}
           />
         </Grid>
@@ -70,6 +55,7 @@ const Requirements = ({ setField, values }) => {
             component={FileUploaderComp}
             inputType={false}
             setField={setField}
+            setDocument={setDocument}
             values={values}
           />
         </Grid>
@@ -84,6 +70,7 @@ const Requirements = ({ setField, values }) => {
             component={FileUploaderComp}
             inputType={false}
             setField={setField}
+            setDocument={setDocument}
             values={values}
           />
         </Grid>
@@ -98,6 +85,7 @@ const Requirements = ({ setField, values }) => {
             component={FileUploaderComp}
             inputType={false}
             setField={setField}
+            setDocument={setDocument}
             values={values}
           />
         </Grid>
@@ -112,6 +100,7 @@ const Requirements = ({ setField, values }) => {
             component={FileUploaderComp}
             inputType={true}
             setField={setField}
+            setDocument={setDocument}
             values={values}
           />
 
@@ -127,6 +116,7 @@ const Requirements = ({ setField, values }) => {
             component={FileUploaderComp}
             inputType={false}
             setField={setField}
+            setDocument={setDocument}
             values={values}
           />
         </Grid>
@@ -138,8 +128,5 @@ const Requirements = ({ setField, values }) => {
 export default Requirements;
 Requirements.propTypes = {
   setField: PropTypes.func.isRequired,
-  values: PropTypes.func.isRequired,
-  label: PropTypes.func.isRequired,
-  input: PropTypes.func.isRequired,
-  inputType: PropTypes.bool.isRequired,
+  values: PropTypes.object.isRequired,
 };
