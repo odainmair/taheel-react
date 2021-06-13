@@ -26,7 +26,7 @@ const FileUploaderComp = ({ input: { value, name }, label, meta, inputType, setF
     else docId = (values) ? values[name] : "";
 
     if (docId)
-      setUploadedFileName(JSON.stringify(docId));
+      setUploadedFileName("تم رفع هذا الملف في نجاح");
 
   }, [])
 
@@ -52,7 +52,7 @@ const FileUploaderComp = ({ input: { value, name }, label, meta, inputType, setF
       if (!response.isSuccessful)
         SetErrMessage(response.message)
       else {
-        setUploadedFileName(response.responseBody.docID)
+        setUploadedFileName("تم رفع هذا الملف في نجاح");
         setDocument(name, response.responseBody.docID, false)
       }
     }
@@ -63,13 +63,13 @@ const FileUploaderComp = ({ input: { value, name }, label, meta, inputType, setF
     <>
       <TextField
         fullWidth
-        label={`${label} ${uploadedFileName}`}
+        label={`${label}`}
         name={name}
         onClick={handleClick}
         variant="outlined"
         dir="rtl"
         disabled
-        helperText={meta.error}
+        helperText={showError?"يرجى ارفاق هذا الملف":uploadedFileName}
         error={showError}
         className="custom-field"
         InputProps={{

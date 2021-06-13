@@ -51,11 +51,11 @@ const Capacity = ({ editMode, Condition, values, setField, setIsEnableNextBtn })
 			setLoading(false);
 			return
 		}
-		if (values.beneficiariesNum > parseInt(values.capacity)) {
+	/*	if (values.beneficiariesNum > parseInt(values.capacity)) {
 			SetErrMessage('عدد المستفيدين يجب ان لا يتجاوز الطاقة الاستعابية');
 			setLoading(false);
 			return
-		}
+		}*/
 
 		const response = await calculation(values.buildingArea, values.basementArea);
 		if (!response.isSuccessful) {

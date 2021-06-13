@@ -45,8 +45,8 @@ const capacityValidation = values => {
     msg.basementArea = required
   if (parseInt(values.buildingArea) <= parseInt(values.basementArea))
     msg.basementArea = 'مساحة القبو يجب ان تكون أقل من مساحة مسطح البناء'
-  if (values.beneficiariesNum > parseInt(values.capacity))
-    msg.beneficiariesNum = 'عدد المستفيدين يجب ان لا يتجاوز الطاقة الاستعابية'
+  /*if (values.beneficiariesNum > parseInt(values.capacity))
+    msg.beneficiariesNum = 'عدد المستفيدين يجب ان لا يتجاوز الطاقة الاستعابية'*/
   return msg
 }
 
