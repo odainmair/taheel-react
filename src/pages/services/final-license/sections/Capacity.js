@@ -31,21 +31,32 @@ const Capacity = ({ editMode, Condition, values, setField, setIsEnableNextBtn })
 	const calculate = async () => {
 		setLoading(true);
 		SetErrMessage('');
-		if (!values.beneficiariesNum && values.beneficiariesNum === 0) {
-      SetErrMessage('يرجى ادخال عدد المستفيدين الفعلي');
-      setLoading(false);
-      return;
-    }
-		if (!values.buildingArea) {
-      SetErrMessage('يرجى ادخال مساحة مسطح البناء');
-      setLoading(false);
-      return;
-    }
-		if (!values.basementArea) {
-      SetErrMessage('يرجى ادخال مساحة القبو');
-      setLoading(false);
-      return;
-    }
+		if (!values.beneficiariesNum || values.beneficiariesNum <= 0) {
+			SetErrMessage('يرجى ادخال عدد المستفيدين الفعلي صحيح');
+			setLoading(false);
+			return;
+		}
+		if (!values.buildingArea || values.buildingArea <= 0) {
+			SetErrMessage('يرجى ادخال مساحة مسطح البناء صحيح');
+			setLoading(false);
+			return;
+		}
+		if (!values.basementArea || values.basementArea <= 0) {
+			SetErrMessage('يرجى ادخال مساحة القبو صحيح');
+			setLoading(false);
+			return;
+		}
+		if (parseInt(values.buildingArea) <= parseInt(values.basementArea)) {
+			SetErrMessage('مساحة القبو يجب ان تكون أقل من مساحة مسطح البناء');
+			setLoading(false);
+			return
+		}
+		if (values.beneficiariesNum > parseInt(values.capacity)) {
+			SetErrMessage('عدد المستفيدين يجب ان لا يتجاوز الطاقة الاستعابية');
+			setLoading(false);
+			return
+		}
+
 		const response = await calculation(values.buildingArea, values.basementArea);
 		if (!response.isSuccessful) {
 			setIsEnableNextBtn(false);

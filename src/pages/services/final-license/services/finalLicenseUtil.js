@@ -25,7 +25,7 @@ const CenterDetailsValidation = values => {
     msg.CRNumber = required
   if (!values.temporaryLicenceNum)
     msg.temporaryLicenceNum = required
-  if (values.CRNumber && isNaN(values.CRNumber))
+  if (values.CRNumber && isNaN(values.CRNumber) && values.CRNumber.length > 10)
     msg.CRNumber = "يجب ان يحتوي فقط على ارقام والا يزيد عددها عن 10 خانات"
   return msg
 }
@@ -36,11 +36,14 @@ const capacityValidation = values => {
   console.log(' values.buildingArea', typeof (values.buildingArea), 'values.basementArea', typeof (values.basementArea))
   if (!values.beneficiariesNum)
     msg.beneficiariesNum = required
+  if (parseInt(values.beneficiariesNum)<0)
+    msg.basementArea = 'يجب ان يكون عدد المستفيدين اكبر من صفر'
+
   if (!values.buildingArea)
     msg.buildingArea = required
   if (!values.basementArea)
     msg.basementArea = required
-  if (parseInt(values.buildingArea) < parseInt(values.basementArea))
+  if (parseInt(values.buildingArea) <= parseInt(values.basementArea))
     msg.basementArea = 'مساحة القبو يجب ان تكون أقل من مساحة مسطح البناء'
   if (values.beneficiariesNum > parseInt(values.capacity))
     msg.beneficiariesNum = 'عدد المستفيدين يجب ان لا يتجاوز الطاقة الاستعابية'
@@ -139,185 +142,185 @@ const uploadDocument = (file) => {
 
 
 const ConditionComp = ({ when, is, children }) => (
-    <Field name={when} subscription={{ value: true }}>
-      {({ input: { value } }) => (value == is ? children : null)}
-    </Field>
-  )
+  <Field name={when} subscription={{ value: true }}>
+    {({ input: { value } }) => (value == is ? children : null)}
+  </Field>
+)
 
-  const MedicalPracticeComp = ({ when, is, children }) => (
-    <Field name={when} subscription={{ value: true }}>
-      {({ input: { value } }) => (is.includes(value) ? children : null)}
-    </Field>
-  )
+const MedicalPracticeComp = ({ when, is, children }) => (
+  <Field name={when} subscription={{ value: true }}>
+    {({ input: { value } }) => (is.includes(value) ? children : null)}
+  </Field>
+)
 
-  const calculationConditionComp = ({ is, children }) => (
-    <Field subscription={{ value: true }}>
-      {(value) => (is ? children : null)}
-    </Field>
-  )
+const calculationConditionComp = ({ is, children }) => (
+  <Field subscription={{ value: true }}>
+    {(value) => (is ? children : null)}
+  </Field>
+)
 
-  const ContentField = ({ value, label }) => (
+const ContentField = ({ value, label }) => (
+  <>
+    <Typography gutterBottom variant="body2" color="textSecondary" component="p">
+      {label}
+    </Typography>
+    <Typography gutterBottom variant="h5" component="h2">
+      {value}
+    </Typography>
+  </>
+)
+const DownloadButt = ({ index, docID, name, label }) => {
+  const [loading, setLoading] = React.useState(false)
+  return (
     <>
-      <Typography gutterBottom variant="body2" color="textSecondary" component="p">
-        {label}
-      </Typography>
-      <Typography gutterBottom variant="h5" component="h2">
-        {value}
-      </Typography>
-    </>
-  )
-  const DownloadButt = ({ index, docID, name, label }) => {
-    const [loading, setLoading] = React.useState(false)
-    return (
-      <>
-        <TableRow>
-          <TableCell> ملف رقم {index + 1} </TableCell>
-          <TableCell>
-            <Button
-              startIcon={loading ? <CircularProgress size="1rem" /> : <CloudDownloadIcon />}
-              key={index}
-              name={name}
-              variant="contained"
-              color="primary"
-              sx={{
-                backgroundColor: '#3c8084',
-              }}
-              onClick={() => downloadFileFn(setLoading, loading, docID)}
-            >
-              تنزيل
-            </Button>
-          </TableCell>
-        </TableRow>
-      </>)
-  }
-  const DownloadButtTable = ({ docIDs, name, label }) => {
+      <TableRow>
+        <TableCell> ملف رقم {index + 1} </TableCell>
+        <TableCell>
+          <Button
+            startIcon={loading ? <CircularProgress size="1rem" /> : <CloudDownloadIcon />}
+            key={index}
+            name={name}
+            variant="contained"
+            color="primary"
+            sx={{
+              backgroundColor: '#3c8084',
+            }}
+            onClick={() => downloadFileFn(setLoading, loading, docID)}
+          >
+            تنزيل
+          </Button>
+        </TableCell>
+      </TableRow>
+    </>)
+}
+const DownloadButtTable = ({ docIDs, name, label }) => {
 
-    return (
-      <>
-        {docIDs &&
+  return (
+    <>
+      {docIDs &&
+        <>
+          <TableContainer >
+            <Table aria-label="simple table">
+              <TableHead>
+                <TableRow>
+                  <TableCell> الرقم</TableCell>
+                  <TableCell> {label} </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+
+                {docIDs.map((docID, index) => (
+                  < DownloadButt index={index} docID={docID} name={name} label={label} />
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+
           <>
-            <TableContainer >
-              <Table aria-label="simple table">
-                <TableHead>
-                  <TableRow>
-                    <TableCell> الرقم</TableCell>
-                    <TableCell> {label} </TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-
-                  {docIDs.map((docID, index) => (
-                    < DownloadButt index={index} docID={docID} name={name} label={label} />
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-
-            <>
-
-            </>
 
           </>
-        }
-      </>
-    )
+
+        </>
+      }
+    </>
+  )
+
+}
+const validateAddStaffForm = (values, rowIndex, SAForm, forignForm) => {
+  console.log(`-- rowIndex :: ${rowIndex}`)
+  console.log(`-- SAForm :: ${SAForm}`)
+  console.log(`-- forignForm :: ${forignForm}`)
+  console.log(`-- rowIndex :: ${!rowIndex || rowIndex !== -1 ? JSON.stringify(values.customers[rowIndex]) : values}`)
+  const { nationality, year, month, day, idNumber, iqamaNo, staffTypes } = !rowIndex || rowIndex !== -1 ? values.customers[rowIndex] : values;
+  console.log(`-- nationality :: ${nationality}`);
+  console.log(`-- idNumber :: ${idNumber}`);
+  console.log(`-- year :: ${year}`);
+
+  if (!nationality) {
+    return "يرجى اختيار الجنسية";
+  }
+  if (nationality === "سعودي") {
+    if (!idNumber) {
+      return "يرجى ادخال رقم الهوية";
+    }
+    if (!year || !month || !day) {
+      return "يرجى ادخال تاريخ ميلاد صحيح";
+    }
+  }
+  if (nationality === "غير سعودي") {
+    if (!iqamaNo) {
+      return "يرجى ادخال رقم الاقامة";
+    }
+  }
+  if (!SAForm && !forignForm) {
+
+    return "يرجى تحقق من هوية الشخص";
+
 
   }
-  const validateAddStaffForm = (values, rowIndex, SAForm, forignForm) => {
-    console.log(`-- rowIndex :: ${rowIndex}`)
-    console.log(`-- SAForm :: ${SAForm}`)
-    console.log(`-- forignForm :: ${forignForm}`)
-    console.log(`-- rowIndex :: ${!rowIndex || rowIndex !== -1 ? JSON.stringify(values.customers[rowIndex]) : values}`)
-    const { nationality, year, month, day, idNumber, iqamaNo, staffTypes } = !rowIndex || rowIndex !== -1 ? values.customers[rowIndex] : values;
-    console.log(`-- nationality :: ${nationality}`);
-    console.log(`-- idNumber :: ${idNumber}`);
-    console.log(`-- year :: ${year}`);
-
-    if (!nationality) {
-      return "يرجى اختيار الجنسية";
+  if (SAForm || forignForm) {
+    if (!staffTypes) {
+      return "يرجى اختيار نوع الكادر";
     }
-    if (nationality === "سعودي") {
-      if (!idNumber) {
-        return "يرجى ادخال رقم الهوية";
-      }
-      if (!year || !month || !day) {
-        return "يرجى ادخال تاريخ ميلاد صحيح";
-      }
-    }
-    if (nationality === "غير سعودي") {
-      if (!iqamaNo) {
-        return "يرجى ادخال رقم الاقامة";
-      }
-    }
-    if (!SAForm && !forignForm) {
 
-      return "يرجى تحقق من هوية الشخص";
-
-
-    }
-    if (SAForm || forignForm) {
-      if (!staffTypes) {
-        return "يرجى اختيار نوع الكادر";
-      }
-
-    }
-    return null;
   }
-  const getStaff = (data) => {
-    const newKeys = {
-      idNumIqamaNum: 'idNumber',
-      birthDate: 'birthDate',
-      name: 'fullName',
-      gender: 'gender',
-      nationality: 'nationality',
-      StaffType: 'staffTypes',
-      CV: 'cv',
-      educationQualifications: 'EducationalQualification',
-      professionalLicense: 'MedicalPractice',
-    }
+  return null;
+}
+const getStaff = (data) => {
+  const newKeys = {
+    idNumIqamaNum: 'idNumber',
+    birthDate: 'birthDate',
+    name: 'fullName',
+    gender: 'gender',
+    nationality: 'nationality',
+    StaffType: 'staffTypes',
+    CV: 'cv',
+    educationQualifications: 'EducationalQualification',
+    professionalLicense: 'MedicalPractice',
+  }
 
-    const staffTypes = ["معلم تربية خاصة", "أخصائي اجتماعي", "مراقب اجتماعي", "حارس", "عامل تنظيفات", "مشرف فني عام", "اخصائي نفسي و توجيه اجتماعي", "عامل رعاية شخصية", "مدير", "سائق", "مرافق سائق", "أخصائي علاج طبيعي", "أخصائي علاج وظيفي", "أخصائي نطق و تخاطب", "ممرض"]
-    var staff = JSON.parse(JSON.stringify(data))
+  const staffTypes = ["معلم تربية خاصة", "أخصائي اجتماعي", "مراقب اجتماعي", "حارس", "عامل تنظيفات", "مشرف فني عام", "اخصائي نفسي و توجيه اجتماعي", "عامل رعاية شخصية", "مدير", "سائق", "مرافق سائق", "أخصائي علاج طبيعي", "أخصائي علاج وظيفي", "أخصائي نطق و تخاطب", "ممرض"]
+  var staff = JSON.parse(JSON.stringify(data))
 
-    staff.map((customer) => {
-      Object.keys(customer).map((key) => {
-        if (customer[key]) {
-          const newKey = newKeys[key] || key;
-          if (key === 'gender')
-            customer[newKey] = customer[key] === 'f' ? 'انثى' : 'ذكر'
-          else if (key === 'idNumIqamaNum') {
-            if (key === 'سعودي')
-              customer['idNumber'] = customer[key]
-            else
-              customer['iqamaNo'] = customer[key]
-          }
-          else if (key === 'StaffType')
-            customer[newKey] = staffTypes[customer[key] - 1]
-          else if (['professionalLicense', 'educationQualifications', 'CV'].includes(key))
-            customer[newKey] = [customer[key].id]
+  staff.map((customer) => {
+    Object.keys(customer).map((key) => {
+      if (customer[key]) {
+        const newKey = newKeys[key] || key;
+        if (key === 'gender')
+          customer[newKey] = customer[key] === 'f' ? 'انثى' : 'ذكر'
+        else if (key === 'idNumIqamaNum') {
+          if (key === 'سعودي')
+            customer['idNumber'] = customer[key]
           else
-            customer[newKey] = customer[key];
-          if (!customer[newKey] || newKey !== key)
-            delete customer[key]
+            customer['iqamaNo'] = customer[key]
         }
-      })
-    });
-    return staff
-  }
+        else if (key === 'StaffType')
+          customer[newKey] = staffTypes[customer[key] - 1]
+        else if (['professionalLicense', 'educationQualifications', 'CV'].includes(key))
+          customer[newKey] = [customer[key].id]
+        else
+          customer[newKey] = customer[key];
+        if (!customer[newKey] || newKey !== key)
+          delete customer[key]
+      }
+    })
+  });
+  return staff
+}
 
-  export {
-    CenterDetailsValidation,
-    capacityValidation,
-    RequirementsValidation,
-    healthServicesValidation,
-    personsValidation,
-    ConditionComp,
-    MedicalPracticeComp,
-    calculationConditionComp,
-    uploadDocument,
-    DownloadButt,
-    ContentField,
-    DownloadButtTable,
-    getStaff,
-    validateAddStaffForm
-  };
+export {
+  CenterDetailsValidation,
+  capacityValidation,
+  RequirementsValidation,
+  healthServicesValidation,
+  personsValidation,
+  ConditionComp,
+  MedicalPracticeComp,
+  calculationConditionComp,
+  uploadDocument,
+  DownloadButt,
+  ContentField,
+  DownloadButtTable,
+  getStaff,
+  validateAddStaffForm
+};
