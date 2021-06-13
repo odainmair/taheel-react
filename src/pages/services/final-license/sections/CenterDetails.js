@@ -45,6 +45,12 @@ const CenterDetails = ({ editMode, setEditMode, Condition, values, temporaryLice
       setLoading(false);
       return;
     }
+    console.log(`CRNumber vaildate ${!isNaN(values.CRNumber) && values.CRNumber.length !== 10}`)
+    if ( values.CRNumber.length > 10) {
+      setErrMessage('يجب ان الا يزيد السجل تجاري عن 10 خانات');
+      setLoading(false);
+      return;
+    }
     const getMunicipalLicenseRs = await getMunicipalLicenseNoApi(values.CRNumber);
     if (!getMunicipalLicenseRs.isSuccessful) {
       setErrMessage(getMunicipalLicenseRs.message);
