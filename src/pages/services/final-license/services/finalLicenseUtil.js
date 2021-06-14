@@ -17,6 +17,7 @@ import {
   Button,
   CircularProgress,
 } from '@material-ui/core';
+import { checkIsNumber } from 'src/utils/inputValidator';
 
 const CenterDetailsValidation = values => {
   console.log("values", isNaN(values.CRNumber))
@@ -36,13 +37,25 @@ const capacityValidation = values => {
   console.log(' values.buildingArea', typeof (values.buildingArea), 'values.basementArea', typeof (values.basementArea))
   if (!values.beneficiariesNum)
     msg.beneficiariesNum = required
-  if (parseInt(values.beneficiariesNum)<0)
+  if (parseInt(values.beneficiariesNum) <= 0)
     msg.basementArea = 'يجب ان يكون عدد المستفيدين اكبر من صفر'
-
+  if (!checkIsNumber(values.beneficiariesNum)) {
+    msg.basementArea = 'يجب ادخال عدد المستفيدين صحيح'
+  }
   if (!values.buildingArea)
     msg.buildingArea = required
+  if (parseInt(values.buildingArea) <= 0)
+    msg.basementArea = 'يجب ان يكون مساحة مسطح البناء اكبر من صفر'
+  if (!checkIsNumber(values.buildingArea)) {
+    msg.basementArea = 'يجب ادخال مساحة مسطح البناء صحيح'
+  }
   if (!values.basementArea)
     msg.basementArea = required
+  if (parseInt(values.basementArea) <= 0)
+    msg.basementArea = 'يجب ان يكون مساحة القبو اكبر من صفر'
+  if (!checkIsNumber(values.basementArea)) {
+    msg.basementArea = 'يجب ادخال مساحة القبو صحيح'
+  }
   if (parseInt(values.buildingArea) <= parseInt(values.basementArea))
     msg.basementArea = 'مساحة القبو يجب ان تكون أقل من مساحة مسطح البناء'
   /*if (values.beneficiariesNum > parseInt(values.capacity))

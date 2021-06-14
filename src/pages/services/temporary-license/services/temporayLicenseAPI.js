@@ -48,7 +48,7 @@ const validateCompanyFunc = async (crNumber) => {
     return response;
 }
 const validateCitizenFunc = async (idNumber, birthDate) => {
-    const url = "taheel-apis-utilities-validateCitizen-v2"
+    const url = "taheel-apis-utilities-validateCitizen-v3"
     const requestBody = {
         IDNo: idNumber,
         HijriDateOfBirth: moment(birthDate, 'iDD/iMM/iYYYY').format('iYYYYiMMiDD')
@@ -73,10 +73,10 @@ const validateAPIFunc = async values => {
         if (!validateCitRs.isSuccessful) {
             return { isSuccessful: false, message: validateCitRs.message }
         }
-        const data = validateCitRs.responseBody.data.Body;
+        const data = validateCitRs.responseBody.data;
         console.log(JSON.stringify(data));
-        const { FirstName, SecondName, ThirdName, LastName } = data.Name;
-        values.ownerName = `${FirstName} ${SecondName} ${ThirdName} ${LastName}`;
+        const { firstName, secondName, thirdName, fourthName } = data.name;
+        values.ownerName = `${firstName} ${secondName} ${thirdName} ${fourthName}`;
     }
     return response;
 }

@@ -94,7 +94,7 @@ const CreateTemporaryLicense = () => {
                   error['ageGroup']= "يرجى ختيار الفئة العمرية من سنتين الى ١٢سنة"
                 }
                 if(values['centerCap']<=0){
-                  error['centerCap']= "يجب ادخل الطاقة استعابية اكبر من صفر "
+                  error['centerCap']= "يجب ادخل طاقة استعابية اكبر من صفر "
 
                 }
                 return error;

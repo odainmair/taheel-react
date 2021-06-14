@@ -16,13 +16,13 @@ const PersonForm = ({ fromEdit, isSaudi, MedicalPracticeCondition, fieldName, se
   const { documents, SetDocuments } = useContext(localContext);
   useEffect(() => {
     console.log(`-- PersonForm rowIndex ${rowIndex}`);
-    setField('fullName', isSaudi || fromEdit ? `${citizenInfo.Name.FirstName} ${citizenInfo.Name.LastName}` : `${citizenInfo.NameT.FirstName} ${citizenInfo.NameT.LastName}`)
-    setField('gender', citizenInfo.Gender === 'F' ? 'انثى' : "ذكر")
-    setField('birthDate', isSaudi || fromEdit ? citizenInfo.BirthDateH : citizenInfo.BirthDate.HijriDate)
-    setField('nationality', isSaudi || fromEdit ? 'سعودي' : 'غير سعودي')
+    setField('fullName', `${citizenInfo.name.firstName} ${citizenInfo.name.forthName}`);
+    setField('gender', citizenInfo.gender === 'F' ? 'انثى' : "ذكر")
+    setField('birthDate',citizenInfo.birthDate );
+    setField('nationality', isSaudi || fromEdit ? 'سعودي' : 'غير سعودي');
 
     if (!isSaudi) {
-      setField('sponsorName', citizenInfo.SponsorName)
+      setField('sponsorName', citizenInfo.sponsorName)
     }
   }, [])
 

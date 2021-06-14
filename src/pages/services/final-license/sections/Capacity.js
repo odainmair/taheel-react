@@ -13,6 +13,7 @@ import PropTypes from 'prop-types';
 import { TextField as TextFieldFinal, Select } from 'final-form-material-ui';
 import { calculation } from '../services/finalLicenseAPI'
 import { ContentField } from '../services/finalLicenseUtil'
+import { checkIsNumber } from 'src/utils/inputValidator';
 const Capacity = ({ editMode, Condition, values, setField, setIsEnableNextBtn }) => {
 
 	const [calculatedData, setCalculatedData] = useState(false);
@@ -31,17 +32,17 @@ const Capacity = ({ editMode, Condition, values, setField, setIsEnableNextBtn })
 	const calculate = async () => {
 		setLoading(true);
 		SetErrMessage('');
-		if (!values.beneficiariesNum || values.beneficiariesNum <= 0) {
+		if (!values.beneficiariesNum || values.beneficiariesNum <= 0 || !checkIsNumber(values.beneficiariesNum)) {
 			SetErrMessage('يرجى ادخال عدد المستفيدين الفعلي صحيح');
 			setLoading(false);
 			return;
 		}
-		if (!values.buildingArea || values.buildingArea <= 0) {
+		if (!values.buildingArea || values.buildingArea <= 0 || !checkIsNumber(values.buildingArea)) {
 			SetErrMessage('يرجى ادخال مساحة مسطح البناء صحيح');
 			setLoading(false);
 			return;
 		}
-		if (!values.basementArea || values.basementArea <= 0) {
+		if (!values.basementArea || values.basementArea <= 0 || !checkIsNumber(values.basementArea)) {
 			SetErrMessage('يرجى ادخال مساحة القبو صحيح');
 			setLoading(false);
 			return;

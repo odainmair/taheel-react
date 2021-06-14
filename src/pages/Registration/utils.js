@@ -1,10 +1,12 @@
+import { checkMobilePattern } from "src/utils/inputValidator";
+
 const required = 'يجب تعبئة الحقل'
 
 const CitizenValidate = values => {
   var msg = {}
   if (!values.idNumber)
     msg.idNumber = required;
-    console.log(`nationality ${JSON.stringify(values.nationality)}`);
+  console.log(`nationality ${JSON.stringify(values.nationality)}`);
   if (values.nationality === "SA") {
     if (!values.day)
       msg.day = required;
@@ -32,8 +34,10 @@ const regitrationValidate = values => {
     msg.password = required;
   if (!values.passwordConfirmation)
     msg.passwordConfirmation = required;
-  if (values.passwordConfirmation && values.passwordConfirmation !== values.password)
+  if (values.passwordConfirmation && values.passwordConfirmation !== values.password){
+    console.log(`${values.passwordConfirmation} ${values.password}`);
     msg.passwordConfirmation = 'كلمة المرور لا تماثل التأكيد';
+  }
   document.getElementsByTagName('UL')[0].style.color = 'red';
   if (values.password && values.password.length >= 8)
     document.getElementById('digitsNo').style.color = '#04AA6D';
@@ -72,7 +76,12 @@ const regitrationValidate = values => {
 const TaheelOtpValidate = (values) => {
   var msg = {}
   if (!values.phoneNumber)
-    msg.phoneNumber = required
+    msg.phoneNumber = required;
+  if (!checkMobilePattern(values.phoneNumber)){
+    msg.phoneNumber = 'يرجى ادخال رقم جوال سعودي صحيح';
+   }
+  if (values.isTaheelValidate && !values.taheelOtp)
+    msg.taheelOtp = required;
   return msg
 }
 

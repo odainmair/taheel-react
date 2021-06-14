@@ -54,7 +54,7 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
     if (!response.isSuccessful)
       setErrMessage(response.message)
     else {
-      setCitizenInfo(response.responseBody.data.Body)
+      setCitizenInfo(response.responseBody.data)
       setSAForm(true)
     }
     setLoading(false)
@@ -73,7 +73,7 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
     if (!response.isSuccessful)
       setErrMessage(response.message);
     else {
-      setCitizenInfo(response.responseBody.data.Body);
+      setCitizenInfo(response.responseBody.data);
       setForignForm(true);
       setErrMessage('');
     }
