@@ -11,18 +11,20 @@ import FileUploaderComp from '../../components/FileUploader';
 import { useContext } from 'react';
 import localContext from 'src/localContext';
 
-const PersonForm = ({ fromEdit, isSaudi, MedicalPracticeCondition, fieldName, setField, pop, push, values, Condition, citizenInfo,rowIndex}) => {
+const PersonForm = ({ fromEdit, isSaudi, MedicalPracticeCondition, fieldName, setField, pop, push, values, Condition, citizenInfo, rowIndex }) => {
 
   const { documents, SetDocuments } = useContext(localContext);
   useEffect(() => {
     console.log(`-- PersonForm rowIndex ${rowIndex}`);
-    setField('fullName', `${citizenInfo.name.firstName} ${citizenInfo.name.forthName}`);
-    setField('gender', citizenInfo.gender === 'F' ? 'انثى' : "ذكر")
-    setField('birthDate',citizenInfo.birthDate );
-    setField('nationality', isSaudi || fromEdit ? 'سعودي' : 'غير سعودي');
+    if (!fromEdit) {
+      setField('fullName', `${citizenInfo.name.firstName} ${citizenInfo.name.fourthName}`);
+      setField('gender', citizenInfo.gender === 'F' ? 'انثى' : "ذكر")
+      setField('birthDate', citizenInfo.birthDate);
+      setField('nationality', isSaudi || fromEdit ? 'سعودي' : 'غير سعودي');
 
-    if (!isSaudi) {
-      setField('sponsorName', citizenInfo.sponsorName)
+      if (!isSaudi) {
+        setField('sponsorName', citizenInfo.sponsorName)
+      }
     }
   }, [])
 
@@ -125,7 +127,7 @@ const PersonForm = ({ fromEdit, isSaudi, MedicalPracticeCondition, fieldName, se
           >
             {staffTypes.map((staff, index) =>
               <MenuItem key={index} value={staff}>{staff}</MenuItem>
-            )}     
+            )}
           </Field>
         </Grid>
 

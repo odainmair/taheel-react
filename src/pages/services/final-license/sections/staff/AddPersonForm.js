@@ -18,7 +18,7 @@ import PersonForm from './PersonForm'
 import { validateAddStaffForm } from '../../services/finalLicenseUtil';
 import { useEffect } from 'react';
 
-const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push, values, setOpenPopup, fieldName, Condition,rowIndex }) => {
+const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push, values, setOpenPopup, fieldName, Condition, rowIndex }) => {
   const [errMessage, setErrMessage] = useState('')
   const [loading, setLoading] = useState(false)
   const [forignForm, setForignForm] = useState(fromEdit ? true : false)
@@ -33,14 +33,21 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
   const CitizenValidate_SA = async () => {
 
     setLoading(true);
-    const {nationality,year,month,day,idNumber} = !rowIndex || rowIndex!==-1 ? values.customers[rowIndex] : values;
-
-    if(!idNumber){
+    const { nationality, year, month, day, idNumber } = !rowIndex || rowIndex !== -1 ? values.customers[rowIndex] : values;
+    if (values.customers) {
+      const custumerByIdCount = values.customers || values.customers.filter(customer => customer.idNumber === idNumber).length;
+      if (custumerByIdCount > 1) {
+        setErrMessage(" رقم الهوية مستخدم يرجى استخدام رقم اخر");
+        setLoading(false);
+        return;
+      }
+    }
+    if (!idNumber) {
       setErrMessage("يرجى ادخال رقم الهوية");
       setLoading(false);
       return;
     }
-    if(!year || !month || !day){
+    if (!year || !month || !day) {
       setErrMessage("يرجى ادخال تاريخ ميلاد صحيح");
       setLoading(false);
       return;
@@ -50,7 +57,7 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
     }
     const birthDate = year + '' + numberToDay(month) + numberToDay(day);
     const response = await validateCitizenFunc(idNumber, birthDate)
-   
+
     if (!response.isSuccessful)
       setErrMessage(response.message)
     else {
@@ -62,9 +69,16 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
 
   const CitizenValidate_Forign = async () => {
     setLoading(true);
-    const {iqamaNo} = !rowIndex || rowIndex!==-1 ? values.customers[rowIndex] : values;
-
-    if(!iqamaNo){
+    const { iqamaNo } = !rowIndex || rowIndex !== -1 ? values.customers[rowIndex] : values;
+    if (values.customers) {
+      const custumerByIdCount = values.customers.filter(customer => customer.iqamaNo === iqamaNo).length;
+      if (custumerByIdCount > 1) {
+        setErrMessage(" رقم الاقامة مستخدم يرجى استخدام رقم اخر");
+        setLoading(false);
+        return;
+      }
+    }
+    if (!iqamaNo) {
       setErrMessage("يرجى ادخال رقم الاقامة");
       setLoading(false);
       return;
@@ -114,14 +128,14 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
               control={<Field
                 name={fieldName === null ? "nationality" : `${fieldName}.nationality`}
                 component={Radio} type="radio" value="سعودي" />}
-                disabled={loading|| SAForm || forignForm}
+              disabled={loading || SAForm || forignForm}
             />
             <FormControlLabel
               label="غير سعودي"
               control={<Field
                 name={fieldName === null ? "nationality" : `${fieldName}.nationality`}
                 component={Radio} type="radio" value="غير سعودي" />}
-                disabled={loading||SAForm || forignForm}
+              disabled={loading || SAForm || forignForm}
             />
           </RadioGroup>
         </Grid>
@@ -154,7 +168,7 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
               />
             </Grid>
 
-            < Calendar FeiledWidth={2} fieldName={fieldName}   disabled={loading || SAForm || forignForm} />
+            < Calendar FeiledWidth={2} fieldName={fieldName} disabled={loading || SAForm || forignForm} />
 
             <Grid
               item
@@ -190,7 +204,7 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
             </Grid>
 
             {SAForm &&
-              < PersonForm values={values} fromEdit={fromEdit} isSaudi={true} MedicalPracticeCondition={MedicalPracticeCondition} setField={setField} fieldName={fieldName} Condition={Condition} citizenInfo={citizenInfo} rowIndex={rowIndex}/>
+              < PersonForm values={values} fromEdit={fromEdit} isSaudi={true} MedicalPracticeCondition={MedicalPracticeCondition} setField={setField} fieldName={fieldName} Condition={Condition} citizenInfo={citizenInfo} rowIndex={rowIndex} />
             }
 
           </Condition>
@@ -247,7 +261,7 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
               </Button>
             </Grid>
             {forignForm &&
-              < PersonForm values={values} fromEdit={fromEdit} isSaudi={false} MedicalPracticeCondition={MedicalPracticeCondition} setField={setField} fieldName={fieldName} Condition={Condition} citizenInfo={citizenInfo} rowIndex={rowIndex}/>
+              < PersonForm values={values} fromEdit={fromEdit} isSaudi={false} MedicalPracticeCondition={MedicalPracticeCondition} setField={setField} fieldName={fieldName} Condition={Condition} citizenInfo={citizenInfo} rowIndex={rowIndex} />
             }
           </Condition>
         </Grid>
@@ -309,8 +323,8 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
               console.log(`-- SAForm :: ${SAForm}`)
 
 
-              const error = validateAddStaffForm(values,rowIndex,SAForm,forignForm);
-              if(error !== null){
+              const error = validateAddStaffForm(values, rowIndex, SAForm, forignForm);
+              if (error !== null) {
                 setErrMessage(error);
                 return;
               }
