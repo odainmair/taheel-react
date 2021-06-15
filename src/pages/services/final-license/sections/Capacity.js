@@ -32,17 +32,17 @@ const Capacity = ({ editMode, Condition, values, setField, setIsEnableNextBtn })
 	const calculate = async () => {
 		setLoading(true);
 		SetErrMessage('');
-		if (!values.beneficiariesNum || values.beneficiariesNum <= 0 || !checkIsNumber(values.beneficiariesNum)) {
+		if (!values.beneficiariesNum || values.beneficiariesNum <= 0) {
 			SetErrMessage('يرجى ادخال عدد المستفيدين الفعلي صحيح');
 			setLoading(false);
 			return;
 		}
-		if (!values.buildingArea || values.buildingArea <= 0 || !checkIsNumber(values.buildingArea)) {
+		if (!values.buildingArea || values.buildingArea <= 0 ) {
 			SetErrMessage('يرجى ادخال مساحة مسطح البناء صحيح');
 			setLoading(false);
 			return;
 		}
-		if (!values.basementArea || values.basementArea <= 0 || !checkIsNumber(values.basementArea)) {
+		if (!values.basementArea || values.basementArea <= 0 ) {
 			SetErrMessage('يرجى ادخال مساحة القبو صحيح');
 			setLoading(false);
 			return;
@@ -65,7 +65,7 @@ const Capacity = ({ editMode, Condition, values, setField, setIsEnableNextBtn })
 			setCalculatedData(false);
 		}
 		else {
-			setField('capacity', response.responseBody.body.carryingCapacity.toFixed(0));
+			setField('capacity', response.responseBody.body.carryingCapacity.toFixed(3));
 			setField('financialGuarantee', `${response.responseBody.body.financialGuarantee.toFixed(3)} ر.س.`);
 			setCalculatedData(true);
 			setIsEnableNextBtn(true);

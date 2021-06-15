@@ -39,23 +39,17 @@ const capacityValidation = values => {
     msg.beneficiariesNum = required
   if (parseInt(values.beneficiariesNum) <= 0)
     msg.basementArea = 'يجب ان يكون عدد المستفيدين اكبر من صفر'
-  if (!checkIsNumber(values.beneficiariesNum)) {
-    msg.basementArea = 'يجب ادخال عدد المستفيدين صحيح'
-  }
+
   if (!values.buildingArea)
     msg.buildingArea = required
   if (parseInt(values.buildingArea) <= 0)
     msg.basementArea = 'يجب ان يكون مساحة مسطح البناء اكبر من صفر'
-  if (!checkIsNumber(values.buildingArea)) {
-    msg.basementArea = 'يجب ادخال مساحة مسطح البناء صحيح'
-  }
+
   if (!values.basementArea)
     msg.basementArea = required
   if (parseInt(values.basementArea) <= 0)
     msg.basementArea = 'يجب ان يكون مساحة القبو اكبر من صفر'
-  if (!checkIsNumber(values.basementArea)) {
-    msg.basementArea = 'يجب ادخال مساحة القبو صحيح'
-  }
+
   if (parseInt(values.buildingArea) <= parseInt(values.basementArea))
     msg.basementArea = 'مساحة القبو يجب ان تكون أقل من مساحة مسطح البناء'
   /*if (values.beneficiariesNum > parseInt(values.capacity))
@@ -111,12 +105,12 @@ const personsValidation = async values => {
     return { isSuccessful: false, message: "يرجى استيفاء الشروط" };
 
   }
-  const TeachersCount = values.customers.filter(customer => customer.staffTypes === "معلم تربية خاصة ").length
+  const TeachersCount = values.customers.filter(customer => customer.staffTypes === "معلم تربية خاصة").length
   const managersCount = values.customers.filter(customer => customer.staffTypes === "مدير").length
   if (managersCount > 0 && managersCount !== 1)
     return { isSuccessful: false, message: "يرجى استيفاء الشروط" };
 
-  if (values.beneficiariesNum / 8 >= TeachersCount && TeachersCount >= 1)
+  if (Math.round(values.beneficiariesNum / 8) > TeachersCount || TeachersCount < 1)
     return { isSuccessful: false, message: "يرجى استيفاء الشروط" };
   return response
 }
@@ -244,7 +238,7 @@ const validateAddStaffForm = (values, rowIndex, SAForm, forignForm) => {
   console.log(`-- SAForm :: ${SAForm}`)
   console.log(`-- forignForm :: ${forignForm}`)
   console.log(`-- rowIndex :: ${!rowIndex || rowIndex !== -1 ? JSON.stringify(values.customers[rowIndex]) : values}`)
-  const { nationality, year, month, day, idNumber, iqamaNo, staffTypes } = !rowIndex || rowIndex !== -1 ? values.customers[rowIndex] : values;
+  const { nationality, year, month, day, idNumber, iqamaNo, staffTypes,EducationalQualification,cv } = !rowIndex || rowIndex !== -1 ? values.customers[rowIndex] : values;
   console.log(`-- nationality :: ${nationality}`);
   console.log(`-- idNumber :: ${idNumber}`);
   console.log(`-- year :: ${year}`);
@@ -274,6 +268,12 @@ const validateAddStaffForm = (values, rowIndex, SAForm, forignForm) => {
   if (SAForm || forignForm) {
     if (!staffTypes) {
       return "يرجى اختيار نوع الكادر";
+    }
+    if (!EducationalQualification) {
+      return "يرجى رفع المؤهلات التعليمية";
+    }
+    if (!cv) {
+      return "يرجى رفع السيرة الذاتية";
     }
 
   }

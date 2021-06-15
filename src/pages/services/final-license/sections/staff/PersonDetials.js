@@ -172,7 +172,6 @@ const Row = ({ editMode, SponsorName, setSponsorName, values, fromEdit, setFromE
                 onClick={() => {
                   var customers = [...values.customers]
                   fields.remove(index);
-                  setField('managersCount', (managersCount)?managersCount:0);
                   setField("nationality", "")
                   setField("nationalityBtn", "")
                   setField("idNumber", "");

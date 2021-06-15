@@ -23,6 +23,7 @@ import {
   Alert,
   CircularProgress,
   Grid,
+  AlertTitle,
 } from '@material-ui/core';
 import FinalFromWizard from '../../../components/wizard/FinalFormWizard';
 import AlertDialog from 'src/components/AlertDialog';
@@ -86,9 +87,10 @@ const CreateFinalLicense = () => {
       response = await createFinalLicenseAPIFunc(values);
       handleClickOpen(` تم تقديم طلب ${response.responseBody.data.requestNumber} لإصدار الترخيص النهائي رقم ${values.temporaryLicenceNum} يرجى تسليم أصل الضمان البنكي إلى وكالة التأهيل والتوجيه الإجتماعي بوزارة الموارد البشرية والتنمية الإجتماعية لانهاء إجراءات الطلب خلال 3 أيام عمل`, '');
     }
-    else
+    else {
       response = await updateFinalLicenseAPIFunc(values, taskID);
-    handleClickOpen(` تم تقديم طلب ${response.responseBody.data.requestNumber} لإصدار الترخيص النهائي رقم ${values.temporaryLicenceNum} يرجى تسليم أصل الضمان البنكي إلى وكالة التأهيل والتوجيه الإجتماعي بوزارة الموارد البشرية والتنمية الإجتماعية لانهاء إجراءات الطلب خلال 3 أيام عمل`, '');
+      handleClickOpen(` تم تقديم طلب ${response.responseBody.data.requestNumber} لإصدار الترخيص النهائي رقم ${values.temporaryLicenceNum} يرجى تسليم أصل الضمان البنكي إلى وكالة التأهيل والتوجيه الإجتماعي بوزارة الموارد البشرية والتنمية الإجتماعية لانهاء إجراءات الطلب خلال 3 أيام عمل`, '');
+    }
   };
 
   const handleClickOpen = (dialogContent, dialogTitle) => {
@@ -104,10 +106,17 @@ const CreateFinalLicense = () => {
   return (
     <Container maxWidth="md">
       <Card>
+
         <CardHeader
           title="اصدار ترخيص نهائي لمركز تأهيل أهلي"
         />
         <Divider />
+        {!isLoading && editMode &&
+          <Alert variant="outlined" severity="warning" sx={{ marginLeft: 2, marginRight: 2, marginTop: 1 }}>
+            <AlertTitle>يرجى مراجعة الطلب</AlertTitle>
+            {editInitValues.chairmanComment.comment}
+          </Alert>
+        }
         {errMessage && (
           <Alert variant="outlined" severity="error">
             {errMessage}
@@ -116,11 +125,7 @@ const CreateFinalLicense = () => {
         <CardContent>
           {!isLoading ?
             <>
-              {editMode &&
-                <Alert severity="error" style={{ position: 'fixed', color: 'white', background: 'red', top: 50, right: 0, width: '100%', zIndex: 100, opacity: 0.8 }}>
-                  {editInitValues.chairmanComment.comment}
-                </Alert>
-              }
+
               <FinalFromWizard
                 initialValues={!editMode ? {
                   agree: [],

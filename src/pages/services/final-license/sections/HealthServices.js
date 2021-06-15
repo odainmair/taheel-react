@@ -10,6 +10,7 @@ import {
 } from '@material-ui/core';
 import { Field } from 'react-final-form';
 import { Radio, Select } from 'final-form-material-ui';
+import { OnChange } from 'react-final-form-listeners';
 import PropTypes from 'prop-types';
 import FileUploaderComp from '../components/FileUploader';
 
@@ -60,6 +61,14 @@ const HealthServices = ({ Condition, values, setField }) => {
               )
             }}
           </Field>
+          <OnChange name="healthServices">
+            {(value, previous) => {
+              if (value === "no"){
+                setField("healthServiceType","");
+                setField("healthServiceAttachment","");
+              }
+            }}
+          </OnChange>
         </Grid>
         <Condition when='healthServices' is='yes' >
           <Grid
