@@ -197,7 +197,7 @@ const Capacity = ({ editMode, Condition, values, setField, setIsEnableNextBtn })
 								>
 									<Alert severity="info" size="small">
 										يتم حسابه من قبل المنصة:
-										(مساحة مسطح البناء - مساحة القبو/10)
+										(مساحة مسطح البناء - مساحة القبو)/10
 									</Alert>
 								</Box>
 							</Grid>

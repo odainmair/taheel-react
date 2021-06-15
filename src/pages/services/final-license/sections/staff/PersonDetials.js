@@ -358,7 +358,7 @@ const PersonDetials = ({ editMode, Condition, MedicalPracticeCondition, setField
             label={'teachers'}
             name={'teachersCount'}
             component={teachersCountComp}
-            maxValue={values.beneficiariesNum}
+            maxValue={(values.beneficiariesNum)?values.beneficiariesNum:0}
           />
           معلم تربية خاصة نسبة 1 الى 8
           <Link

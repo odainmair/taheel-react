@@ -132,7 +132,6 @@ const CreateFinalLicense = () => {
                   isNextBtnDisabled: false,
                   managersCount: 0,
                   teachersCount: 0,
-                  beneficiariesNum: 0,
                 } : {
                   agree: [],
                   isNextBtnDisabled: false,
