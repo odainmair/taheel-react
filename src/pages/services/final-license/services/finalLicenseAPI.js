@@ -6,7 +6,7 @@ import { getCurrentUser } from 'src/utils/UserLocalStorage'
 const getFurnitures = (values) => {
 	const furnitures = []
 	values.Furniture.map((docId, index) => {
-		furnitures.push({ Document: { id: docId } })
+		furnitures.push({ Document: docId })
 	})
 	return furnitures
 }
@@ -104,9 +104,9 @@ const createFinalLicenseAPIFunc = async (values) => {
 			"healthCareServices_r": {
 				"ID": values.healthCareServices_r,
 				"type": values.healthServices === 'yes' ? values.healthServiceType : null,
-				"attachment": values.healthServices === 'yes' ? {
-					"ID": values.healthServiceAttachment[0]
-				} : null
+				"attachment": values.healthServices === 'yes' ?
+					values.healthServiceAttachment[0]
+					: null
 			}
 		}
 
@@ -156,9 +156,9 @@ const updateFinalLicenseAPIFunc = async (values, TaskID) => {
 			"healthCareServices_r": {
 				"ID": values.healthCareServices_r,
 				"type": values.healthServices === 'yes' ? values.healthServiceType : null,
-				"attachment":values.healthServices  === 'yes'? {
-					"ID":values.healthServiceAttachment[0]
-				  }: null
+				"attachment": values.healthServices === 'yes' ?
+					values.healthServiceAttachment[0]
+					: null
 			}
 		}
 	}

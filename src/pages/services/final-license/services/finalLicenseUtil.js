@@ -17,6 +17,7 @@ import {
   Button,
   CircularProgress,
 } from '@material-ui/core';
+import { checkIsNumber } from 'src/utils/inputValidator';
 
 const CenterDetailsValidation = values => {
   console.log("values", isNaN(values.CRNumber))
@@ -25,7 +26,7 @@ const CenterDetailsValidation = values => {
     msg.CRNumber = required
   if (!values.temporaryLicenceNum)
     msg.temporaryLicenceNum = required
-  if (values.CRNumber && isNaN(values.CRNumber))
+  if (values.CRNumber && isNaN(values.CRNumber) && values.CRNumber.length > 10)
     msg.CRNumber = "يجب ان يحتوي فقط على ارقام والا يزيد عددها عن 10 خانات"
   return msg
 }
@@ -36,38 +37,65 @@ const capacityValidation = values => {
   console.log(' values.buildingArea', typeof (values.buildingArea), 'values.basementArea', typeof (values.basementArea))
   if (!values.beneficiariesNum)
     msg.beneficiariesNum = required
+  if (parseInt(values.beneficiariesNum) <= 0)
+    msg.basementArea = 'يجب ان يكون عدد المستفيدين اكبر من صفر'
+
   if (!values.buildingArea)
     msg.buildingArea = required
+  if (parseInt(values.buildingArea) <= 0)
+    msg.basementArea = 'يجب ان يكون مساحة مسطح البناء اكبر من صفر'
+
   if (!values.basementArea)
     msg.basementArea = required
-  if (parseInt(values.buildingArea) < parseInt(values.basementArea))
+  if (parseInt(values.basementArea) <= 0)
+    msg.basementArea = 'يجب ان يكون مساحة القبو اكبر من صفر'
+
+  if (parseInt(values.buildingArea) <= parseInt(values.basementArea))
     msg.basementArea = 'مساحة القبو يجب ان تكون أقل من مساحة مسطح البناء'
-  if (values.beneficiariesNum > parseInt(values.capacity))
-    msg.beneficiariesNum = 'عدد المستفيدين يجب ان لا يتجاوز الطاقة الاستعابية'
+  /*if (values.beneficiariesNum > parseInt(values.capacity))
+    msg.beneficiariesNum = 'عدد المستفيدين يجب ان لا يتجاوز الطاقة الاستعابية'*/
   return msg
 }
 
 const RequirementsValidation = values => {
-  const response = { isSuccessful: true, message: '' };
-  if (!values.OperationalPlan || !values.ExecutivePlan || !values.OfficeReport || !values.SecurityReport || !values.Furniture || !values.FinancialGuaranteeAtt)
-    return { isSuccessful: false, message: "يرجى ارفاق جميع المتطلبات المذكورة" };
-  return response
+  var msg = {}
+  if (!values.OperationalPlan)
+    msg.OperationalPlan = "يرجى ارفاق هذا الملف";
+
+  if (!values.ExecutivePlan)
+    msg.ExecutivePlan = "يرجى ارفاق هذا الملف";
+
+  if (!values.OfficeReport)
+    msg.OfficeReport = "يرجى ارفاق هذا الملف";
+
+  if (!values.SecurityReport)
+    msg.SecurityReport = "يرجى ارفاق هذا الملف";
+
+  if (!values.Furniture)
+    msg.Furniture = "يرجى ارفاق هذا الملف";
+
+  if (!values.FinancialGuaranteeAtt)
+    msg.FinancialGuaranteeAtt = "يرجى ارفاق هذا الملف";
+
+  return msg;
 }
 
-const healthServicesValidation = async values => {
-  const response = { isSuccessful: true, message: '' };
+const healthServicesValidation = values => {
+  var msg = {}
+  console.log(JSON.stringify(values))
   if (!values.healthServices)
-    return { isSuccessful: false, message: "يرجى تحديد ما ان كان المركز يقدم خدمات صحية ام لا" };
-  if (values.healthServices === 'yes') {
+    msg.healthServices = "يرجى تحديد ما ان كان المركز يقدم خدمات صحية ام لا";
+  if (values.healthServices && values.healthServices === 'yes') {
     if (!values.healthServiceType)
-      return { isSuccessful: false, message: "يرجى تحديد نوع الخدمة الصحية" };
-    if (!values.healthServiceAttachment)
+      msg.healthServiceType = "يرجى تحديد نوع الخدمة الصحية";
+    if (!values.healthServiceAttachment) {
       if (values.healthServiceType === 1)
-        return { isSuccessful: false, message: " يرجى ارفاق رخصة وزارة الصحة" };
+        msg.healthServiceAttachment = " يرجى ارفاق رخصة وزارة الصحة";
       else
-        return { isSuccessful: false, message: " يرجى ارفاق عقد الشراكة" };
+        msg.healthServiceAttachment = " يرجى ارفاق عقد الشراكة";
+    }
   }
-  return response
+  return msg
 
 }
 
@@ -77,12 +105,12 @@ const personsValidation = async values => {
     return { isSuccessful: false, message: "يرجى استيفاء الشروط" };
 
   }
-  const TeachersCount = values.customers.filter(customer => customer.staffTypes === "معلم تربية خاصة ").length
+  const TeachersCount = values.customers.filter(customer => customer.staffTypes === "معلم تربية خاصة").length
   const managersCount = values.customers.filter(customer => customer.staffTypes === "مدير").length
   if (managersCount > 0 && managersCount !== 1)
     return { isSuccessful: false, message: "يرجى استيفاء الشروط" };
 
-  if (values.beneficiariesNum / 8 >= TeachersCount && TeachersCount >= 1)
+  if (Math.round(values.beneficiariesNum / 8) > TeachersCount || TeachersCount < 1)
     return { isSuccessful: false, message: "يرجى استيفاء الشروط" };
   return response
 }
@@ -96,31 +124,27 @@ const downloadFileFn = async (setLoading, loading, licenseNumber) => {
   }
 }
 
-const uploadDocument = async (setDocument, name, file, multiple, setLoading) => {
-  var reader = new FileReader();
-  reader.readAsDataURL(file);
-  reader.onloadend = async function () {
-    var base64String = reader.result;
-    var n = base64String.indexOf("base64,") + 7;
-    base64String = reader.result.substr(n);
-    const data = window.atob(base64String)
-    const image = data
+const uploadDocument = (file) => {
+  return new Promise((resolve) => {
+    var reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      var base64String = reader.result;
+      var n = base64String.indexOf("base64,") + 7;
+      base64String = reader.result.substr(n);
+      const data = window.atob(base64String)
+      const image = data
 
-    const buf = new Uint8Array(image.length);
-    for (let i = 0; i < image.length; i++) {
-      buf[i] = image.charCodeAt(i);
+      const buf = new Uint8Array(image.length);
+      for (let i = 0; i < image.length; i++) {
+        buf[i] = image.charCodeAt(i);
+      }
+      return resolve(buf);
     }
 
-    const response = await uploadDocumentApi(name, buf)
-    console.log('...response...', response)
-    if (!response.isSuccessful)
-      SetErrMessage(response.message)
-    else {
-      setDocument(name, response.responseBody.docID, multiple)
-      setLoading(false)
-    }
-  }
+  })
 }
+
 
 
 
@@ -209,7 +233,52 @@ const DownloadButtTable = ({ docIDs, name, label }) => {
   )
 
 }
+const validateAddStaffForm = (values, rowIndex, SAForm, forignForm) => {
+  console.log(`-- rowIndex :: ${rowIndex}`)
+  console.log(`-- SAForm :: ${SAForm}`)
+  console.log(`-- forignForm :: ${forignForm}`)
+  console.log(`-- rowIndex :: ${!rowIndex || rowIndex !== -1 ? JSON.stringify(values.customers[rowIndex]) : values}`)
+  const { nationality, year, month, day, idNumber, iqamaNo, staffTypes,EducationalQualification,cv } = !rowIndex || rowIndex !== -1 ? values.customers[rowIndex] : values;
+  console.log(`-- nationality :: ${nationality}`);
+  console.log(`-- idNumber :: ${idNumber}`);
+  console.log(`-- year :: ${year}`);
 
+  if (!nationality) {
+    return "يرجى اختيار الجنسية";
+  }
+  if (nationality === "سعودي") {
+    if (!idNumber) {
+      return "يرجى ادخال رقم الهوية";
+    }
+    if (!year || !month || !day) {
+      return "يرجى ادخال تاريخ ميلاد صحيح";
+    }
+  }
+  if (nationality === "غير سعودي") {
+    if (!iqamaNo) {
+      return "يرجى ادخال رقم الاقامة";
+    }
+  }
+  if (!SAForm && !forignForm) {
+
+    return "يرجى تحقق من هوية الشخص";
+
+
+  }
+  if (SAForm || forignForm) {
+    if (!staffTypes) {
+      return "يرجى اختيار نوع الكادر";
+    }
+    if (!EducationalQualification) {
+      return "يرجى رفع المؤهلات التعليمية";
+    }
+    if (!cv) {
+      return "يرجى رفع السيرة الذاتية";
+    }
+
+  }
+  return null;
+}
 const getStaff = (data) => {
   const newKeys = {
     idNumIqamaNum: 'idNumber',
@@ -252,18 +321,19 @@ const getStaff = (data) => {
   return staff
 }
 
-export { 
-  CenterDetailsValidation, 
-  capacityValidation, 
-  RequirementsValidation, 
-  healthServicesValidation, 
-  personsValidation, 
-  ConditionComp, 
-  MedicalPracticeComp, 
-  calculationConditionComp, 
-  uploadDocument, 
-  DownloadButt, 
-  ContentField, 
+export {
+  CenterDetailsValidation,
+  capacityValidation,
+  RequirementsValidation,
+  healthServicesValidation,
+  personsValidation,
+  ConditionComp,
+  MedicalPracticeComp,
+  calculationConditionComp,
+  uploadDocument,
+  DownloadButt,
+  ContentField,
   DownloadButtTable,
-  getStaff, 
+  getStaff,
+  validateAddStaffForm
 };

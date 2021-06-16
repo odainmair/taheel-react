@@ -113,8 +113,8 @@ export default
     {
       id: uuid(),
       label: {
-        ar: 'الضمان المالي',
-        en: 'Financial Guarantee'
+        ar: 'الطاقة الاستعابية',
+        en: 'capacity'
       },
       name: 'capacity',
       type: 'Text',

@@ -41,7 +41,7 @@ const useRowStyles = makeStyles({
   },
 });
 
-const Row = ({ editMode, SponsorName, setSponsorName, values, fromEdit, setFromEdit, fieldName, setFieldName, open, setOpen, setField, fields, name, index }) => {
+const Row = ({ editMode, SponsorName, setSponsorName, values, fromEdit, setFromEdit, fieldName, setFieldName, open, setOpen, setField, fields, name, index, setRowIndex }) => {
   const classes = useRowStyles();
   const [showen, setShowen] = useState(false)
   const handleClickOpen = () => {
@@ -131,7 +131,8 @@ const Row = ({ editMode, SponsorName, setSponsorName, values, fromEdit, setFromE
                 color="primary"
                 component="span"
                 onClick={() => {
-                  setFromEdit(true)
+                  setFromEdit(true);
+                  setRowIndex(index);
                   setFieldName(name);
                   const { idNumber, iqamaNo, lastName, nationality, nationalityBtn, day, month, year, fullName, gender, birthDate, staffTypes, cv, cvAtt, EducationalQualification, MedicalPractice, EducationalQualificationAtt, MedicalPracticeAtt, sponsorName } = fields.value[index];
                   setField("idNumber", idNumber);
@@ -171,7 +172,6 @@ const Row = ({ editMode, SponsorName, setSponsorName, values, fromEdit, setFromE
                 onClick={() => {
                   var customers = [...values.customers]
                   fields.remove(index);
-                  setField('managersCount', managersCount)
                   setField("nationality", "")
                   setField("nationalityBtn", "")
                   setField("idNumber", "");
@@ -260,7 +260,7 @@ const teachersCountComp = ({ maxValue }) => (
         {({ fields }) => {
           let count = 0;
           if (fields.value) {
-            count = fields.value.filter(customer => customer.staffTypes === "معلم تربية خاصة ").length
+            count = fields.value.filter(customer => customer.staffTypes === "معلم تربية خاصة").length
           }
           if (count >= 1) {
             if (Math.round(maxValue / 8) <= count) {
@@ -279,7 +279,7 @@ const teachersCountComp = ({ maxValue }) => (
 const PersonDetials = ({ editMode, Condition, MedicalPracticeCondition, setField, pop, push, values }) => {
   const [open, setOpen] = useState(false);
   const [fieldName, setFieldName] = useState(null);
-  const [index, setIndex] = useState(0);
+  const [rowIndex, setRowIndex] = useState(-1);
   const [fromEdit, setFromEdit] = useState(false)
   const [SponsorName, setSponsorName] = useState(false)
   const [dialogContent, setDialogContent] = useState("");
@@ -358,7 +358,7 @@ const PersonDetials = ({ editMode, Condition, MedicalPracticeCondition, setField
             label={'teachers'}
             name={'teachersCount'}
             component={teachersCountComp}
-            maxValue={values.beneficiariesNum}
+            maxValue={(values.beneficiariesNum)?values.beneficiariesNum:0}
           />
           معلم تربية خاصة نسبة 1 الى 8
           <Link
@@ -380,7 +380,9 @@ const PersonDetials = ({ editMode, Condition, MedicalPracticeCondition, setField
           fullWidth
           endIcon={<AddIcon style={{ marginRight: 10 }} />}
           onClick={() => {
-            setFromEdit(false)
+            setRowIndex(-1);
+            console.log(`-- rowIndex :: ${rowIndex}`)
+            setFromEdit(false);
             setField("nationality", "")
             setField("nationalityBtn", "")
             setField("idNumber", "");
@@ -431,7 +433,7 @@ const PersonDetials = ({ editMode, Condition, MedicalPracticeCondition, setField
 
               <FieldArray name="customers">
                 {({ fields }) => fields.map((name, index) => (
-                  <Row editMode={editMode} managersCount={managersCount} setManagersCount={setManagersCount} SponsorName={SponsorName} setSponsorName={setSponsorName} values={values} fromEdit={fromEdit} setFromEdit={setFromEdit} fieldName={fieldName} setFieldName={setFieldName} open={open} setOpen={setOpen} setField={setField} fields={fields} name={name} index={index} />
+                  <Row editMode={editMode} managersCount={managersCount} setManagersCount={setManagersCount} SponsorName={SponsorName} setSponsorName={setSponsorName} values={values} fromEdit={fromEdit} setFromEdit={setFromEdit} fieldName={fieldName} setFieldName={setFieldName} open={open} setOpen={setOpen} setField={setField} fields={fields} name={name} index={index} setRowIndex={setRowIndex} />
                 ))}
               </FieldArray>
 
@@ -472,7 +474,7 @@ const PersonDetials = ({ editMode, Condition, MedicalPracticeCondition, setField
           setField("MedicalPracticeAtt", "")
         }}
       >
-        <AddPersonForm fromEdit={fromEdit} MedicalPracticeCondition={MedicalPracticeCondition} setField={setField} index={index} pop={pop} push={push} values={values} setOpenPopup={setOpen} fieldName={fieldName} Condition={Condition} />
+        <AddPersonForm fromEdit={fromEdit} MedicalPracticeCondition={MedicalPracticeCondition} setField={setField}  pop={pop} push={push} values={values} setOpenPopup={setOpen} fieldName={fieldName} Condition={Condition} rowIndex={rowIndex}/>
       </FormDialog>
     </Grid>
   );
@@ -490,6 +492,6 @@ PersonDetials.propTypes = {
   setField: PropTypes.func.isRequired,
   pop: PropTypes.func.isRequired,
   push: PropTypes.func.isRequired,
-  values: PropTypes.func.isRequired,
-  input: PropTypes.func.isRequired,
+  values: PropTypes.object.isRequired,
+  input: PropTypes.func,
 };

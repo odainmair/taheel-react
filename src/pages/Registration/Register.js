@@ -67,6 +67,8 @@ const Register = () => {
 
   let { otp, setOtp } = useContext(localContext);
   const { recipient, setRecipient } = useContext(localContext);
+  const [errMessage, SetErrMessage] = useState('')
+
   const [isMobileNavOpen, setMobileNavOpen] = useState(false);
   const [is, setIs] = useState(false)
   const [info, setInfo] = React.useState({});
@@ -76,6 +78,9 @@ const Register = () => {
   });
 
   const navigate = useNavigate();
+  function numberToDay(day) {
+    return ('0' + day).slice(-2);
+  }
   const validateCitizenFunc = async (idNumber, birthDate) => {
     const url = '/taheel-apis-utilities-validateCitizen-v3';
     const requestBody = {
@@ -88,8 +93,10 @@ const Register = () => {
   const validateAPIFunc = async (values) => {
     console.log('HIIIIIIIIIII')
     const { idNumber, day, month, year } = values;
-    function numberToDay(day) {
-      return ('0' + day).slice(-2);
+
+    const verifyEmailAndIqamaNumRs = await verifyEmailAndIqamaNum({ idNumber });
+    if (!verifyEmailAndIqamaNumRs.isSuccessful) {
+      return { isSuccessful: false, message: verifyEmailAndIqamaNumRs.message };
     }
     const birthDate = year + '' + numberToDay(month) + numberToDay(day);
     const response = { isSuccessful: true, message: '' };
@@ -97,20 +104,29 @@ const Register = () => {
     if (!validateCitRs.isSuccessful) {
       return { isSuccessful: false, message: validateCitRs.message };
     }
-    const data = validateCitRs.responseBody.data.Body;
+    const data = validateCitRs.responseBody.data;
     setInfo(data);
 
     const url = '/taheel-apis-utilities-AbsherOTP-v2'
     console.log(otp)
     const queryParams = {
-      BeneficiaryId: "273",
+      BeneficiaryId: idNumber,
       OTP: otp
     }
     const absherSms = await APIRequest({ queryParams, url });
     return response;
   };
 
+  const validateEmail = async (values) => {
+    console.log('validateEmail')
+    const { email } = values;
 
+    const verifyEmailAndIqamaNumRs = await verifyEmailAndIqamaNum({ email });
+    if (!verifyEmailAndIqamaNumRs.isSuccessful) {
+      return { isSuccessful: false, message: verifyEmailAndIqamaNumRs.message };
+    }
+    return { isSuccessful: true, message: '' };
+  }
   // OTP Checking
   const validateOtp = async (values) => {
     const { AbsherOtp } = values;
@@ -138,40 +154,46 @@ const Register = () => {
     return { isSuccessful: true, message: '' };
 
   };
+  const verifyEmailAndIqamaNum = async ({ idNumber, email }) => {
+    const queryParams = {
+      Email: email,
+      IqamaNum: idNumber
+    };
+    const url = 'taheel-apis-utilities-verifyEmailAndIqamaNum-v2';
+    const response = await APIRequest({ queryParams, url });
+    return response;
+  };
 
   const onSubmit = async (values) => {
     const response = { isSuccessful: true, message: '' };
-    const { taheelOtp, phoneNumber } = values
+    const { taheelOtp, phoneNumber } = values;
+    const { idNumber, day, month, year } = values;
+    const birthDate = year + '' + numberToDay(month) + numberToDay(day);
 
     if (phoneNumber && !is) {
-      validateTaheelOtp(values)
-      setIs(true)
+      validateTaheelOtp(values);
+      values.isTaheelValidate = true;
+      setIs(true);
     }
 
     else if ((taheelOtp && otp == taheelOtp) || taheelOtp == '000000') {
       const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
       await sleep(300);
       const requestBody = {
-        firstName: info.Name.FirstName,
-        secondName: info.Name.SecondName,
-        thirdName: info.Name.ThirdName,
-        lastName: info.Name.LastName,
         email: values.email,
-        idNumIqamaNum: info.IdExpiry.IdNo,
+        nationality: values.nationality,
+        idNumIqamaNum: idNumber,
         phoneNumber: values.phoneNumber,
-        DOB: moment(info.BirthHijriDate, 'iYYYYiMMiDD').format('iDD/iMM/iYYYY'),
+        DOB: moment(birthDate, 'iYYYYiMMiDD').format('iDD/iMM/iYYYY'),
         userType: 'center owner',
         userPassword: values.password,
-        expiryDate: moment(info.IdExpiry.HijriDate, 'iYYYYiMMiDD').format('iDD/iMM/iYYYY'),
-        gender: info.Gender,
-        profession: info.IdExpiry.Profession,
-        maritalStatus: info.IdExpiry.MaritalStatus,
-        placeOFBirth: info.BirthPlace
       };
       const url = '/taheel-apis-users-registration-v2';
       const response = await APIRequest({ requestBody, url });
       if (!response.isSuccessful) {
+        //SetErrMessage(response.message);
         return { isSuccessful: false, message: response.message };
+
       }
       handleClickOpen('لقد تم تسجيلك بنجاح', '');
       return { isSuccessful: true, message: '' };
@@ -226,8 +248,7 @@ const Register = () => {
           sx={{
             backgroundColor: '#fafafa',
             width: '100%',
-            position: 'fixed',
-            height: "100%",
+
             backgroundSize: "cover"
           }}
         >
@@ -289,11 +310,17 @@ const Register = () => {
                 </Typography>
               </Box>
               <CardContent sx={{ padding: "0px" }}>
+                {errMessage && (
+                  <Alert variant="outlined" severity="error">
+                    {errMessage}
+                  </Alert>
+                )}
                 <FinalFromWizard // pass initialValues, onSubmit and 4 childrens
                   initialValues={{
                     disabledBackButt: true,
-                    lastPageErrorHandling: false,
-                    agree: [false]
+                    lastPageErrorHandling: true,
+                    agree: [false],
+                    isTaheelValidate: false
                   }}
                   onSubmit={onSubmit}
                 // counter={counter}
@@ -320,6 +347,7 @@ const Register = () => {
 
                   <FinalFromWizard.Page label=""
                     validate={regitrationValidate}
+                    nextFun={(values) => validateEmail(values)}
                   >
                     <RegistrationInfo
                       Condition={Condition}

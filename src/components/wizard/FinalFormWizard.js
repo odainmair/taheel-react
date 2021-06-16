@@ -62,7 +62,8 @@ export default class FinalFromWizard extends React.Component {
         completed: true
       }));
       if (this.state.values.lastPageErrorHandling) {
-        const { isSuccessful, message } = await onSubmit(values)
+        console.log("this.state.values.lastPageErrorHandling");
+        const { isSuccessful, message } = await onSubmit(values);
         if (!isSuccessful) {
           this.setState((state) => ({
             isNextCallBackFunSuccess: false,
@@ -180,7 +181,6 @@ export default class FinalFromWizard extends React.Component {
                   </Grid>
                 )}
               </Grid>
-              {/* <pre>{JSON.stringify(values, 0, 2)}</pre> */}
             </form>
           )
         }}

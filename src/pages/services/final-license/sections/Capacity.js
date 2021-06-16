@@ -13,29 +13,63 @@ import PropTypes from 'prop-types';
 import { TextField as TextFieldFinal, Select } from 'final-form-material-ui';
 import { calculation } from '../services/finalLicenseAPI'
 import { ContentField } from '../services/finalLicenseUtil'
-const Capacity = ({ editMode, Condition, values, setField }) => {
+import { checkIsNumber } from 'src/utils/inputValidator';
+const Capacity = ({ editMode, Condition, values, setField, setIsEnableNextBtn }) => {
 
 	const [calculatedData, setCalculatedData] = useState(false);
 	const [errMessage, SetErrMessage] = useState('');
 	const [loading, setLoading] = useState(false);
 
 	useEffect(() => {
-		setField('isNextBtnDisabled', true)
+		if (values.capacity) {
+			setIsEnableNextBtn(true);
+			setCalculatedData(true);
+		} else {
+			setIsEnableNextBtn(false);
+		}
 	}, []);
 
 	const calculate = async () => {
 		setLoading(true);
 		SetErrMessage('');
+		if (!values.beneficiariesNum || values.beneficiariesNum <= 0) {
+			SetErrMessage('يرجى ادخال عدد المستفيدين الفعلي صحيح');
+			setLoading(false);
+			return;
+		}
+		if (!values.buildingArea || values.buildingArea <= 0 ) {
+			SetErrMessage('يرجى ادخال مساحة مسطح البناء صحيح');
+			setLoading(false);
+			return;
+		}
+		if (!values.basementArea || values.basementArea <= 0 ) {
+			SetErrMessage('يرجى ادخال مساحة القبو صحيح');
+			setLoading(false);
+			return;
+		}
+		if (parseInt(values.buildingArea) <= parseInt(values.basementArea)) {
+			SetErrMessage('مساحة القبو يجب ان تكون أقل من مساحة مسطح البناء');
+			setLoading(false);
+			return
+		}
+	/*	if (values.beneficiariesNum > parseInt(values.capacity)) {
+			SetErrMessage('عدد المستفيدين يجب ان لا يتجاوز الطاقة الاستعابية');
+			setLoading(false);
+			return
+		}*/
+
 		const response = await calculation(values.buildingArea, values.basementArea);
 		if (!response.isSuccessful) {
+			setIsEnableNextBtn(false);
 			SetErrMessage(response.message);
 			setCalculatedData(false);
 		}
 		else {
-			setField('capacity', response.responseBody.body.carryingCapacity.toFixed(0));
+			setField('capacity', response.responseBody.body.carryingCapacity.toFixed(3));
 			setField('financialGuarantee', `${response.responseBody.body.financialGuarantee.toFixed(3)} ر.س.`);
 			setCalculatedData(true);
-		
+			setIsEnableNextBtn(true);
+
 		}
 		setLoading(false);
 	}
@@ -70,7 +104,7 @@ const Capacity = ({ editMode, Condition, values, setField }) => {
 						required
 						name="beneficiariesNum"
 						component={TextFieldFinal}
-						type="text"
+						type="number"
 						variant="outlined"
 						dir="rtl"
 						className="custom-field"
@@ -88,7 +122,7 @@ const Capacity = ({ editMode, Condition, values, setField }) => {
 						label="مساحة مسطح البناء"
 						name="buildingArea"
 						component={TextFieldFinal}
-						type="text"
+						type="number"
 						variant="outlined"
 						dir="rtl"
 						className="custom-field"
@@ -106,7 +140,7 @@ const Capacity = ({ editMode, Condition, values, setField }) => {
 						label="مساحة القبو"
 						name="basementArea"
 						component={TextFieldFinal}
-						type="text"
+						type="number"
 						variant="outlined"
 						dir="rtl"
 						className="custom-field"
@@ -163,7 +197,7 @@ const Capacity = ({ editMode, Condition, values, setField }) => {
 								>
 									<Alert severity="info" size="small">
 										يتم حسابه من قبل المنصة:
-										(مساحة مسطح البناء - مساحة القبو/10)
+										(مساحة مسطح البناء - مساحة القبو)/10
 									</Alert>
 								</Box>
 							</Grid>
@@ -196,6 +230,7 @@ export default Capacity;
 
 Capacity.propTypes = {
 	Condition: PropTypes.func.isRequired,
-	values: PropTypes.func.isRequired,
+	values: PropTypes.object.isRequired,
 	setField: PropTypes.func.isRequired,
+	setIsEnableNextBtn: PropTypes.func.isRequired,
 };

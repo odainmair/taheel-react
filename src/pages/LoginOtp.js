@@ -77,7 +77,6 @@ const LoginOtp = () => {
         sx={{
           backgroundColor: '#fafafa',
           width: '100%',
-          position: 'fixed',
           height: "100%",
           backgroundSize: "cover"
         }}
