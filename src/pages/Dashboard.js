@@ -37,15 +37,7 @@ const Dashboard = () => {
   };
   const [loading, setLoading] = useState(false);
   const [taheelRequests, setTaheelRequests] = useState([]);
-  const [taskRequests, setTaskRequests] = useState([{
-    "processID": 268457657,
-    "status": 0,
-    "centerLicenceNumber": "0101020029",
-    "requestNum": "CNTR-REQ-0119",
-    "userEmail": "ahmad.albuthom@inspirejo.com",
-    "name": "مراجعة طلب رقم CNTR-REQ-0119",
-    "ID": 8
-  }]);
+  const [taskRequests, setTaskRequests] = useState([]);
   const [centerRequests, setCenterRequests] = useState([]);
   const [totalPendingRequests, setTotalPendingRequests] = useState(0);
   const [totalCompletedRequests, setTotalCompletedRequests] = useState(0);
