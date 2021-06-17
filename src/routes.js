@@ -5,6 +5,7 @@ import MainLayout from 'src/components/MainLayout';
 import Account from 'src/pages/Account';
 import CreateTemporaryLicense from 'src/pages/services/temporary-license/CreateTemporaryLicense';
 import CreatefinalLicense from 'src/pages/services/final-license/CreateFinalLicense';
+import CreateFinalLicenseRenewal from 'src/pages/services/final-license-renewal/CreateFinalLicenseRenewal';
 import CustomerList from 'src/pages/CustomerList';
 import Dashboard from 'src/pages/Dashboard';
 import Login from 'src/pages/Login';
@@ -59,6 +60,7 @@ const routes = (isLoggedIn) => [
     children: [
       { path: 'templicense', element: <CreateTemporaryLicense /> },
       { path: 'finallicense', element: <CreatefinalLicense /> },
+      { path: 'finallicenserenewal', element: <CreateFinalLicenseRenewal /> },
       { path: '*', element: <Navigate to="/404" /> }
     ]
   }

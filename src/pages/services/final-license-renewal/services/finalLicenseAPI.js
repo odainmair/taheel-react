@@ -14,6 +14,7 @@ const getStaff = (values) => {
 
 	const staffTypesNo = {}
 	const newKeys = {
+		id: 'id',
 		idNumber: 'idNumIqamaNum',
 		day: 'birthDate',
 		fullName: 'name',
@@ -65,7 +66,7 @@ const getStaff = (values) => {
 }
 
 
-const createFinalLicenseAPIFunc = async (values) => {
+const createFinalLicenseRenewalAPIFunc = async (values) => {
 
 
 	const requestBody = {
@@ -104,14 +105,12 @@ const createFinalLicenseAPIFunc = async (values) => {
 			"healthCareServices_r": {
 				"ID": values.healthCareServices_r,
 				"type": values.healthServices === 'yes' ? values.healthServiceType : null,
-				"attachment": values.healthServices === 'yes' ?
-					values.healthServiceAttachment[0]
-					: null
+				"attachment": values.healthServices === 'yes' ? values.healthServiceAttachment[0] : null
 			}
 		}
 
 	}
-	const url = "taheel-apis-services-createFinalLicense-v2"
+	const url = "taheel-apis-services-renewLicenseV2"
 	const response = await APIRequest({ requestBody, url });
 	return response;
 }
@@ -156,9 +155,7 @@ const updateFinalLicenseAPIFunc = async (values, TaskID) => {
 			"healthCareServices_r": {
 				"ID": values.healthCareServices_r,
 				"type": values.healthServices === 'yes' ? values.healthServiceType : null,
-				"attachment": values.healthServices === 'yes' ?
-					values.healthServiceAttachment[0]
-					: null
+				"attachment":values.healthServices  === 'yes'? values.healthServiceAttachment[0] : null
 			}
 		}
 	}
@@ -169,10 +166,13 @@ const updateFinalLicenseAPIFunc = async (values, TaskID) => {
 
 
 
-const getTempLicense = async (userEmail) => {
+const getCenters = async (userEmail) => {
 	const url = 'taheel-apis-records-getCenters-v2';
-	const queryParams = { userEmail, isExpired: false, licenseType: 'رخصة مؤقتة' };
+	// const queryParams = { userEmail, isExpired: false, licenseType: 'رخصة مؤقتة' };
+	// const queryParams = { userEmail, forRenewal: true, isEligibleForFinal:true };
+	const queryParams = { userEmail, forRenewal: true};
 	const response = await APIRequest({ url, queryParams });
+	// console.log("response===============> " + JSON.parse(response));
 	return response;
 };
 
@@ -248,4 +248,4 @@ const downloadDocument = async (DocID, attachment) => {
 }
 
 
-export { validateCompanyFunc, createFinalLicenseAPIFunc, updateFinalLicenseAPIFunc, calculation, validateCitizenFunc, uploadDocumentApi, getTempLicense, getMunicipalLicenseNoApi, downloadDocument, TaskDetails, CentertDetails };
+export { validateCompanyFunc, createFinalLicenseRenewalAPIFunc, updateFinalLicenseAPIFunc, calculation, validateCitizenFunc, uploadDocumentApi, getCenters, getMunicipalLicenseNoApi, downloadDocument, TaskDetails, CentertDetails };

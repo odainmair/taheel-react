@@ -20,15 +20,39 @@ export default
     {
       id: uuid(),
       label: {
-        ar: 'رقم الترخيص المؤقت',
-        en: 'Temporary License Number'
+        ar: 'اسم مالك المركز',
+        en: 'Owner Name'
       },
-      name: 'temporaryLicenceNum',
+      name: 'ownerName',
       type: 'Text',
       gridSize: '6',
       sectionName: 'CenterDetails',
       validators: [],
     },
+    {
+      id: uuid(),
+      label: {
+        ar: 'رقم مالك المركز',
+        en: 'Owner Number'
+      },
+      name: 'ownerID',
+      type: 'Text',
+      gridSize: '6',
+      sectionName: 'CenterDetails',
+      validators: [],
+    },
+    // {
+    //   id: uuid(),
+    //   label: {
+    //     ar: 'رقم الترخيص المؤقت',
+    //     en: 'Temporary License Number'
+    //   },
+    //   name: 'temporaryLicenceNum',
+    //   type: 'Text',
+    //   gridSize: '6',
+    //   sectionName: 'CenterDetails',
+    //   validators: [],
+    // },
     {
       id: uuid(),
       label: {
@@ -51,6 +75,71 @@ export default
         en: 'Municipal License'
       },
       name: 'municipLicenseNo',
+      type: 'Text',
+      gridSize: '6',
+      sectionName: 'CenterDetails',
+      options: [],
+      validators: [],
+    },
+    {
+      id: uuid(),
+      label: {
+        ar: 'نشاط السجل التجاري',
+        en: 'Commercial Registration Activity'
+      },
+      name: 'activities',
+      type: 'Text',
+      gridSize: '6',
+      sectionName: 'CenterDetails',
+      options: [],
+      validators: [],
+    },
+    {
+      id: uuid(),
+      label: {
+        ar: 'تاريخ إصدار الترخيص',
+        en: 'License Issue Date'
+      },
+      name: 'licenseCreationDate',
+      type: 'Text',
+      gridSize: '6',
+      sectionName: 'CenterDetails',
+      options: [],
+      validators: [],
+    },
+    {
+      id: uuid(),
+      label: {
+        ar: 'تاريخ انتهاء الترخيص',
+        en: 'License Expiry Date'
+      },
+      name: 'licenseExpiryDate',
+      type: 'Text',
+      gridSize: '6',
+      sectionName: 'CenterDetails',
+      options: [],
+      validators: [],
+    },
+    {
+      id: uuid(),
+      label: {
+        ar: 'الفئة العمرية للمركز',
+        en: 'Center Age Group'
+      },
+      name: 'centerAgeGroup',
+      type: 'Text',
+      gridSize: '6',
+      sectionName: 'CenterDetails',
+      options: [],
+      validators: [],
+    },
+    {
+      id: uuid(),
+      label: {
+        ar: 'جنس المستفيدين',
+        en: 'Center Gender Group'
+      },
+      name: 'centerGenderGroup',
       type: 'Text',
       gridSize: '6',
       sectionName: 'CenterDetails',
@@ -113,8 +202,8 @@ export default
     {
       id: uuid(),
       label: {
-        ar: 'الطاقة الاستعابية',
-        en: 'capacity'
+        ar: 'الطاقة الاستيعابية',
+        en: 'Capacity'
       },
       name: 'capacity',
       type: 'Text',

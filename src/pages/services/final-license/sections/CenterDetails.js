@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars */
+import { useEffect } from 'react';
 import {
   Grid,
   Button,
@@ -17,20 +18,46 @@ import { CentertDetails } from '../services/finalLicenseAPI'
 import { ContentField } from '../services/finalLicenseUtil'
 
 const CenterDetails = ({ editMode, setEditMode, Condition, values, temporaryLicenses, setField, setIsEnableNextBtn }) => {
-  const [loading, setLoading] = useState(false)
-  const [checkData, setCheckData] = useState(false)
-  const [errMessage, setErrMessage] = useState('')
+  const [loading, setLoading] = useState(false);
+  const [checkData, setCheckData] = useState(false);
+  const [errMessage, setErrMessage] = useState('');
+
+  useEffect(() => {
+    console.log(" -- CenterDetails -- useEffect");
+    console.log(" -- CenterDetails -- useEffect" + JSON.stringify(values));
+    if (values.municipLicenseNo) {
+      console.log("-- CenterDetails -- useEffect  -- if");
+      setCheckData(true);
+      setIsEnableNextBtn(true);
+    }
+  }, []);
 
   const checkLicenseCert = async () => {
     setLoading(true);
     setErrMessage('');
+    if (!values.temporaryLicenceNum) {
+      setErrMessage('يرجى اختيار رقم الترخيص المؤقت');
+      setLoading(false);
+      return;
+    }
+    if (!values.CRNumber) {
+      setErrMessage('يرجى ادخل رقم السجل تجاري');
+      setLoading(false);
+      return;
+    }
+    console.log(`CRNumber vaildate ${!isNaN(values.CRNumber) && values.CRNumber.length !== 10}`)
+    if ( values.CRNumber.length > 10) {
+      setErrMessage('يجب ان الا يزيد رقم السجل تجاري عن 10 خانات');
+      setLoading(false);
+      return;
+    }
     const getMunicipalLicenseRs = await getMunicipalLicenseNoApi(values.CRNumber);
     if (!getMunicipalLicenseRs.isSuccessful) {
       setErrMessage(getMunicipalLicenseRs.message);
       setLoading(false);
       return;
     }
-    setField('municipLicenseNo', getMunicipalLicenseRs.responseBody.MomraLicense);
+    setField('municipLicenseNo', getMunicipalLicenseRs.responseBody.body.MomraLicense);
 
     const isSuccessgetCentertDetailsRs = await getCentertDetails();
     if (!isSuccessgetCentertDetailsRs) {
@@ -146,7 +173,7 @@ const CenterDetails = ({ editMode, setEditMode, Condition, values, temporaryLice
             label="رقم السجل التجاري"
             name="CRNumber"
             component={TextFieldFinal}
-            type="text"
+            type="number"
             variant="outlined"
             dir="rtl"
             className="custom-field"
@@ -162,6 +189,7 @@ const CenterDetails = ({ editMode, setEditMode, Condition, values, temporaryLice
             startIcon={loading ? <CircularProgress size="1rem" /> : null}
             variant='outlined'
             type="button"
+            disabled={loading}
             sx={{
               height: 55,
               backgroundColor: 'white',
@@ -185,7 +213,6 @@ const CenterDetails = ({ editMode, setEditMode, Condition, values, temporaryLice
           <Condition is={checkData || editMode}>
             <Grid
               container
-              spacing={3}
               mt={3}
               mb={3}
             >
@@ -196,18 +223,7 @@ const CenterDetails = ({ editMode, setEditMode, Condition, values, temporaryLice
                 xs={12}
                 className="custom-label-field"
               >
-                <Field
-                  fullWidth
-                  required
-                  disabled
-                  label="رقم رخصة البلدية"
-                  name="municipLicenseNo"
-                  component={TextFieldFinal}
-                  type="text"
-                  variant="outlined"
-                  dir="rtl"
-                  className="custom-field"
-                />
+                < ContentField label="رقم رخصة البلدية" value={values.municipLicenseNo} />
               </Grid>
               <Grid
                 container

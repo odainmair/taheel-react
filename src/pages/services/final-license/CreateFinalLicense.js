@@ -23,6 +23,7 @@ import {
   Alert,
   CircularProgress,
   Grid,
+  AlertTitle,
 } from '@material-ui/core';
 import FinalFromWizard from '../../../components/wizard/FinalFormWizard';
 import AlertDialog from 'src/components/AlertDialog';
@@ -39,7 +40,7 @@ import zIndex from '@material-ui/core/styles/zIndex';
 const CreateFinalLicense = () => {
   const [temporaryLicenses, SetTemporaryLicenses] = useState([])
   const [open, setOpen] = useState(false);
-  const [isEnableNextBtn, setIsEnableNextBtn] = useState(true);
+  const [isEnableNextBtn, setIsEnableNextBtn] = useState(false);
   const [dialogContent, setDialogContent] = useState("");
   const [dialogTitle, setDialogTitle] = useState("");
   const navigate = useNavigate();
@@ -86,9 +87,10 @@ const CreateFinalLicense = () => {
       response = await createFinalLicenseAPIFunc(values);
       handleClickOpen(` تم تقديم طلب ${response.responseBody.data.requestNumber} لإصدار الترخيص النهائي رقم ${values.temporaryLicenceNum} يرجى تسليم أصل الضمان البنكي إلى وكالة التأهيل والتوجيه الإجتماعي بوزارة الموارد البشرية والتنمية الإجتماعية لانهاء إجراءات الطلب خلال 3 أيام عمل`, '');
     }
-    else
+    else {
       response = await updateFinalLicenseAPIFunc(values, taskID);
-    handleClickOpen(` تم تقديم طلب ${response.responseBody.data.requestNumber} لإصدار الترخيص النهائي رقم ${values.temporaryLicenceNum} يرجى تسليم أصل الضمان البنكي إلى وكالة التأهيل والتوجيه الإجتماعي بوزارة الموارد البشرية والتنمية الإجتماعية لانهاء إجراءات الطلب خلال 3 أيام عمل`, '');
+      handleClickOpen(` تم تقديم طلب ${response.responseBody.data.requestNumber} لإصدار الترخيص النهائي رقم ${values.temporaryLicenceNum} يرجى تسليم أصل الضمان البنكي إلى وكالة التأهيل والتوجيه الإجتماعي بوزارة الموارد البشرية والتنمية الإجتماعية لانهاء إجراءات الطلب خلال 3 أيام عمل`, '');
+    }
   };
 
   const handleClickOpen = (dialogContent, dialogTitle) => {
@@ -104,10 +106,17 @@ const CreateFinalLicense = () => {
   return (
     <Container maxWidth="md">
       <Card>
+
         <CardHeader
           title="اصدار ترخيص نهائي لمركز تأهيل أهلي"
         />
         <Divider />
+        {!isLoading && editMode &&
+          <Alert variant="outlined" severity="warning" sx={{ marginLeft: 2, marginRight: 2, marginTop: 1 }}>
+            <AlertTitle>يرجى مراجعة الطلب</AlertTitle>
+            {editInitValues.chairmanComment.comment}
+          </Alert>
+        }
         {errMessage && (
           <Alert variant="outlined" severity="error">
             {errMessage}
@@ -116,18 +125,13 @@ const CreateFinalLicense = () => {
         <CardContent>
           {!isLoading ?
             <>
-              {editMode &&
-                <Alert severity="error" style={{ position: 'fixed', color: 'white', background: 'red', top: 50, right: 0, width: '100%', zIndex: 100, opacity: 0.8 }}>
-                  {editInitValues.chairmanComment.comment}
-                </Alert>
-              }
+
               <FinalFromWizard
                 initialValues={!editMode ? {
                   agree: [],
                   isNextBtnDisabled: false,
                   managersCount: 0,
                   teachersCount: 0,
-                  beneficiariesNum: 0,
                 } : {
                   agree: [],
                   isNextBtnDisabled: false,
@@ -160,24 +164,25 @@ const CreateFinalLicense = () => {
                 isEnableNextBtn={isEnableNextBtn}
                 onSubmit={onSubmit}
               >
+
                 <FinalFromWizardCenterDetailsPage
                   centerLicenceNumber={centerLicenceNumber}
                   validate={CenterDetailsValidation}
                   temporaryLicenses={temporaryLicenses}
                   editMode={editMode}
                   setEditMode={setEditMode}
-                  setIsEnableNextBtn={(isEnable)=>setIsEnableNextBtn(isEnable)}
+                  setIsEnableNextBtn={(isEnable) => setIsEnableNextBtn(isEnable)}
                   label="معلومات المركز" />
                 <FinalFromWizardCapacityPage
                   validate={capacityValidation}
                   editMode={editMode}
-                  setIsEnableNextBtn={(isEnable)=>setIsEnableNextBtn(isEnable)}
+                  setIsEnableNextBtn={(isEnable) => setIsEnableNextBtn(isEnable)}
                   label="الطاقة الإستعابية والضمان المالي" />
                 <FinalFromWizardRequirements
-                  nextFun={(values) => RequirementsValidation(values)}
+                  validate={(values) => RequirementsValidation(values)}
                   label="المتطلبات" />
                 <FinalFromWizardHealthServices
-                  nextFun={(values) => healthServicesValidation(values)}
+                  validate={(values) => healthServicesValidation(values)}
                   label="الخدمات الضحية"
                   editMode={editMode} />
                 <FinalFromWizardPersonsPage
@@ -202,12 +207,12 @@ const CreateFinalLicense = () => {
   );
 };
 
-const FinalFromWizardCenterDetailsPage = ({ 
-  setField, 
-  temporaryLicenses, 
-  editMode, 
-  setEditMode, 
-  values, 
+const FinalFromWizardCenterDetailsPage = ({
+  setField,
+  temporaryLicenses,
+  editMode,
+  setEditMode,
+  values,
   centerLicenceNumber,
   setIsEnableNextBtn }) => (
   <>
@@ -218,7 +223,7 @@ const FinalFromWizardCenterDetailsPage = ({
       temporaryLicenses={temporaryLicenses}
       setField={(fieldName, fieldValue) => setField(fieldName, fieldValue)}
       editMode={editMode}
-      setIsEnableNextBtn={(isEnable)=>setIsEnableNextBtn(isEnable)}
+      setIsEnableNextBtn={(isEnable) => setIsEnableNextBtn(isEnable)}
       setEditMode={setEditMode}
     />
   </>
@@ -230,7 +235,7 @@ const FinalFromWizardCapacityPage = ({ editMode, values, setField, setIsEnableNe
       Condition={calculationConditionComp}
       values={values}
       setField={(fieldName, fieldValue) => setField(fieldName, fieldValue)}
-      setIsEnableNextBtn={(isEnable)=>setIsEnableNextBtn(isEnable)}
+      setIsEnableNextBtn={(isEnable) => setIsEnableNextBtn(isEnable)}
       editMode={editMode}
     />
   </>
