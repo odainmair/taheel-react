@@ -175,7 +175,7 @@ const Summary = ({ values }) => {
 
 
   return (
-    <>
+    <>{console.log(values)}
       <Typography
         color="textPrimary"
         gutterBottom

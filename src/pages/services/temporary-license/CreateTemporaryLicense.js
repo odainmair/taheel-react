@@ -67,6 +67,8 @@ const CreateTemporaryLicense = () => {
               mobileNo: phoneNumber,
               agree: []
             }}
+            cancelBtnFn={()=>{  navigate('/app/products', { replace: true });}}
+            isEnableCancelBtn={true}
             onSubmit={onSubmit}
           >
             <FinalFromWizard.Page

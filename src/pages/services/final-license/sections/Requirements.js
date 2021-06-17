@@ -7,13 +7,13 @@ import PropTypes from 'prop-types';
 import FileUploaderComp from '../components/FileUploader';
 
 const Requirements = ({ setField, values }) => {
-  var multipleDocs = []
-  const setDocument = (name, docID, multiple) => {
-    if (!multiple)
+  var multipleFileDocs = []
+  const setDocument = (name, docID, multipleFile) => {
+    if (!multipleFile)
       setField(name, [docID])
     else {
-      multipleDocs.push(docID)
-      setField(name, multipleDocs)
+      multipleFileDocs.push(docID)
+      setField(name, multipleFileDocs)
     }
   }
   return (
@@ -38,7 +38,7 @@ const Requirements = ({ setField, values }) => {
             label="ارفاق الخطة التشغيلية"
             name="OperationalPlan"
             component={FileUploaderComp}
-            inputType={false}
+            multipleFile={false}
             setField={setField}
             setDocument={setDocument}
             values={values}
@@ -53,7 +53,7 @@ const Requirements = ({ setField, values }) => {
             label="ارفاق الخطة التنفيذية"
             name="ExecutivePlan"
             component={FileUploaderComp}
-            inputType={false}
+            multipleFile={false}
             setField={setField}
             setDocument={setDocument}
             values={values}
@@ -68,7 +68,7 @@ const Requirements = ({ setField, values }) => {
             label="ارفاق تقرير زيارة مكتب هندسي معتمد"
             name="OfficeReport"
             component={FileUploaderComp}
-            inputType={false}
+            multipleFile={false}
             setField={setField}
             setDocument={setDocument}
             values={values}
@@ -83,7 +83,7 @@ const Requirements = ({ setField, values }) => {
             label="ارفاق تقرير المسح الأمني"
             name="SecurityReport"
             component={FileUploaderComp}
-            inputType={false}
+            multipleFile={false}
             setField={setField}
             setDocument={setDocument}
             values={values}
@@ -97,11 +97,11 @@ const Requirements = ({ setField, values }) => {
           <Field
             label="ارفاق صور الأثاث و الأجهزة الكهربائية"
             name="Furniture"
-            component={FileUploaderComp}
-            inputType={true}
+            component={FileUploaderComp}     
             setField={setField}
             setDocument={setDocument}
             values={values}
+            multipleFile={true}
           />
 
         </Grid>
@@ -114,7 +114,7 @@ const Requirements = ({ setField, values }) => {
             label="ارفاق الضمان المالي"
             name="FinancialGuaranteeAtt"
             component={FileUploaderComp}
-            inputType={false}
+            multipleFile={false}
             setField={setField}
             setDocument={setDocument}
             values={values}
