@@ -68,5 +68,5 @@ export default TotalProfit;
 
 TotalProfit.propTypes = {
   loading: PropTypes.bool.isRequired,
-  totalreturnrequests: PropTypes.string
+  totalreturnrequests: PropTypes.number
 };

@@ -198,6 +198,7 @@ export default class FinalFromWizard extends React.Component {
                   </Grid>
                 </Grid>
               </Grid>
+                 {/*<pre dir="ltr">{JSON.stringify(values, 0, 2)}</pre>*/ }
             </form>
           )
         }}

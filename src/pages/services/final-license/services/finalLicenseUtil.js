@@ -3,8 +3,8 @@ const required = 'يجب تعبئة الحقل'
 import { Field } from 'react-final-form';
 import React from 'react';
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
-import { uploadDocumentApi } from './finalLicenseAPI'
-import { downloadDocument } from '../services/finalLicenseAPI'
+import moment from 'moment-hijri';
+import { downloadDocument } from '../services/finalLicenseAPI';
 import {
   Grid,
   Typography,
@@ -17,7 +17,6 @@ import {
   Button,
   CircularProgress,
 } from '@material-ui/core';
-import { checkIsNumber } from 'src/utils/inputValidator';
 
 const CenterDetailsValidation = values => {
   console.log("values", isNaN(values.CRNumber))
@@ -302,10 +301,20 @@ const getStaff = (data) => {
         if (key === 'gender')
           customer[newKey] = customer[key] === 'f' ? 'انثى' : 'ذكر'
         else if (key === 'idNumIqamaNum') {
-          if (key === 'سعودي')
+          if (customer['nationality'] === 'سعودي')
             customer['idNumber'] = customer[key]
           else
             customer['iqamaNo'] = customer[key]
+        }
+        else if (key === 'birthDate'&&customer['nationality'] === 'سعودي') {
+          const birthDateDay= moment(customer[key], 'iYYYYiMMiDD').format('iDD')
+          const birthDateMonth=moment(customer[key], 'iYYYYiMMiDD').format('iMM')
+          const birthDateYear=moment(customer[key], 'iYYYYiMMiDD').format('iYYYY')
+          console.log(`odai odai ${birthDateDay} ${birthDateMonth} ${birthDateYear}`)
+          customer['day']=parseInt(birthDateDay);
+          customer['month']=parseInt(birthDateMonth);
+          customer['year']=parseInt(birthDateYear);
+
         }
         else if (key === 'StaffType')
           customer[newKey] = staffTypes[customer[key] - 1]

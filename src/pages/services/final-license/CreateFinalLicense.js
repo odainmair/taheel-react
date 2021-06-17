@@ -51,6 +51,7 @@ const CreateFinalLicense = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [errMessage, SetErrMessage] = useState('')
   const taskID = location.state ? location.state.taskID : null;
+  const requestNum = location.state ? location.state.requestNum : "";
   useEffect(async () => {
     const { email } = await getCurrentUser();
     const getCentersRs = await getTempLicense(email);
@@ -89,7 +90,7 @@ const CreateFinalLicense = () => {
     }
     else {
       response = await updateFinalLicenseAPIFunc(values, taskID);
-      handleClickOpen(` تم تقديم طلب ${response.responseBody.data.requestNumber} لإصدار الترخيص النهائي رقم ${values.temporaryLicenceNum} يرجى تسليم أصل الضمان البنكي إلى وكالة التأهيل والتوجيه الإجتماعي بوزارة الموارد البشرية والتنمية الإجتماعية لانهاء إجراءات الطلب خلال 3 أيام عمل`, '');
+      handleClickOpen(` تم تقديم طلب ${requestNum} لإصدار الترخيص النهائي رقم ${values.temporaryLicenceNum} يرجى تسليم أصل الضمان البنكي إلى وكالة التأهيل والتوجيه الإجتماعي بوزارة الموارد البشرية والتنمية الإجتماعية لانهاء إجراءات الطلب خلال 3 أيام عمل`, '');
     }
   };
 
@@ -106,14 +107,16 @@ const CreateFinalLicense = () => {
   return (
     <Container maxWidth="md">
       <Card>
-
+        {!isLoading && (
         <CardHeader
-          title="اصدار ترخيص نهائي لمركز تأهيل أهلي"
-        />
+          title={!editMode?"اصدار ترخيص نهائي لمركز تأهيل أهلي":
+          `تعديل طلب ترخيص نهائي - ${requestNum}`}
+        />    
+        )}
         <Divider />
         {!isLoading && editMode &&
           <Alert variant="outlined" severity="warning" sx={{ marginLeft: 2, marginRight: 2, marginTop: 1 }}>
-            <AlertTitle>يرجى مراجعة الطلب</AlertTitle>
+            <AlertTitle> يرجى مراجعة طلب رقم {requestNum}</AlertTitle>
             {editInitValues.chairmanComment.comment}
           </Alert>
         }
@@ -158,7 +161,7 @@ const CreateFinalLicense = () => {
                   healthServices: editInitValues.center[0].isHealthCareServices ? "yes" : "no",
                   healthServiceType: editInitValues.center[0].healthCareServices_r.type,
                   // healthServiceAttachment: editInitValues.center[0].centerInfo_r.financialGuarbteeAtt,
-                  healthServiceAttachment: [1202],
+                  healthServiceAttachment: [editInitValues.center[0].healthCareServices_r.attachment.id],
                   customers: getStaff(editInitValues.staff),
                 }}
                 isEnableNextBtn={isEnableNextBtn}
@@ -183,7 +186,7 @@ const CreateFinalLicense = () => {
                   label="المتطلبات" />
                 <FinalFromWizardHealthServices
                   validate={(values) => healthServicesValidation(values)}
-                  label="الخدمات الضحية"
+                  label="الخدمات الصحية"
                   editMode={editMode} />
                 <FinalFromWizardPersonsPage
                   nextFun={(values) => personsValidation(values)}
