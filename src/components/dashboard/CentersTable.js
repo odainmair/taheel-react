@@ -98,7 +98,7 @@ const CentersTable = (props) => {
               {(!loading ? Array.from(new Array(6)) : centerRequests).map((request, index) => (
                 <TableRow
                   hover
-                  key={request ? request.requestNum : index}
+                  key={ index+"center"}
                 >
                   <TableCell>
                     {request ? request.name
