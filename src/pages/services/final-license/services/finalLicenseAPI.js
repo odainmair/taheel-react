@@ -97,6 +97,7 @@ const createFinalLicenseAPIFunc = async (values) => {
 				"executivePlan": values.ExecutivePlan[0],
 				"engineeringPlan": values.OfficeReport[0],
 				"securityReport": values.SecurityReport[0],
+				"operationPlan": values.OperationalPlan[0],
 				"beneficiaryCount": values.beneficiariesNum,
 				"furniturePhoto_r": getFurnitures(values),
 			},

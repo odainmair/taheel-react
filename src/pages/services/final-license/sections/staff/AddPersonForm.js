@@ -34,9 +34,11 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
 
     setLoading(true);
     const { nationality, year, month, day, idNumber } = !rowIndex || rowIndex !== -1 ? values.customers[rowIndex] : values;
+    console.log(`CitizenValidate_SA--idNumber :::  ${idNumber}`);
     if (values.customers) {
-      const custumerByIdCount = values.customers || values.customers.filter(customer => customer.idNumber === idNumber).length;
-      if (custumerByIdCount > 1) {
+      console.log(`CitizenValidate_SA--customers :::  ${JSON.stringify(values.customers)}`);
+      const custumerByIdCount =  values.customers.filter(customer => customer.idNumber === idNumber).length;
+      if (custumerByIdCount > 0) {
         setErrMessage(" رقم الهوية مستخدم يرجى استخدام رقم اخر");
         setLoading(false);
         return;
@@ -72,7 +74,7 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
     const { iqamaNo } = !rowIndex || rowIndex !== -1 ? values.customers[rowIndex] : values;
     if (values.customers) {
       const custumerByIdCount = values.customers.filter(customer => customer.iqamaNo === iqamaNo).length;
-      if (custumerByIdCount > 1) {
+      if (custumerByIdCount > 0) {
         setErrMessage(" رقم الاقامة مستخدم يرجى استخدام رقم اخر");
         setLoading(false);
         return;

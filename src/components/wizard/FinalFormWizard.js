@@ -94,7 +94,7 @@ export default class FinalFromWizard extends React.Component {
   }
 
   render() {
-    const { children, isEnableNextBtn = true } = this.props;
+    const { children, isEnableNextBtn = true, isEnableCancelBtn = false, cancelBtnFn } = this.props;
     const childrenArray = React.Children.toArray(children);
     const { page, values, completed, isNextCallBackFunSuccess, errMessage } = this.state;
     const activePage = React.Children.toArray(children)[page];
@@ -117,7 +117,7 @@ export default class FinalFromWizard extends React.Component {
             <form onSubmit={handleSubmit} autoComplete="off" noValidate>
               <Stepper className="custom-wizard" alternativeLabel activeStep={page}>
                 {childrenArray.map((child, index) => (
-                  <Step key={child.props.label||index} completed={page > index || completed}>
+                  <Step key={child.props.label || index} completed={page > index || completed}>
                     <StepLabel>{child.props.label}</StepLabel>
                   </Step>
                 ))}
@@ -135,51 +135,68 @@ export default class FinalFromWizard extends React.Component {
                 push: form.mutators.push,
                 values: values
               })}
-
-              <Grid container spacing={2} mt={3} justifyContent="flex-end">
-                {(page > 0 && !this.state.values.disabledBackButt) && (
+              <Grid container direction="row" spacing={2} mt={3} justifyContent={isEnableCancelBtn?"space-between":"flex-end"}>
+                {isEnableCancelBtn && (
                   <Grid item>
                     <Button
                       variant="contained"
-                      onClick={this.previous}
+                      onClick={() => { cancelBtnFn() }}
                       sx={{
                         backgroundColor: '#E2E8EB',
                         color: '#000'
                       }}
                     >
-                      رجوع
+                      الغاء
                     </Button>
                   </Grid>
                 )}
-                {!isLastPage && (
-                  <Grid item>
-                    <Button
-                      startIcon={submitting ? <CircularProgress size="1rem" /> : null}
-                      disabled={!isEnableNextBtn || submitting}
-                      variant="contained"
-                      color="primary"
-                      type="submit"
-                      sx={{
-                        backgroundColor: '#3c8084',
-                      }}
-                    >
-                      التالي
-                    </Button>
+                <Grid item>
+                  <Grid container direction="row" spacing={2} justifyContent="flex-end">
+                    {(page > 0 && !this.state.values.disabledBackButt) && (
+                      <Grid item>
+                        <Button
+                          variant="contained"
+                          onClick={this.previous}
+                          sx={{
+                            backgroundColor: '#E2E8EB',
+                            color: '#000'
+                          }}
+                        >
+                          رجوع
+                        </Button>
+                      </Grid>
+                    )}
+                    {!isLastPage && (
+                      <Grid item>
+                        <Button
+                          startIcon={submitting ? <CircularProgress size="1rem" /> : null}
+                          disabled={!isEnableNextBtn || submitting}
+                          variant="contained"
+                          color="primary"
+                          type="submit"
+                          sx={{
+                            backgroundColor: '#3c8084',
+                          }}
+                        >
+                          التالي
+                        </Button>
+                      </Grid>
+                    )}
+                    {isLastPage && (
+                      <Grid item>
+                        <Button
+                          startIcon={submitting ? <CircularProgress size="1rem" /> : null}
+                          disabled={values.agree.length == 0 || submitting}
+                          variant="contained"
+                          color="primary"
+                          type="submit"
+                        >
+                          ارسال
+                        </Button>
+                      </Grid>
+                    )}
                   </Grid>
-                )}
-                {isLastPage && (
-                  <Grid item>
-                    <Button
-                      startIcon={submitting ? <CircularProgress size="1rem" /> : null}
-                      disabled={values.agree.length == 0 || submitting}
-                      variant="contained"
-                      color="primary"
-                      type="submit"
-                    >
-                      ارسال
-                    </Button>
-                  </Grid>
-                )}
+                </Grid>
               </Grid>
             </form>
           )

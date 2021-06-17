@@ -7,16 +7,12 @@ import {
   Grid,
   Typography,
 } from '@material-ui/core';
-import localContext from 'src/localContext'
-import {APIRequest} from 'src/api/APIRequest';
+import PropTypes from 'prop-types';
+import { AbsherOTP } from '../data/ForgetPasswordApi';
 
-const AbsherOtp = () => {
-  const { otp, setOtp} = useContext(localContext);
-  const url = '/taheel-apis-utilities-AbsherOTP-v2'
-  const queryParams = {
-    BeneficiaryId: "273",
-    OTP: otp
-  }
+const AbsherOtp = ({ values }) => {
+  const { IqamaNumber } = values;
+  console.log("IqamaNumberrrrrrrrrrrrrr", IqamaNumber)
 
   return (
     <>
@@ -86,9 +82,8 @@ const AbsherOtp = () => {
           }}
         >
           <a
-           onClick={() => APIRequest({ queryParams, url })}
+           onClick={() => AbsherOTP(IqamaNumber)}
           >
-       
             إعادة ارسال رمز التحقق
           </a>
         </Typography>
@@ -98,3 +93,6 @@ const AbsherOtp = () => {
 };
 
 export default AbsherOtp;
+AbsherOTP.propTypes = {
+  values: PropTypes.object.isRequired,
+};
