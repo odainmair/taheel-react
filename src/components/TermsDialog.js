@@ -21,7 +21,7 @@ export default function TermsDialog(props) {
             onClose={handleClose}
             aria-labelledby="terms-dialog-title"
             aria-describedby="terms-dialog-description"
-            fullWidth="true"
+            fullWidth={true}
             maxWidth="lg"
             open={open}
         >
@@ -56,7 +56,7 @@ export default function TermsDialog(props) {
 TermsDialog.propTypes = {
     onClose: PropTypes.func.isRequired,
     open: PropTypes.bool.isRequired,
-    dialogContent: PropTypes.string.isRequired,
+    dialogContent: PropTypes.any,
     dialogTitle: PropTypes.string.isRequired,
     acceptBtnName: PropTypes.string.isRequired,
 };

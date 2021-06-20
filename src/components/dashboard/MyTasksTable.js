@@ -24,7 +24,7 @@ const MyTasksTable = (props) => {
     <Card>
       <CardHeader title={
         loading ? (
-          'الطلبات المرتجعة'
+          'الطلبات المعادة'
         ) : (
           <Skeleton animation="wave" height={15} width="20%" style={{ marginBottom: 6 }} />
         )

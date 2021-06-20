@@ -216,7 +216,7 @@ const DownloadButtTable = ({ docIDs, name, label }) => {
               <TableBody>
 
                 {docIDs.map((docID, index) => (
-                  < DownloadButt index={index} docID={docID} name={name} label={label} />
+                  < DownloadButt key={docID+"_"+index} index={index} docID={docID} name={name} label={label} />
                 ))}
               </TableBody>
             </Table>
@@ -280,6 +280,7 @@ const validateAddStaffForm = (values, rowIndex, SAForm, forignForm) => {
 }
 const getStaff = (data) => {
   const newKeys = {
+    id:'id',
     idNumIqamaNum: 'idNumber',
     birthDate: 'birthDate',
     name: 'fullName',
@@ -315,6 +316,10 @@ const getStaff = (data) => {
           customer['month']=parseInt(birthDateMonth);
           customer['year']=parseInt(birthDateYear);
 
+        }
+        else if (key === 'id'){
+          if(customer[key])
+            customer['id'] = customer[key];
         }
         else if (key === 'StaffType')
           customer[newKey] = staffTypes[customer[key] - 1]

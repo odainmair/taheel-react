@@ -161,7 +161,7 @@ const CreateFinalLicense = () => {
                   healthServices: editInitValues.center[0].isHealthCareServices ? "yes" : "no",
                   healthServiceType: editInitValues.center[0].healthCareServices_r.type,
                   // healthServiceAttachment: editInitValues.center[0].centerInfo_r.financialGuarbteeAtt,
-                  healthServiceAttachment: [editInitValues.center[0].healthCareServices_r.attachment.id],
+                  healthServiceAttachment:editInitValues.center[0].healthCareServices_r.attachment ? [editInitValues.center[0].healthCareServices_r.attachment.id]:null,
                   customers: getStaff(editInitValues.staff),
                 }}
                 isEnableNextBtn={isEnableNextBtn}
