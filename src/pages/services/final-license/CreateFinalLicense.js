@@ -49,6 +49,7 @@ const CreateFinalLicense = () => {
   const [editMode, setEditMode] = useState(false);
   const [editInitValues, setEditInitValues] = useState({});
   const [isLoading, setIsLoading] = useState(true);
+  const [canShowSection, setCanShowSection] = useState(true);
   const [errMessage, SetErrMessage] = useState('')
   const taskID = location.state ? location.state.taskID : null;
   const requestNum = location.state ? location.state.requestNum : "";
@@ -56,8 +57,12 @@ const CreateFinalLicense = () => {
     const { email } = await getCurrentUser();
     const getCentersRs = await getTempLicense(email);
     SetErrMessage("");
+    setIsLoading(true);
     if (!getCentersRs.isSuccessful) {
       SetErrMessage(getCentersRs.message);
+      setCanShowSection(false);
+      setIsLoading(false);
+      return;
     } else {
       const { Centers } = getCentersRs.responseBody.data;
       SetTemporaryLicenses(Centers);
@@ -166,8 +171,11 @@ const CreateFinalLicense = () => {
                 }}
                 isEnableNextBtn={isEnableNextBtn}
                 onSubmit={onSubmit}
+                cancelBtnFn={()=>{  navigate('/app/products', { replace: true });}}
+                isEnableCancelBtn={true} 
+                canShowSection={canShowSection}   
               >
-
+    
                 <FinalFromWizardCenterDetailsPage
                   centerLicenceNumber={centerLicenceNumber}
                   validate={CenterDetailsValidation}
