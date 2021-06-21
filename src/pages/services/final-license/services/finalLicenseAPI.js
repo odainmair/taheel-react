@@ -169,7 +169,7 @@ const updateFinalLicenseAPIFunc = async (values, TaskID) => {
 }
 
 
-ß
+
 const getTempLicense = async (userEmail) => {
 	const url = 'taheel-apis-records-getCenters-v2';
 	const queryParams = { userEmail, isExpired: false, licenseType: 'رخصة مؤقتة',isEligibleForFinal:true };
