@@ -115,7 +115,14 @@ const CreateFinalLicenseRenewal = () => {
     let response = null
     // if (!editMode) {
       response = await createFinalLicenseRenewalAPIFunc(values);
-      handleClickOpen(`${response.responseBody.data[0]}`, '');
+      
+      if (response.isSuccessful) {
+        handleClickOpen(`${response.responseBody.data[0]}`, '');
+      }
+      else {
+        SetErrMessage(`${response.message}`);
+        setIsLoading(false)
+      }
   };
 
   const handleClickOpen = (dialogContent, dialogTitle) => {
