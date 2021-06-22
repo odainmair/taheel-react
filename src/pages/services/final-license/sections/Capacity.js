@@ -13,7 +13,8 @@ import PropTypes from 'prop-types';
 import { TextField as TextFieldFinal, Select } from 'final-form-material-ui';
 import { calculation } from '../services/finalLicenseAPI'
 import { ContentField } from '../services/finalLicenseUtil'
-import { checkIsNumber } from 'src/utils/inputValidator';
+import { LICENSE_FORM_TYPES } from 'src/utils/enums'
+
 const Capacity = ({ editMode, Condition, values, setField, setIsEnableNextBtn }) => {
 
 	const [calculatedData, setCalculatedData] = useState(false);

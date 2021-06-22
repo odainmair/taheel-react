@@ -4,13 +4,9 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { getCurrentUser } from 'src/utils/UserLocalStorage';
 import { useState, useEffect } from 'react';
 import Summary from './sections/Summary'
-import { createFinalLicenseRenewalAPIFunc } from './services/finalLicenseAPI'
-import { updateFinalLicenseAPIFunc } from './services/finalLicenseAPI'
-import { getCenters } from './services/finalLicenseAPI'
-import { CentertDetails } from './services/finalLicenseAPI'
-import { getStaff } from './services/finalLicenseUtil';
+import { getCenters, CentertDetails, getMunicipalLicenseNoApi, createFinalLicenseRenewalAPIFunc, validateCompanyFunc } from './services/finalLicenseAPI'
+import { getStaff, CenterDetailsValidation } from './services/finalLicenseUtil';
 import {
-  Button,
   Card,
   CardContent,
   CardHeader,
@@ -36,25 +32,20 @@ const CreateFinalLicenseRenewal = () => {
   const [dialogTitle, setDialogTitle] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
-  // const centerLicenceNumber = location.state ? location.state.centerLicenceNumber : null;
-  // const centerLicenceNumber = location.state ? location.state.centerLicenceNumber : '0101010065';
   const [centerLicenceNumber, setCenterLicenceNumber] = useState(location.state ? location.state.centerLicenceNumber : "1");
-  // const [centerLicenceNumber, setCenterLicenceNumber] = useState("1");
-  // const [centerLicenceNumber, setCenterLicenceNumber] = useState(location.state ? location.state.centerLicenceNumber : '0101010065');
   const [editMode, setEditMode] = useState(false);
   const [editInitValues, setEditInitValues] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [showSummary, setShowSummary] = useState(false);
   const [errMessage, SetErrMessage] = useState('')
   const taskID = location.state ? location.state.taskID : null;
-  // const [showSummary, setShowSummary] = React.useState(false)
 
   useEffect(async () => {
-    console.log("------------------------------- 0000000000000 ")
+    console.log(" ==> CreateFinalLicenseRenewal ")
     const { email } = await getCurrentUser();
     console.log("------------------------------- email " + email)
     const getCentersRs = await getCenters(email);
-    // const getCentersRs = await getCenters("ahmad.albuthom@inspirejo.com");
+
     SetErrMessage("");
     if (!getCentersRs.isSuccessful) {
       SetErrMessage(getCentersRs.message);
@@ -65,25 +56,51 @@ const CreateFinalLicenseRenewal = () => {
       setIsLoading(false);
     }
     console.log("------------------------------- centerLicenceNumber: " + centerLicenceNumber)
-    // if (centerLicenceNumber) {
-    //   console.log("------------------------------- 1")
-    //   // const response = await getTaskDetails()
-    //   const response = await getCentertDetails()
-    //   console.log("------------------------------- 2")
-    // }
-    // else{
-    //   console.log("------------------------------- 3")
-    //   setIsLoading(false)
-    // }
   }, [])
 
   const getCentertDetails = async (licenceNumber) => {
     setIsLoading(true)
     SetErrMessage("");
     const response = await CentertDetails(licenceNumber)
-    console.log("getCentertDetails ===============> response:" + JSON.stringify(response) )
-    if (!response.isSuccessful)
-    SetErrMessage(response.message)
+    console.log("===> getCentertDetails response: " + JSON.stringify(response) )
+    
+    if(response.responseBody && response.responseBody.data && response.responseBody.data.center) {
+      // const crNum = "654";
+      const crNum = response.responseBody.data.center.crInfo_r.crNumber;
+
+      if(crNum != ''){
+        const validateMomraRs = await getMunicipalLicenseNoApi(crNum)
+        if(!validateMomraRs.isSuccessful){
+          console.log("===> getMunicipalLicenseNoApi ERROR!: " + validateMomraRs.message)
+          SetErrMessage(validateMomraRs.message);
+          setEditInitValues(response.responseBody.data);
+          setIsLoading(false);
+          setShowSummary(false);
+          return response.responseBody.data;
+        }
+        const validateCompanyRs = await validateCompanyFunc(crNum)
+        if (!validateCompanyRs.isSuccessful) {
+          console.log("===> validateCompanyFunc ERROR!: " + validateCompanyRs.message)
+          SetErrMessage(validateCompanyRs.message);
+          setEditInitValues(response.responseBody.data);
+          setIsLoading(false);
+          setShowSummary(false);
+          return response.responseBody.data;
+        }
+      }
+      else {
+        console.log(' ===> ERROR Wrong Data - No CrNumber, => response' + JSON.stringify(response))
+        SetErrMessage("Wrong Data - No CrNumber");
+        setEditInitValues(response.responseBody.data);
+        setIsLoading(false);
+        setShowSummary(false);
+        return
+      }
+    }
+    
+    if (!response.isSuccessful){
+      SetErrMessage(response.message);
+    }
     else {
       setEditInitValues(response.responseBody.data);
       setEditMode(true);
@@ -98,12 +115,7 @@ const CreateFinalLicenseRenewal = () => {
     let response = null
     // if (!editMode) {
       response = await createFinalLicenseRenewalAPIFunc(values);
-      // handleClickOpen(` تم تقديم طلب ${response.data.requestNumber} لإصدار الترخيص النهائي رقم ${values.temporaryLicenceNum} يرجى تسليم أصل الضمان البنكي إلى وكالة التأهيل والتوجيه الإجتماعي بوزارة الموارد البشرية والتنمية الإجتماعية لانهاء إجراءات الطلب خلال 3 أيام عمل`, '');
       handleClickOpen(`${response.responseBody.data[0]}`, '');
-    // }
-    // else
-    //   response = await updateFinalLicenseAPIFunc(values, taskID);
-    // handleClickOpen(` تم تقديم طلب ${response.responseBody.data.requestNumber} لإصدار الترخيص النهائي رقم ${values.temporaryLicenceNum} يرجى تسليم أصل الضمان البنكي إلى وكالة التأهيل والتوجيه الإجتماعي بوزارة الموارد البشرية والتنمية الإجتماعية لانهاء إجراءات الطلب خلال 3 أيام عمل`, '');
   };
 
   const handleClickOpen = (dialogContent, dialogTitle) => {
@@ -181,7 +193,7 @@ const CreateFinalLicenseRenewal = () => {
                   FinancialGuaranteeAtt: [editInitValues.center && editInitValues.center.centerInfo_r.financialGuarbteeAtt && editInitValues.center.centerInfo_r.financialGuarbteeAtt.id],
                   healthServices: editInitValues.center && editInitValues.center.isHealthCareServices ? "yes" : "no",
                   healthServiceType: editInitValues.center && editInitValues.center.healthCareServices_r && editInitValues.center.healthCareServices_r.type && editInitValues.center.healthCareServices_r.type,
-                  healthServiceAttachment: [editInitValues.center.centerInfo_r.financialGuarbteeAtt.id],
+                  healthServiceAttachment: [editInitValues.center.centerInfo_r && editInitValues.center.centerInfo_r.financialGuarbteeAtt && editInitValues.center.centerInfo_r.financialGuarbteeAtt.id],
                   // healthServiceAttachment: [1202],
                   // customers: editInitValues && editInitValues.staff,
                   customers: editInitValues && getStaff(editInitValues.staff),
@@ -192,6 +204,7 @@ const CreateFinalLicenseRenewal = () => {
                 
               >
                 <FinalFormRenewalSummary 
+                  validate={CenterDetailsValidation}
                   renewableLicenses={renewableLicenses} 
                   setCenterLicenceNumber={setCenterLicenceNumber} 
                   showSummary={showSummary}

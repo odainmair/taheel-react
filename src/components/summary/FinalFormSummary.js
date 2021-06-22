@@ -1,23 +1,21 @@
 /* eslint-disable */
 import React from 'react';
+import { useState, useEffect } from 'react';
 import { Form } from 'react-final-form';
 import { Alert, Box, Button, Card, CardContent, CircularProgress, Grid, Step, StepLabel } from '@material-ui/core';
 import arrayMutators from "final-form-arrays";
-import { TramRounded } from '@material-ui/icons';
+import { useNavigate } from 'react-router';
+import { LICENSE_FORM_TYPES } from 'src/utils/enums'
 
-export default class FinalFormSummary extends React.Component {
-  static Page = ({ children }) => children;
+function FinalFormSummary (props) {
+  const navigate = useNavigate();
+  const Page = ({ children }) => children;
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      page: 0,
-      values: props.initialValues || {},
-      completed: false,
-      isValid: true,
-      errMessage: ""
-    };
-  }
+  const [page, setPage] = useState(0);
+  const [values, setValues] = useState(props.initialValues || {});
+  const [completed, setCompleted] = useState(false);
+  const [isValid, setIsValid] = useState(true);
+  const [errMessage, setErrMessage] = useState("");
 
   /**
    * NOTE: Both validate and handleSubmit switching are implemented
@@ -25,54 +23,44 @@ export default class FinalFormSummary extends React.Component {
    * functions once the form has been defined.
    */
 
-  validate = (values) => {
+   const validate = (values) => {
     console.log("--- validate  ----");
-    const activePage = React.Children.toArray(this.props.children)[
-      this.state.page
-    ];
+    const activePage = React.Children.toArray(props.children)[page];
     const valid = activePage.props.validate ? activePage.props.validate(values) : {}
     console.log("------------ values : " + JSON.stringify(values))
     console.log("------------ validate : " + JSON.stringify(valid))
     return valid
   }
 
-  handleSubmit = async (values) => {
+  const handleSubmit = async (values) => {
     console.log("--- handleSubmit  ----");
-    const errors = this.validate(values);
+    const errors = validate(values);
     if (Object.keys(errors).length > 0)
-      return this.validate(values);
-    const { children, onSubmit } = this.props;
-    const { page } = this.state;
+      return validate(values);
+    const { onSubmit } = props;
+    // const { page } = state;
     // const isLastPage = page === React.Children.count(children) - 1;
-    const activePage = React.Children.toArray(this.props.children)[
-      this.state.page
-    ];
+    // const activePage = React.Children.toArray(props.children)[
+    //   state.page
+    // ];
 
-    if (this.state.values.isValid) {
+    if (values.isValid) {
       const { isSuccessful, message } = await onSubmit(values)
       if (!isSuccessful) {
-        this.setState((state) => ({
-          // isNextCallBackFunSuccess: false,
-          errMessage: message
-        }));
+        setErrMessage(message);
         return;
       }
     }
     return onSubmit(values)
-
   }
 
-  render() {
-    const { children } = this.props;
-    const childrenArray = React.Children.toArray(children);
-    const { page, values, completed, errMessage } = this.state;
+    const { children } = props;
     const activePage = React.Children.toArray(children)[page];
-    // const isLastPage = page === React.Children.count(children) - 1;
     return (
       <Form
         initialValues={values}
-        validate={this.validate}
-        onSubmit={this.handleSubmit}
+        validate={validate}
+        onSubmit={handleSubmit}
         mutators={{
           // expect (field, value) args from the mutator
           ...arrayMutators,
@@ -84,14 +72,7 @@ export default class FinalFormSummary extends React.Component {
         {({ handleSubmit, pristine, form, submitting, values }) => {
           return (
             <form onSubmit={handleSubmit} autoComplete="off" noValidate>
-              {/* <Stepper className="custom-wizard" alternativeLabel activeStep={page}>
-                {childrenArray.map((child, index) => (
-                  <Step key={child.props.label||index} completed={page > index || completed}>
-                    <StepLabel>{child.props.label}</StepLabel>
-                  </Step>
-                ))}
-              </Stepper> */}
-              {!this.state.isValid && (
+              {!isValid && (
                 <Box mt={3}>
                   <Alert variant="outlined" severity="error">
                     {errMessage}
@@ -122,25 +103,28 @@ export default class FinalFormSummary extends React.Component {
                   </Grid>
                   <Grid item>
                     <Button
-                      startIcon={submitting ? <CircularProgress size="1rem" /> : null}
-                      disabled={true}
+                      disabled={values.agree.length == 0 || submitting}
                       variant="contained"
                       color="primary"
                       type="submit"
                       sx={{
                         backgroundColor: '#3c8084',
                       }}
+                      onClick={() => {
+                        console.log("edit function");
+                        navigate('/services/finallicense', { state: { centerLicenceNumber: values.centerLicenceNumber, formType: LICENSE_FORM_TYPES.RENEW } });
+                      }}
                     >
                     تحديث بيانات طلب تجديد الترخيص
                     </Button>
                   </Grid>
               </Grid>
-              {/* <pre>{JSON.stringify(values, 0, 2)}</pre> */}
             </form>
           )
         }}
       </Form>
     )
-  }
 }
-/* eslint-enable */
+
+
+export default FinalFormSummary;

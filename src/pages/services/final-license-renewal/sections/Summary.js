@@ -322,6 +322,8 @@ const Summary = ({ values }) => {
       </Grid>
       <Divider />
 
+      {Array.isArray(values.customers) && values.customers.length > 0 && 
+      <>
       <Typography
         color="textPrimary"
         gutterBottom
@@ -374,6 +376,8 @@ const Summary = ({ values }) => {
         </Grid>
       </Grid>
       <Divider />
+      </>
+      }
 
       <Grid
         container

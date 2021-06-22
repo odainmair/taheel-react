@@ -169,8 +169,8 @@ const updateFinalLicenseAPIFunc = async (values, TaskID) => {
 const getCenters = async (userEmail) => {
 	const url = 'taheel-apis-records-getCenters-v2';
 	// const queryParams = { userEmail, isExpired: false, licenseType: 'رخصة مؤقتة' };
-	// const queryParams = { userEmail, forRenewal: true, isEligibleForFinal:true };
-	const queryParams = { userEmail, forRenewal: true};
+	const queryParams = { userEmail, forRenewal: true, isEligibleForFinal:true };
+	// const queryParams = { userEmail, forRenewal: true};
 	const response = await APIRequest({ url, queryParams });
 	// console.log("response===============> " + JSON.parse(response));
 	return response;
