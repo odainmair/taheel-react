@@ -73,7 +73,7 @@ const CreateFinalLicense = () => {
         SetTemporaryLicenses(Centers);
       }
     }
-    if (centerLicenceNumber) {
+    if (centerLicenceNumber && formType != LICENSE_FORM_TYPES.RENEW) {
       const response = await getTaskDetails()
       // editInitValues.center[0]
       // setCenter(editInitValues.center[0])
