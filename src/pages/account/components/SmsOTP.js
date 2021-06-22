@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { Field } from 'react-final-form';
 import { TextField as TextFieldFinal } from 'final-form-material-ui';
 import {
@@ -6,12 +7,11 @@ import {
   Typography,
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
-import { AbsherOTP } from '../data/ForgetPasswordApi';
+import { requestOTPPhoneNum } from '../data/AccountApi';
+import { getCurrentUser, setCurrentUser } from 'src/utils/UserLocalStorage';
 
-const AbsherOtp = () => {
-  // const { IqamaNumber } = values;
-  // console.log("IqamaNumberrrrrrrrrrrrrr", valuesIqamaNumber)
-
+const SmsOTP = (props) => {
+  const { idNumIqamaNum } = getCurrentUser();
   return (
     <>
       <Grid
@@ -25,7 +25,7 @@ const AbsherOtp = () => {
         >
         </Grid>
       </Grid>
-      <img alt="Absher Logo" style={{ width: '10%', marginRight: '46%' }} src="https://proven-sa.com/wp-content/uploads/2016/09/Absher-logo.png" />
+      {/* <img alt="Absher Logo" style={{ width: '10%', marginRight: '46%' }} src="https://proven-sa.com/wp-content/uploads/2016/09/Absher-logo.png" /> */}
       <Box
         sx={{
           pb: 1,
@@ -37,14 +37,14 @@ const AbsherOtp = () => {
           color="textSecondary"
           variant="body1"
         >
-          تم إرسال رمز التحقق الى رقم جوالك المسجل في أبشر
+          تم إرسال رمز التحقق الى رقم جوالك
         </Typography>
       </Box>
       <Field
         fullWidth
         required
         label="رمز التحقق"
-        name="AbsherOtp"
+        name="SmsOTP"
         component={TextFieldFinal}
         type="text"
         variant="outlined"
@@ -65,21 +65,12 @@ const AbsherOtp = () => {
           variant="body1"
           sx={{
             paddingBottom: '16px',
-          }}
-        >
-          لم يصلك رمز التحقق ؟
-        </Typography>
-
-        <Typography
-          color="textSecondary"
-          variant="body1"
-          sx={{
-            paddingBottom: '16px',
             cursor: 'pointer',
             textDecoration: 'underline'
           }}
         >
           <a
+          onClick= {()=> requestOTPPhoneNum(idNumIqamaNum,props.newNum)}
           //  onClick={() => AbsherOTP(IqamaNumber)}
           >
             إعادة ارسال رمز التحقق
@@ -90,7 +81,7 @@ const AbsherOtp = () => {
   );
 };
 
-export default AbsherOtp;
-AbsherOTP.propTypes = {
-  values: PropTypes.object.isRequired,
+export default SmsOTP;
+SmsOTP.propTypes = {
+  newNum: PropTypes.string.isRequired,
 };

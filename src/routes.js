@@ -2,7 +2,7 @@
 import { Navigate } from 'react-router-dom';
 import DashboardLayout from 'src/components/DashboardLayout';
 import MainLayout from 'src/components/MainLayout';
-import Account from 'src/pages/Account';
+import Account from 'src/pages/account/Account';
 import CreateTemporaryLicense from 'src/pages/services/temporary-license/CreateTemporaryLicense';
 import CreatefinalLicense from 'src/pages/services/final-license/CreateFinalLicense';
 import CustomerList from 'src/pages/CustomerList';
@@ -19,6 +19,8 @@ import Faq from './pages/public/faq';
 import Services from './pages/public/Services';
 import ContactUs from './pages/public/ContactUs';
 import ForgetPassword from './pages/forgetPassword/ForgetPassword';
+import CentersDetails from './pages/account/components/CentersDetails';
+import Centers from './pages/account/Centers';
 
 const routes = (isLoggedIn) => [
   {
@@ -46,6 +48,8 @@ const routes = (isLoggedIn) => [
     element: isLoggedIn !== "" ? <DashboardLayout /> : <Navigate to="/login" />,
     children: [
       { path: 'account', element: <Account /> },
+      { path: 'centers', element: <Centers /> },
+      { path: 'centersDetails', element: <CentersDetails /> },
       { path: 'customers', element: <CustomerList /> },
       { path: 'dashboard', element: <Dashboard /> },
       { path: 'products', element: <ProductList /> },

@@ -95,6 +95,8 @@ const Register = () => {
     const { idNumber, day, month, year } = values;
 
     const verifyEmailAndIqamaNumRs = await verifyEmailAndIqamaNum({ idNumber });
+    console.log("qqqqqqqqqqqqq", verifyEmailAndIqamaNumRs.isSuccessful)
+
     if (!verifyEmailAndIqamaNumRs.isSuccessful) {
       return { isSuccessful: false, message: verifyEmailAndIqamaNumRs.message };
     }
@@ -122,6 +124,8 @@ const Register = () => {
     const { email } = values;
 
     const verifyEmailAndIqamaNumRs = await verifyEmailAndIqamaNum({ email });
+    console.log("qqqqqqqqqqqqq", verifyEmailAndIqamaNumRs.isSuccessful)
+
     if (!verifyEmailAndIqamaNumRs.isSuccessful) {
       return { isSuccessful: false, message: verifyEmailAndIqamaNumRs.message };
     }
