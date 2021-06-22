@@ -31,7 +31,7 @@ const Dashboard = () => {
   };
   const getMyTasksFun = async (userEmail) => {
     const url = 'taheel-apis-utilities-GetGetExternalUserTasks-v2';
-    const queryParams = { userEmail:"ahmad.albuthom@inspirejo.com", taskStatus:0 };
+    const queryParams = { userEmail, taskStatus:0 };
     const response = await APIRequest({ url, queryParams });
     return response;
   };

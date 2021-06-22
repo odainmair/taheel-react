@@ -23,7 +23,7 @@ const getStaff = (values) => {
 		cv: 'CV',
 		EducationalQualification: 'educationQualifications',
 		MedicalPractice: 'professionalLicense',
-		sponsorName: 'SponsorName',
+		sponsorName: 'sponsorName',
 	}
 
 	const staffTypes = ["معلم تربية خاصة", "أخصائي اجتماعي", "مراقب اجتماعي", "حارس", "عامل تنظيفات", "مشرف فني عام", "اخصائي نفسي و توجيه اجتماعي", "عامل رعاية شخصية", "مدير", "سائق", "مرافق سائق", "أخصائي علاج طبيعي", "أخصائي علاج وظيفي", "أخصائي نطق و تخاطب", "ممرض"]
@@ -172,7 +172,7 @@ const updateFinalLicenseAPIFunc = async (values, TaskID) => {
 
 const getTempLicense = async (userEmail) => {
 	const url = 'taheel-apis-records-getCenters-v2';
-	const queryParams = { userEmail, isExpired: false, licenseType: 'رخصة مؤقتة' };
+	const queryParams = { userEmail, isExpired: false, licenseType: 'رخصة مؤقتة',isEligibleForFinal:true };
 	const response = await APIRequest({ url, queryParams });
 	return response;
 };

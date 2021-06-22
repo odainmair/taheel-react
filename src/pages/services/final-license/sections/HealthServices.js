@@ -118,9 +118,6 @@ export default HealthServices;
 
 HealthServices.propTypes = {
   Condition: PropTypes.func.isRequired,
-  values: PropTypes.func.isRequired,
+  values: PropTypes.object.isRequired,
   setField: PropTypes.func.isRequired,
-  input: PropTypes.func.isRequired,
-  label: PropTypes.func.isRequired,
-  multipleDocs: PropTypes.bool,
 };

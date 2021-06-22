@@ -35,7 +35,7 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
     setLoading(true);
     const { nationality, year, month, day, idNumber } = !rowIndex || rowIndex !== -1 ? values.customers[rowIndex] : values;
     console.log(`CitizenValidate_SA--idNumber :::  ${idNumber}`);
-    if (values.customers) {
+    /*if (values.customers) {
       console.log(`CitizenValidate_SA--customers :::  ${JSON.stringify(values.customers)}`);
       const custumerByIdCount =  values.customers.filter(customer => customer.idNumber === idNumber).length;
       if (custumerByIdCount > 0) {
@@ -43,7 +43,7 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
         setLoading(false);
         return;
       }
-    }
+    }*/
     if (!idNumber) {
       setErrMessage("يرجى ادخال رقم الهوية");
       setLoading(false);
@@ -72,14 +72,14 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
   const CitizenValidate_Forign = async () => {
     setLoading(true);
     const { iqamaNo } = !rowIndex || rowIndex !== -1 ? values.customers[rowIndex] : values;
-    if (values.customers) {
+    /*if (values.customers) {
       const custumerByIdCount = values.customers.filter(customer => customer.iqamaNo === iqamaNo).length;
       if (custumerByIdCount > 0) {
         setErrMessage(" رقم الاقامة مستخدم يرجى استخدام رقم اخر");
         setLoading(false);
         return;
       }
-    }
+    }*/
     if (!iqamaNo) {
       setErrMessage("يرجى ادخال رقم الاقامة");
       setLoading(false);
