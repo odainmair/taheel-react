@@ -370,9 +370,6 @@ const Summary = ({ values }) => {
 
       <Grid
         container
-        lg={12}
-        md={12}
-        xs={12}
         mt={3}
       >
         <Field name="agree" mt={3}>
@@ -400,13 +397,13 @@ const Summary = ({ values }) => {
 
 export default Summary;
 Summary.propTypes = {
-  section: PropTypes.func.isRequired,
-  label: PropTypes.func.isRequired,
-  value: PropTypes.func.isRequired,
-  values: PropTypes.func.isRequired,
-  index: PropTypes.func.isRequired,
-  name: PropTypes.func.isRequired,
-  fields: PropTypes.func.isRequired,
-  setSponsorName: PropTypes.func.isRequired,
+  section: PropTypes.func,
+  label: PropTypes.string,
+  value: PropTypes.string,
+  values: PropTypes.object,
+  index: PropTypes.number,
+  name: PropTypes.string,
+  fields: PropTypes.object,
+  setSponsorName: PropTypes.func,
 
 };
