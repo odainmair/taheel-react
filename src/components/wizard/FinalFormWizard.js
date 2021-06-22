@@ -74,7 +74,9 @@ export default class FinalFromWizard extends React.Component {
       }
       return onSubmit(values)
     } else {
+      console.log('before if--- activePage.props.nextFun ----')
       if (activePage.props.nextFun) {
+        console.log('if--- activePage.props.nextFun ----')
         const { isSuccessful, message } = await activePage.props.nextFun(values);
         if (!isSuccessful) {
           this.setState((state) => ({

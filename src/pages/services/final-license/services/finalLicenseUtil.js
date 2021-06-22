@@ -99,6 +99,7 @@ const healthServicesValidation = values => {
 }
 
 const personsValidation = async values => {
+  console.log(`--personsValidation `)
   const response = { isSuccessful: true, message: '' };
   if (!values.customers || values.customers.length === 0) {
     return { isSuccessful: false, message: "يرجى استيفاء الشروط" };
@@ -106,7 +107,8 @@ const personsValidation = async values => {
   }
   const TeachersCount = values.customers.filter(customer => customer.staffTypes === "معلم تربية خاصة").length
   const managersCount = values.customers.filter(customer => customer.staffTypes === "مدير").length
-  if (managersCount > 0 && managersCount !== 1)
+  console.log(`--manager count ::: ${managersCount}`)
+  if ( managersCount !== 1)
     return { isSuccessful: false, message: "يرجى استيفاء الشروط" };
 
   if (Math.round(values.beneficiariesNum / 8) > TeachersCount || TeachersCount < 1)
