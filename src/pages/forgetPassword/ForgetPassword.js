@@ -31,7 +31,6 @@ const ForgetPassword = () => {
 
   const absherOTPRequest = async (values) => {
     const { IqamaNumber } = values;
-    const response = { isSuccessful: true, message: '' };
     setInfo(IqamaNumber);
     const sendOTP = await AbsherOTP(IqamaNumber);
     console.log("qqqqqqqqqqqqq", sendOTP.isSuccessful)
@@ -39,20 +38,17 @@ const ForgetPassword = () => {
     if (!sendOTP.isSuccessful) {
       return { isSuccessful: false, message: sendOTP.message };
     }
-    return response;
+    return { isSuccessful: true, message: '' };
     // return { isSuccessful: true, message: '' }
   };
 
   const validateOtp = async (values) => {
     const { AbsherOtp } = values;
-    const response = { isSuccessful: true, message: '' };
-    // console.log("hiiiiiiiiiiiii", AbsherOtp)
-    // console.log("hiiiiiiiiiiiii", info)
     const AbsherAuth = await AbsherOTPAuth(info, AbsherOtp);
     if (!AbsherAuth.isSuccessful) {
       return { isSuccessful: false, message: AbsherAuth.message };
     }
-    return response;
+    return { isSuccessful: true, message: '' };
   };
 
   const onSubmit = async (values) => {
@@ -128,8 +124,9 @@ const ForgetPassword = () => {
                 >
                   <FinalFromWizard.Page
                     label=""
-                    nextFun={(values) => absherOTPRequest(values)}
                     validate={CitizenValidate}
+
+                    nextFun={(values) => absherOTPRequest(values)}
                   >
                     <CitizenInfo />
                   </FinalFromWizard.Page>
