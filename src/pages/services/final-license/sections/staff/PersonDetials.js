@@ -131,7 +131,7 @@ const Row = ({ editMode, SponsorName, setSponsorName, values, fromEdit, setFromE
                 color="primary"
                 component="span"
                 onClick={() => {
-                  setFromEdit(true);
+                  setFromEdit(false);
                   setRowIndex(index);
                   setFieldName(name);
                   const { idNumber, iqamaNo, lastName, nationality, nationalityBtn, day, month, year, fullName, gender, birthDate, staffTypes, cv, cvAtt, EducationalQualification, MedicalPractice, EducationalQualificationAtt, MedicalPracticeAtt, sponsorName } = fields.value[index];

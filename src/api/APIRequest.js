@@ -34,6 +34,7 @@ const APIRequest = async ({
         }
         console.log(`----apiResponse err.message :: ${response.message}`);
     }
+    console.log(`----response============================> :: ${JSON.stringify(response)}`);
     return response;
 };
 const downloadFileAPI = async ({

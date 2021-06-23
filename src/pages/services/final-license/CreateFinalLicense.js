@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import { getCurrentUser } from 'src/utils/UserLocalStorage';
 import { useState, useEffect } from 'react';
 import CenterDetails from './sections/CenterDetails'
@@ -9,10 +9,9 @@ import Capacity from './sections/Capacity';
 import HealthServices from './sections/HealthServices';
 import PersonDetials from './sections/staff/PersonDetials';
 import Summary from './sections/Summary'
-import { createFinalLicenseAPIFunc } from './services/finalLicenseAPI'
 import { updateFinalLicenseAPIFunc } from './services/finalLicenseAPI'
 import { getTempLicense } from './services/finalLicenseAPI'
-import { TaskDetails } from './services/finalLicenseAPI'
+import { TaskDetails, CentertDetails } from './services/finalLicenseAPI'
 import {
   Box,
   Card,
@@ -35,7 +34,7 @@ import { personsValidation } from './services/finalLicenseUtil'
 import { ConditionComp } from './services/finalLicenseUtil'
 import { MedicalPracticeComp } from './services/finalLicenseUtil'
 import { calculationConditionComp } from './services/finalLicenseUtil'
-import zIndex from '@material-ui/core/styles/zIndex';
+import { LICENSE_FORM_TYPES } from 'src/utils/enums'
 
 const CreateFinalLicense = () => {
   const [temporaryLicenses, SetTemporaryLicenses] = useState([])
@@ -45,33 +44,45 @@ const CreateFinalLicense = () => {
   const [dialogTitle, setDialogTitle] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
+  const params = useParams();
   const centerLicenceNumber = location.state ? location.state.centerLicenceNumber : null;
+  const formType = location.state ? location.state.formType : null;
   const [editMode, setEditMode] = useState(false);
+  const [center, setCenter] = useState({});
   const [editInitValues, setEditInitValues] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [canShowSection, setCanShowSection] = useState(true);
   const [errMessage, SetErrMessage] = useState('')
   const taskID = location.state ? location.state.taskID : null;
   const requestNum = location.state ? location.state.requestNum : "";
+
   useEffect(async () => {
-    const { email } = await getCurrentUser();
-    const getCentersRs = await getTempLicense(email);
     SetErrMessage("");
     setIsLoading(true);
-    if (!getCentersRs.isSuccessful) {
-      SetErrMessage(getCentersRs.message);
-      setCanShowSection(false);
-      setIsLoading(false);
-      return;
-    } else {
-      const { Centers } = getCentersRs.responseBody.data;
-      SetTemporaryLicenses(Centers);
+    console.log("===> formType: " + formType)
+    const { email } = await getCurrentUser();
+    if (formType != LICENSE_FORM_TYPES.RENEW && formType != LICENSE_FORM_TYPES.EDIT) {
+      const getCentersRs = await getTempLicense(email);
+      if (!getCentersRs.isSuccessful) {
+        SetErrMessage(getCentersRs.message);
+        setCanShowSection(false);
+        setIsLoading(false);
+        return;
+      } else {
+        const { Centers } = getCentersRs.responseBody.data;
+        SetTemporaryLicenses(Centers);
+      }
     }
-    if (centerLicenceNumber) {
+    if (centerLicenceNumber && formType === LICENSE_FORM_TYPES.EDIT) {
       const response = await getTaskDetails()
+      // editInitValues.center[0]
+      // setCenter(editInitValues.center[0])
     }
-    else
-      setIsLoading(false)
+    if(centerLicenceNumber && formType === LICENSE_FORM_TYPES.RENEW) {
+      const response = await getCentertDetails(centerLicenceNumber)
+      setEditMode(false)
+    }
+    setIsLoading(false);
   }, [])
 
   const getTaskDetails = async () => {
@@ -82,19 +93,48 @@ const CreateFinalLicense = () => {
       SetErrMessage(response.message)
     else {
       setEditInitValues(response.responseBody.data)
+      setCenter(response.responseBody.data.center[0])
       setIsLoading(false)
       return response.responseBody.data
     }
   }
 
+  const getCentertDetails = async (centerLicenceNumber) => {
+    setIsLoading(true)
+    SetErrMessage("");
+    const response = await CentertDetails(centerLicenceNumber)
+    console.log("getCentertDetails ===============> response:" + JSON.stringify(response) )
+    if (!response.isSuccessful){
+      SetErrMessage(response.message);
+    }
+    else {
+      setEditInitValues(response.responseBody.data);
+      setCenter(response.responseBody.data.center)
+      setEditMode(true);
+      setIsLoading(false);
+      // setShowSummary(true);
+      return response.responseBody.data;
+    }
+  }
+
   const onSubmit = async (values) => {
     let response = null
-    if (!editMode) {
-      response = await createFinalLicenseAPIFunc(values);
+    if(values.formType === LICENSE_FORM_TYPES.RENEW) {
+      response = await updateFinalLicenseAPIFunc(values, formType, 0);
+      if (response.isSuccessful) {
+        handleClickOpen(`${response.responseBody.data[0]}`, '');
+      }
+      else {
+        SetErrMessage(`${response.message}`);
+        setIsLoading(false)
+      }
+    }
+    else if (!editMode) {
+      response = await updateFinalLicenseAPIFunc(values, formType, 0);
       handleClickOpen(` تم تقديم طلب ${response.responseBody.data.requestNumber} لإصدار الترخيص النهائي رقم ${values.temporaryLicenceNum} يرجى تسليم أصل الضمان البنكي إلى وكالة التأهيل والتوجيه الإجتماعي بوزارة الموارد البشرية والتنمية الإجتماعية لانهاء إجراءات الطلب خلال 3 أيام عمل`, '');
     }
     else {
-      response = await updateFinalLicenseAPIFunc(values, taskID);
+      response = await updateFinalLicenseAPIFunc(values, formType, taskID);
       handleClickOpen(` تم تقديم طلب ${requestNum} لإصدار الترخيص النهائي رقم ${values.temporaryLicenceNum} يرجى تسليم أصل الضمان البنكي إلى وكالة التأهيل والتوجيه الإجتماعي بوزارة الموارد البشرية والتنمية الإجتماعية لانهاء إجراءات الطلب خلال 3 أيام عمل`, '');
     }
   };
@@ -112,17 +152,21 @@ const CreateFinalLicense = () => {
   return (
     <Container maxWidth="md">
       <Card>
-        {!isLoading && (
+        {!isLoading && formType != LICENSE_FORM_TYPES.RENEW && (
         <CardHeader
-          title={!editMode?"اصدار ترخيص نهائي لمركز تأهيل أهلي":
-          `تعديل طلب ترخيص نهائي - ${requestNum}`}
+          title={!editMode?"اصدار ترخيص نهائي لمركز تأهيل أهلي": `تعديل طلب ترخيص نهائي - ${requestNum}`}
+        />    
+        )}
+        {!isLoading && formType === LICENSE_FORM_TYPES.RENEW && ( 
+        <CardHeader
+          title={`طلب تجديد رخصة نهائية`}
         />    
         )}
         <Divider />
         {!isLoading && editMode &&
           <Alert variant="outlined" severity="warning" sx={{ marginLeft: 2, marginRight: 2, marginTop: 1 }}>
             <AlertTitle> يرجى مراجعة طلب رقم {requestNum}</AlertTitle>
-            {editInitValues.chairmanComment.comment}
+            {editInitValues.chairmanComment && editInitValues.chairmanComment.comment}
           </Alert>
         }
         {errMessage && (
@@ -140,34 +184,37 @@ const CreateFinalLicense = () => {
                   isNextBtnDisabled: false,
                   managersCount: 0,
                   teachersCount: 0,
+                  page: formType === LICENSE_FORM_TYPES.RENEW ? 1 : 0,
+                  formType: formType
                 } : {
                   agree: [],
                   isNextBtnDisabled: false,
                   managersCount: 0,
                   teachersCount: 0,
-                  CRNumber: editInitValues.center[0].crInfo_r.crNumber,
-                  temporaryLicenceNum: editInitValues.center[0].licenceNumber,
-                  companyName: editInitValues.center[0].crInfo_r.entityName,
-                  activities: editInitValues.center[0].crInfo_r.crActivityType,
-                  municipLicenseNo: editInitValues.center[0].crInfo_r.MoMRA_Licence,
-                  beneficiariesNum: editInitValues.center[0].centerInfo_r.beneficiaryCount,
-                  capacity: editInitValues.center[0].centerInfo_r.carryingnumber,
-                  financialGuarantee: `${editInitValues.center[0].centerInfo_r.financialGuarantee} ر.س.`,
-                  buildingArea: editInitValues.center[0].centerInfo_r.buildingArea,
-                  basementArea: editInitValues.center[0].centerInfo_r.basementArea,
-                  // OperationalPlan: [editInitValues.center[0].centerInfo_r.operationPlan.id],
-                  OperationalPlan: [12403],
-                  ExecutivePlan: [editInitValues.center[0].centerInfo_r.executivePlan.id],
-                  OfficeReport: [editInitValues.center[0].centerInfo_r.engineeringPlan.id],
-                  SecurityReport: [editInitValues.center[0].centerInfo_r.securityReport.id],
-                  // Furniture: editInitValues.center[0].centerInfo_r.carryingnumber,
+                  CRNumber: center.crInfo_r.crNumber,
+                  temporaryLicenceNum: center.licenceNumber,
+                  companyName: center.crInfo_r.entityName,
+                  activities: center.crInfo_r.crActivityType,
+                  municipLicenseNo: center.crInfo_r.MoMRA_Licence,
+                  beneficiariesNum: center.centerInfo_r.beneficiaryCount,
+                  capacity: center.centerInfo_r.carryingnumber,
+                  financialGuarantee: `${center.centerInfo_r.financialGuarantee} ر.س.`,
+                  buildingArea: center.centerInfo_r.buildingArea,
+                  basementArea: center.centerInfo_r.basementArea,
+                  OperationalPlan: [center.centerInfo_r.operationPlan && center.centerInfo_r.operationPlan.id],
+                  ExecutivePlan: [center && center.centerInfo_r && center.centerInfo_r.executivePlan && center.centerInfo_r.executivePlan.id],
+                  OfficeReport: [center && center.centerInfo_r && center.centerInfo_r.engineeringPlan && center.centerInfo_r.engineeringPlan.id],
+                  SecurityReport: center && center.centerInfo_r && [center.centerInfo_r.securityReport && center.centerInfo_r.securityReport.id],
+                  // Furniture: center.centerInfo_r.carryingnumber,
                   Furniture: [1202],
-                  FinancialGuaranteeAtt: [editInitValues.center[0].centerInfo_r.financialGuarbteeAtt.id],
-                  healthServices: editInitValues.center[0].isHealthCareServices ? "yes" : "no",
-                  healthServiceType: editInitValues.center[0].healthCareServices_r.type,
-                  // healthServiceAttachment: editInitValues.center[0].centerInfo_r.financialGuarbteeAtt,
-                  healthServiceAttachment:editInitValues.center[0].healthCareServices_r.attachment ? [editInitValues.center[0].healthCareServices_r.attachment.id]:null,
+                  FinancialGuaranteeAtt: [center && center.centerInfo_r && center.centerInfo_r.financialGuarbteeAtt && center.centerInfo_r.financialGuarbteeAtt.id],
+                  healthServices: center && center.centerInfo_r && center.isHealthCareServices ? "yes" : "no",
+                  healthServiceType: center && center.centerInfo_r && center.healthCareServices_r && center.healthCareServices_r.type,
+                  // healthServiceAttachment: center.centerInfo_r.financialGuarbteeAtt,
+                  healthServiceAttachment: [center && center.centerInfo_r && center.healthCareServices_r && center.healthCareServices_r.attachment && center.healthCareServices_r.attachment.id],
                   customers: getStaff(editInitValues.staff),
+                  page: formType === LICENSE_FORM_TYPES.RENEW ? 1 : 0,
+                  formType: formType
                 }}
                 isEnableNextBtn={isEnableNextBtn}
                 onSubmit={onSubmit}

@@ -3,7 +3,7 @@ import React from 'react';
 import { Form } from 'react-final-form';
 import { Alert, Box, Button, Card, CardContent, CircularProgress, Grid, Step, StepLabel, Stepper } from '@material-ui/core';
 import arrayMutators from "final-form-arrays";
-import { TramRounded } from '@material-ui/icons';
+import { LICENSE_FORM_TYPES } from 'src/utils/enums'
 
 export default class FinalFromWizard extends React.Component {
   static Page = ({ children }) => children;
@@ -11,7 +11,7 @@ export default class FinalFromWizard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      page: 0,
+      page: props.initialValues.page ? props.initialValues.page : 0,
       values: props.initialValues || {},
       completed: false,
       isNextCallBackFunSuccess: true,
@@ -47,7 +47,7 @@ export default class FinalFromWizard extends React.Component {
   }
 
   handleSubmit = async (values) => {
-    console.log("--- handleSubmit  ----");
+    console.log("--- handleSubmit  ----" + this.state.values.formType);
     const errors = this.validate(values);
     if (Object.keys(errors).length > 0)
       return this.validate(values);
@@ -158,6 +158,7 @@ export default class FinalFromWizard extends React.Component {
                       <Grid item>
                         <Button
                           variant="contained"
+                          disabled={page === 1 && this.state.values.formType === LICENSE_FORM_TYPES.RENEW}
                           onClick={this.previous}
                           sx={{
                             backgroundColor: '#E2E8EB',
@@ -200,7 +201,7 @@ export default class FinalFromWizard extends React.Component {
                   </Grid>
                 </Grid>
               </Grid>
-                 {/*<pre dir="ltr">{JSON.stringify(values, 0, 2)}</pre>*/ }
+                 {/* {<pre dir="ltr">{JSON.stringify(values, 0, 2)}</pre> } */}
             </form>
           )
         }}
