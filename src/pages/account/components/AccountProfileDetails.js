@@ -14,18 +14,6 @@ import {
 } from '@material-ui/core';
 
 const AccountProfileDetails = ({ setIsDisable, data }) => {
-  const [open, setOpen] = React.useState(false);
-  const [errMessage, SetErrMessage] = useState('')
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-
-
   return (
     <Card>
       <CardHeader
@@ -33,11 +21,6 @@ const AccountProfileDetails = ({ setIsDisable, data }) => {
       />
       <Divider />
       <CardContent>
-        {errMessage && (
-          <Alert variant="outlined" severity="error">
-            {errMessage}
-          </Alert>
-        )}
         <Grid
           container
           spacing={3}
@@ -93,8 +76,7 @@ const AccountProfileDetails = ({ setIsDisable, data }) => {
               label="رقم الجوال"
               name="phoneNumber"
               component={TextFieldFinal}
-              // onChange={handleChange}
-              initialValue={data.phone}
+              initialValue={data.phoneNumber}
               variant="outlined"
               className="custom-field"
             />

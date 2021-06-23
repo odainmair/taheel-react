@@ -19,8 +19,8 @@ import Faq from './pages/public/faq';
 import Services from './pages/public/Services';
 import ContactUs from './pages/public/ContactUs';
 import ForgetPassword from './pages/forgetPassword/ForgetPassword';
-import CentersDetails from './pages/account/components/CentersDetails';
-import Centers from './pages/account/Centers';
+import CentersDetails from './pages/CentersManagement/components/CentersDetails';
+import Centers from './pages/CentersManagement/Centers';
 
 const routes = (isLoggedIn) => [
   {

@@ -8,10 +8,8 @@ import {
 } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { requestOTPPhoneNum } from '../data/AccountApi';
-import { getCurrentUser, setCurrentUser } from 'src/utils/UserLocalStorage';
 
 const SmsOTP = (props) => {
-  const { idNumIqamaNum } = getCurrentUser();
   return (
     <>
       <Grid
@@ -25,7 +23,6 @@ const SmsOTP = (props) => {
         >
         </Grid>
       </Grid>
-      {/* <img alt="Absher Logo" style={{ width: '10%', marginRight: '46%' }} src="https://proven-sa.com/wp-content/uploads/2016/09/Absher-logo.png" /> */}
       <Box
         sx={{
           pb: 1,
@@ -70,8 +67,7 @@ const SmsOTP = (props) => {
           }}
         >
           <a
-          onClick= {()=> requestOTPPhoneNum(idNumIqamaNum,props.newNum)}
-          //  onClick={() => AbsherOTP(IqamaNumber)}
+            onClick={() => requestOTPPhoneNum(props.newNum)}
           >
             إعادة ارسال رمز التحقق
           </a>
