@@ -6,7 +6,7 @@ name: Master CI
 on:
   push:
     branches:
-      - main
+      - develop
 
 jobs:
   build:
@@ -36,5 +36,5 @@ jobs:
         port: ${{ secrets.PORT }}
         overwrite: true
         source: "build/*"
-        target: "/home/inspire-admin/apps/www-static/taheel-demo"
+        target: "/home/inspire-admin/apps/www-static/taheel-demo-qa"
         strip_components: 1 
