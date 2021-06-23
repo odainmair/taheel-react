@@ -36,6 +36,11 @@ const Account = () => {
     setOpen(false);
   };
 
+  useEffect(() => {
+    const { firstName, lastName, email, phoneNumber, idNumIqamaNum } = getCurrentUser();
+
+  }, []);
+  
   const onSubmit = async (values) => {
     const response = { isSuccessful: true, message: '' };
     setNum(values.phoneNumber);
@@ -56,6 +61,7 @@ const Account = () => {
       SetsuccessMessage('لقد تم حفظ المعلومات بنجاح');
 
       setCurrentUser({
+        ...getCurrentUser(),
         email: values.email,
         phoneNumber: values.phoneNumber,
       });
