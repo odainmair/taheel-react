@@ -9,9 +9,7 @@ import Capacity from './sections/Capacity';
 import HealthServices from './sections/HealthServices';
 import PersonDetials from './sections/staff/PersonDetials';
 import Summary from './sections/Summary'
-import { createFinalLicenseAPIFunc } from './services/finalLicenseAPI'
 import { updateFinalLicenseAPIFunc } from './services/finalLicenseAPI'
-import { createFinalLicenseRenewalAPIFunc } from '../final-license-renewal/services/finalLicenseAPI'
 import { getTempLicense } from './services/finalLicenseAPI'
 import { TaskDetails, CentertDetails } from './services/finalLicenseAPI'
 import {
@@ -122,7 +120,7 @@ const CreateFinalLicense = () => {
   const onSubmit = async (values) => {
     let response = null
     if(values.formType === LICENSE_FORM_TYPES.RENEW) {
-      response = await createFinalLicenseRenewalAPIFunc(values);
+      response = await updateFinalLicenseAPIFunc(values, formType, 0);
       if (response.isSuccessful) {
         handleClickOpen(`${response.responseBody.data[0]}`, '');
       }
@@ -132,11 +130,11 @@ const CreateFinalLicense = () => {
       }
     }
     else if (!editMode) {
-      response = await createFinalLicenseAPIFunc(values);
+      response = await updateFinalLicenseAPIFunc(values, formType, 0);
       handleClickOpen(` تم تقديم طلب ${response.responseBody.data.requestNumber} لإصدار الترخيص النهائي رقم ${values.temporaryLicenceNum} يرجى تسليم أصل الضمان البنكي إلى وكالة التأهيل والتوجيه الإجتماعي بوزارة الموارد البشرية والتنمية الإجتماعية لانهاء إجراءات الطلب خلال 3 أيام عمل`, '');
     }
     else {
-      response = await updateFinalLicenseAPIFunc(values, taskID);
+      response = await updateFinalLicenseAPIFunc(values, formType, taskID);
       handleClickOpen(` تم تقديم طلب ${requestNum} لإصدار الترخيص النهائي رقم ${values.temporaryLicenceNum} يرجى تسليم أصل الضمان البنكي إلى وكالة التأهيل والتوجيه الإجتماعي بوزارة الموارد البشرية والتنمية الإجتماعية لانهاء إجراءات الطلب خلال 3 أيام عمل`, '');
     }
   };

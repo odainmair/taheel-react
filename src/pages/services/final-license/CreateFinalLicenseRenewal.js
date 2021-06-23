@@ -4,7 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { getCurrentUser } from 'src/utils/UserLocalStorage';
 import { useState, useEffect } from 'react';
 import Summary from './sections/Summary'
-import { getCenters, CentertDetails, getMunicipalLicenseNoApi, createFinalLicenseRenewalAPIFunc, validateCompanyFunc } from './services/finalLicenseAPI'
+import { getCenters, CentertDetails, getMunicipalLicenseNoApi, updateFinalLicenseAPIFunc, validateCompanyFunc } from './services/finalLicenseAPI'
 import { getStaff, CenterDetailsValidation } from './services/finalLicenseUtil';
 import {
   Card,
@@ -23,6 +23,7 @@ import { Field } from 'react-final-form';
 import { TextField as TextFieldFinal, Select } from 'final-form-material-ui';
 import { OnChange } from 'react-final-form-listeners';
 import dateFormatter from 'src/utils/dateFormatter';
+import { LICENSE_FORM_TYPES } from 'src/utils/enums'
 
 const CreateFinalLicenseRenewal = () => {
   const [renewableLicenses, setRenewableLicenses] = useState([]);
@@ -114,7 +115,7 @@ const CreateFinalLicenseRenewal = () => {
     console.log("===================== onSubmit")
     let response = null
     // if (!editMode) {
-      response = await createFinalLicenseRenewalAPIFunc(values);
+      response = await updateFinalLicenseAPIFunc(values, LICENSE_FORM_TYPES.RENEW, 0);
       
       if (response.isSuccessful) {
         handleClickOpen(`${response.responseBody.data[0]}`, '');

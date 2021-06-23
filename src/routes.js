@@ -5,7 +5,7 @@ import MainLayout from 'src/components/MainLayout';
 import Account from 'src/pages/account/Account';
 import CreateTemporaryLicense from 'src/pages/services/temporary-license/CreateTemporaryLicense';
 import CreatefinalLicense from 'src/pages/services/final-license/CreateFinalLicense';
-import CreateFinalLicenseRenewal from 'src/pages/services/final-license-renewal/CreateFinalLicenseRenewal';
+import CreateFinalLicenseRenewal from 'src/pages/services/final-license/CreateFinalLicenseRenewal';
 import CustomerList from 'src/pages/CustomerList';
 import Dashboard from 'src/pages/Dashboard';
 import Login from 'src/pages/Login';
