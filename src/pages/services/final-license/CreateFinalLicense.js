@@ -57,12 +57,14 @@ const CreateFinalLicense = () => {
   const [errMessage, SetErrMessage] = useState('')
   const taskID = location.state ? location.state.taskID : null;
   const requestNum = location.state ? location.state.requestNum : "";
+
   useEffect(async () => {
+    SetErrMessage("");
+    setIsLoading(true);
+    console.log("===> formType: " + formType)
     const { email } = await getCurrentUser();
-    if (formType != LICENSE_FORM_TYPES.RENEW) {
+    if (formType != LICENSE_FORM_TYPES.RENEW && formType != LICENSE_FORM_TYPES.EDIT) {
       const getCentersRs = await getTempLicense(email);
-      SetErrMessage("");
-      setIsLoading(true);
       if (!getCentersRs.isSuccessful) {
         SetErrMessage(getCentersRs.message);
         setCanShowSection(false);
@@ -73,16 +75,16 @@ const CreateFinalLicense = () => {
         SetTemporaryLicenses(Centers);
       }
     }
-    if (centerLicenceNumber && formType != LICENSE_FORM_TYPES.RENEW) {
+    if (centerLicenceNumber && formType === LICENSE_FORM_TYPES.EDIT) {
       const response = await getTaskDetails()
       // editInitValues.center[0]
       // setCenter(editInitValues.center[0])
     }
-    else {
+    if(centerLicenceNumber && formType === LICENSE_FORM_TYPES.RENEW) {
       const response = await getCentertDetails(centerLicenceNumber)
       setEditMode(false)
-      setIsLoading(false)
     }
+    setIsLoading(false);
   }, [])
 
   const getTaskDetails = async () => {
@@ -201,8 +203,7 @@ const CreateFinalLicense = () => {
                   financialGuarantee: `${center.centerInfo_r.financialGuarantee} ر.س.`,
                   buildingArea: center.centerInfo_r.buildingArea,
                   basementArea: center.centerInfo_r.basementArea,
-                  // OperationalPlan: [center.centerInfo_r.operationPlan.id],
-                  OperationalPlan: [12403],
+                  OperationalPlan: [center.centerInfo_r.operationPlan && center.centerInfo_r.operationPlan.id],
                   ExecutivePlan: [center && center.centerInfo_r && center.centerInfo_r.executivePlan && center.centerInfo_r.executivePlan.id],
                   OfficeReport: [center && center.centerInfo_r && center.centerInfo_r.engineeringPlan && center.centerInfo_r.engineeringPlan.id],
                   SecurityReport: center && center.centerInfo_r && [center.centerInfo_r.securityReport && center.centerInfo_r.securityReport.id],

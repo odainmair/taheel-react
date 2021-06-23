@@ -3,19 +3,20 @@ import React from 'react';
 import { Form } from 'react-final-form';
 import { Alert, Box, Button, Card, CardContent, CircularProgress, Grid, Step, StepLabel, Stepper } from '@material-ui/core';
 import arrayMutators from "final-form-arrays";
-import { LICENSE_FORM_TYPES } from 'src/utils/enums'
+import { TramRounded } from '@material-ui/icons';
 
-export default class FinalFromWizard extends React.Component {
+export default class AccountFinalFrom extends React.Component {
   static Page = ({ children }) => children;
 
   constructor(props) {
     super(props);
     this.state = {
-      page: props.initialValues.page ? props.initialValues.page : 0,
+      page: 0,
       values: props.initialValues || {},
       completed: false,
       isNextCallBackFunSuccess: true,
-      errMessage: ""
+      errMessage: "",
+      isDisable: true,
     };
   }
 
@@ -47,7 +48,7 @@ export default class FinalFromWizard extends React.Component {
   }
 
   handleSubmit = async (values) => {
-    console.log("--- handleSubmit  ----" + this.state.values.formType);
+    console.log("--- handleSubmit  ----");
     const errors = this.validate(values);
     if (Object.keys(errors).length > 0)
       return this.validate(values);
@@ -74,9 +75,7 @@ export default class FinalFromWizard extends React.Component {
       }
       return onSubmit(values)
     } else {
-      console.log('before if--- activePage.props.nextFun ----')
       if (activePage.props.nextFun) {
-        console.log('if--- activePage.props.nextFun ----')
         const { isSuccessful, message } = await activePage.props.nextFun(values);
         if (!isSuccessful) {
           this.setState((state) => ({
@@ -96,7 +95,7 @@ export default class FinalFromWizard extends React.Component {
   }
 
   render() {
-    const { children, isEnableNextBtn = true, isEnableCancelBtn = false, cancelBtnFn,canShowSection=true } = this.props;
+    const { children, isEnableNextBtn = true, isDisable } = this.props;
     const childrenArray = React.Children.toArray(children);
     const { page, values, completed, isNextCallBackFunSuccess, errMessage } = this.state;
     const activePage = React.Children.toArray(children)[page];
@@ -117,13 +116,6 @@ export default class FinalFromWizard extends React.Component {
         {({ handleSubmit, pristine, form, submitting, values }) => {
           return (
             <form onSubmit={handleSubmit} autoComplete="off" noValidate>
-              <Stepper className="custom-wizard" alternativeLabel activeStep={page}>
-                {childrenArray.map((child, index) => (
-                  <Step key={child.props.label || index} completed={page > index || completed}>
-                    <StepLabel>{child.props.label}</StepLabel>
-                  </Step>
-                ))}
-              </Stepper>
               {!isNextCallBackFunSuccess && (
                 <Box mt={3}>
                   <Alert variant="outlined" severity="error">
@@ -131,77 +123,41 @@ export default class FinalFromWizard extends React.Component {
                   </Alert>
                 </Box>
               )}
-              {canShowSection ? React.cloneElement(activePage, {
+              {React.cloneElement(activePage, {
                 setField: form.mutators.setValue,
                 pop: form.mutators.pop,
                 push: form.mutators.push,
                 values: values
-              }):""}
-              <Grid container direction="row" spacing={2} mt={3} justifyContent={isEnableCancelBtn?"space-between":"flex-end"}>
-                {isEnableCancelBtn && (
+              })}
+
+              <Grid container spacing={2} mt={3} justifyContent="flex-end">
+                {(page > 0 && !this.state.values.disabledBackButt) && (
                   <Grid item>
                     <Button
                       variant="contained"
-                      onClick={() => { cancelBtnFn() }}
+                      onClick={this.previous}
                       sx={{
                         backgroundColor: '#E2E8EB',
                         color: '#000'
                       }}
                     >
-                      الغاء
+                      رجوع
                     </Button>
                   </Grid>
                 )}
                 <Grid item>
-                  <Grid container direction="row" spacing={2} justifyContent="flex-end">
-                    {(page > 0 && !this.state.values.disabledBackButt) && (
-                      <Grid item>
-                        <Button
-                          variant="contained"
-                          disabled={page === 1 && this.state.values.formType === LICENSE_FORM_TYPES.RENEW}
-                          onClick={this.previous}
-                          sx={{
-                            backgroundColor: '#E2E8EB',
-                            color: '#000'
-                          }}
-                        >
-                          رجوع
-                        </Button>
-                      </Grid>
-                    )}
-                    {!isLastPage && (
-                      <Grid item>
-                        <Button
-                          startIcon={submitting ? <CircularProgress size="1rem" /> : null}
-                          disabled={!isEnableNextBtn || submitting}
-                          variant="contained"
-                          color="primary"
-                          type="submit"
-                          sx={{
-                            backgroundColor: '#3c8084',
-                          }}
-                        >
-                          التالي
-                        </Button>
-                      </Grid>
-                    )}
-                    {isLastPage && (
-                      <Grid item>
-                        <Button
-                          startIcon={submitting ? <CircularProgress size="1rem" /> : null}
-                          disabled={values.agree.length == 0 || submitting}
-                          variant="contained"
-                          color="primary"
-                          type="submit"
-                        >
-                          ارسال
-                        </Button>
-                      </Grid>
-                    )}
-                  </Grid>
+                  <Button
+                    startIcon={submitting ? <CircularProgress size="1rem" /> : null}
+                    disabled={!isDisable}
+                    variant="contained"
+                    color="primary"
+                    type="submit"
+                  >
+                    ارسال
+                  </Button>
                 </Grid>
+
               </Grid>
-                 {<pre dir="ltr">{JSON.stringify(values, 0, 2)}</pre> }
             </form>
           )
         }}
