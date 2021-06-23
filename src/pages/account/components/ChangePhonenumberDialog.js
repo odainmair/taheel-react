@@ -31,6 +31,7 @@ export default function ChangePhonenumberDialog(props) {
 		const response = { isSuccessful: true, message: '' };
 		const OTPAuth = await AuthOTPPhoneNum(props.data.phoneNumber, props.data.idNumIqamaNum, SmsOTP);
 		if (!OTPAuth.isSuccessful) {
+			SetErrMessage(OTPAuth.message);
 			return { isSuccessful: false, message: OTPAuth.message };
 		}
 		const ownerInfoUpdateRequest = await ownerInfoUpdate(props.data.idNumIqamaNum, props.data.email, props.data.phoneNumber, SmsOTP);
