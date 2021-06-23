@@ -46,7 +46,12 @@ const items = [
   {
     href: '/app/account',
     icon: UserIcon,
-    title: 'معلومات الشخصيه'
+    title: 'المعلومات الشخصيه'
+  },
+  {
+    href: '/app/centers',
+    icon: UserIcon,
+    title: 'المراكز'
   },
   {
     href: '/login',
@@ -125,7 +130,7 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
               key={item.title}
               title={item.title}
               icon={item.icon}
-              onClick = {item.onClick}
+              onClick={item.onClick}
             />
           ))}
         </List>
