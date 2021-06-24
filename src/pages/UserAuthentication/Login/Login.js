@@ -7,10 +7,10 @@ import * as Yup from 'yup';
 import { Formik } from 'formik';
 import Avatar from '@material-ui/core/Avatar';
 import { makeStyles } from '@material-ui/core/styles';
-import localContext from '../localContext';
+import localContext from '../../../localContext';
 import { APIRequest } from 'src/api/APIRequest';
-import DashboardNavbar from '../components/DashboardNavbar';
-import MainNavbar from '../components/MainNavbar';
+import DashboardNavbar from '../../../components/DashboardNavbar';
+import MainNavbar from '../../../components/MainNavbar';
 
 import {
   Box,

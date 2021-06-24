@@ -9,7 +9,6 @@ import {
 } from '@material-ui/core';
 
 const CitizenInfo = () => {
-
   return (
     <>
       <Grid
@@ -44,5 +43,4 @@ const CitizenInfo = () => {
     </>
   );
 };
-
 export default CitizenInfo;

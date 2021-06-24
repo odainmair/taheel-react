@@ -9,33 +9,29 @@ import {
   Grid,
 } from '@material-ui/core';
 
-const useStyles = makeStyles((theme) => ({
- 
-}));
-
-
-
 const PasswordConfirmation = () => {
-  const classes = useStyles();
-
   return (
     <>
+       <Box sx={{
+              mt: '1%',
+              padding: 2,
+            }}>
       <Grid
         container
         spacing={3}
       >
+      
         <Grid
           item
           xs={12}
           md={12}
         >
-          لقد تم ارسال كلمة مرور الى جهازك يرجى اعادة كتابته في خانة كلمة المرور السابقة
-
+          لقد تم ارسال رمز تحقق الى جهازك يرجى اعادة كتابته في خانة رمز الأمان
           <Field
             sx={{ mb: 3 }}
             fullWidth
             required
-            label="كلمة المرور السابقة"
+            label="رمز الأمان"
             name="oldPassword"
             component={TextFieldFinal}
             type="password"
@@ -55,7 +51,6 @@ const PasswordConfirmation = () => {
             dir="rtl"
             className="custom-field"
           />
-
           <Field
             sx={{ mb: 3 }}
             fullWidth
@@ -72,6 +67,7 @@ const PasswordConfirmation = () => {
             sx={{
               color: 'gray',
               py: 2,
+               padding: 2,
             }}
           >
             <ul>
@@ -80,10 +76,12 @@ const PasswordConfirmation = () => {
               <li id="UpperCase"> حرف واحد صغير على الاقل </li>
               <li id="LowerCase"> حرف واحد كبير على الاقل </li>
               <li id="symbol"> رمز على الاقل </li>
+              <li id="EnglishFormat"> لغة انجليزية فقط </li>
             </ul>
           </Box>
         </Grid>
       </Grid>
+      </Box>
     </>
   );
 };

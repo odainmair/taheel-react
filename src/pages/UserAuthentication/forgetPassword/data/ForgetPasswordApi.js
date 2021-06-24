@@ -17,7 +17,7 @@ const AbsherOTP = async (IqamaNumber) => {
 
 
 const AbsherOTPAuth = async (IqamaNumber, OTP) => {
-    const url = '/taheel-apis-utilities-AuthenticationAbsherOTP-v2?'
+    const url = '/taheel-apis-utilities-AuthenticationAbsherOTP-v2'
     const queryParams = {
         BeneficiaryId: IqamaNumber,
         OTP: OTP,
@@ -32,9 +32,7 @@ const AbsherOTPAuth = async (IqamaNumber, OTP) => {
 
 
 
-const changePassword = async (IqamaNumber, oldPassword, password, passwordConfirmation) => {
-    // const response = { isSuccessful: true, message: '' };
-    // const { oldPassword, password, passwordConfirmation } = values
+const ChangePassword = async (IqamaNumber, oldPassword, password, passwordConfirmation) => {
     const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
     await sleep(300);
     const requestBody = {
@@ -51,4 +49,4 @@ const changePassword = async (IqamaNumber, oldPassword, password, passwordConfir
     return { isSuccessful: true, message: response.message };
 }
 
-export { AbsherOTP, changePassword, AbsherOTPAuth }
+export { AbsherOTP, ChangePassword, AbsherOTPAuth }
