@@ -15,20 +15,20 @@ import {
   Button
 } from '@material-ui/core';
 import FinalFromWizard from '../../components/wizard/FinalFormWizard';
-import CitizenInfo from './components/CitizenInfo';
-import AbsherOtp from './components/AbsherOtp';
-import TaheelOtp from './components/TaheelOtp';
-import RegistrationInfo from './components/RegistrationInfo';
+import CitizenInfo from './sections/CitizenInfo';
+import AbsherOtp from './sections/AbsherOtp';
+import TaheelOtp from './sections/TaheelOtp';
+import RegistrationInfo from './sections/RegistrationInfo';
 import { APIRequest } from 'src/api/APIRequest';
 import AlertDialog from 'src/components/AlertDialog';
 import localContext from 'src/localContext'
 import moment from 'moment-hijri';
 import DashboardNavbar from '../../components/DashboardNavbar';
 import MainNavbar from '../../components/MainNavbar';
-import { CitizenValidate } from './RegistrationUtils'
-import { absherValidate } from './RegistrationUtils'
-import { regitrationValidate } from './RegistrationUtils'
-import { TaheelOtpValidate } from './RegistrationUtils'
+import { CitizenValidate } from './utils'
+import { absherValidate } from './utils'
+import { regitrationValidate } from './utils'
+import { TaheelOtpValidate } from './utils'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -267,7 +267,8 @@ const Register = () => {
               // mb: '2%',
               backgroundColor: 'white',
               borderRadius: 5,
-              padding: 3,
+              paddingRight: 3,
+              paddingLeft: 3,
               boxShadow: '5px 10px 18px #ecf1f5'
             }}>
               <Box
