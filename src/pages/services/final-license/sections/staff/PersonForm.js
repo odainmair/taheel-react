@@ -18,7 +18,7 @@ const PersonForm = ({ fromEdit, isSaudi, MedicalPracticeCondition, fieldName, se
     console.log(`-- PersonForm rowIndex ${rowIndex}`);
     if (!fromEdit) {
       setField('fullName', `${citizenInfo.name.firstName} ${citizenInfo.name.fourthName}`);
-      setField('gender', citizenInfo.gender === 'FEMALE' ? 'انثى' : "ذكر")
+      setField('gender', citizenInfo.gender === 'f' ? 'انثى' : "ذكر")
       setField('birthDate', citizenInfo.birthDate);
       setField('nationality', isSaudi || fromEdit ? 'سعودي' : 'غير سعودي');
 
@@ -164,7 +164,7 @@ const PersonForm = ({ fromEdit, isSaudi, MedicalPracticeCondition, fieldName, se
           />
         </Grid>
 
-        <MedicalPracticeCondition when={fieldName === null ? "staffTypes" : `${fieldName}.staffTypes`} is={['أخصائي علاج طبيعي', 'أخصائي علاج وظيفي', 'أخصائي نطق و تخاطب']}>
+        <MedicalPracticeCondition when={fieldName === null ? "staffTypes" : `${fieldName}.staffTypes`} is={['أخصائي علاج طبيعي', 'أخصائي علاج وظيفي','ممرض', 'أخصائي نطق و تخاطب']}>
           <Grid
             item
             md={6}

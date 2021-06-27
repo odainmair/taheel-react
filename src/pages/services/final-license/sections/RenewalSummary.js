@@ -18,7 +18,7 @@ import { Field } from 'react-final-form';
 import { FieldArray } from "react-final-form-arrays";
 import PropTypes from 'prop-types';
 import { TextField as TextFieldFinal, Checkbox } from 'final-form-material-ui';
-import finalLicenseFieldSchema from '../models/finalLicenseFieldSchema';
+import finalLicenseFieldSchema from '../models/finalLicenseRenewalFieldSchema';
 import TermsContent from './TermsContent';
 import TermsDialog from 'src/components/TermsDialog';
 import { useContext } from 'react';
@@ -70,6 +70,9 @@ const getFieldValue = ({ name, value }) => {
 }
 
 const Summary = ({ values }) => {
+  console.log("=========================>values: " + JSON.stringify(values))
+  // console.log("=========================>values: " + values.healthServiceAttachment)
+  // console.log("=========================>values: " + values.OperationalPlan)
 
   const [open, setOpen] = React.useState(false);
   const [SponsorName, setSponsorName] = React.useState(false)
@@ -84,7 +87,9 @@ const Summary = ({ values }) => {
 
   const Row = ({ fields, setSponsorName, name, index }) => {
     const classes = useRowStyles();
-    const [showen, setShowen] = React.useState(false)
+    const [showen, setShowen] = React.useState(true);
+    const staffTypes = ["معلم تربية خاصة", "أخصائي اجتماعي", "مراقب اجتماعي", "حارس", "عامل تنظيفات", "مشرف فني عام", "اخصائي نفسي و توجيه اجتماعي", "عامل رعاية شخصية", "مدير", "سائق", "مرافق سائق", "أخصائي علاج طبيعي", "أخصائي علاج وظيفي", "أخصائي نطق و تخاطب", "ممرض"]
+
 
     return (
       <>
@@ -95,7 +100,7 @@ const Summary = ({ values }) => {
           </TableCell>
 
           <TableCell component="th" scope="row">
-            {name.idNumber ? name.idNumber : name.iqamaNo}
+            {name.idNumIqamaNum}
           </TableCell>
           <TableCell component="th" scope="row">
             {name.birthDate}
@@ -112,6 +117,13 @@ const Summary = ({ values }) => {
           <TableCell component="th" scope="row">
             {name.nationality}
           </TableCell>
+
+          <TableCell>
+            <IconButton onClick={() => setShowen(!showen)}>
+              {showen ? <VisibilityIcon /> : <VisibilityOffIcon />}
+            </IconButton>
+          </TableCell>
+
           {name.iqamaNo ?
             <>
               {setSponsorName(true)}
@@ -123,16 +135,10 @@ const Summary = ({ values }) => {
             <TableCell></TableCell>
           }
 
-          <TableCell>
-            <IconButton onClick={() => setShowen(!showen)}>
-              {showen ? <VisibilityIcon /> : <VisibilityOffIcon />}
-            </IconButton>
-          </TableCell>
-
         </TableRow>
         <TableRow >
           <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={12}>
-            <Collapse in={showen} className={`Attach${index}`} timeout="auto" unmountOnExit  >
+            <Collapse in={!showen} className={`Attach${index}`} timeout="auto" unmountOnExit  >
 
               <Grid
                 container
@@ -316,6 +322,8 @@ const Summary = ({ values }) => {
       </Grid>
       <Divider />
 
+      {Array.isArray(values.customers) && values.customers.length > 0 && 
+      <>
       <Typography
         color="textPrimary"
         gutterBottom
@@ -348,18 +356,19 @@ const Summary = ({ values }) => {
                   <TableCell> نوع الكادر </TableCell>
                   <TableCell> الجنس </TableCell>
                   <TableCell> الجنسية</TableCell>
-                  {SponsorName &&
+                  <TableCell> المرفقات</TableCell>
+                  {/* {SponsorName &&
                     <TableCell > اسم الكفيل</TableCell>
-                  }
+                  } */}
                 </TableRow>
               </TableHead>
               <TableBody>
-                <FieldArray name="customers">
-
-                  {({ fields }) => fields.value.map((name, index) => (
+              {<FieldArray name="customers">
+                  {({ fields }) => fields && fields.value && fields.value.map((name, index) => (
                     <Row key={index} setSponsorName={setSponsorName} fields={fields} name={name} index={index} />
                   ))}
                 </FieldArray>
+              }
               </TableBody>
             </Table>
           </TableContainer>
@@ -367,9 +376,14 @@ const Summary = ({ values }) => {
         </Grid>
       </Grid>
       <Divider />
+      </>
+      }
 
       <Grid
         container
+        lg={12}
+        md={12}
+        xs={12}
         mt={3}
       >
         <Field name="agree" mt={3}>
@@ -397,13 +411,13 @@ const Summary = ({ values }) => {
 
 export default Summary;
 Summary.propTypes = {
-  section: PropTypes.func,
-  label: PropTypes.string,
-  value: PropTypes.string,
-  values: PropTypes.object,
-  index: PropTypes.number,
-  name: PropTypes.string,
-  fields: PropTypes.object,
-  setSponsorName: PropTypes.func,
+  section: PropTypes.func.isRequired,
+  label: PropTypes.func.isRequired,
+  value: PropTypes.func.isRequired,
+  values: PropTypes.func.isRequired,
+  index: PropTypes.func.isRequired,
+  name: PropTypes.func.isRequired,
+  fields: PropTypes.func.isRequired,
+  setSponsorName: PropTypes.func.isRequired,
 
 };

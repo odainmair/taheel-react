@@ -3,6 +3,8 @@ import { APIRequest } from 'src/api/APIRequest';
 import { uploadFileAPI } from 'src/api/APIRequest';
 import { downloadFileAPI } from 'src/api/APIRequest';
 import { getCurrentUser } from 'src/utils/UserLocalStorage'
+import { LICENSE_FORM_TYPES } from 'src/utils/enums'
+
 const getFurnitures = (values) => {
 	const furnitures = []
 	values.Furniture.map((docId, index) => {
@@ -14,6 +16,7 @@ const getStaff = (values) => {
 
 	const staffTypesNo = {}
 	const newKeys = {
+		id: 'id',
 		idNumber: 'idNumIqamaNum',
 		day: 'birthDate',
 		fullName: 'name',
@@ -23,7 +26,7 @@ const getStaff = (values) => {
 		cv: 'CV',
 		EducationalQualification: 'educationQualifications',
 		MedicalPractice: 'professionalLicense',
-		sponsorName: 'SponsorName',
+		sponsorName: 'sponsorName',
 	}
 
 	const staffTypes = ["معلم تربية خاصة", "أخصائي اجتماعي", "مراقب اجتماعي", "حارس", "عامل تنظيفات", "مشرف فني عام", "اخصائي نفسي و توجيه اجتماعي", "عامل رعاية شخصية", "مدير", "سائق", "مرافق سائق", "أخصائي علاج طبيعي", "أخصائي علاج وظيفي", "أخصائي نطق و تخاطب", "ممرض"]
@@ -64,64 +67,9 @@ const getStaff = (values) => {
 	return staff
 }
 
-
-const createFinalLicenseAPIFunc = async (values) => {
-
-
+const updateFinalLicenseAPIFunc = async (values, actionType, TaskID) => {
 	const requestBody = {
 		"userCreationEmail": getCurrentUser().email,
-		"staff": getStaff(values),
-
-		"center": {
-			"licenceNumber": values.temporaryLicenceNum,
-			"centerParentType": values.centerParentType,
-			"centerFirstSubType": values.centerFirstSubType,
-			"centerSecondSubType": values.centerSecondSubType,
-			"crInfo_r": {
-				"ID": values.centerInfo_r,
-				"crNumber": values.CRNumber,
-				"crActivityType": values.activities,
-				"commissionerMobNum": "",
-				"entityName": values.companyName,
-				"MoMRA_Licence": values.municipLicenseNo,
-				"crIssueDate": values.crIssueDate,
-				"crExpirationDate": values.crExpirationDate,
-			},
-			"centerInfo_r": {
-				"ID": values.centerInfo_r,
-				"buildingArea": values.buildingArea,
-				"basementArea": values.basementArea,
-				"carryingnumber": values.capacity,
-				"financialGuarantee": values.financialGuarantee.substring(0, values.financialGuarantee.length - 5),
-				"financialGuarbteeAtt": values.FinancialGuaranteeAtt[0],
-				"executivePlan": values.ExecutivePlan[0],
-				"engineeringPlan": values.OfficeReport[0],
-				"securityReport": values.SecurityReport[0],
-				"beneficiaryCount": values.beneficiariesNum,
-				"furniturePhoto_r": getFurnitures(values),
-			},
-			"isHealthCareServices": values.healthServices === 'yes' ? true : false,
-			"healthCareServices_r": {
-				"ID": values.healthCareServices_r,
-				"type": values.healthServices === 'yes' ? values.healthServiceType : null,
-				"attachment": values.healthServices === 'yes' ?
-					values.healthServiceAttachment[0]
-					: null
-			}
-		}
-
-	}
-	const url = "taheel-apis-services-createFinalLicense-v2"
-	const response = await APIRequest({ requestBody, url });
-	return response;
-}
-
-
-const updateFinalLicenseAPIFunc = async (values, TaskID) => {
-
-	const requestBody = {
-		"externalUserTaskID": TaskID,
-		"cancel": "false",
 		"staff": getStaff(values),
 		"center": {
 			"licenceNumber": values.temporaryLicenceNum,
@@ -130,6 +78,7 @@ const updateFinalLicenseAPIFunc = async (values, TaskID) => {
 			"centerSecondSubType": values.centerSecondSubType,
 			"crInfo_r": {
 				"ID": values.crInfo_r,
+				// "ID": values.centerInfo_r,
 				"crNumber": values.CRNumber,
 				"crActivityType": values.activities,
 				"commissionerMobNum": "",
@@ -162,16 +111,34 @@ const updateFinalLicenseAPIFunc = async (values, TaskID) => {
 			}
 		}
 	}
-	const url = "taheel-apis-services-continueFinalLicense-v2"
+
+	let url = "taheel-apis-services-createFinalLicense-v2";
+	if(actionType === LICENSE_FORM_TYPES.RENEW) {
+		url = "taheel-apis-services-renewLicenseV2";
+	}
+	else if(actionType === LICENSE_FORM_TYPES.EDIT) {
+		requestBody.externalUserTaskID = TaskID
+		requestBody.cancel = "false"
+		url = "taheel-apis-services-continueFinalLicense-v2";
+	}
+
 	const response = await APIRequest({ requestBody, url });
 	return response;
 }
 
-
+const getCenters = async (userEmail) => {
+	const url = 'taheel-apis-records-getCenters-v2';
+	// const queryParams = { userEmail, isExpired: false, licenseType: 'رخصة مؤقتة' };
+	const queryParams = { userEmail, forRenewal: true, isEligibleForFinal:true };
+	// const queryParams = { userEmail, forRenewal: true};
+	const response = await APIRequest({ url, queryParams });
+	// console.log("response===============> " + JSON.parse(response));
+	return response;
+};
 
 const getTempLicense = async (userEmail) => {
 	const url = 'taheel-apis-records-getCenters-v2';
-	const queryParams = { userEmail, isExpired: false, licenseType: 'رخصة مؤقتة' };
+	const queryParams = { userEmail, isExpired: false, licenseType: 'رخصة مؤقتة',isEligibleForFinal:true };
 	const response = await APIRequest({ url, queryParams });
 	return response;
 };
@@ -248,4 +215,4 @@ const downloadDocument = async (DocID, attachment) => {
 }
 
 
-export { validateCompanyFunc, createFinalLicenseAPIFunc, updateFinalLicenseAPIFunc, calculation, validateCitizenFunc, uploadDocumentApi, getTempLicense, getMunicipalLicenseNoApi, downloadDocument, TaskDetails, CentertDetails };
+export { getCenters, validateCompanyFunc, updateFinalLicenseAPIFunc, calculation, validateCitizenFunc, uploadDocumentApi, getTempLicense, getMunicipalLicenseNoApi, downloadDocument, TaskDetails, CentertDetails };

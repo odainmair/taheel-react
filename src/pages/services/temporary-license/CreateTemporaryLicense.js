@@ -61,12 +61,13 @@ const CreateTemporaryLicense = () => {
             initialValues={{
               centerType: '01',
               beneficiaryCategory: '01',
-              requestType: '1',
               idNumber: idNumIqamaNum,
               birthDate: DOB,
               mobileNo: phoneNumber,
               agree: []
             }}
+            cancelBtnFn={()=>{  navigate('/app/products', { replace: true });}}
+            isEnableCancelBtn={true}
             onSubmit={onSubmit}
           >
             <FinalFromWizard.Page

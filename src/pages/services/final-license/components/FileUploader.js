@@ -7,13 +7,14 @@ import React from 'react';
 import { uploadDocumentApi } from '../services/finalLicenseAPI';
 import { useEffect } from 'react';
 
-const FileUploaderComp = ({ input: { value, name }, label, meta, inputType, setField, values, rowIndex = -1 }) => {
+const FileUploaderComp = ({ input: { value, name }, label, meta,  setField, values, rowIndex = -1 ,multipleFile}) => {
   const showError = ((meta.submitError && !meta.dirtySinceLastSubmit) || meta.error) && meta.touched;
   const [loading, setLoading] = React.useState(false);
   const hiddenFileInput = React.useRef(null);
   const [uploadedFileName, setUploadedFileName] = React.useState("");
+  var multipleFileDocs = []
   useEffect(() => {
-
+    console.log(`-- FileUploaderComp multipleFile ${multipleFile}`);
     console.log(`-- FileUploaderComp RowIndex ${name}`);
     console.log(`-- FileUploaderComp RowIndex ${rowIndex} ${rowIndex && rowIndex !== -1}`);
     let docId = ""
@@ -30,12 +31,12 @@ const FileUploaderComp = ({ input: { value, name }, label, meta, inputType, setF
 
   }, [])
 
-  const setDocument = (name, docID, multiple) => {
-    if (!multiple)
+  const setDocument = (name, docID, multipleFile) => {
+    if (!multipleFile)
       setField(name, [docID])
     else {
-      multipleDocs.push(docID)
-      setField(name, multipleDocs)
+      multipleFileDocs.push(docID)
+      setField(name, multipleFileDocs)
     }
   }
   const handleClick = () => {
@@ -44,6 +45,7 @@ const FileUploaderComp = ({ input: { value, name }, label, meta, inputType, setF
   const handleChange = async (event) => {
     setLoading(true)
     const fileUploaded = event.target.files;
+    console.log(`--fileUploaded ${fileUploaded}`);
     for (let i = 0; i < fileUploaded.length; i++) {
       const buf = await uploadDocument(fileUploaded[i]);
       const response = await uploadDocumentApi("test", buf);
@@ -53,7 +55,7 @@ const FileUploaderComp = ({ input: { value, name }, label, meta, inputType, setF
         SetErrMessage(response.message)
       else {
         setUploadedFileName("تم رفع هذا الملف في نجاح");
-        setDocument(name, response.responseBody.docID, false)
+        setDocument(name, response.responseBody.docID, multipleFile)
       }
     }
     setLoading(false);
@@ -81,7 +83,7 @@ const FileUploaderComp = ({ input: { value, name }, label, meta, inputType, setF
         }}
       />
       <input
-        multiple={inputType}
+        multiple={multipleFile}
         type="file"
         ref={hiddenFileInput}
         onChange={(event) => { handleChange(event) }}
@@ -98,7 +100,7 @@ FileUploaderComp.propTypes = {
   input: PropTypes.object,
   name: PropTypes.string,
   label: PropTypes.string,
-  inputType: PropTypes.bool,
+  multipleFile: PropTypes.bool,
   setField: PropTypes.func,
   values: PropTypes.object,
   meta: PropTypes.object,

@@ -102,7 +102,7 @@ const HealthServices = ({ Condition, values, setField }) => {
               label={values.healthServiceType ? values.healthServiceType === 1 ? 'ارفاق رخصة وزارة الصحة' : 'ارفاق عقد الشراكة' : 'ارفاق الخدمة الصحية'}
               name="healthServiceAttachment"
               component={FileUploaderComp}
-              inputType={false}
+              multipleDocs={false}
               setField={setField}
               setDocument={setDocument}
               values={values}
@@ -118,9 +118,6 @@ export default HealthServices;
 
 HealthServices.propTypes = {
   Condition: PropTypes.func.isRequired,
-  values: PropTypes.func.isRequired,
+  values: PropTypes.object.isRequired,
   setField: PropTypes.func.isRequired,
-  input: PropTypes.func.isRequired,
-  label: PropTypes.func.isRequired,
-  inputType: PropTypes.bool.isRequired,
 };

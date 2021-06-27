@@ -13,7 +13,9 @@ import PropTypes from 'prop-types';
 import { TextField as TextFieldFinal, Select } from 'final-form-material-ui';
 import { calculation } from '../services/finalLicenseAPI'
 import { ContentField } from '../services/finalLicenseUtil'
+import { LICENSE_FORM_TYPES } from 'src/utils/enums'
 import { checkIsNumber } from 'src/utils/inputValidator';
+
 const Capacity = ({ editMode, Condition, values, setField, setIsEnableNextBtn }) => {
 
 	const [calculatedData, setCalculatedData] = useState(false);
@@ -32,17 +34,17 @@ const Capacity = ({ editMode, Condition, values, setField, setIsEnableNextBtn })
 	const calculate = async () => {
 		setLoading(true);
 		SetErrMessage('');
-		if (!values.beneficiariesNum || values.beneficiariesNum <= 0) {
+		if (!values.beneficiariesNum || !checkIsNumber(values.beneficiariesNum)|| values.beneficiariesNum <= 0) {
 			SetErrMessage('يرجى ادخال عدد المستفيدين الفعلي صحيح');
 			setLoading(false);
 			return;
 		}
-		if (!values.buildingArea || values.buildingArea <= 0 ) {
+		if (!values.buildingArea || !checkIsNumber(values.buildingArea) || values.buildingArea <= 0 ) {
 			SetErrMessage('يرجى ادخال مساحة مسطح البناء صحيح');
 			setLoading(false);
 			return;
 		}
-		if (!values.basementArea || values.basementArea <= 0 ) {
+		if (!values.basementArea || !checkIsNumber(values.basementArea) ||values.basementArea < 0 ) {
 			SetErrMessage('يرجى ادخال مساحة القبو صحيح');
 			setLoading(false);
 			return;
@@ -65,8 +67,8 @@ const Capacity = ({ editMode, Condition, values, setField, setIsEnableNextBtn })
 			setCalculatedData(false);
 		}
 		else {
-			setField('capacity', response.responseBody.body.carryingCapacity.toFixed(3));
-			setField('financialGuarantee', `${response.responseBody.body.financialGuarantee.toFixed(3)} ر.س.`);
+			setField('capacity', response.responseBody.body.carryingCapacity.toFixed(2).toLocaleString('en-US', {maximumFractionDigits:2}));
+			setField('financialGuarantee', `${response.responseBody.body.financialGuarantee.toFixed(2).toLocaleString('en-US', {maximumFractionDigits:2})} ر.س.`);
 			setCalculatedData(true);
 			setIsEnableNextBtn(true);
 

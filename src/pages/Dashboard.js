@@ -31,21 +31,13 @@ const Dashboard = () => {
   };
   const getMyTasksFun = async (userEmail) => {
     const url = 'taheel-apis-utilities-GetGetExternalUserTasks-v2';
-    const queryParams = { userEmail:"ahmad.albuthom@inspirejo.com", taskStatus:0 };
+    const queryParams = { userEmail, taskStatus:0 };
     const response = await APIRequest({ url, queryParams });
     return response;
   };
   const [loading, setLoading] = useState(false);
   const [taheelRequests, setTaheelRequests] = useState([]);
-  const [taskRequests, setTaskRequests] = useState([{
-    "processID": 268457657,
-    "status": 0,
-    "centerLicenceNumber": "0101020029",
-    "requestNum": "CNTR-REQ-0119",
-    "userEmail": "ahmad.albuthom@inspirejo.com",
-    "name": "مراجعة طلب رقم CNTR-REQ-0119",
-    "ID": 8
-  }]);
+  const [taskRequests, setTaskRequests] = useState([]);
   const [centerRequests, setCenterRequests] = useState([]);
   const [totalPendingRequests, setTotalPendingRequests] = useState(0);
   const [totalCompletedRequests, setTotalCompletedRequests] = useState(0);
@@ -55,9 +47,6 @@ const Dashboard = () => {
   const [totalCenters, setTotalCenters] = useState(0);
 
   useEffect(async () => {
-    // Update the document title using the browser API
-    // const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-    // await sleep(1000); odai odaio
     const { email } = getCurrentUser();
     const getTaheelRequestsRs = await getTaheelRequestsFun(email);
     let response = {};

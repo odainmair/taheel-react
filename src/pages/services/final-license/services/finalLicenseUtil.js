@@ -3,8 +3,8 @@ const required = 'يجب تعبئة الحقل'
 import { Field } from 'react-final-form';
 import React from 'react';
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
-import { uploadDocumentApi } from './finalLicenseAPI'
-import { downloadDocument } from '../services/finalLicenseAPI'
+import moment from 'moment-hijri';
+import { downloadDocument } from '../services/finalLicenseAPI';
 import {
   Grid,
   Typography,
@@ -37,23 +37,32 @@ const capacityValidation = values => {
   console.log(' values.buildingArea', typeof (values.buildingArea), 'values.basementArea', typeof (values.basementArea))
   if (!values.beneficiariesNum)
     msg.beneficiariesNum = required
-  if (parseInt(values.beneficiariesNum) <= 0)
+  else if (!checkIsNumber(values.beneficiariesNum)) {
+    msg.basementArea = 'يجب ان يكون مساحة مسطح البناء عدد صحيح'
+  }
+  else if (parseInt(values.beneficiariesNum) <= 0)
     msg.basementArea = 'يجب ان يكون عدد المستفيدين اكبر من صفر'
 
   if (!values.buildingArea)
     msg.buildingArea = required
-  if (parseInt(values.buildingArea) <= 0)
+  else if (!checkIsNumber(values.buildingArea)) {
+    msg.basementArea = 'يجب ان يكون مساحة مسطح البناء عدد صحيح'
+  }
+  else if (parseInt(values.buildingArea) <= 0)
     msg.basementArea = 'يجب ان يكون مساحة مسطح البناء اكبر من صفر'
 
   if (!values.basementArea)
     msg.basementArea = required
-  if (parseInt(values.basementArea) <= 0)
+  else if (!checkIsNumber(values.buildingArea)) {
+    msg.basementArea = 'يجب ان يكون مساحة مسطح البناء عدد صحيح'
+  }
+  else if (parseInt(values.basementArea) < 0)
     msg.basementArea = 'يجب ان يكون مساحة القبو اكبر من صفر'
 
   if (parseInt(values.buildingArea) <= parseInt(values.basementArea))
     msg.basementArea = 'مساحة القبو يجب ان تكون أقل من مساحة مسطح البناء'
-  /*if (values.beneficiariesNum > parseInt(values.capacity))
-    msg.beneficiariesNum = 'عدد المستفيدين يجب ان لا يتجاوز الطاقة الاستعابية'*/
+  if (values.beneficiariesNum > parseInt(values.capacity))
+    msg.beneficiariesNum = 'عدد المستفيدين يجب ان لا يتجاوز الطاقة الاستعابية'
   return msg
 }
 
@@ -100,6 +109,7 @@ const healthServicesValidation = values => {
 }
 
 const personsValidation = async values => {
+  console.log(`--personsValidation `)
   const response = { isSuccessful: true, message: '' };
   if (!values.customers || values.customers.length === 0) {
     return { isSuccessful: false, message: "يرجى استيفاء الشروط" };
@@ -107,7 +117,8 @@ const personsValidation = async values => {
   }
   const TeachersCount = values.customers.filter(customer => customer.staffTypes === "معلم تربية خاصة").length
   const managersCount = values.customers.filter(customer => customer.staffTypes === "مدير").length
-  if (managersCount > 0 && managersCount !== 1)
+  console.log(`--manager count ::: ${managersCount}`)
+  if (managersCount !== 1)
     return { isSuccessful: false, message: "يرجى استيفاء الشروط" };
 
   if (Math.round(values.beneficiariesNum / 8) > TeachersCount || TeachersCount < 1)
@@ -217,7 +228,7 @@ const DownloadButtTable = ({ docIDs, name, label }) => {
               <TableBody>
 
                 {docIDs.map((docID, index) => (
-                  < DownloadButt index={index} docID={docID} name={name} label={label} />
+                  < DownloadButt key={docID + "_" + index} index={index} docID={docID} name={name} label={label} />
                 ))}
               </TableBody>
             </Table>
@@ -238,7 +249,7 @@ const validateAddStaffForm = (values, rowIndex, SAForm, forignForm) => {
   console.log(`-- SAForm :: ${SAForm}`)
   console.log(`-- forignForm :: ${forignForm}`)
   console.log(`-- rowIndex :: ${!rowIndex || rowIndex !== -1 ? JSON.stringify(values.customers[rowIndex]) : values}`)
-  const { nationality, year, month, day, idNumber, iqamaNo, staffTypes,EducationalQualification,cv } = !rowIndex || rowIndex !== -1 ? values.customers[rowIndex] : values;
+  const { nationality, year, month, day, idNumber, iqamaNo, staffTypes, EducationalQualification, cv } = !rowIndex || rowIndex !== -1 ? values.customers[rowIndex] : values;
   console.log(`-- nationality :: ${nationality}`);
   console.log(`-- idNumber :: ${idNumber}`);
   console.log(`-- year :: ${year}`);
@@ -281,6 +292,7 @@ const validateAddStaffForm = (values, rowIndex, SAForm, forignForm) => {
 }
 const getStaff = (data) => {
   const newKeys = {
+    id: 'id',
     idNumIqamaNum: 'idNumber',
     birthDate: 'birthDate',
     name: 'fullName',
@@ -302,10 +314,24 @@ const getStaff = (data) => {
         if (key === 'gender')
           customer[newKey] = customer[key] === 'f' ? 'انثى' : 'ذكر'
         else if (key === 'idNumIqamaNum') {
-          if (key === 'سعودي')
+          if (customer['nationality'] === 'سعودي')
             customer['idNumber'] = customer[key]
           else
             customer['iqamaNo'] = customer[key]
+        }
+        else if (key === 'birthDate' && customer['nationality'] === 'سعودي') {
+          const birthDateDay = moment(customer[key], 'iYYYYiMMiDD').format('iDD')
+          const birthDateMonth = moment(customer[key], 'iYYYYiMMiDD').format('iMM')
+          const birthDateYear = moment(customer[key], 'iYYYYiMMiDD').format('iYYYY')
+          console.log(`odai odai ${birthDateDay} ${birthDateMonth} ${birthDateYear}`)
+          customer['day'] = parseInt(birthDateDay);
+          customer['month'] = parseInt(birthDateMonth);
+          customer['year'] = parseInt(birthDateYear);
+
+        }
+        else if (key === 'id') {
+          if (customer[key])
+            customer['id'] = customer[key];
         }
         else if (key === 'StaffType')
           customer[newKey] = staffTypes[customer[key] - 1]
