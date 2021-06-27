@@ -3,8 +3,8 @@ import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { getCurrentUser } from 'src/utils/UserLocalStorage';
 import { useState, useEffect } from 'react';
-import Summary from './sections/Summary'
-import { getCenters, CentertDetails, getMunicipalLicenseNoApi, updateFinalLicenseAPIFunc, validateCompanyFunc } from './services/finalLicenseAPI'
+import RenewalSummary from './sections/RenewalSummary'
+import { getCentersForFinal, CentertDetails, getMunicipalLicenseNoApi, updateFinalLicenseAPIFunc, validateCompanyFunc } from './services/finalLicenseAPI'
 import { getStaff, CenterDetailsValidation } from './services/finalLicenseUtil';
 import {
   Card,
@@ -22,7 +22,7 @@ import AlertDialog from 'src/components/AlertDialog';
 import { Field } from 'react-final-form';
 import { TextField as TextFieldFinal, Select } from 'final-form-material-ui';
 import { OnChange } from 'react-final-form-listeners';
-import dateFormatter from 'src/utils/dateFormatter';
+import { dateFormatter, reverseRange } from 'src/utils/utilFunctions';
 import { LICENSE_FORM_TYPES } from 'src/utils/enums'
 
 const CreateFinalLicenseRenewal = () => {
@@ -45,7 +45,7 @@ const CreateFinalLicenseRenewal = () => {
     console.log(" ==> CreateFinalLicenseRenewal ")
     const { email } = await getCurrentUser();
     console.log("------------------------------- email " + email)
-    const getCentersRs = await getCenters(email);
+    const getCentersRs = await getCentersForFinal(email);
 
     SetErrMessage("");
     if (!getCentersRs.isSuccessful) {
@@ -137,10 +137,75 @@ const CreateFinalLicenseRenewal = () => {
     navigate('/app/dashboard', { replace: true });
   };
 
-  const reverseRange = (s) => {
-    const range = s.trim().split('-')
-    return `${range[0]} - ${range[1]}`;
-  }
+  const centerTypeJSON = {
+    "type": [
+      {
+        "name": "متسولين",
+        "ID": 1
+      },
+      {
+        "name": "ارشاد أسري",
+        "ID": 2
+      },
+      {
+        "name": "ذوي الإعاقة",
+        "ID": 3
+      },
+      {
+        "name": "أيتام",
+        "ID": 4
+      },
+      {
+        "name": "كبار السن",
+        "ID": 5
+      },
+      {
+        "name": "أحداث",
+        "ID": 6
+      },
+      {
+        "name": "حماية الأسرة",
+        "ID": 7
+      }
+    ],
+    "targetedBeneficiary": [
+      {
+        "name": "البيوت الإجتماعية",
+        "ID": 2
+      },
+      {
+        "name": "التدريب المهني",
+        "ID": 3
+      },
+      {
+        "name": "الرعاية النهارية",
+        "ID": 4
+      },
+      {
+        "name": "الرعاية الإجتماعية المنزلية",
+        "ID": 5
+      }
+    ],
+    "targetedServices": [
+      {
+        "name": "مراكز تأهيل الأشخاص ذوي الأعاقات المحددة",
+        "ID": 2
+      },
+      {
+        "name": " مراكز تأهيل الأشخاص ذوي الأعاقات العقلية والأعاقات الحركية",
+        "ID": 3
+      },
+      {
+        "name": "مراكز تأهيل الأسخاص ذوي الأعاقة العقلية",
+        "ID": 4
+      },
+      {
+        "name": "مراكز تأهيل الأشخاص ذوي الأعاقة متوسط وشديدي الإعاقة ",
+        "ID": 5
+      }
+    ]
+  };
+
   return (
     <Container maxWidth="md">
       <Card>
@@ -173,6 +238,7 @@ const CreateFinalLicenseRenewal = () => {
                   agree: [],
                   managersCount: 0,
                   teachersCount: 0,
+                  centerType: editInitValues.center && centerTypeJSON.type[parseInt(editInitValues.center.type)].name + ' - ' + centerTypeJSON.targetedBeneficiary[parseInt(editInitValues.center.targetedBeneficiary)].name + ' - ' + centerTypeJSON.targetedServices[parseInt(editInitValues.center.targetedServices)].name, 
                   companyName: editInitValues.center && editInitValues.center.name,
                   temporaryLicenceNum: editInitValues.center && editInitValues.center.licenceNumber,
                   licenseCreationDate: editInitValues.center && dateFormatter(editInitValues.center.creationDate),
@@ -285,7 +351,7 @@ const FinalFormRenewalSummary = ({ setField, renewableLicenses, values, setCente
         >
       </Grid>
     </Grid>
-    { showSummary && <Summary
+    { showSummary && <RenewalSummary
       values={values}
       renewableLicenses={renewableLicenses}
       setField={(fieldName, fieldValue) => setField(fieldName, fieldValue)}

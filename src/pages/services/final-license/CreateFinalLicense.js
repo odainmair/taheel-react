@@ -8,7 +8,7 @@ import Requirements from './sections/Requirements'
 import Capacity from './sections/Capacity';
 import HealthServices from './sections/HealthServices';
 import PersonDetials from './sections/staff/PersonDetials';
-import Summary from './sections/Summary'
+import Summary from './sections/RenewalSummary'
 import { updateFinalLicenseAPIFunc } from './services/finalLicenseAPI'
 import { getTempLicense } from './services/finalLicenseAPI'
 import { TaskDetails, CentertDetails } from './services/finalLicenseAPI'
@@ -34,6 +34,7 @@ import { personsValidation } from './services/finalLicenseUtil'
 import { ConditionComp } from './services/finalLicenseUtil'
 import { MedicalPracticeComp } from './services/finalLicenseUtil'
 import { calculationConditionComp } from './services/finalLicenseUtil'
+import { dateFormatter, reverseRange } from 'src/utils/utilFunctions';
 import { LICENSE_FORM_TYPES } from 'src/utils/enums'
 
 const CreateFinalLicense = () => {
@@ -89,6 +90,7 @@ const CreateFinalLicense = () => {
     setEditMode(true)
     SetErrMessage("");
     const response = await TaskDetails(taskID)
+    console.log("getTaskDetails ===============> response:" + JSON.stringify(response) )
     if (!response.isSuccessful)
       SetErrMessage(response.message)
     else {
@@ -184,6 +186,7 @@ const CreateFinalLicense = () => {
                   isNextBtnDisabled: false,
                   managersCount: 0,
                   teachersCount: 0,
+                  beneficiariesNum: 0,
                   page: formType === LICENSE_FORM_TYPES.RENEW ? 1 : 0,
                   formType: formType
                 } : {
@@ -193,6 +196,15 @@ const CreateFinalLicense = () => {
                   teachersCount: 0,
                   CRNumber: center.crInfo_r.crNumber,
                   temporaryLicenceNum: center.licenceNumber,
+                  licenseCreationDate: center && dateFormatter(center.creationDate),
+                  licenseExpiryDate: center && dateFormatter(center.expirationDate),
+                  ownerName: center && center.ownerName,
+                  ownerID: center && center.ownerID,
+                  centerAgeGroup: center && reverseRange(center.ageGroup),
+                  centerGenderGroup: center 
+                  && center.targetedGender && 
+                    (center.targetedGender === "m" ? "ذكر" : (center.targetedGender === "f" ? "انثى" :"كلا الجنسين")) ,
+                  CRNumber: center && center.crInfo_r.crNumber,
                   companyName: center.crInfo_r.entityName,
                   activities: center.crInfo_r.crActivityType,
                   municipLicenseNo: center.crInfo_r.MoMRA_Licence,

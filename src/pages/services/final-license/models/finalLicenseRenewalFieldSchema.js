@@ -8,6 +8,18 @@ export default
     {
       id: uuid(),
       label: {
+        ar: 'نوع المركز',
+        en: 'Center Type'
+      },
+      name: 'centerType',
+      type: 'Text',
+      gridSize: '6',
+      sectionName: 'CenterDetails',
+      validators: [],
+    },
+    {
+      id: uuid(),
+      label: {
         ar: 'اسم المركز',
         en: 'Temporary License Number'
       },
