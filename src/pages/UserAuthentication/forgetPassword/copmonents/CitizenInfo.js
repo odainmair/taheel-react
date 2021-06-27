@@ -26,7 +26,7 @@ const CitizenInfo = () => {
               <Field
                 fullWidth
                 required
-                label=" رقم الهوية / الاقامه "
+                label=" رقم الهوية الإقامة "
                 name="IqamaNumber"
                 component={TextFieldFinal}
                 type="text"
