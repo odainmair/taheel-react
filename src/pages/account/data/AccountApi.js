@@ -2,20 +2,15 @@
 import { APIRequest } from 'src/api/APIRequest';
 import { getCurrentUser } from 'src/utils/UserLocalStorage';
 
-
 const requestOTPPhoneNum = async (PhoneNumber) => {
     const { idNumIqamaNum } = getCurrentUser();
-
     const url = '/taheel-apis-utilities-sms-otp-v2'
     const queryParams = {
         BeneficiaryId: idNumIqamaNum,
         phoneNumber: PhoneNumber,
     }
     const response = await APIRequest({ queryParams, url });
-    if (!response.isSuccessful) {
-        return { isSuccessful: false, message: response.message };
-    }
-    return { isSuccessful: true, message: '' }
+    return response;
 }
 
 const AuthOTPPhoneNum = async (phone, idNumIqamaNum, otp) => {
@@ -26,10 +21,7 @@ const AuthOTPPhoneNum = async (phone, idNumIqamaNum, otp) => {
         OTP: otp,
     }
     const response = await APIRequest({ queryParams, url });
-    if (!response.isSuccessful) {
-        return { isSuccessful: false, message: response.message };
-    }
-    return { isSuccessful: true, message: '' }
+    return response;
 }
 
 const ownerInfoUpdate = async (idNumIqamaNum, email, phoneNumber, OTP) => {
@@ -43,9 +35,6 @@ const ownerInfoUpdate = async (idNumIqamaNum, email, phoneNumber, OTP) => {
         newPhonenumber: phoneNumber,
     }
     const response = await APIRequest({ queryParams, url });
-    if (!response.isSuccessful) {
-        return { isSuccessful: false, message: response.message };
-    }
-    return { isSuccessful: true, message: '' };
+    return response;
 }
 export { requestOTPPhoneNum, AuthOTPPhoneNum, ownerInfoUpdate }

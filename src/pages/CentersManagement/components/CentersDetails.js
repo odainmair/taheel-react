@@ -21,10 +21,10 @@ import { CentertDetails } from 'src/pages/services/final-license/services/finalL
 const CentersDetails = (props) => {
     const location = useLocation();
     const licenceNumber = location.state.licenceNumber;
-    console.log("kholoud+_+_+_+_+_+_+", licenceNumber)
+    console.log("licenceNumber+_+_+_+_+_+_+", licenceNumber)
     const [open, setOpen] = React.useState(false);
-    const [dialogContent, setDialogContent] = React.useState('');
-    const [dialogTitle, setDialogTitle] = React.useState('');
+    const [details, setDetails] = React.useState(false);
+
     
     const { firstName, lastName, email, phoneNumber } = getCurrentUser();
     const [values, setValues] = useState({
@@ -34,7 +34,6 @@ const CentersDetails = (props) => {
         phone: phoneNumber,
     });
     useEffect(async () => {
-        // const getCentersRs = await getCentersFun(email);
         const getCenterDetails = await CentertDetails(licenceNumber);
         if (!getCenterDetails.isSuccessful) {
           response = { isSuccessful: false, message: getCenterDetails.message };

@@ -2,14 +2,10 @@
 import { Field } from 'react-final-form';
 import { TextField as TextFieldFinal, Radio } from 'final-form-material-ui';
 import {
-  Typography,
   Grid,
-  FormControlLabel,
-  RadioGroup,
 } from '@material-ui/core';
 
 const CitizenInfo = () => {
-
   return (
     <>
       <Grid
@@ -30,7 +26,7 @@ const CitizenInfo = () => {
               <Field
                 fullWidth
                 required
-                label=" رقم الهوية / الاقامه "
+                label=" رقم الهوية الإقامة "
                 name="IqamaNumber"
                 component={TextFieldFinal}
                 type="text"
@@ -44,5 +40,4 @@ const CitizenInfo = () => {
     </>
   );
 };
-
 export default CitizenInfo;

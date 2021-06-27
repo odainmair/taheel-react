@@ -8,20 +8,21 @@ import CreatefinalLicense from 'src/pages/services/final-license/CreateFinalLice
 import CreateFinalLicenseRenewal from 'src/pages/services/final-license/CreateFinalLicenseRenewal';
 import CustomerList from 'src/pages/CustomerList';
 import Dashboard from 'src/pages/Dashboard';
-import Login from 'src/pages/Login';
+import Login from 'src/pages/UserAuthentication/Login/Login';
 import NotFound from 'src/pages/NotFound';
 import ProductList from 'src/pages/ProductList';
 import Register from 'src/pages/Registration/Register';
 import Settings from 'src/pages/Settings';
-import OTPLogin from 'src/pages/LoginOtp';
+import OTPLogin from 'src/pages/UserAuthentication/Login/components/LoginOtp';
 import Home from './pages/public/Home';
 import About from './pages/public/AboutUs';
 import Faq from './pages/public/faq';
 import Services from './pages/public/Services';
 import ContactUs from './pages/public/ContactUs';
-import ForgetPassword from './pages/forgetPassword/ForgetPassword';
+import ForgetPassword from './pages/UserAuthentication/forgetPassword/ForgetPassword';
 import CentersDetails from './pages/CentersManagement/components/CentersDetails';
 import Centers from './pages/CentersManagement/Centers';
+import AddCommissioner from './pages/CentersManagement/components/AddCommissioner';
 
 const routes = (isLoggedIn) => [
   {
@@ -51,6 +52,7 @@ const routes = (isLoggedIn) => [
       { path: 'account', element: <Account /> },
       { path: 'centers', element: <Centers /> },
       { path: 'centersDetails', element: <CentersDetails /> },
+      { path: 'AddCommissioner', element: <AddCommissioner /> },
       { path: 'customers', element: <CustomerList /> },
       { path: 'dashboard', element: <Dashboard /> },
       { path: 'products', element: <ProductList /> },

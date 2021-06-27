@@ -33,6 +33,7 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
   const CitizenValidate_SA = async () => {
 
     setLoading(true);
+    setErrMessage("");
     const { nationality, year, month, day, idNumber } = !rowIndex || rowIndex !== -1 ? values.customers[rowIndex] : values;
     console.log(`CitizenValidate_SA--idNumber :::  ${idNumber}`);
     /*if (values.customers) {
@@ -71,6 +72,7 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
 
   const CitizenValidate_Forign = async () => {
     setLoading(true);
+    setErrMessage("");
     const { iqamaNo } = !rowIndex || rowIndex !== -1 ? values.customers[rowIndex] : values;
     /*if (values.customers) {
       const custumerByIdCount = values.customers.filter(customer => customer.iqamaNo === iqamaNo).length;

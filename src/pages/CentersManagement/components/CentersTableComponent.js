@@ -21,7 +21,9 @@ const CentersTableComponent = (props) => {
     const navigate = useNavigate();
     const { loading = false, centerRequests = [] } = props;
     const handleOnClickFn = async (licenceNumber) => {
-        navigate('/app/centersDetails', { state: { licenceNumber } });
+                navigate('/app/AddCommissioner', { state: { licenceNumber } });
+
+        // navigate('/app/centersDetails', { state: { licenceNumber } });
     };
     const getCenterType = (centerType) => {
         if (centerType === '01') {
@@ -122,17 +124,10 @@ const CentersTableComponent = (props) => {
                                         <Button
                                             variant="contained"
                                             color="primary"
-                                            // startIcon={<CloudDownloadIcon />}
                                             onClick={() => handleOnClickFn(request.licenceNumber)}
                                         >
                                             المزيد
                                         </Button>
-                                        {/* {request && request.licenseDoc !== null ? (
-                                            <CentertDetails />
-
-                                        ) : (
-                                            <Skeleton />
-                                        )} */}
                                     </TableCell>
                                 </TableRow>
                             ))}

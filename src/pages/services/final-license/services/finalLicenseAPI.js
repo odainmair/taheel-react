@@ -96,7 +96,7 @@ const updateFinalLicenseAPIFunc = async (values, actionType, TaskID) => {
 				"financialGuarantee": values.financialGuarantee.substring(0, values.financialGuarantee.length - 5),
 				"financialGuarbteeAtt": values.FinancialGuaranteeAtt[0],
 				"executivePlan": values.ExecutivePlan[0],
-				"operationalPlan": values.OperationalPlan[0],
+				"operationPlan": values.OperationalPlan[0],
 				"engineeringPlan": values.OfficeReport[0],
 				"securityReport": values.SecurityReport[0],
 				"beneficiaryCount": values.beneficiariesNum,

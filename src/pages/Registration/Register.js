@@ -267,7 +267,8 @@ const Register = () => {
               // mb: '2%',
               backgroundColor: 'white',
               borderRadius: 5,
-              padding: 3,
+              paddingRight: 3,
+              paddingLeft: 3,
               boxShadow: '5px 10px 18px #ecf1f5'
             }}>
               <Box

@@ -6,6 +6,8 @@ import {
   Grid,
   FormControlLabel,
   RadioGroup,
+  FormControl,
+  FormLabel,
 } from '@material-ui/core';
 
 import Calendar from 'src/components/calendar'
@@ -25,21 +27,27 @@ const CitizenInfo = ({ Condition }) => {
           md={12}
           xs={12}
         >
-          <Typography> الجنسية</Typography>
-          <RadioGroup row >
-            <FormControlLabel
-              label="سعودي"
-              control={<Field name="nationality" component={Radio} type="radio" value="SA" />}
-            />
-            <FormControlLabel
-              label="غير سعودي"
-              control={<Field name="nationality" component={Radio} type="radio" value="forign" />}
-            />
-          </RadioGroup>
+          <Field name="nationality" >
+            {({ input, meta }) => {
+              const showError = ((meta.submitError && !meta.dirtySinceLastSubmit) || meta.error) && meta.touched; return ( // eslint-disable-line no-unused-vars
+                <FormControl component="fieldset" error={showError ? meta.error || meta.submitError : undefined} required>
+                  <FormLabel component="legend">الجنسية</FormLabel>
+                  <RadioGroup row>
+                    <FormControlLabel
+                      label="سعودي"
+                      control={<Field name="nationality" component={Radio} type="radio" value="SA" />}
+                    />
+                    <FormControlLabel
+                      label="غير سعودي"
+                      control={<Field name="nationality" component={Radio} type="radio" value="forign" />}
+                    />
+                  </RadioGroup>
+                  {showError && <FormHelperText dir="rtl">{showError ? meta.error || meta.submitError : undefined}</FormHelperText>}
+                </FormControl>
+              )
+            }}
+          </Field>
         </Grid>
-
-
-
         <Condition when="nationality" is='SA'>
           <Grid
             container
@@ -70,7 +78,7 @@ const CitizenInfo = ({ Condition }) => {
             >
               <Typography> تاريخ الميلاد</Typography>
             </Grid>
-            < Calendar FeiledWidth={4} fieldName={null}/>
+            < Calendar FeiledWidth={4} fieldName={null} />
 
           </Grid>
         </Condition>
