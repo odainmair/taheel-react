@@ -19,7 +19,7 @@ import DashboardNavbar from '../../../components/DashboardNavbar';
 import MainNavbar from '../../../components/MainNavbar';
 import { CitizenValidate, absherValidate, confirmationValidate } from './ForgetPasswordUtils';
 import { AbsherOTP, AbsherOTPAuth, ChangePassword  } from './data/ForgetPasswordApi';
-import TopHeader from '../Registration/components/TopHeader';
+import TopHeader from '../../Registration/components/TopHeader';
 
 const ForgetPassword = () => {
 

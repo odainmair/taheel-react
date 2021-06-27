@@ -10,7 +10,7 @@ import Dashboard from 'src/pages/Dashboard';
 import Login from 'src/pages/UserAuthentication/Login/Login';
 import NotFound from 'src/pages/NotFound';
 import ProductList from 'src/pages/ProductList';
-import Register from 'src/pages/UserAuthentication/Registration/Register';
+import Register from 'src/pages/Registration/Register';
 import Settings from 'src/pages/Settings';
 import OTPLogin from 'src/pages/UserAuthentication/Login/components/LoginOtp';
 import Home from './pages/public/Home';

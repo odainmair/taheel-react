@@ -14,7 +14,7 @@ import {
   Link,
   Button
 } from '@material-ui/core';
-import FinalFromWizard from '../../../components/wizard/FinalFormWizard';
+import FinalFromWizard from '../../components/wizard/FinalFormWizard';
 import CitizenInfo from './components/CitizenInfo';
 import AbsherOtp from './components/AbsherOtp';
 import TaheelOtp from './components/TaheelOtp';
@@ -23,8 +23,8 @@ import { APIRequest } from 'src/api/APIRequest';
 import AlertDialog from 'src/components/AlertDialog';
 import localContext from 'src/localContext'
 import moment from 'moment-hijri';
-import DashboardNavbar from '../../../components/DashboardNavbar';
-import MainNavbar from '../../../components/MainNavbar';
+import DashboardNavbar from '../../components/DashboardNavbar';
+import MainNavbar from '../../components/MainNavbar';
 import { CitizenValidate } from './RegistrationUtils'
 import { absherValidate } from './RegistrationUtils'
 import { regitrationValidate } from './RegistrationUtils'
