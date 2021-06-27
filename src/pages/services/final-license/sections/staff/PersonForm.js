@@ -164,7 +164,7 @@ const PersonForm = ({ fromEdit, isSaudi, MedicalPracticeCondition, fieldName, se
           />
         </Grid>
 
-        <MedicalPracticeCondition when={fieldName === null ? "staffTypes" : `${fieldName}.staffTypes`} is={['أخصائي علاج طبيعي', 'أخصائي علاج وظيفي', 'أخصائي نطق و تخاطب']}>
+        <MedicalPracticeCondition when={fieldName === null ? "staffTypes" : `${fieldName}.staffTypes`} is={['أخصائي علاج طبيعي', 'أخصائي علاج وظيفي','ممرض', 'أخصائي نطق و تخاطب']}>
           <Grid
             item
             md={6}

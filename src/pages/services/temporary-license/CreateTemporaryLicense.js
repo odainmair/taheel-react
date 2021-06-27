@@ -61,7 +61,6 @@ const CreateTemporaryLicense = () => {
             initialValues={{
               centerType: '01',
               beneficiaryCategory: '01',
-              requestType: '1',
               idNumber: idNumIqamaNum,
               birthDate: DOB,
               mobileNo: phoneNumber,

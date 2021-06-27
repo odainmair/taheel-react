@@ -95,7 +95,7 @@ const TaheelOtp = ({ Condition }) => {
               justifyContent: 'center',
               display: 'flex',
               flexDirection: 'column',
-              mt: 5
+             
             }}
           >
             <Typography
@@ -112,7 +112,6 @@ const TaheelOtp = ({ Condition }) => {
               color="textSecondary"
               variant="body1"
               sx={{
-                paddingBottom: '16px',
                 cursor: 'pointer',
 
               }}

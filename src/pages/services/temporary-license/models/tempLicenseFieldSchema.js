@@ -16,7 +16,11 @@ export default [
       { value: '2', label: { ar: 'صفة طبيعية' } },
       { value: '1', label: { ar: 'صفة اعتباريه' } },
     ],
-    validators: [],
+    validators: [{
+      id: 'requestType-required',
+      isValidFun: checkIsfilled,
+      alert: 'هذا الحقل مطلوب'
+    }],
   },
   {
     id: uuid(),
@@ -31,7 +35,11 @@ export default [
     options: [
       { value: '01', label: { ar: 'ذوي الإعاقة' } },
     ],
-    validators: [],
+    validators: [{
+      id: 'beneficiaryCategory-required',
+      isValidFun: checkIsfilled,
+      alert: 'هذا الحقل مطلوب'
+    }],
   },
   {
     id: uuid(),

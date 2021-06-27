@@ -1,4 +1,4 @@
-import { checkMobilePattern } from "src/utils/inputValidator";
+import { checkEmailPattern, checkMobilePattern } from "src/utils/inputValidator";
 
 const required = 'يجب تعبئة الحقل'
 
@@ -30,44 +30,51 @@ const regitrationValidate = values => {
 
   if (!values.email)
     msg.email = required;
+  else if (!checkEmailPattern(values.email)){
+    msg.email = 'يرجى ادخال البريد الكتروني صحيح';
+  }
   if (!values.password)
     msg.password = required;
   if (!values.passwordConfirmation)
     msg.passwordConfirmation = required;
-  if (values.passwordConfirmation && values.passwordConfirmation !== values.password){
+  if (values.passwordConfirmation && values.passwordConfirmation !== values.password) {
     console.log(`${values.passwordConfirmation} ${values.password}`);
     msg.passwordConfirmation = 'كلمة المرور لا تماثل التأكيد';
   }
   document.getElementsByTagName('UL')[0].style.color = 'red';
-  if (values.password && values.password.length >= 8)
-    document.getElementById('digitsNo').style.color = '#04AA6D';
-  else {
-    document.getElementById('digitsNo').style.color = 'red';
-    msg.password = 'حقل كلمة المرور غير صحيح';
-  }
-  if (values.password && /\d/.test(values.password))
-    document.getElementById('digitExist').style.color = '#04AA6D';
-  else {
-    document.getElementById('digitExist').style.color = 'red';
-    msg.password = 'حقل كلمة المرور غير صحيح';
-  }
-  if (values.password && values.password.toUpperCase() !== values.password)
-    document.getElementById('UpperCase').style.color = '#04AA6D';
-  else {
-    document.getElementById('UpperCase').style.color = 'red';
-    msg.password = 'حقل كلمة المرور غير صحيح';
-  }
-  if (values.password && values.password.toLowerCase() !== values.password)
-    document.getElementById('LowerCase').style.color = '#04AA6D';
-  else {
-    document.getElementById('LowerCase').style.color = 'red';
-    msg.password = 'حقل كلمة المرور غير صحيح';
-  }
-  if (values.password && format.test(values.password))
-    document.getElementById('symbol').style.color = '#04AA6D';
-  else {
-    document.getElementById('symbol').style.color = 'red';
-    msg.password = 'حقل كلمة المرور غير صحيح';
+  if (values.password) {
+    if (values.password.length >= 8)
+      document.getElementById('digitsNo').style.color = '#04AA6D';
+    else {
+      document.getElementById('digitsNo').style.color = 'red';
+      msg.password = 'حقل كلمة المرور غير صحيح';
+    }
+    if (/\d/.test(values.password))
+      document.getElementById('digitExist').style.color = '#04AA6D';
+    else {
+      document.getElementById('digitExist').style.color = 'red';
+      msg.password = 'حقل كلمة المرور غير صحيح';
+    }
+    if (values.password.toUpperCase() !== values.password)
+      document.getElementById('UpperCase').style.color = '#04AA6D';
+    else {
+      document.getElementById('UpperCase').style.color = 'red';
+      msg.password = 'حقل كلمة المرور غير صحيح';
+    }
+    if (values.password.toLowerCase() !== values.password)
+      document.getElementById('LowerCase').style.color = '#04AA6D';
+    else {
+      document.getElementById('LowerCase').style.color = 'red';
+      msg.password = 'حقل كلمة المرور غير صحيح';
+    }
+    if (format.test(values.password))
+      document.getElementById('symbol').style.color = '#04AA6D';
+    else {
+      document.getElementById('symbol').style.color = 'red';
+      msg.password = 'حقل كلمة المرور غير صحيح';
+    }
+  } else {
+    msg.password = required;
   }
   console.log('msg', msg)
   return msg
@@ -77,9 +84,9 @@ const TaheelOtpValidate = (values) => {
   var msg = {}
   if (!values.phoneNumber)
     msg.phoneNumber = required;
-  if (!checkMobilePattern(values.phoneNumber)){
+  if (!checkMobilePattern(values.phoneNumber)) {
     msg.phoneNumber = 'يرجى ادخال رقم جوال سعودي صحيح';
-   }
+  }
   if (values.isTaheelValidate && !values.taheelOtp)
     msg.taheelOtp = required;
   return msg
