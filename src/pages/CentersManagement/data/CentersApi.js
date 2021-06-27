@@ -7,8 +7,8 @@ const getCenters = async (email) => {
         userEmail: email,
         }
     const response = await APIRequest({ queryParams, url });
-    return response;
     console.log("response++++++++++", JSON.stringify(response.responseBody.data.Centers[0].name));
+    return response;
 
     if (!res.isSuccessful) {
         return { isSuccessful: false, message: response.message };

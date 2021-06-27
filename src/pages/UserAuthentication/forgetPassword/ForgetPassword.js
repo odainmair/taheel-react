@@ -7,18 +7,19 @@ import {
   CardContent,
   Typography,
   Box,
+  Alert,
   Container
 } from '@material-ui/core';
-import FinalFromWizard from '../../components/wizard/FinalFormWizard';
+import FinalFromWizard from '../../../components/wizard/FinalFormWizard';
 import CitizenInfo from './copmonents/CitizenInfo';
 import AbsherOtp from './copmonents/AbsherOtp';
 import PasswordConfirmation from './copmonents/PasswordConfirmation';
 import AlertDialog from 'src/components/AlertDialog';
-import DashboardNavbar from '../../components/DashboardNavbar';
-import MainNavbar from '../../components/MainNavbar';
-import { CitizenValidate, absherValidate, confirmationValidate } from './ForgetPasswordUtils'
-import { changePassword, AbsherOTP, AbsherOTPAuth } from './data/ForgetPasswordApi'
-import TopHeader from '../Registration/components/TopHeader';
+import DashboardNavbar from '../../../components/DashboardNavbar';
+import MainNavbar from '../../../components/MainNavbar';
+import { CitizenValidate, absherValidate, confirmationValidate } from './ForgetPasswordUtils';
+import { AbsherOTP, AbsherOTPAuth, ChangePassword  } from './data/ForgetPasswordApi';
+import TopHeader from '../../Registration/components/TopHeader';
 
 const ForgetPassword = () => {
 
@@ -27,36 +28,45 @@ const ForgetPassword = () => {
   const [dialogTitle, setDialogTitle] = React.useState('');
   const [isMobileNavOpen, setMobileNavOpen] = useState(false);
   const [info, setInfo] = React.useState('');
+  const [errMessage, SetErrMessage] = useState('');
+
   const navigate = useNavigate();
 
   const absherOTPRequest = async (values) => {
     const { IqamaNumber } = values;
     setInfo(IqamaNumber);
+    const response = { isSuccessful: true, message: '' };
     const sendOTP = await AbsherOTP(IqamaNumber);
-    console.log("qqqqqqqqqqqqq", sendOTP.isSuccessful)
-
     if (!sendOTP.isSuccessful) {
+      SetErrMessage(sendOTP.message);
       return { isSuccessful: false, message: sendOTP.message };
     }
-    return { isSuccessful: true, message: '' };
-    // return { isSuccessful: true, message: '' }
+    return response;
   };
 
   const validateOtp = async (values) => {
     const { AbsherOtp } = values;
     const AbsherAuth = await AbsherOTPAuth(info, AbsherOtp);
     if (!AbsherAuth.isSuccessful) {
+      SetErrMessage(AbsherAuth.message);
       return { isSuccessful: false, message: AbsherAuth.message };
     }
     return { isSuccessful: true, message: '' };
   };
 
   const onSubmit = async (values) => {
-    const { oldPassword, password, passwordConfirmation } = values
-    changePassword(info, oldPassword, password, passwordConfirmation);
+    const { oldPassword, password, passwordConfirmation } = values;
+    // const response = { isSuccessful: true, message: '' };
+    const changePassword = await ChangePassword(info, oldPassword, password, passwordConfirmation);
+
+    if (!changePassword.isSuccessful) {
+      console.log("1111111111111111111", changePassword.message);
+      // SetErrMessage("hiiiiiiiiiiiiiiiiiiiiiiiiii");
+      SetErrMessage(changePassword.message);
+      return { isSuccessful: false, message: changePassword.message };
+    }
     handleClickOpen('لقد تم تغيير كلمة السر بنجاح', '');
     return { isSuccessful: true, message: '' };
-    return response
   };
   const handleClickOpen = (dialogContent, dialogTitle) => {
     setDialogContent(dialogContent);
@@ -113,11 +123,11 @@ const ForgetPassword = () => {
                   إعادة تعيين كلمة السر الخاصة بك
                 </Typography>
               </Box>
-              <CardContent sx={{ padding: "0px" }}>
+              <CardContent sx={{ padding: "3px" }}>
                 <FinalFromWizard // pass initialValues, onSubmit and 4 childrens
                   initialValues={{
                     disabledBackButt: true,
-                    lastPageErrorHandling: false,
+                    lastPageErrorHandling: true,
                     agree: [false]
                   }}
                   onSubmit={onSubmit}
@@ -125,16 +135,17 @@ const ForgetPassword = () => {
                   <FinalFromWizard.Page
                     label=""
                     validate={CitizenValidate}
-
                     nextFun={(values) => absherOTPRequest(values)}
                   >
                     <CitizenInfo />
                   </FinalFromWizard.Page>
-                  <FinalAbsherPage
-                    nextFun={(values) => validateOtp(values)}
-                    validate={absherValidate}
+                  <FinalFromWizard.Page
                     label=""
-                  />
+                    validate={absherValidate}
+                    nextFun={(values) => validateOtp(values)}
+                  >
+                    <AbsherOtp info={info} />
+                  </FinalFromWizard.Page>
                   <FinalFromWizard.Page
                     label=""
                     validate={confirmationValidate}
@@ -152,13 +163,11 @@ const ForgetPassword = () => {
   );
 };
 
-const FinalAbsherPage = ({ values }) => (
-  <>
-    <AbsherOtp
-      values={values}
-    />
-  </>
-);
-
-
+// const FinalAbsherPage = ({ values }) => (
+//   <>
+//     <AbsherOtp
+//       values={values}
+//     />
+//   </>
+// );
 export default ForgetPassword;
