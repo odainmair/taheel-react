@@ -38,23 +38,23 @@ const capacityValidation = values => {
   if (!values.beneficiariesNum)
     msg.beneficiariesNum = required
   else if (!checkIsNumber(values.beneficiariesNum)) {
-    msg.basementArea = 'يجب ان يكون مساحة مسطح البناء عدد صحيح'
+    msg.beneficiariesNum = 'يجب ان يكون عدد المستفيدين عدد صحيح'
   }
   else if (parseInt(values.beneficiariesNum) <= 0)
-    msg.basementArea = 'يجب ان يكون عدد المستفيدين اكبر من صفر'
+    msg.beneficiariesNum = 'يجب ان يكون عدد المستفيدين اكبر من صفر'
 
   if (!values.buildingArea)
     msg.buildingArea = required
   else if (!checkIsNumber(values.buildingArea)) {
-    msg.basementArea = 'يجب ان يكون مساحة مسطح البناء عدد صحيح'
+    msg.buildingArea = 'يجب ان يكون مساحة مسطح البناء عدد صحيح'
   }
   else if (parseInt(values.buildingArea) <= 0)
-    msg.basementArea = 'يجب ان يكون مساحة مسطح البناء اكبر من صفر'
+    msg.buildingArea = 'يجب ان يكون مساحة مسطح البناء اكبر من صفر'
 
   if (!values.basementArea)
     msg.basementArea = required
   else if (!checkIsNumber(values.buildingArea)) {
-    msg.basementArea = 'يجب ان يكون مساحة مسطح البناء عدد صحيح'
+    msg.basementArea = 'يجب ان يكون مساحة القبو اكبر عدد صحيح'
   }
   else if (parseInt(values.basementArea) < 0)
     msg.basementArea = 'يجب ان يكون مساحة القبو اكبر من صفر'
