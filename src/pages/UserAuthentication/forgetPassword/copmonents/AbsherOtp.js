@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { Field } from 'react-final-form';
 import { TextField as TextFieldFinal } from 'final-form-material-ui';
 import {
@@ -8,9 +9,7 @@ import {
 import PropTypes from 'prop-types';
 import { AbsherOTP } from '../data/ForgetPasswordApi';
 
-const AbsherOtp = () => {
-  // const { IqamaNumber } = values;
-  // console.log("IqamaNumberrrrrrrrrrrrrr", valuesIqamaNumber)
+const AbsherOtp = (props) => {
 
   return (
     <>
@@ -80,7 +79,7 @@ const AbsherOtp = () => {
           }}
         >
           <a
-          //  onClick={() => AbsherOTP(IqamaNumber)}
+           onClick={() => AbsherOTP(props.info)}
           >
             إعادة ارسال رمز التحقق
           </a>

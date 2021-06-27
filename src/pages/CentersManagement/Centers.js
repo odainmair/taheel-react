@@ -1,6 +1,5 @@
 import { Helmet } from 'react-helmet';
 import React, { useState, useEffect } from 'react';
-
 import {
   Box,
   Container,
@@ -17,9 +16,7 @@ const Centers = (props) => {
   const [centers, setCenters] = useState([]);
   const [loading, setLoading] = useState(true);
 
-
   useEffect(async () => {
-    // const getCentersRs = await getCentersFun(email);
     const getCentersDetails = await getCenters(email);
     if (!getCentersDetails.isSuccessful) {
       response = { isSuccessful: false, message: getCentersDetails.message };
@@ -59,11 +56,7 @@ const Centers = (props) => {
                 xs={12}
                 marginBottom={3}
               >
-                <CentersTableComponent loading={loading} centerRequests={centers} />  
-
-                
-                {/* <CentersDetails centers={centers} /> */}
-              </Grid >
+                <CentersTableComponent loading={loading} centerRequests={centers} />                </Grid >
             </Grid>
           </Grid>
         </Container>
