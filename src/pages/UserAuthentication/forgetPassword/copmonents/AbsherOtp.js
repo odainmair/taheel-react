@@ -9,8 +9,7 @@ import {
 import PropTypes from 'prop-types';
 import { AbsherOTP } from '../data/ForgetPasswordApi';
 
-const AbsherOtp = ({values}) => {
-  const { IqamaNumber } = values;
+const AbsherOtp = (props) => {
 
   return (
     <>
@@ -80,7 +79,7 @@ const AbsherOtp = ({values}) => {
           }}
         >
           <a
-           onClick={() => AbsherOTP(IqamaNumber)}
+           onClick={() => AbsherOTP(props.info)}
           >
             إعادة ارسال رمز التحقق
           </a>

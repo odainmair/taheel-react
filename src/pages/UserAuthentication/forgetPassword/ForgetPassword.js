@@ -56,14 +56,17 @@ const ForgetPassword = () => {
 
   const onSubmit = async (values) => {
     const { oldPassword, password, passwordConfirmation } = values;
-    const response = { isSuccessful: true, message: '' };
+    // const response = { isSuccessful: true, message: '' };
     const changePassword = await ChangePassword(info, oldPassword, password, passwordConfirmation);
+
     if (!changePassword.isSuccessful) {
+      console.log("1111111111111111111", changePassword.message);
+      // SetErrMessage("hiiiiiiiiiiiiiiiiiiiiiiiiii");
       SetErrMessage(changePassword.message);
       return { isSuccessful: false, message: changePassword.message };
     }
     handleClickOpen('لقد تم تغيير كلمة السر بنجاح', '');
-    return response
+    return { isSuccessful: true, message: '' };
   };
   const handleClickOpen = (dialogContent, dialogTitle) => {
     setDialogContent(dialogContent);
@@ -121,15 +124,10 @@ const ForgetPassword = () => {
                 </Typography>
               </Box>
               <CardContent sx={{ padding: "3px" }}>
-              {errMessage && (
-                  <Alert variant="outlined" severity="error">
-                    {errMessage}
-                  </Alert>
-                )}
                 <FinalFromWizard // pass initialValues, onSubmit and 4 childrens
                   initialValues={{
                     disabledBackButt: true,
-                    lastPageErrorHandling: false,
+                    lastPageErrorHandling: true,
                     agree: [false]
                   }}
                   onSubmit={onSubmit}
@@ -141,11 +139,13 @@ const ForgetPassword = () => {
                   >
                     <CitizenInfo />
                   </FinalFromWizard.Page>
-                  <FinalAbsherPage
-                    nextFun={(values) => validateOtp(values)}
-                    validate={absherValidate}
+                  <FinalFromWizard.Page
                     label=""
-                  />
+                    validate={absherValidate}
+                    nextFun={(values) => validateOtp(values)}
+                  >
+                    <AbsherOtp info={info} />
+                  </FinalFromWizard.Page>
                   <FinalFromWizard.Page
                     label=""
                     validate={confirmationValidate}
@@ -163,11 +163,11 @@ const ForgetPassword = () => {
   );
 };
 
-const FinalAbsherPage = ({ values }) => (
-  <>
-    <AbsherOtp
-      values={values}
-    />
-  </>
-);
+// const FinalAbsherPage = ({ values }) => (
+//   <>
+//     <AbsherOtp
+//       values={values}
+//     />
+//   </>
+// );
 export default ForgetPassword;

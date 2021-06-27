@@ -1,20 +1,14 @@
 
 import { APIRequest } from 'src/api/APIRequest';
 
-
 const AbsherOTP = async (IqamaNumber) => {
     const url = '/taheel-apis-utilities-AbsherOTP-v2'
     const queryParams = {
         BeneficiaryId: IqamaNumber,
     }
     const response = await APIRequest({ queryParams, url });
-    if (!response.isSuccessful) {
-        return { isSuccessful: false, message: response.message };
-    }
-    return { isSuccessful: true, message: '' }
-
+    return response;
 }
-
 
 const AbsherOTPAuth = async (IqamaNumber, OTP) => {
     const url = '/taheel-apis-utilities-AuthenticationAbsherOTP-v2'
@@ -24,17 +18,10 @@ const AbsherOTPAuth = async (IqamaNumber, OTP) => {
         serviceType: 1,
     }
     const response = await APIRequest({ queryParams, url });
-    if (!response.isSuccessful) {
-        return { isSuccessful: false, message: response.message };
-    }
-    return { isSuccessful: true, message: '' }
+    return response;
 }
 
-
-
 const ChangePassword = async (IqamaNumber, oldPassword, password, passwordConfirmation) => {
-    const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-    await sleep(300);
     const requestBody = {
         IqamaNumber: IqamaNumber,
         oldPassword: oldPassword,
@@ -43,10 +30,7 @@ const ChangePassword = async (IqamaNumber, oldPassword, password, passwordConfir
     };
     const url = '/taheel-apis-users-changePassword-v2';
     const response = await APIRequest({ requestBody, url });
-    if (!response.isSuccessful) {
-        return { isSuccessful: false, message: response.message };
-    }
-    return { isSuccessful: true, message: response.message };
+    return response;
 }
 
 export { AbsherOTP, ChangePassword, AbsherOTPAuth }
