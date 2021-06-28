@@ -18,13 +18,14 @@ const FileUploaderComp = ({ input: { value, name }, label, meta,  setField, valu
     console.log(`-- FileUploaderComp RowIndex ${name}`);
     console.log(`-- FileUploaderComp RowIndex ${rowIndex} ${rowIndex && rowIndex !== -1}`);
     let docId = ""
-    if (rowIndex !== -1) {
+   /* if (rowIndex !== -1) {
       if (values) {
         docId = values.customers[rowIndex][name.split('.')[1]];
         console.log(`-- FileUploaderComp RowIndex ${name} ${JSON.stringify(values[name])} ${JSON.stringify(values.customers[rowIndex][name])}`);
       }
     }
-    else docId = (values) ? values[name] : "";
+    else */
+    docId = (values) ? values[name] : "";
 
     if (docId)
       setUploadedFileName("تم رفع هذا الملف في نجاح");

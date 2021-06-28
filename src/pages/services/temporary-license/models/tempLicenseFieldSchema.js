@@ -366,7 +366,7 @@ export default [
     },{
       id: 'centerCap-required',
       isValidFun: checkIsNumber,
-      alert: 'يرجى ادخل رقم صحيح'
+      alert: 'يرجى إدخال رقم صحيح'
     }],
   },
   {

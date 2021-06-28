@@ -130,14 +130,14 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
             <FormControlLabel
               label="سعودي"
               control={<Field
-                name={fieldName === null ? "nationality" : `${fieldName}.nationality`}
+                name={fieldName === null ? "nationality" : `nationality`}
                 component={Radio} type="radio" value="سعودي" />}
               disabled={loading || SAForm || forignForm}
             />
             <FormControlLabel
               label="غير سعودي"
               control={<Field
-                name={fieldName === null ? "nationality" : `${fieldName}.nationality`}
+                name={fieldName === null ? "nationality" : `nationality`}
                 component={Radio} type="radio" value="غير سعودي" />}
               disabled={loading || SAForm || forignForm}
             />
@@ -150,7 +150,7 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
           className="custom-label-field"
         >
 
-          <Condition when={fieldName === null ? "nationality" : `${fieldName}.nationality`} is='سعودي'>
+          <Condition when={fieldName === null ? "nationality" : `nationality`} is='سعودي'>
 
             <Grid
               item
@@ -162,7 +162,7 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
                 fullWidth
                 required
                 label="رقم الهوية "
-                name={fieldName === null ? "idNumber" : `${fieldName}.idNumber`}
+                name={fieldName === null ? "idNumber" : `idNumber`}
                 component={TextFieldFinal}
                 disabled={loading || SAForm || forignForm}
                 type="number"
@@ -219,7 +219,7 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
           spacing={1}
           className="custom-label-field"
         >
-          <Condition when={fieldName === null ? "nationality" : `${fieldName}.nationality`} is='غير سعودي'>
+          <Condition when={fieldName === null ? "nationality" : `nationality`} is='غير سعودي'>
             <Grid
               item
               md={6}
@@ -230,7 +230,7 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
                 fullWidth
                 required
                 label="رقم الإقامة "
-                name={fieldName === null ? "iqamaNo" : `${fieldName}.iqamaNo`}
+                name={fieldName === null ? "iqamaNo" : `iqamaNo`}
                 component={TextFieldFinal}
                 type="number"
                 disabled={loading || SAForm || forignForm}

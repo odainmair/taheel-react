@@ -96,7 +96,7 @@ export default class FinalFromWizard extends React.Component {
   }
 
   render() {
-    const { children, isEnableNextBtn = true, isEnableCancelBtn = false, cancelBtnFn,canShowSection=true } = this.props;
+    const { children, isEnableNextBtn = true, isEnableCancelBtn = false, cancelBtnFn, canShowSection = true } = this.props;
     const childrenArray = React.Children.toArray(children);
     const { page, values, completed, isNextCallBackFunSuccess, errMessage } = this.state;
     const activePage = React.Children.toArray(children)[page];
@@ -136,8 +136,8 @@ export default class FinalFromWizard extends React.Component {
                 pop: form.mutators.pop,
                 push: form.mutators.push,
                 values: values
-              }):""}
-              <Grid container direction="row" spacing={2} mt={3} justifyContent={isEnableCancelBtn?"space-between":"flex-end"}>
+              }) : ""}
+              <Grid container direction="row" spacing={2} mt={3} justifyContent={isEnableCancelBtn ? "space-between" : "flex-end"}>
                 {isEnableCancelBtn && (
                   <Grid item>
                     <Button
@@ -201,7 +201,7 @@ export default class FinalFromWizard extends React.Component {
                   </Grid>
                 </Grid>
               </Grid>
-                 {/* {<pre dir="ltr">{JSON.stringify(values, 0, 2)}</pre> } */}
+            {/*   {<pre dir="ltr">{JSON.stringify(values, 0, 2)}</pre>} */}
             </form>
           )
         }}
