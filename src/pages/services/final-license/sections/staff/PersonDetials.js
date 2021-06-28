@@ -131,7 +131,7 @@ const Row = ({ editMode, SponsorName, setSponsorName, values, fromEdit, setFromE
                 color="primary"
                 component="span"
                 onClick={() => {
-                  setFromEdit(false);
+                  setFromEdit(true);
                   setRowIndex(index);
                   setFieldName(name);
                   const { idNumber, iqamaNo, lastName, nationality, nationalityBtn, day, month, year, fullName, gender, birthDate, staffTypes, cv, cvAtt, EducationalQualification, MedicalPractice, EducationalQualificationAtt, MedicalPracticeAtt, sponsorName } = fields.value[index];
@@ -451,7 +451,7 @@ const PersonDetials = ({ editMode, Condition, MedicalPracticeCondition, setField
         className="custom-label-field"
       />
       <FormDialog
-        title=" اضافة كادر"
+        title={fromEdit?"تحديث بيانات الكادر":" اضافة كادر"}
         openPopup={open}
         setOpenPopup={setOpen}
         onClose={() => {

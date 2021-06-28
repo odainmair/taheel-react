@@ -36,6 +36,7 @@ import { MedicalPracticeComp } from './services/finalLicenseUtil'
 import { calculationConditionComp, centerTypeJSON } from './services/finalLicenseUtil'
 import { dateFormatter, reverseRange } from 'src/utils/utilFunctions';
 import { LICENSE_FORM_TYPES } from 'src/utils/enums'
+import numeral from 'numeral';
 
 const CreateFinalLicense = () => {
   const [temporaryLicenses, SetTemporaryLicenses] = useState([])
@@ -210,8 +211,8 @@ const CreateFinalLicense = () => {
                   activities: center.crInfo_r.crActivityType,
                   municipLicenseNo: center.crInfo_r.MoMRA_Licence,
                   beneficiariesNum: center.centerInfo_r.beneficiaryCount,
-                  capacity: center.centerInfo_r.carryingnumber,
-                  financialGuarantee: `${center.centerInfo_r.financialGuarantee} ر.س.`,
+                  capacity: numeral(center.centerInfo_r.carryingnumber).format('0,0'),
+                  financialGuarantee: `${numeral(center.centerInfo_r.financialGuarantee).format('0,0.00')} ر.س.`,
                   buildingArea: center.centerInfo_r.buildingArea,
                   basementArea: center.centerInfo_r.basementArea,
                   OperationalPlan: [center.centerInfo_r.operationPlan && center.centerInfo_r.operationPlan.id],
