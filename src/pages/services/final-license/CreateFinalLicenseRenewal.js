@@ -263,7 +263,7 @@ const FinalFormRenewalSummary = ({ setField, renewableLicenses, values, setCente
           disabled={!Array.isArray(renewableLicenses) || !renewableLicenses.length}
         >
           <MenuItem value="1" key="1" selected={true}>اختيار</MenuItem>
-          <MenuItem value="0101020060" key="0101020060" >0101020060</MenuItem>
+          {/* <MenuItem value="0101020060" key="0101020060" >0101020060</MenuItem> */}
           {renewableLicenses.map(item => (
             <MenuItem key={item.licenceNumber} value={item.licenceNumber}>{item.licenceNumber}</MenuItem>
           ))}
