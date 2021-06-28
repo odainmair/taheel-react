@@ -134,7 +134,24 @@ const Row = ({ editMode, SponsorName, setSponsorName, values, fromEdit, setFromE
                   setFromEdit(true);
                   setRowIndex(index);
                   setFieldName(name);
-                  const { idNumber, iqamaNo, lastName, nationality, nationalityBtn, day, month, year, fullName, gender, birthDate, staffTypes, cv, cvAtt, EducationalQualification, MedicalPractice, EducationalQualificationAtt, MedicalPracticeAtt, sponsorName } = fields.value[index];
+                  const { 
+                    idNumber, 
+                    iqamaNo, 
+                    lastName, 
+                    nationality, 
+                    nationalityBtn, 
+                    day, 
+                    month, 
+                    year, 
+                    fullName, 
+                    gender, 
+                    birthDate, 
+                    staffTypes, 
+                    cv, 
+                    EducationalQualification, 
+                    MedicalPractice, 
+                    sponsorName 
+                  } = fields.value[index];
                   setField("idNumber", idNumber);
                   setField("iqamaNo", iqamaNo);
                   setField("nationality", nationality)
@@ -149,11 +166,8 @@ const Row = ({ editMode, SponsorName, setSponsorName, values, fromEdit, setFromE
                   setField("birthDate", birthDate)
                   setField("staffTypes", staffTypes)
                   setField("cv", cv)
-                  setField("cvAtt", cvAtt)
                   setField("EducationalQualification", EducationalQualification)
                   setField("MedicalPractice", MedicalPractice)
-                  setField("EducationalQualificationAtt", EducationalQualificationAtt)
-                  setField("MedicalPracticeAtt", MedicalPracticeAtt)
                   handleClickOpen();
                 }}
               >
