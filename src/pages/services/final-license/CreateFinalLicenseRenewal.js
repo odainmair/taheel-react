@@ -67,6 +67,12 @@ const CreateFinalLicenseRenewal = () => {
     
     if(response.responseBody && response.responseBody.data && response.responseBody.data.center) {
       // const crNum = "654";
+      // const fNum = response.responseBody.data.center && response.responseBody.data.center.centerInfo_r && response.responseBody.data.center.centerInfo_r.furniturePhoto_r.map(d => d.Document.id);
+      // console.log('===> fNum: ' + JSON.stringify(fNum))
+      // const attach = response.responseBody.data.center && response.responseBody.data.center.healthCareServices_r && response.responseBody.data.center.healthCareServices_r.attachment;
+      // console.log('===> attach: ' + JSON.stringify(attach))
+      const attach = response.responseBody.data.center && response.responseBody.data.center.centerInfo_r && response.responseBody.data.center.centerInfo_r.operationPlan && response.responseBody.data.center.centerInfo_r.operationPlan.id;
+      console.log('===> attach: ' + JSON.stringify(attach))
       const crNum = response.responseBody.data.center.crInfo_r.crNumber;
 
       if(crNum != ''){
@@ -91,7 +97,7 @@ const CreateFinalLicenseRenewal = () => {
       }
       else {
         console.log(' ===> ERROR Wrong Data - No CrNumber, => response' + JSON.stringify(response))
-        SetErrMessage("Wrong Data - No CrNumber");
+        SetErrMessage("لا يوجد رقم تسجيل");
         setEditInitValues(response.responseBody.data);
         setIsLoading(false);
         setShowSummary(false);
@@ -192,12 +198,12 @@ const CreateFinalLicenseRenewal = () => {
                   ExecutivePlan: [editInitValues.center && editInitValues.center.centerInfo_r.executivePlan && editInitValues.center.centerInfo_r.executivePlan.id],
                   OfficeReport: [editInitValues.center && editInitValues.center.centerInfo_r.engineeringPlan && editInitValues.center.centerInfo_r.engineeringPlan.id],
                   SecurityReport: [editInitValues.center && editInitValues.center.centerInfo_r.securityReport && editInitValues.center.centerInfo_r.securityReport.id],
-                  // Furniture: [editInitValues.center && editInitValues.center.centerInfo_r && editInitValues.center.centerInfo_r.carryingnumber],
-                  Furniture: [1202],
+                  Furniture: editInitValues.center && editInitValues.center.centerInfo_r && editInitValues.center.centerInfo_r.furniturePhoto_r && editInitValues.center.centerInfo_r.furniturePhoto_r.map(d => d.Document.id),
+                  // Furniture: [1202],
                   FinancialGuaranteeAtt: [editInitValues.center && editInitValues.center.centerInfo_r.financialGuarbteeAtt && editInitValues.center.centerInfo_r.financialGuarbteeAtt.id],
                   healthServices: editInitValues.center && editInitValues.center.isHealthCareServices ? "yes" : "no",
                   healthServiceType: editInitValues.center && editInitValues.center.healthCareServices_r && editInitValues.center.healthCareServices_r.type && editInitValues.center.healthCareServices_r.type,
-                  healthServiceAttachment: [editInitValues.center.centerInfo_r && editInitValues.center.centerInfo_r.financialGuarbteeAtt && editInitValues.center.centerInfo_r.financialGuarbteeAtt.id],
+                  healthServiceAttachment: [editInitValues.center && editInitValues.center.centerInfo_r && editInitValues.center.healthCareServices_r && editInitValues.center.healthCareServices_r.attachment && editInitValues.center.healthCareServices_r.attachment.id],
                   // healthServiceAttachment: [1202],
                   // customers: editInitValues && editInitValues.staff,
                   customers: editInitValues && getStaff(editInitValues.staff),

@@ -266,7 +266,8 @@ const Summary = ({ values }) => {
         mb={3}
       >
         {finalLicenseFieldSchema.filter(fintalLicense => fintalLicense.sectionName === "Requirements" && !fintalLicense.dependOn).map(filteredFinalLicense => (
-          <Grid
+          
+          values[filteredFinalLicense.name] > 0 && values[filteredFinalLicense.name][0] ? (<Grid
             item
             key={filteredFinalLicense.id}
             lg={6}
@@ -275,6 +276,7 @@ const Summary = ({ values }) => {
           >
             < DownloadButtTable docIDs={values[filteredFinalLicense.name]} name={filteredFinalLicense.name} label={filteredFinalLicense.label.ar} />
           </Grid>
+        ) : ''
         ))}
       </Grid>
 
