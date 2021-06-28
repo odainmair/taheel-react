@@ -37,27 +37,30 @@ const capacityValidation = values => {
   console.log(' values.buildingArea', typeof (values.buildingArea), 'values.basementArea', typeof (values.basementArea))
   if (!values.beneficiariesNum)
     msg.beneficiariesNum = required
+  else if (parseInt(values.beneficiariesNum) <= 0) {
+      msg.beneficiariesNum = 'يجب ان يكون عدد المستفيدين اكبر من صفر'
+    }
   else if (!checkIsNumber(values.beneficiariesNum)) {
     msg.beneficiariesNum = 'يجب ان يكون عدد المستفيدين عدد صحيح'
   }
-  else if (parseInt(values.beneficiariesNum) <= 0)
-    msg.beneficiariesNum = 'يجب ان يكون عدد المستفيدين اكبر من صفر'
 
   if (!values.buildingArea)
     msg.buildingArea = required
+  else if (parseInt(values.buildingArea) <= 0) {
+      msg.buildingArea = 'يجب ان يكون مساحة مسطح البناء اكبر من صفر'
+    }
   else if (!checkIsNumber(values.buildingArea)) {
     msg.buildingArea = 'يجب ان يكون مساحة مسطح البناء عدد صحيح'
   }
-  else if (parseInt(values.buildingArea) <= 0)
-    msg.buildingArea = 'يجب ان يكون مساحة مسطح البناء اكبر من صفر'
 
   if (!values.basementArea)
     msg.basementArea = required
+  else if (parseInt(values.basementArea) < 0) {
+      msg.basementArea = 'يجب ان يكون مساحة القبو اكبر من صفر'
+    }
   else if (!checkIsNumber(values.buildingArea)) {
-    msg.basementArea = 'يجب ان يكون مساحة القبو اكبر عدد صحيح'
+    msg.basementArea = 'يجب ان يكون مساحة القبو عدد صحيح'
   }
-  else if (parseInt(values.basementArea) < 0)
-    msg.basementArea = 'يجب ان يكون مساحة القبو اكبر من صفر'
 
   if (parseInt(values.buildingArea) <= parseInt(values.basementArea))
     msg.basementArea = 'مساحة القبو يجب ان تكون أقل من مساحة مسطح البناء'
