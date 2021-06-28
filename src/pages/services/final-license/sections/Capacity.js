@@ -70,7 +70,7 @@ const Capacity = ({ editMode, Condition, values, setField, setIsEnableNextBtn })
 		else {
 			//	setField('capacity', response.responseBody.body.carryingCapacity.toFixed(2).toLocaleString('en-US', {maximumFractionDigits:2}));
 			//setField('financialGuarantee', `${response.responseBody.body.financialGuarantee.toFixed(2).toLocaleString('en-US', {maximumFractionDigits:2})} ر.س.`);
-			setField('capacity', numeral(response.responseBody.body.carryingCapacity).format('0,0.00'));
+			setField('capacity', numeral(response.responseBody.body.carryingCapacity).format('0,0'));
 			setField('financialGuarantee', `${numeral(response.responseBody.body.financialGuarantee).format('0,0.00')} ر.س.`);
 
 			setCalculatedData(true);

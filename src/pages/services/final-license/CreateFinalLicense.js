@@ -198,7 +198,7 @@ const CreateFinalLicense = () => {
                   activities: center.crInfo_r.crActivityType,
                   municipLicenseNo: center.crInfo_r.MoMRA_Licence,
                   beneficiariesNum: center.centerInfo_r.beneficiaryCount,
-                  capacity: numeral(center.centerInfo_r.carryingnumber).format('00.00'),
+                  capacity: numeral(center.centerInfo_r.carryingnumber).format('0,0'),
                   financialGuarantee: `${numeral(center.centerInfo_r.financialGuarantee).format('0,0.00')} ر.س.`,
                   buildingArea: center.centerInfo_r.buildingArea,
                   basementArea: center.centerInfo_r.basementArea,

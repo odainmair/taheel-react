@@ -26,8 +26,8 @@ const CenterDetailsValidation = values => {
     msg.CRNumber = required
   if (!values.temporaryLicenceNum)
     msg.temporaryLicenceNum = required
-  if (values.CRNumber && isNaN(values.CRNumber) && values.CRNumber.length > 10)
-    msg.CRNumber = "يجب ان يحتوي فقط على ارقام والا يزيد عددها عن 10 خانات"
+  if (values.CRNumber && checkIsNumber(values.CRNumber) && values.CRNumber.length > 10)
+    msg.CRNumber = "يجب ان يحتوي فقط على ارقام ولا يزيد عددها عن 10 خانات"
   return msg
 }
 
