@@ -14,7 +14,7 @@ const absherValidate = values => {
 }
 const confirmationValidate = values => {
   var msg = {}
-  const format = /[^A-Za-z`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
+  const format = /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
   const EnglishFormat = /[\u0600-\u065F\u066A-\u06EF\u06FA-\u06FF]/;
 
   if (!values.oldPassword)
