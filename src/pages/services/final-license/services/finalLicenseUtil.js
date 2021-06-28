@@ -347,6 +347,76 @@ const getStaff = (data) => {
   return staff
 }
 
+// TO BE REMOVED WHEN THE LOOKUP SERVICE IS READY
+const centerTypeJSON = {
+  "type": [
+    {
+      "name": "متسولين",
+      "ID": 1
+    },
+    {
+      "name": "ارشاد أسري",
+      "ID": 2
+    },
+    {
+      "name": "ذوي الإعاقة",
+      "ID": 3
+    },
+    {
+      "name": "أيتام",
+      "ID": 4
+    },
+    {
+      "name": "كبار السن",
+      "ID": 5
+    },
+    {
+      "name": "أحداث",
+      "ID": 6
+    },
+    {
+      "name": "حماية الأسرة",
+      "ID": 7
+    }
+  ],
+  "targetedBeneficiary": [
+    {
+      "name": "البيوت الإجتماعية",
+      "ID": 2
+    },
+    {
+      "name": "التدريب المهني",
+      "ID": 3
+    },
+    {
+      "name": "الرعاية النهارية",
+      "ID": 4
+    },
+    {
+      "name": "الرعاية الإجتماعية المنزلية",
+      "ID": 5
+    }
+  ],
+  "targetedServices": [
+    {
+      "name": "مراكز تأهيل الأشخاص ذوي الأعاقات المحددة",
+      "ID": 2
+    },
+    {
+      "name": " مراكز تأهيل الأشخاص ذوي الأعاقات العقلية والأعاقات الحركية",
+      "ID": 3
+    },
+    {
+      "name": "مراكز تأهيل الأسخاص ذوي الأعاقة العقلية",
+      "ID": 4
+    },
+    {
+      "name": "مراكز تأهيل الأشخاص ذوي الأعاقة متوسط وشديدي الإعاقة ",
+      "ID": 5
+    }
+  ]
+};
+
 export {
   CenterDetailsValidation,
   capacityValidation,
@@ -361,5 +431,6 @@ export {
   ContentField,
   DownloadButtTable,
   getStaff,
-  validateAddStaffForm
+  validateAddStaffForm,
+  centerTypeJSON
 };

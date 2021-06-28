@@ -33,7 +33,7 @@ import { healthServicesValidation } from './services/finalLicenseUtil'
 import { personsValidation } from './services/finalLicenseUtil'
 import { ConditionComp } from './services/finalLicenseUtil'
 import { MedicalPracticeComp } from './services/finalLicenseUtil'
-import { calculationConditionComp } from './services/finalLicenseUtil'
+import { calculationConditionComp, centerTypeJSON } from './services/finalLicenseUtil'
 import { dateFormatter, reverseRange } from 'src/utils/utilFunctions';
 import { LICENSE_FORM_TYPES } from 'src/utils/enums'
 
@@ -194,6 +194,7 @@ const CreateFinalLicense = () => {
                   isNextBtnDisabled: false,
                   managersCount: 0,
                   teachersCount: 0,
+                  centerType: editInitValues.center && centerTypeJSON.type[parseInt(editInitValues.center.type)].name + ' - ' + centerTypeJSON.targetedBeneficiary[parseInt(editInitValues.center.targetedBeneficiary)].name + ' - ' + centerTypeJSON.targetedServices[parseInt(editInitValues.center.targetedServices)].name, 
                   CRNumber: center.crInfo_r.crNumber,
                   temporaryLicenceNum: center.licenceNumber,
                   licenseCreationDate: center && dateFormatter(center.creationDate),
