@@ -15,6 +15,7 @@ import { calculation } from '../services/finalLicenseAPI'
 import { ContentField } from '../services/finalLicenseUtil'
 import { LICENSE_FORM_TYPES } from 'src/utils/enums'
 import { checkIsNumber } from 'src/utils/inputValidator';
+import numeral from 'numeral';
 
 const Capacity = ({ editMode, Condition, values, setField, setIsEnableNextBtn }) => {
 
@@ -34,17 +35,17 @@ const Capacity = ({ editMode, Condition, values, setField, setIsEnableNextBtn })
 	const calculate = async () => {
 		setLoading(true);
 		SetErrMessage('');
-		if (!values.beneficiariesNum || !checkIsNumber(values.beneficiariesNum)|| values.beneficiariesNum <= 0) {
+		if (!values.beneficiariesNum || !checkIsNumber(values.beneficiariesNum) || values.beneficiariesNum <= 0) {
 			SetErrMessage('يرجى ادخال عدد المستفيدين الفعلي صحيح');
 			setLoading(false);
 			return;
 		}
-		if (!values.buildingArea || !checkIsNumber(values.buildingArea) || values.buildingArea <= 0 ) {
+		if (!values.buildingArea || !checkIsNumber(values.buildingArea) || values.buildingArea <= 0) {
 			SetErrMessage('يرجى ادخال مساحة مسطح البناء صحيح');
 			setLoading(false);
 			return;
 		}
-		if (!values.basementArea || !checkIsNumber(values.basementArea) ||values.basementArea < 0 ) {
+		if (!values.basementArea || !checkIsNumber(values.basementArea) || values.basementArea < 0) {
 			SetErrMessage('يرجى ادخال مساحة القبو صحيح');
 			setLoading(false);
 			return;
@@ -54,11 +55,11 @@ const Capacity = ({ editMode, Condition, values, setField, setIsEnableNextBtn })
 			setLoading(false);
 			return
 		}
-	/*	if (values.beneficiariesNum > parseInt(values.capacity)) {
-			SetErrMessage('عدد المستفيدين يجب ان لا يتجاوز الطاقة الاستعابية');
-			setLoading(false);
-			return
-		}*/
+		/*	if (values.beneficiariesNum > parseInt(values.capacity)) {
+				SetErrMessage('عدد المستفيدين يجب ان لا يتجاوز الطاقة الاستعابية');
+				setLoading(false);
+				return
+			}*/
 
 		const response = await calculation(values.buildingArea, values.basementArea);
 		if (!response.isSuccessful) {
@@ -67,8 +68,11 @@ const Capacity = ({ editMode, Condition, values, setField, setIsEnableNextBtn })
 			setCalculatedData(false);
 		}
 		else {
-			setField('capacity', response.responseBody.body.carryingCapacity.toFixed(2).toLocaleString('en-US', {maximumFractionDigits:2}));
-			setField('financialGuarantee', `${response.responseBody.body.financialGuarantee.toFixed(2).toLocaleString('en-US', {maximumFractionDigits:2})} ر.س.`);
+			//	setField('capacity', response.responseBody.body.carryingCapacity.toFixed(2).toLocaleString('en-US', {maximumFractionDigits:2}));
+			//setField('financialGuarantee', `${response.responseBody.body.financialGuarantee.toFixed(2).toLocaleString('en-US', {maximumFractionDigits:2})} ر.س.`);
+			setField('capacity', numeral(response.responseBody.body.carryingCapacity).format('0,0.00'));
+			setField('financialGuarantee', `${numeral(response.responseBody.body.financialGuarantee).format('0,0.00')} ر.س.`);
+
 			setCalculatedData(true);
 			setIsEnableNextBtn(true);
 
