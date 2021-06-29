@@ -41,7 +41,7 @@ const CenterDetails = ({ editMode, setEditMode, Condition, values, temporaryLice
       return;
     }
     if (!values.CRNumber) {
-      setErrMessage('يرجى ادخل رقم السجل تجاري');
+      setErrMessage('يرجى إدخال رقم السجل تجاري');
       setLoading(false);
       return;
     }
