@@ -385,6 +385,10 @@ const centerTypeJSON = {
   "targetedBeneficiary": [
     {
       "name": "البيوت الإجتماعية",
+      "ID": 1
+    },
+    {
+      "name": "البيوت الإجتماعية",
       "ID": 2
     },
     {
@@ -401,6 +405,10 @@ const centerTypeJSON = {
     }
   ],
   "targetedServices": [
+    {
+      "name": "مراكز تأهيل الأشخاص ذوي الأعاقات المحددة",
+      "ID": 1
+    },
     {
       "name": "مراكز تأهيل الأشخاص ذوي الأعاقات المحددة",
       "ID": 2

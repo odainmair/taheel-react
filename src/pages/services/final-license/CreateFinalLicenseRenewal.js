@@ -175,7 +175,11 @@ const CreateFinalLicenseRenewal = () => {
                   agree: [],
                   managersCount: 0,
                   teachersCount: 0,
-                  centerType: editInitValues.center && centerTypeJSON.type[parseInt(editInitValues.center.type)].name + ' - ' + centerTypeJSON.targetedBeneficiary[parseInt(editInitValues.center.targetedBeneficiary)].name + ' - ' + centerTypeJSON.targetedServices[parseInt(editInitValues.center.targetedServices)].name, 
+                  centerType: editInitValues.center && editInitValues.center.type && editInitValues.center.targetedBeneficiary && editInitValues.center.targetedServices 
+                  && centerTypeJSON.type[parseInt(editInitValues.center.type)] && centerTypeJSON.targetedBeneficiary[parseInt(editInitValues.center.targetedBeneficiary)] && centerTypeJSON.targetedServices[parseInt(editInitValues.center.targetedServices)]
+                  && centerTypeJSON.type[parseInt(editInitValues.center.type)].name 
+                  + ' - ' + editInitValues.center.targetedBeneficiary && centerTypeJSON.targetedBeneficiary[parseInt(editInitValues.center.targetedBeneficiary)].name 
+                  + ' - ' + editInitValues.center.targetedServices && centerTypeJSON.targetedServices[parseInt(editInitValues.center.targetedServices)].name, 
                   companyName: editInitValues.center && editInitValues.center.name,
                   temporaryLicenceNum: editInitValues.center && editInitValues.center.licenceNumber,
                   licenseCreationDate: editInitValues.center && dateFormatter(editInitValues.center.creationDate),
