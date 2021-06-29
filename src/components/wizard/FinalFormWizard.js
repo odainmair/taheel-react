@@ -4,6 +4,9 @@ import { Form } from 'react-final-form';
 import { Alert, Box, Button, Card, CardContent, CircularProgress, Grid, Step, StepLabel, Stepper } from '@material-ui/core';
 import arrayMutators from "final-form-arrays";
 import { LICENSE_FORM_TYPES } from 'src/utils/enums'
+import ConfirmationDialog from '../ConfirmationDialog';
+import { SettingsPowerRounded } from '@material-ui/icons';
+import { stubTrue } from 'lodash-es';
 
 export default class FinalFromWizard extends React.Component {
   static Page = ({ children }) => children;
@@ -14,6 +17,7 @@ export default class FinalFromWizard extends React.Component {
       page: props.initialValues.page ? props.initialValues.page : 0,
       values: props.initialValues || {},
       completed: false,
+      open: false,
       isNextCallBackFunSuccess: true,
       errMessage: ""
     };
@@ -102,110 +106,121 @@ export default class FinalFromWizard extends React.Component {
     const activePage = React.Children.toArray(children)[page];
     const isLastPage = page === React.Children.count(children) - 1;
     return (
-      <Form
-        initialValues={values}
-        //validate={this.validate}
-        onSubmit={this.handleSubmit}
-        mutators={{
-          // expect (field, value) args from the mutator
-          ...arrayMutators,
-          setValue: ([field, value], state, { changeValue }) => {
-            changeValue(state, field, () => value)
-          }
-        }}
-      >
-        {({ handleSubmit, pristine, form, submitting, values }) => {
-          return (
-            <form onSubmit={handleSubmit} autoComplete="off" noValidate>
-              <Stepper className="custom-wizard" alternativeLabel activeStep={page}>
-                {childrenArray.map((child, index) => (
-                  <Step key={child.props.label || index} completed={page > index || completed}>
-                    <StepLabel>{child.props.label}</StepLabel>
-                  </Step>
-                ))}
-              </Stepper>
-              {!isNextCallBackFunSuccess && (
-                <Box mt={3}>
-                  <Alert variant="outlined" severity="error">
-                    {errMessage}
-                  </Alert>
-                </Box>
-              )}
-              {canShowSection ? React.cloneElement(activePage, {
-                setField: form.mutators.setValue,
-                pop: form.mutators.pop,
-                push: form.mutators.push,
-                values: values
-              }) : ""}
-              <Grid container direction="row" spacing={2} mt={3} justifyContent={isEnableCancelBtn ? "space-between" : "flex-end"}>
-                {isEnableCancelBtn && (
-                  <Grid item>
-                    <Button
-                      variant="contained"
-                      onClick={() => { cancelBtnFn() }}
-                      sx={{
-                        backgroundColor: '#E2E8EB',
-                        color: '#000'
-                      }}
-                    >
-                      الغاء
-                    </Button>
-                  </Grid>
+      <>
+        <Form
+          initialValues={values}
+          //validate={this.validate}
+          onSubmit={this.handleSubmit}
+          mutators={{
+            // expect (field, value) args from the mutator
+            ...arrayMutators,
+            setValue: ([field, value], state, { changeValue }) => {
+              changeValue(state, field, () => value)
+            }
+          }}
+        >
+          {({ handleSubmit, pristine, form, submitting, values }) => {
+            return (
+              <form onSubmit={handleSubmit} autoComplete="off" noValidate>
+                <Stepper className="custom-wizard" alternativeLabel activeStep={page}>
+                  {childrenArray.map((child, index) => (
+                    <Step key={child.props.label || index} completed={page > index || completed}>
+                      <StepLabel>{child.props.label}</StepLabel>
+                    </Step>
+                  ))}
+                </Stepper>
+                {!isNextCallBackFunSuccess && (
+                  <Box mt={3}>
+                    <Alert variant="outlined" severity="error">
+                      {errMessage}
+                    </Alert>
+                  </Box>
                 )}
-                <Grid item>
-                  <Grid container direction="row" spacing={2} justifyContent="flex-end">
-                    {(page > 0 && !this.state.values.disabledBackButt) && (
-                      <Grid item>
-                        <Button
-                          variant="contained"
-                          disabled={page === 1 && this.state.values.formType === LICENSE_FORM_TYPES.RENEW}
-                          onClick={this.previous}
-                          sx={{
-                            backgroundColor: '#E2E8EB',
-                            color: '#000'
-                          }}
-                        >
-                          رجوع
-                        </Button>
-                      </Grid>
-                    )}
-                    {!isLastPage && (
-                      <Grid item>
-                        <Button
-                          startIcon={submitting ? <CircularProgress size="1rem" /> : null}
-                          disabled={!isEnableNextBtn || submitting}
-                          variant="contained"
-                          color="primary"
-                          type="submit"
-                          sx={{
-                            backgroundColor: '#3c8084',
-                          }}
-                        >
-                          التالي
-                        </Button>
-                      </Grid>
-                    )}
-                    {isLastPage && (
-                      <Grid item>
-                        <Button
-                          startIcon={submitting ? <CircularProgress size="1rem" /> : null}
-                          disabled={values.agree.length == 0 || submitting}
-                          variant="contained"
-                          color="primary"
-                          type="submit"
-                        >
-                          ارسال
-                        </Button>
-                      </Grid>
-                    )}
+                {canShowSection ? React.cloneElement(activePage, {
+                  setField: form.mutators.setValue,
+                  pop: form.mutators.pop,
+                  push: form.mutators.push,
+                  values: values
+                }) : ""}
+                <Grid container direction="row" spacing={2} mt={3} justifyContent={isEnableCancelBtn ? "space-between" : "flex-end"}>
+                  {isEnableCancelBtn && (
+                    <Grid item>
+                      <Button
+                        variant="contained"
+                        onClick={() => { this.setState((state) => ({ open: true })) }}
+                        sx={{
+                          backgroundColor: '#E2E8EB',
+                          color: '#000'
+                        }}
+                      >
+                        الغاء
+                      </Button>
+                    </Grid>
+                  )}
+                  <Grid item>
+                    <Grid container direction="row" spacing={2} justifyContent="flex-end">
+                      {(page > 0 && !this.state.values.disabledBackButt) && (
+                        <Grid item>
+                          <Button
+                            variant="contained"
+                            disabled={page === 1 && this.state.values.formType === LICENSE_FORM_TYPES.RENEW}
+                            onClick={this.previous}
+                            sx={{
+                              backgroundColor: '#E2E8EB',
+                              color: '#000'
+                            }}
+                          >
+                            رجوع
+                          </Button>
+                        </Grid>
+                      )}
+                      {!isLastPage && (
+                        <Grid item>
+                          <Button
+                            startIcon={submitting ? <CircularProgress size="1rem" /> : null}
+                            disabled={!isEnableNextBtn || submitting}
+                            variant="contained"
+                            color="primary"
+                            type="submit"
+                            sx={{
+                              backgroundColor: '#3c8084',
+                            }}
+                          >
+                            التالي
+                          </Button>
+                        </Grid>
+                      )}
+                      {isLastPage && (
+                        <Grid item>
+                          <Button
+                            startIcon={submitting ? <CircularProgress size="1rem" /> : null}
+                            disabled={values.agree.length == 0 || submitting}
+                            variant="contained"
+                            color="primary"
+                            type="submit"
+                          >
+                            ارسال
+                          </Button>
+                        </Grid>
+                      )}
+                    </Grid>
                   </Grid>
                 </Grid>
-              </Grid>
-            {/*   {<pre dir="ltr">{JSON.stringify(values, 0, 2)}</pre>} */}
-            </form>
-          )
-        }}
-      </Form>
+                {/*   {<pre dir="ltr">{JSON.stringify(values, 0, 2)}</pre>} */}
+              </form>
+            )
+          }}
+
+        </Form>
+        {isEnableCancelBtn && (
+          <ConfirmationDialog
+            acceptBtnName="نعم"
+            cancelBtnName="لا"
+            dialogTitle="هل انت متأكد من إلغاء الطلب؟"
+            open={this.state.open}
+            onCloseFn={() => this.setState((state) => ({ open: false }))}
+            onAcceptFn={() => cancelBtnFn()}></ConfirmationDialog>)}
+      </>
     )
   }
 }
