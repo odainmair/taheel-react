@@ -66,7 +66,7 @@ const CreateFinalLicense = () => {
     if (formType != LICENSE_FORM_TYPES.RENEW && formType != LICENSE_FORM_TYPES.EDIT) {
       const getCentersRs = await getTempLicense(email);
       if (!getCentersRs.isSuccessful) {
-        SetErrMessage(getCentersRs.message);
+        SetErrMessage("لا يمكنك التقديم على الخدمة الترخيص النهائي في حال لا يوجد لديك ترخيص مؤقت");
         setCanShowSection(false);
         setIsLoading(false);
         return;
