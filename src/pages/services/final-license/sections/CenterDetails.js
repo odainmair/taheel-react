@@ -47,7 +47,7 @@ const CenterDetails = ({ editMode, setEditMode, Condition, values, temporaryLice
     }
     console.log(`CRNumber vaildate ${!isNaN(values.CRNumber) && values.CRNumber.length !== 10}`)
     if ( values.CRNumber.length > 10) {
-      setErrMessage('يجب ان الا يزيد رقم السجل تجاري عن 10 خانات');
+      setErrMessage('يجب ان لا يزيد رقم السجل تجاري عن 10 خانات');
       setLoading(false);
       return;
     }
