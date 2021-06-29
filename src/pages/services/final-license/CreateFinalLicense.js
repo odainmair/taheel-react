@@ -219,7 +219,7 @@ const CreateFinalLicense = () => {
                   ExecutivePlan: [center && center.centerInfo_r && center.centerInfo_r.executivePlan && center.centerInfo_r.executivePlan.id],
                   OfficeReport: [center && center.centerInfo_r && center.centerInfo_r.engineeringPlan && center.centerInfo_r.engineeringPlan.id],
                   SecurityReport: center && center.centerInfo_r && [center.centerInfo_r.securityReport && center.centerInfo_r.securityReport.id],
-                  Furniture: editInitValues.center && editInitValues.center.centerInfo_r && editInitValues.center.centerInfo_r.furniturePhoto_r && editInitValues.center.centerInfo_r.furniturePhoto_r.map(d => d.Document.id),
+                  Furniture: center && center.centerInfo_r && center.centerInfo_r.furniturePhoto_r && center.centerInfo_r.furniturePhoto_r.map(d => d.Document.id),
                   // Furniture: [1202],
                   FinancialGuaranteeAtt: [center && center.centerInfo_r && center.centerInfo_r.financialGuarbteeAtt && center.centerInfo_r.financialGuarbteeAtt.id],
                   healthServices: center && center.centerInfo_r && center.isHealthCareServices ? "yes" : "no",
