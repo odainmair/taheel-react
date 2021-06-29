@@ -187,7 +187,6 @@ const CreateFinalLicense = () => {
                   isNextBtnDisabled: false,
                   managersCount: 0,
                   teachersCount: 0,
-                  beneficiariesNum: 0,
                   page: formType === LICENSE_FORM_TYPES.RENEW ? 1 : 0,
                   formType: formType
                 } : {
