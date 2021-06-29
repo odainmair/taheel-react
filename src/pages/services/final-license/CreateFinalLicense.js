@@ -194,7 +194,9 @@ const CreateFinalLicense = () => {
                   isNextBtnDisabled: false,
                   managersCount: 0,
                   teachersCount: 0,
-                  centerType: center && center.type && center.targetedBeneficiary && center.targetedServices && centerTypeJSON.type[parseInt(center.type)].name + ' - ' + centerTypeJSON.targetedBeneficiary[parseInt(center.targetedBeneficiary)].name + ' - ' + centerTypeJSON.targetedServices[parseInt(center.targetedServices)].name, 
+                  centerType: center && center.type && center.targetedBeneficiary && center.targetedServices 
+                  && centerTypeJSON.type[parseInt(center.type)] && centerTypeJSON.targetedBeneficiary[parseInt(center.targetedBeneficiary)] && centerTypeJSON.targetedBeneficiary[parseInt(center.targetedBeneficiary)] && centerTypeJSON.targetedServices[parseInt(center.targetedServices)] 
+                  && centerTypeJSON.type[parseInt(center.type)].name + ' - ' + centerTypeJSON.targetedBeneficiary[parseInt(center.targetedBeneficiary)].name + ' - ' + centerTypeJSON.targetedServices[parseInt(center.targetedServices)].name, 
                   CRNumber: center.crInfo_r.crNumber,
                   temporaryLicenceNum: center.licenceNumber,
                   licenseCreationDate: center && dateFormatter(center.creationDate),
