@@ -37,27 +37,30 @@ const capacityValidation = values => {
   console.log(' values.buildingArea', typeof (values.buildingArea), 'values.basementArea', typeof (values.basementArea))
   if (!values.beneficiariesNum)
     msg.beneficiariesNum = required
+  else if (parseInt(values.beneficiariesNum) <= 0) {
+      msg.beneficiariesNum = 'يجب ان يكون عدد المستفيدين اكبر من صفر'
+    }
   else if (!checkIsNumber(values.beneficiariesNum)) {
     msg.beneficiariesNum = 'يجب ان يكون عدد المستفيدين عدد صحيح'
   }
-  else if (parseInt(values.beneficiariesNum) <= 0)
-    msg.beneficiariesNum = 'يجب ان يكون عدد المستفيدين اكبر من صفر'
 
   if (!values.buildingArea)
     msg.buildingArea = required
+  else if (parseInt(values.buildingArea) <= 0) {
+      msg.buildingArea = 'يجب ان يكون مساحة مسطح البناء اكبر من صفر'
+    }
   else if (!checkIsNumber(values.buildingArea)) {
     msg.buildingArea = 'يجب ان يكون مساحة مسطح البناء عدد صحيح'
   }
-  else if (parseInt(values.buildingArea) <= 0)
-    msg.buildingArea = 'يجب ان يكون مساحة مسطح البناء اكبر من صفر'
 
   if (!values.basementArea)
     msg.basementArea = required
+  else if (parseInt(values.basementArea) < 0) {
+      msg.basementArea = 'يجب ان يكون مساحة القبو اكبر من صفر'
+    }
   else if (!checkIsNumber(values.buildingArea)) {
-    msg.basementArea = 'يجب ان يكون مساحة القبو اكبر عدد صحيح'
+    msg.basementArea = 'يجب ان يكون مساحة القبو عدد صحيح'
   }
-  else if (parseInt(values.basementArea) < 0)
-    msg.basementArea = 'يجب ان يكون مساحة القبو اكبر من صفر'
 
   if (parseInt(values.buildingArea) <= parseInt(values.basementArea))
     msg.basementArea = 'مساحة القبو يجب ان تكون أقل من مساحة مسطح البناء'
@@ -347,6 +350,76 @@ const getStaff = (data) => {
   return staff
 }
 
+// TO BE REMOVED WHEN THE LOOKUP SERVICE IS READY
+const centerTypeJSON = {
+  "type": [
+    {
+      "name": "متسولين",
+      "ID": 1
+    },
+    {
+      "name": "ارشاد أسري",
+      "ID": 2
+    },
+    {
+      "name": "ذوي الإعاقة",
+      "ID": 3
+    },
+    {
+      "name": "أيتام",
+      "ID": 4
+    },
+    {
+      "name": "كبار السن",
+      "ID": 5
+    },
+    {
+      "name": "أحداث",
+      "ID": 6
+    },
+    {
+      "name": "حماية الأسرة",
+      "ID": 7
+    }
+  ],
+  "targetedBeneficiary": [
+    {
+      "name": "البيوت الإجتماعية",
+      "ID": 2
+    },
+    {
+      "name": "التدريب المهني",
+      "ID": 3
+    },
+    {
+      "name": "الرعاية النهارية",
+      "ID": 4
+    },
+    {
+      "name": "الرعاية الإجتماعية المنزلية",
+      "ID": 5
+    }
+  ],
+  "targetedServices": [
+    {
+      "name": "مراكز تأهيل الأشخاص ذوي الأعاقات المحددة",
+      "ID": 2
+    },
+    {
+      "name": " مراكز تأهيل الأشخاص ذوي الأعاقات العقلية والأعاقات الحركية",
+      "ID": 3
+    },
+    {
+      "name": "مراكز تأهيل الأسخاص ذوي الأعاقة العقلية",
+      "ID": 4
+    },
+    {
+      "name": "مراكز تأهيل الأشخاص ذوي الأعاقة متوسط وشديدي الإعاقة ",
+      "ID": 5
+    }
+  ]
+};
+
 export {
   CenterDetailsValidation,
   capacityValidation,
@@ -361,5 +434,6 @@ export {
   ContentField,
   DownloadButtTable,
   getStaff,
-  validateAddStaffForm
+  validateAddStaffForm,
+  centerTypeJSON
 };

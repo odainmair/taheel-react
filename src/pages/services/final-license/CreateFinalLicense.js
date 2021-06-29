@@ -8,7 +8,7 @@ import Requirements from './sections/Requirements'
 import Capacity from './sections/Capacity';
 import HealthServices from './sections/HealthServices';
 import PersonDetials from './sections/staff/PersonDetials';
-import Summary from './sections/Summary'
+import Summary from './sections/RenewalSummary'
 import { updateFinalLicenseAPIFunc } from './services/finalLicenseAPI'
 import { getTempLicense } from './services/finalLicenseAPI'
 import { TaskDetails, CentertDetails } from './services/finalLicenseAPI'
@@ -33,7 +33,8 @@ import { healthServicesValidation } from './services/finalLicenseUtil'
 import { personsValidation } from './services/finalLicenseUtil'
 import { ConditionComp } from './services/finalLicenseUtil'
 import { MedicalPracticeComp } from './services/finalLicenseUtil'
-import { calculationConditionComp } from './services/finalLicenseUtil'
+import { calculationConditionComp, centerTypeJSON } from './services/finalLicenseUtil'
+import { dateFormatter, reverseRange } from 'src/utils/utilFunctions';
 import { LICENSE_FORM_TYPES } from 'src/utils/enums'
 import numeral from 'numeral';
 
@@ -90,6 +91,7 @@ const CreateFinalLicense = () => {
     setEditMode(true)
     SetErrMessage("");
     const response = await TaskDetails(taskID)
+    console.log("getTaskDetails ===============> response:" + JSON.stringify(response) )
     if (!response.isSuccessful)
       SetErrMessage(response.message)
     else {
@@ -185,6 +187,7 @@ const CreateFinalLicense = () => {
                   isNextBtnDisabled: false,
                   managersCount: 0,
                   teachersCount: 0,
+                  beneficiariesNum: 0,
                   page: formType === LICENSE_FORM_TYPES.RENEW ? 1 : 0,
                   formType: formType
                 } : {
@@ -192,8 +195,18 @@ const CreateFinalLicense = () => {
                   isNextBtnDisabled: false,
                   managersCount: 0,
                   teachersCount: 0,
+                  centerType: editInitValues.center && centerTypeJSON.type[parseInt(editInitValues.center.type)].name + ' - ' + centerTypeJSON.targetedBeneficiary[parseInt(editInitValues.center.targetedBeneficiary)].name + ' - ' + centerTypeJSON.targetedServices[parseInt(editInitValues.center.targetedServices)].name, 
                   CRNumber: center.crInfo_r.crNumber,
                   temporaryLicenceNum: center.licenceNumber,
+                  licenseCreationDate: center && dateFormatter(center.creationDate),
+                  licenseExpiryDate: center && dateFormatter(center.expirationDate),
+                  ownerName: center && center.ownerName,
+                  ownerID: center && center.ownerID,
+                  centerAgeGroup: center && reverseRange(center.ageGroup),
+                  centerGenderGroup: center 
+                  && center.targetedGender && 
+                    (center.targetedGender === "m" ? "ذكر" : (center.targetedGender === "f" ? "انثى" :"كلا الجنسين")) ,
+                  CRNumber: center && center.crInfo_r.crNumber,
                   companyName: center.crInfo_r.entityName,
                   activities: center.crInfo_r.crActivityType,
                   municipLicenseNo: center.crInfo_r.MoMRA_Licence,
@@ -206,8 +219,8 @@ const CreateFinalLicense = () => {
                   ExecutivePlan: [center && center.centerInfo_r && center.centerInfo_r.executivePlan && center.centerInfo_r.executivePlan.id],
                   OfficeReport: [center && center.centerInfo_r && center.centerInfo_r.engineeringPlan && center.centerInfo_r.engineeringPlan.id],
                   SecurityReport: center && center.centerInfo_r && [center.centerInfo_r.securityReport && center.centerInfo_r.securityReport.id],
-                  // Furniture: center.centerInfo_r.carryingnumber,
-                  Furniture: [1202],
+                  Furniture: editInitValues.center && editInitValues.center.centerInfo_r && editInitValues.center.centerInfo_r.furniturePhoto_r && editInitValues.center.centerInfo_r.furniturePhoto_r.map(d => d.Document.id),
+                  // Furniture: [1202],
                   FinancialGuaranteeAtt: [center && center.centerInfo_r && center.centerInfo_r.financialGuarbteeAtt && center.centerInfo_r.financialGuarbteeAtt.id],
                   healthServices: center && center.centerInfo_r && center.isHealthCareServices ? "yes" : "no",
                   healthServiceType: center && center.centerInfo_r && center.healthCareServices_r && center.healthCareServices_r.type,

@@ -25,6 +25,7 @@ export default class FinalFromWizard extends React.Component {
 
   next = (values) => {
     console.log("--- next  ----");
+    console.log("--- values  ----" + JSON.stringify(values));
     this.setState((state) => ({
       page: Math.min(state.page + 1, this.props.children.length - 1),
       values

@@ -266,7 +266,8 @@ const Summary = ({ values }) => {
         mb={3}
       >
         {finalLicenseFieldSchema.filter(fintalLicense => fintalLicense.sectionName === "Requirements" && !fintalLicense.dependOn).map(filteredFinalLicense => (
-          <Grid
+          
+          values[filteredFinalLicense.name] > 0 && values[filteredFinalLicense.name][0] ? (<Grid
             item
             key={filteredFinalLicense.id}
             lg={6}
@@ -275,6 +276,7 @@ const Summary = ({ values }) => {
           >
             < DownloadButtTable docIDs={values[filteredFinalLicense.name]} name={filteredFinalLicense.name} label={filteredFinalLicense.label.ar} />
           </Grid>
+        ) : ''
         ))}
       </Grid>
 
@@ -295,29 +297,53 @@ const Summary = ({ values }) => {
         mb={3}
       >
         {finalLicenseFieldSchema.filter(fintalLicense => fintalLicense.sectionName === "HealthServices" && !fintalLicense.dependOn).map(filteredFinalLicense => (
+          values.healthServices === 'yes' ? (
+          <>
+            <Grid
+              item
+              key={filteredFinalLicense.id}
+              lg={6}
+              md={6}
+              xs={12}
+            >
+              <Field
+                label={filteredFinalLicense.label.ar}
+                name={filteredFinalLicense.name}
+                component={contentField}
+                inputType={filteredFinalLicense.type}
+              />
+            </Grid>
+          </>
+          )
+          : filteredFinalLicense.name === 'healthServices' && (
+          <>
+            <Grid
+              item
+              key={filteredFinalLicense.id}
+              lg={6}
+              md={6}
+              xs={12}
+            >
+              <Field
+                label={filteredFinalLicense.label.ar}
+                name={filteredFinalLicense.name}
+                component={contentField}
+                inputType={filteredFinalLicense.type}
+              />
+            </Grid>
+          </>
+          )
+        ))}
+        {values.healthServices === 'yes' && (
           <Grid
             item
-            key={filteredFinalLicense.id}
             lg={6}
             md={6}
             xs={12}
-          >
-            <Field
-              label={filteredFinalLicense.label.ar}
-              name={filteredFinalLicense.name}
-              component={contentField}
-              inputType={filteredFinalLicense.type}
-            />
+            >
+            < DownloadButtTable docIDs={values.healthServiceAttachment} name='healthServiceAttachment' label='مرفقات الخدمات الصحية' />
           </Grid>
-        ))}
-        <Grid
-          item
-          lg={6}
-          md={6}
-          xs={12}
-        >
-          < DownloadButtTable docIDs={values.healthServiceAttachment} name='healthServiceAttachment' label='مرفقات الخدمات الصحية' />
-        </Grid>
+        )}
 
       </Grid>
       <Divider />

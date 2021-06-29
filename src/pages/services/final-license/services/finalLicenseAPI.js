@@ -79,6 +79,7 @@ const updateFinalLicenseAPIFunc = async (values, actionType, TaskID) => {
 			"crInfo_r": {
 				"ID": values.crInfo_r,
 				// "ID": values.centerInfo_r,
+				"idNumIqamaNum": values.idNumber,
 				"crNumber": values.CRNumber,
 				"crActivityType": values.activities,
 				"commissionerMobNum": "",
@@ -122,14 +123,16 @@ const updateFinalLicenseAPIFunc = async (values, actionType, TaskID) => {
 		url = "taheel-apis-services-continueFinalLicense-v2";
 	}
 
+	console.log('#==> requestBody ' + JSON.stringify(requestBody))
+	// return '';
 	const response = await APIRequest({ requestBody, url });
 	return response;
 }
 
-const getCenters = async (userEmail) => {
+const getCentersForFinal = async (userEmail) => {
 	const url = 'taheel-apis-records-getCenters-v2';
 	// const queryParams = { userEmail, isExpired: false, licenseType: 'رخصة مؤقتة' };
-	const queryParams = { userEmail, forRenewal: true, isEligibleForFinal:true };
+	const queryParams = { userEmail, forRenewal: true, isEligibleForFinal:true, licenseType: 'رخصة نهائية' };
 	// const queryParams = { userEmail, forRenewal: true};
 	const response = await APIRequest({ url, queryParams });
 	// console.log("response===============> " + JSON.parse(response));
@@ -215,4 +218,4 @@ const downloadDocument = async (DocID, attachment) => {
 }
 
 
-export { getCenters, validateCompanyFunc, updateFinalLicenseAPIFunc, calculation, validateCitizenFunc, uploadDocumentApi, getTempLicense, getMunicipalLicenseNoApi, downloadDocument, TaskDetails, CentertDetails };
+export { getCentersForFinal, validateCompanyFunc, updateFinalLicenseAPIFunc, calculation, validateCitizenFunc, uploadDocumentApi, getTempLicense, getMunicipalLicenseNoApi, downloadDocument, TaskDetails, CentertDetails };

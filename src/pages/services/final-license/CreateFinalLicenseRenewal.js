@@ -3,9 +3,9 @@ import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { getCurrentUser } from 'src/utils/UserLocalStorage';
 import { useState, useEffect } from 'react';
-import Summary from './sections/Summary'
-import { getCenters, CentertDetails, getMunicipalLicenseNoApi, updateFinalLicenseAPIFunc, validateCompanyFunc } from './services/finalLicenseAPI'
-import { getStaff, CenterDetailsValidation } from './services/finalLicenseUtil';
+import RenewalSummary from './sections/RenewalSummary'
+import { getCentersForFinal, CentertDetails, getMunicipalLicenseNoApi, updateFinalLicenseAPIFunc, validateCompanyFunc } from './services/finalLicenseAPI'
+import { getStaff, CenterDetailsValidation, centerTypeJSON } from './services/finalLicenseUtil';
 import {
   Card,
   CardContent,
@@ -22,7 +22,7 @@ import AlertDialog from 'src/components/AlertDialog';
 import { Field } from 'react-final-form';
 import { TextField as TextFieldFinal, Select } from 'final-form-material-ui';
 import { OnChange } from 'react-final-form-listeners';
-import dateFormatter from 'src/utils/dateFormatter';
+import { dateFormatter, reverseRange } from 'src/utils/utilFunctions';
 import { LICENSE_FORM_TYPES } from 'src/utils/enums'
 
 const CreateFinalLicenseRenewal = () => {
@@ -45,7 +45,7 @@ const CreateFinalLicenseRenewal = () => {
     console.log(" ==> CreateFinalLicenseRenewal ")
     const { email } = await getCurrentUser();
     console.log("------------------------------- email " + email)
-    const getCentersRs = await getCenters(email);
+    const getCentersRs = await getCentersForFinal(email);
 
     SetErrMessage("");
     if (!getCentersRs.isSuccessful) {
@@ -67,6 +67,12 @@ const CreateFinalLicenseRenewal = () => {
     
     if(response.responseBody && response.responseBody.data && response.responseBody.data.center) {
       // const crNum = "654";
+      // const fNum = response.responseBody.data.center && response.responseBody.data.center.centerInfo_r && response.responseBody.data.center.centerInfo_r.furniturePhoto_r.map(d => d.Document.id);
+      // console.log('===> fNum: ' + JSON.stringify(fNum))
+      // const attach = response.responseBody.data.center && response.responseBody.data.center.healthCareServices_r && response.responseBody.data.center.healthCareServices_r.attachment;
+      // console.log('===> attach: ' + JSON.stringify(attach))
+      const attach = response.responseBody.data.center && response.responseBody.data.center.centerInfo_r && response.responseBody.data.center.centerInfo_r.operationPlan && response.responseBody.data.center.centerInfo_r.operationPlan.id;
+      console.log('===> attach: ' + JSON.stringify(attach))
       const crNum = response.responseBody.data.center.crInfo_r.crNumber;
 
       if(crNum != ''){
@@ -91,7 +97,7 @@ const CreateFinalLicenseRenewal = () => {
       }
       else {
         console.log(' ===> ERROR Wrong Data - No CrNumber, => response' + JSON.stringify(response))
-        SetErrMessage("Wrong Data - No CrNumber");
+        SetErrMessage("لا يوجد رقم تسجيل");
         setEditInitValues(response.responseBody.data);
         setIsLoading(false);
         setShowSummary(false);
@@ -137,10 +143,6 @@ const CreateFinalLicenseRenewal = () => {
     navigate('/app/dashboard', { replace: true });
   };
 
-  const reverseRange = (s) => {
-    const range = s.trim().split('-')
-    return `${range[0]} - ${range[1]}`;
-  }
   return (
     <Container maxWidth="md">
       <Card>
@@ -173,6 +175,7 @@ const CreateFinalLicenseRenewal = () => {
                   agree: [],
                   managersCount: 0,
                   teachersCount: 0,
+                  centerType: editInitValues.center && centerTypeJSON.type[parseInt(editInitValues.center.type)].name + ' - ' + centerTypeJSON.targetedBeneficiary[parseInt(editInitValues.center.targetedBeneficiary)].name + ' - ' + centerTypeJSON.targetedServices[parseInt(editInitValues.center.targetedServices)].name, 
                   companyName: editInitValues.center && editInitValues.center.name,
                   temporaryLicenceNum: editInitValues.center && editInitValues.center.licenceNumber,
                   licenseCreationDate: editInitValues.center && dateFormatter(editInitValues.center.creationDate),
@@ -195,12 +198,12 @@ const CreateFinalLicenseRenewal = () => {
                   ExecutivePlan: [editInitValues.center && editInitValues.center.centerInfo_r.executivePlan && editInitValues.center.centerInfo_r.executivePlan.id],
                   OfficeReport: [editInitValues.center && editInitValues.center.centerInfo_r.engineeringPlan && editInitValues.center.centerInfo_r.engineeringPlan.id],
                   SecurityReport: [editInitValues.center && editInitValues.center.centerInfo_r.securityReport && editInitValues.center.centerInfo_r.securityReport.id],
-                  // Furniture: [editInitValues.center && editInitValues.center.centerInfo_r && editInitValues.center.centerInfo_r.carryingnumber],
-                  Furniture: [1202],
+                  Furniture: editInitValues.center && editInitValues.center.centerInfo_r && editInitValues.center.centerInfo_r.furniturePhoto_r && editInitValues.center.centerInfo_r.furniturePhoto_r.map(d => d.Document.id),
+                  // Furniture: [1202],
                   FinancialGuaranteeAtt: [editInitValues.center && editInitValues.center.centerInfo_r.financialGuarbteeAtt && editInitValues.center.centerInfo_r.financialGuarbteeAtt.id],
                   healthServices: editInitValues.center && editInitValues.center.isHealthCareServices ? "yes" : "no",
                   healthServiceType: editInitValues.center && editInitValues.center.healthCareServices_r && editInitValues.center.healthCareServices_r.type && editInitValues.center.healthCareServices_r.type,
-                  healthServiceAttachment: [editInitValues.center.centerInfo_r && editInitValues.center.centerInfo_r.financialGuarbteeAtt && editInitValues.center.centerInfo_r.financialGuarbteeAtt.id],
+                  healthServiceAttachment: [editInitValues.center && editInitValues.center.centerInfo_r && editInitValues.center.healthCareServices_r && editInitValues.center.healthCareServices_r.attachment && editInitValues.center.healthCareServices_r.attachment.id],
                   // healthServiceAttachment: [1202],
                   // customers: editInitValues && editInitValues.staff,
                   customers: editInitValues && getStaff(editInitValues.staff),
@@ -260,7 +263,7 @@ const FinalFormRenewalSummary = ({ setField, renewableLicenses, values, setCente
           disabled={!Array.isArray(renewableLicenses) || !renewableLicenses.length}
         >
           <MenuItem value="1" key="1" selected={true}>اختيار</MenuItem>
-          <MenuItem value="0101020060" key="0101020060" >0101020060</MenuItem>
+          {/* <MenuItem value="0101020060" key="0101020060" >0101020060</MenuItem> */}
           {renewableLicenses.map(item => (
             <MenuItem key={item.licenceNumber} value={item.licenceNumber}>{item.licenceNumber}</MenuItem>
           ))}
@@ -285,7 +288,7 @@ const FinalFormRenewalSummary = ({ setField, renewableLicenses, values, setCente
         >
       </Grid>
     </Grid>
-    { showSummary && <Summary
+    { showSummary && <RenewalSummary
       values={values}
       renewableLicenses={renewableLicenses}
       setField={(fieldName, fieldValue) => setField(fieldName, fieldValue)}
