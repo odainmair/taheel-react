@@ -18,7 +18,7 @@ const PersonForm = ({ fromEdit, isSaudi, MedicalPracticeCondition, fieldName, se
     console.log(`-- PersonForm rowIndex ${rowIndex}`);
     if (!fromEdit) {
       setField('fullName', `${citizenInfo.name.firstName} ${citizenInfo.name.fourthName}`);
-      setField('gender', citizenInfo.gender === 'f' ? 'انثى' : "ذكر")
+      setField('gender', citizenInfo.gender === 'FEMALE' ? 'انثى' : "ذكر")
       setField('birthDate', citizenInfo.birthDate);
       setField('nationality', isSaudi || fromEdit ? 'سعودي' : 'غير سعودي');
 
