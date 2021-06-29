@@ -353,12 +353,22 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
               if (fieldName === null) {
                 push("customers", { fullName: fullName, idNumber: idNumber, iqamaNo: iqamaNo, staffTypes: staffTypes, gender: gender, birthDate: birthDate, nationality: nationality, day: day, month: month, year: year, sponsorName: sponsorName, cv: cv, cvAtt: cvAtt, EducationalQualification: EducationalQualification, MedicalPractice: MedicalPractice, EducationalQualificationAtt: EducationalQualificationAtt, MedicalPracticeAtt: MedicalPracticeAtt });
               }
+              else {
+                if (fieldName) {
+                  setField(`${fieldName}.staffTypes`, staffTypes);
+                  setField(`${fieldName}.EducationalQualification`, EducationalQualification);
+                  setField(`${fieldName}.cv`, cv);
+                  setField(`${fieldName}.MedicalPractice`, MedicalPractice);
+                }
+              }
+              console.log(`-- rowIndex :: ${rowIndex}`)
 
               setOpenPopup(false);
 
             }}
           >
-            اضافة
+            {fromEdit ? "تحديث" : "اضافة"}
+
           </Button>
         </Grid>
 

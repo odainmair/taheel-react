@@ -36,17 +36,17 @@ const Capacity = ({ editMode, Condition, values, setField, setIsEnableNextBtn })
 		setLoading(true);
 		SetErrMessage('');
 		if (!values.beneficiariesNum || !checkIsNumber(values.beneficiariesNum) || values.beneficiariesNum <= 0) {
-			SetErrMessage('يرجى ادخال عدد المستفيدين الفعلي صحيح');
+			SetErrMessage('يرجى ادخال عدد المستفيدين الفعلي عدد صحيح');
 			setLoading(false);
 			return;
 		}
 		if (!values.buildingArea || !checkIsNumber(values.buildingArea) || values.buildingArea <= 0) {
-			SetErrMessage('يرجى ادخال مساحة مسطح البناء صحيح');
+			SetErrMessage('يرجى ادخال مساحة مسطح البناء عدد صحيح');
 			setLoading(false);
 			return;
 		}
 		if (!values.basementArea || !checkIsNumber(values.basementArea) || values.basementArea < 0) {
-			SetErrMessage('يرجى ادخال مساحة القبو صحيح');
+			SetErrMessage('يرجى ادخال مساحة القبو عدد صحيح');
 			setLoading(false);
 			return;
 		}
@@ -70,7 +70,7 @@ const Capacity = ({ editMode, Condition, values, setField, setIsEnableNextBtn })
 		else {
 			//	setField('capacity', response.responseBody.body.carryingCapacity.toFixed(2).toLocaleString('en-US', {maximumFractionDigits:2}));
 			//setField('financialGuarantee', `${response.responseBody.body.financialGuarantee.toFixed(2).toLocaleString('en-US', {maximumFractionDigits:2})} ر.س.`);
-			setField('capacity', numeral(response.responseBody.body.carryingCapacity).format('0,0'));
+			setField('capacity', numeral(response.responseBody.body.carryingCapacity).format('00'));
 			setField('financialGuarantee', `${numeral(response.responseBody.body.financialGuarantee).format('0,0.00')} ر.س.`);
 
 			setCalculatedData(true);

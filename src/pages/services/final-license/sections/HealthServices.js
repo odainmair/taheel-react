@@ -92,6 +92,12 @@ const HealthServices = ({ Condition, values, setField }) => {
               <MenuItem value={1}> رخصة وزارة الصحة </MenuItem>
               <MenuItem value={2}> عقد شراكة مع منشأة رعاية صحية </MenuItem>
             </Field>
+            <OnChange name="healthServiceType">
+            {(value, previous) => {
+              console.log("-- healthServiceType:: OnChange")
+                setField("healthServiceAttachment","");
+            }}
+          </OnChange>
           </Grid>
           <Grid
             item
