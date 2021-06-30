@@ -28,7 +28,7 @@ const FileUploaderComp = ({ input: { value, name }, label, meta,  setField, valu
     docId = (values) ? values[name] : "";
 
     if (docId)
-      setUploadedFileName("تم رفع هذا الملف في نجاح");
+      setUploadedFileName("تم رفع الملف بنجاح");
 
   }, [])
 
@@ -55,7 +55,7 @@ const FileUploaderComp = ({ input: { value, name }, label, meta,  setField, valu
       if (!response.isSuccessful)
         SetErrMessage(response.message)
       else {
-        setUploadedFileName("تم رفع هذا الملف في نجاح");
+        setUploadedFileName("تم رفع الملف بنجاح");
         setDocument(name, response.responseBody.docID, multipleFile)
       }
     }
