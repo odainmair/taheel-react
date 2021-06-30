@@ -8,7 +8,7 @@ import Requirements from './sections/Requirements'
 import Capacity from './sections/Capacity';
 import HealthServices from './sections/HealthServices';
 import PersonDetials from './sections/staff/PersonDetials';
-import Summary from './sections/RenewalSummary'
+import Summary from './sections/Summary'
 import { updateFinalLicenseAPIFunc } from './services/finalLicenseAPI'
 import { getTempLicense } from './services/finalLicenseAPI'
 import { TaskDetails, CentertDetails } from './services/finalLicenseAPI'
