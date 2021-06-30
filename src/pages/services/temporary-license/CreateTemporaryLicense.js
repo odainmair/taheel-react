@@ -109,11 +109,12 @@ const CreateTemporaryLicense = () => {
             >
               <QuestionnaireSection Condition={ConditionComp} />
             </FinalFromWizard.Page>
-            <FinalFromWizard.Page
+            <TempSummary
               label="ملخص"
+              Condition={ConditionComp} 
+              dialog={handleClickOpen}
             >
-              <Summary Condition={ConditionComp} dialog={handleClickOpen} />
-            </FinalFromWizard.Page>
+            </TempSummary>
           </FinalFromWizard>
         </CardContent>
       </Card>
@@ -127,4 +128,16 @@ const FinalFromWizardAddressPage = ({ label, validate, setField }) => (
   </Box>
 
 );
+
+const TempSummary = ({ setField, temporaryLicenses, values, label, Condition, dialog }) => (
+    <Summary
+      values={values}
+      temporaryLicenses={temporaryLicenses}
+      setField={(fieldName, fieldValue) => setField(fieldName, fieldValue)}
+      label={label}
+      Condition={Condition}
+      dialog={dialog}
+      />
+);
+
 export default CreateTemporaryLicense;
