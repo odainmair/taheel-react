@@ -70,12 +70,13 @@ const getFieldValue = ({ name, value }) => {
   return '';
 }
 
-const Summary = ({ values }) => {
+const Summary = ({ values, setField }) => {
   console.log("=========================>values: " + JSON.stringify(values))
   // console.log("=========================>values: " + values.healthServiceAttachment)
   // console.log("=========================>values: " + values.OperationalPlan)
 
   const [open, setOpen] = React.useState(false);
+  const [isAgree, setIsAgree] = React.useState(false);
   const [SponsorName, setSponsorName] = React.useState(false)
   const handleClickOpen = (dialogContent, dialogTitle) => {
     setOpen(true);
@@ -423,7 +424,12 @@ const Summary = ({ values }) => {
                     name="agree"
                     component={Checkbox}
                     type="checkbox"
-                    value="true"
+                    value={!!values.agree[0]}
+                    checked={isAgree}
+                    onClick={() => {
+                      setField("agree", values.agree ? [] : [true]); 
+                      setIsAgree(!isAgree) 
+                    }}
                   />
                 }
               />
@@ -431,7 +437,12 @@ const Summary = ({ values }) => {
           )}
         </Field>
       </Grid>
-      <TermsDialog dialogContent={TermsContent()} dialogTitle={"التعهد"} open={open} onClose={handleClose} acceptBtnName="اوافق" />
+      <TermsDialog setAgreeValue={
+        ()=>{
+            setIsAgree(true);
+            setField("agree", [true])
+          }
+        } dialogContent={TermsContent()} dialogTitle={"التعهد"} open={open} onClose={handleClose} acceptBtnName="اوافق" />
     </>
   )
 }
@@ -445,6 +456,7 @@ Summary.propTypes = {
   index: PropTypes.func.isRequired,
   name: PropTypes.func.isRequired,
   fields: PropTypes.func.isRequired,
+  setField: PropTypes.func.isRequired,
   setSponsorName: PropTypes.func.isRequired,
 
 };

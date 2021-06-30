@@ -70,9 +70,10 @@ const getFieldValue = ({ name, value }) => {
   return '';
 }
 
-const Summary = ({ values }) => {
+const Summary = ({ values, setField }) => {
 
   const [open, setOpen] = React.useState(false);
+  const [isAgree, setIsAgree] = React.useState(false);
   const [SponsorName, setSponsorName] = React.useState(false)
   const handleClickOpen = (dialogContent, dialogTitle) => {
     setOpen(true);
@@ -391,7 +392,12 @@ const Summary = ({ values }) => {
           )}
         </Field>
       </Grid>
-      <TermsDialog dialogContent={TermsContent()} dialogTitle={"التعهد"} open={open} onClose={handleClose} acceptBtnName="اوافق" />
+      <TermsDialog setAgreeValue={
+        ()=>{
+            setIsAgree(true);
+            setField("agree", [true])
+          }
+        } dialogContent={TermsContent()} dialogTitle={"التعهد"} open={open} onClose={handleClose} acceptBtnName="اوافق" />
     </>
   )
 }
@@ -405,6 +411,7 @@ Summary.propTypes = {
   index: PropTypes.number,
   name: PropTypes.string,
   fields: PropTypes.object,
+  setField: PropTypes.func.isRequired,
   setSponsorName: PropTypes.func,
 
 };
