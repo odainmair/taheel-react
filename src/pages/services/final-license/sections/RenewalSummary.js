@@ -28,6 +28,7 @@ import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 import Collapse from '@material-ui/core/Collapse';
 import { makeStyles } from '@material-ui/core/styles';
+import moment from 'moment-hijri';
 
 const contentField = ({ input: { value, name }, label, inputType }) => (
   <>
@@ -100,10 +101,10 @@ const Summary = ({ values }) => {
           </TableCell>
 
           <TableCell component="th" scope="row">
-            {name.idNumIqamaNum}
+            {name.idNumber ? name.idNumber : name.iqamaNo}
           </TableCell>
           <TableCell component="th" scope="row">
-            {name.birthDate}
+            {moment(`${name.birthDate}`, 'iYYYYiMMiDD').format('iDD/iMM/iYYYY')}
           </TableCell>
 
           <TableCell component="th" scope="row">
