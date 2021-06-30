@@ -294,7 +294,6 @@ const FinalFormRenewalSummary = ({ setField, renewableLicenses, values, setCente
     </Grid>
     { showSummary && <RenewalSummary
       values={values}
-      renewableLicenses={renewableLicenses}
       setField={(fieldName, fieldValue) => setField(fieldName, fieldValue)}
     />
     }

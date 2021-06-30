@@ -9,6 +9,7 @@ import Capacity from './sections/Capacity';
 import HealthServices from './sections/HealthServices';
 import PersonDetials from './sections/staff/PersonDetials';
 import Summary from './sections/Summary'
+import RenewalSummary from './sections/RenewalSummary'
 import { updateFinalLicenseAPIFunc } from './services/finalLicenseAPI'
 import { getTempLicense } from './services/finalLicenseAPI'
 import { TaskDetails, CentertDetails } from './services/finalLicenseAPI'
@@ -353,11 +354,18 @@ const FinalFromWizardPersonsPage = ({ editMode, label, validate, setField, pop, 
 
 const FinalFromWizardSummary = ({ setField, temporaryLicenses, values }) => (
   <>
+  { values.formType && values.formType != LICENSE_FORM_TYPES.RENEW ?
     <Summary
       values={values}
       temporaryLicenses={temporaryLicenses}
       setField={(fieldName, fieldValue) => setField(fieldName, fieldValue)}
-    />
+      />
+      :
+    <RenewalSummary
+      values={values}
+      setField={(fieldName, fieldValue) => setField(fieldName, fieldValue)}
+      />
+  }
   </>
 );
 
