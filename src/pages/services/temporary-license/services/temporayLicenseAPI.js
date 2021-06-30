@@ -58,7 +58,12 @@ const validateCitizenFunc = async (idNumber, birthDate) => {
 }
 const validateAPIFunc = async values => {
     const { requestType, licenceNumber, idNumber, birthDate } = values;
+    console.log(`idNumber[0] ${idNumber[0]}`);
     const response = { isSuccessful: true, message: '' };
+
+    if(idNumber[0] === "1" && requestType === "2"){
+        return { isSuccessful: false, message: 'لا يسمح بتقديم الطلب كصفة طبيعية لغير السعوديين' }
+    }
     if (requestType === "1") {
         const validateCompRs = await validateCompanyFunc(licenceNumber);
         if (!validateCompRs.isSuccessful) {
