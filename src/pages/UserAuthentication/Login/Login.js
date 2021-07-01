@@ -23,7 +23,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import LoginRequest from './data/LoginApi';
-import { requestOTPPhoneNum } from 'src/pages/Registration/services/RegistrationAPI';
+import { requestOTPPhoneNum } from 'src/pages/UserAuthentication/Registration/services/RegistrationAPI';
 
 const useStyles = makeStyles((theme) => ({
   root: {
