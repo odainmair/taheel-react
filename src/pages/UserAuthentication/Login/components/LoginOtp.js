@@ -84,7 +84,7 @@ const LoginOtp = () => {
               otp: Yup.string().required('يجب تعبئة الحقل'),
             })}
             onSubmit={async (values) => {
-              if (values.otp == otp || values.otp == '000000') {
+              if (values.otp == otp ) {
                 setCurrentUser(users)
                 navigate('/app/dashboard', { replace: true },{ state: { selectedAvatar }});
               }
