@@ -171,6 +171,14 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
                 className="custom-field"
               />
             </Grid>
+            <Grid
+              item
+              mt={4}
+              md={12}
+              xs={12}
+            >
+              <Typography> تاريخ الميلاد</Typography>
+            </Grid>
 
             < Calendar FeiledWidth={2} fieldName={fieldName} disabled={loading || SAForm || forignForm} />
 
