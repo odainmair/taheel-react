@@ -62,19 +62,4 @@ const validateCitizenFun = async (idNumber, birthDate) => {
   return response;
 };
 
-// const registrationFun = async (email, nationality,idNumber,phoneNumber,birthDate, password) => {
-//   const url = '/taheel-apis-users-registration-v2';
-//   const requestBody = {
-//     email: values.email,
-//     nationality: values.nationality,
-//     idNumIqamaNum: idNumber,
-//     phoneNumber: values.phoneNumber,
-//     DOB: moment(birthDate, 'iYYYYiMMiDD').format('iDD/iMM/iYYYY'),
-//     userType: 'center owner',
-//     userPassword: values.password,
-//   };
-//   const response = await APIRequest({ requestBody, url });
-//     return response;
-// };
-
 export { requestOTPPhoneNum, AuthOTPPhoneNum,absherSms,verifyEmailAndIqamaNum, AbsherOTPAuth,validateCitizenFun };

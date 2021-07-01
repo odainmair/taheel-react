@@ -15,7 +15,7 @@ import {
   Alert,
   Button
 } from '@material-ui/core';
-import FinalFromWizard from '../../../components/wizard/FinalFormWizard';
+// import FinalFromWizard from '../../components/wizard/FinalFormWizard';
 import CitizenInfo from './sections/CitizenInfo';
 import AbsherOtp from './sections/AbsherOtp';
 import TaheelOtp from './sections/TaheelOtp';
@@ -24,13 +24,15 @@ import { APIRequest } from 'src/api/APIRequest';
 import AlertDialog from 'src/components/AlertDialog';
 import localContext from 'src/localContext'
 import moment from 'moment-hijri';
-import DashboardNavbar from '../../../components/DashboardNavbar';
-import MainNavbar from '../../../components/MainNavbar';
+// import MainNavbar from '../../components/MainNavbar';
 import { CitizenValidate } from './utils'
 import { absherValidate } from './utils'
 import { regitrationValidate } from './utils'
 import { TaheelOtpValidate } from './utils'
 import { AbsherOTPAuth, absherSms, validateCitizenFun, verifyEmailAndIqamaNum, AuthOTPPhoneNum, requestOTPPhoneNum } from './services/RegistrationAPI';
+import DashboardNavbar from 'src/components/DashboardNavbar';
+import MainNavbar from 'src/components/MainNavbar';
+import FinalFromWizard from 'src/components/wizard/FinalFormWizard';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -99,6 +101,8 @@ const Register = () => {
     }
 
     const birthDate = year + '' + numberToDay(month) + numberToDay(day);
+    console.log("birthDate++++++++++++++",birthDate)
+    console.log
     const response = { isSuccessful: true, message: '' };
     const validateCitRs = await validateCitizenFun(idNumber, birthDate);
     if (!validateCitRs.isSuccessful) {
@@ -157,7 +161,7 @@ const Register = () => {
         nationality: values.nationality,
         idNumIqamaNum: idNumber,
         phoneNumber: values.phoneNumber,
-        DOB: moment(birthDate, 'iYYYYiMMiDD').format('iDD/iMM/iYYYY'),
+        DOB: birthDate,
         userType: userType,
         userPassword: values.password,
       };
