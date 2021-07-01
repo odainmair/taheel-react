@@ -48,7 +48,7 @@ const RegistrationInfo = () => {
       />
 
       <Field
-        sx={{ mb: 3 }}
+        // sx={{ mb: 3 }}
         fullWidth
         required
         label="تأكيد كلمة المرور"
@@ -63,6 +63,8 @@ const RegistrationInfo = () => {
         sx={{
           color: 'gray',
           py: 2,
+          padding: 2,
+
         }}
       >
         <ul>

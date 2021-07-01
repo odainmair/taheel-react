@@ -22,6 +22,8 @@ import {
   TextField,
   Typography,
 } from '@material-ui/core';
+import LoginRequest from './data/LoginApi';
+import { requestOTPPhoneNum } from 'src/pages/Registration/services/RegistrationAPI';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -53,14 +55,18 @@ const Login = (props) => {
   const [isMobileNavOpen, setMobileNavOpen] = useState(false);
   const navigate = useNavigate();
   const { users, setUser } = useContext(localContext);
-  const [error, setError] = useState('')
+  const [error, setError] = useState('');
+  const [selectedAvatar, setSelectedAvatar] = useState('beneficiary');
+  const [userType, setUserType] = useState("4");
 
   const classes = useStyles();
-  // const [avtarColor, setColor] = useState({
-  //   rightAvatar: '#c8d9d9',
-  //   leftAvatar: '#c8d9d9',
-  // });
-
+  const [avtarColor, setColor] = useState({
+    // rightAvatar: '#c8d9d9',
+    // leftAvatar: '#c8d9d9',
+    beneficiaryAvatar: '#214256',
+    centerAvatar: '#c8d9d9',
+    employeeAvatar: '#c8d9d9',
+  });
   return (
     <>
       <Helmet>
@@ -74,9 +80,9 @@ const Login = (props) => {
       <Box
         sx={{
           backgroundColor: '#fafafa',
-          width:'100%', 
-           height:"100%",
-           backgroundSize:"cover" 
+          width: '100%',
+          height: "100%",
+          backgroundSize: "cover"
         }}
       >
         <Container maxWidth="sm">
@@ -91,25 +97,22 @@ const Login = (props) => {
               password: Yup.string().required('يجب تعبئة الحقل')
             })}
             onSubmit={async (values) => {
-              const requestBody = {
-                username: values.email,
-                password: values.password
-              };
-              const url = '/taheel-apis-users-login-v2'
-              const response = await APIRequest({ requestBody, url });
-              if (response.isSuccessful) {
-                const otp = Math.floor(Math.random() * (1000000 - 100000) + 100000);
-
+              const { email, password } = values;
+              const LoginReq = await LoginRequest(email, password, userType);
+              if (LoginReq.isSuccessful) {
+                
+               console.log('phoneNumber+++++++ ', JSON.stringify(LoginReq.responseBody.data.phoneNumber));
+                const sendSmsRs = await requestOTPPhoneNum(LoginReq.responseBody.data.idNumIqamaNum, LoginReq.responseBody.data.phoneNumber);
+                console.log('OTP OTP +++++++ ', JSON.stringify(sendSmsRs.responseBody.data.OTP));
+                const otp = sendSmsRs.responseBody.data.OTP;
                 const requestBody = {
-                  recipient: response.responseBody.data.phoneNumber,
-                  message: `Hello ${response.responseBody.data.firstName}, use this OTP to validate your login: ${otp}.`
+                  recipient: LoginReq.responseBody.data.phoneNumber,
+                  message: `Hello ${LoginReq.responseBody.data.firstName}, use this OTP to validate your login: ${otp}.`
                 };
-                setUser(response.responseBody.data)
-                navigate('/otplogin', { state: { otp, requestBody } });
+                setUser(LoginReq.responseBody.data)
+                navigate('/otplogin', { state: { otp, requestBody, avtarColor , selectedAvatar } });
               } else {
-
                 setError('كلمة المرور او رقم الإقامه او رقم الهوية او البريد الالكتروني غير صحيح')
-
               }
             }}
           >
@@ -148,56 +151,90 @@ const Login = (props) => {
                         className={classes.root}
                         sx={{ mb: 5, mr: 1.5 }}
                       >
-                        <Grid container spacing={3} sx={{margin: "0 auto", width:"auto"}}>
-                        <Grid item xs={4}>
+                        <Grid container spacing={3} sx={{ margin: "0 auto", width: "auto" }}>
+                          <Grid item xs={4}>
 
-                        <Avatar
-                          className={classes.large + ' ' + classes.avatarHover}
-                          // onClick={() => setColor({ ...avtarColor, rightAvatar: '#214256', leftAvatar: '#c8d9d9' })}
-                          sx={{
-                            height: '85px', width: '85px', backgroundColor: '#c8d9d9', cursor: "pointer"
-                          }}
-                        >
-                          أفراد
-                        </Avatar>
+                            <Avatar
+                              className={classes.large + ' ' + classes.avatarHover}
+                              onClick={() => {
+                                setUserType("4");
+                                setSelectedAvatar('beneficiary'),
+                                  setColor({ ...avtarColor, beneficiaryAvatar: '#214256', centerAvatar: '#c8d9d9', employeeAvatar: '#c8d9d9' })
+                              }
+                              }
+                              sx={{
+                                height: '85px', width: '85px', backgroundColor: avtarColor.beneficiaryAvatar, cursor: "pointer"
+                              }}
+                            >
+                              أفراد
+                            </Avatar>
 
 
-                        </Grid>  
-                        <Grid item xs={4}>
-                        <Avatar
-                          className={classes.large + ' ' + classes.avatarHover}
-                          // onClick={() => setColor({ ...avtarColor, leftAvatar: '#214256', rightAvatar: '#c8d9d9' })}
-                          sx={{
-                            height: '85px', width: '85px', backgroundColor: '#214256', cursor: "pointer"
-                          }}
-                        >
-                            مركز
-                        </Avatar>
-                        </Grid>  
-                        <Grid item xs={4}>
-                        <a href="https://inspiredemo2.appiancloud.com/suite/sites/takamol-taheel/page/request-Records" target="_blank">
-                          <Avatar
-                            className={classes.large + ' ' + classes.avatarHover}
-                            // onClick={() => setColor({ ...avtarColor, leftAvatar: '#214256', rightAvatar: '#c8d9d9' })}
-                            sx={{
-                              height: '85px', width: '85px', backgroundColor: '#c8d9d9', cursor: "pointer"
-                            }}
-                          >
-                            موظف
-                        </Avatar>
-                        </a>
-                        </Grid>  
-                        </Grid>  
-                        
-                        
+                          </Grid>
+                          <Grid item xs={4}>
+                            <Avatar
+                              className={classes.large + ' ' + classes.avatarHover}
+                              onClick={() => {
+                                setUserType("2");
+                                setSelectedAvatar('center'),
+                                  setColor({ ...avtarColor, beneficiaryAvatar: '#c8d9d9', centerAvatar: '#214256', employeeAvatar: '#c8d9d9' })
+                              }}
+
+                              sx={{
+                                height: '85px', width: '85px', backgroundColor: avtarColor.centerAvatar, cursor: "pointer"
+                              }}
+                            >
+                              مركز
+                            </Avatar>
+                          </Grid>
+                          <Grid item xs={4}>
+                            <Avatar
+                              className={classes.large + ' ' + classes.avatarHover}
+                              onClick={() => {
+                                setUserType("1");
+                                setSelectedAvatar('employee'),
+                                  setColor({ ...avtarColor, beneficiaryAvatar: '#c8d9d9', centerAvatar: '#c8d9d9', employeeAvatar: '#214256' })
+                              }}
+                              sx={{
+                                height: '85px', width: '85px', backgroundColor: avtarColor.employeeAvatar, cursor: "pointer"
+                              }}
+                            >
+                              موظف
+                            </Avatar>
+                          </Grid>
+                        </Grid>
                       </Box>
                       <Box sx={{ mb: 3, textAlign: 'center' }}>
-                        <Typography
-                          color="textPrimary"
-                          variant="h2"
-                        >
-                          تسجيل دخول المركز
-                        </Typography>
+                        {selectedAvatar === "beneficiary" && (
+                          <Typography
+                            color="textPrimary"
+                            variant="h2"
+                          >
+                            تسجيل دخول المستفيد
+                          </Typography>
+
+                        )
+                        }
+                        {selectedAvatar === "center" && (
+                          <Typography
+                            color="textPrimary"
+                            variant="h2"
+                          >
+                            تسجيل دخول المركز
+                          </Typography>
+
+                        )
+                        }
+                        {selectedAvatar === "employee" && (
+                          <Typography
+                            color="textPrimary"
+                            variant="h2"
+                          >
+                            تسجيل دخول الموظف
+                          </Typography>
+
+                        )
+                        }
                       </Box>
                     </Grid>
                   </Grid>
@@ -315,6 +352,7 @@ const Login = (props) => {
                       </Link>
                     </Typography>
                   </Box>
+
                 </Box>
               </form>
             )}

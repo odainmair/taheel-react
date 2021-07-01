@@ -7,6 +7,8 @@ import {
   CardContent,
   Typography,
   Box,
+  Grid,
+  Avatar,
   Alert,
   Container
 } from '@material-ui/core';
@@ -18,10 +20,29 @@ import AlertDialog from 'src/components/AlertDialog';
 import DashboardNavbar from '../../../components/DashboardNavbar';
 import MainNavbar from '../../../components/MainNavbar';
 import { CitizenValidate, absherValidate, confirmationValidate } from './ForgetPasswordUtils';
-import { AbsherOTP, AbsherOTPAuth, ChangePassword  } from './data/ForgetPasswordApi';
+import { AbsherOTP, AbsherOTPAuth, ChangePassword } from './data/ForgetPasswordApi';
 import TopHeader from '../../Registration/components/TopHeader';
 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: 'flex',
+    '& > *': {
+      margin: theme.spacing(1),
+    },
+  },
+  large: {
+    width: theme.spacing(40),
+    height: theme.spacing(40),
+  },
+  avatarHover: {
+    "&:hover": {
+      backgroundColor: '#f6a923',
+      border: 'solid 5px #f6a923'
+    }
+  }
+}));
 const ForgetPassword = () => {
+  const classes = useStyles();
 
   const [open, setOpen] = React.useState(false);
   const [dialogContent, setDialogContent] = React.useState('');
@@ -29,6 +50,12 @@ const ForgetPassword = () => {
   const [isMobileNavOpen, setMobileNavOpen] = useState(false);
   const [info, setInfo] = React.useState('');
   const [errMessage, SetErrMessage] = useState('');
+  const [selectedAvatar, setSelectedAvatar] = useState('beneficiary');
+  const [avtarColor, setColor] = useState({
+    beneficiaryAvatar: '#214256',
+    centerAvatar: '#c8d9d9',
+    employeeAvatar: '#c8d9d9',
+  });
 
   const navigate = useNavigate();
 
@@ -75,7 +102,7 @@ const ForgetPassword = () => {
   };
   const handleClose = (value) => {
     setOpen(false);
-    navigate('/login', { replace: true });
+    navigate('/login', { replace: true }, { state: { selectedAvatar } });
   };
 
   return (
@@ -113,8 +140,41 @@ const ForgetPassword = () => {
               padding: 3,
               boxShadow: '5px 10px 18px #ecf1f5'
             }}>
-              <TopHeader />
-
+              <Box
+                className={classes.root}
+                sx={{ mb: 5, mr: 1.5 }}
+              >
+                <Grid container spacing={3} sx={{ margin: "0 auto", width: "auto" }}>
+                  <Grid item xs={6}>
+                    <Avatar
+                      className={classes.large + ' ' + classes.avatarHover}
+                      onClick={() => {
+                        setSelectedAvatar('beneficiary'),
+                          setColor({ ...avtarColor, beneficiaryAvatar: '#214256', centerAvatar: '#c8d9d9', employeeAvatar: '#c8d9d9' })
+                      }
+                      } sx={{
+                        height: '85px', width: '85px', backgroundColor: avtarColor.beneficiaryAvatar, cursor: "pointer"
+                      }}
+                    >
+                      أفراد
+                    </Avatar>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Avatar
+                      className={classes.large + ' ' + classes.avatarHover}
+                      onClick={() => {
+                        setSelectedAvatar('center'),
+                          setColor({ ...avtarColor, beneficiaryAvatar: '#c8d9d9', centerAvatar: '#214256', employeeAvatar: '#c8d9d9' })
+                      }}
+                      sx={{
+                        height: '85px', width: '85px', backgroundColor: avtarColor.centerAvatar, cursor: "pointer"
+                      }}
+                    >
+                      مركز
+                    </Avatar>
+                  </Grid>
+                </Grid>
+              </Box>
               <Box sx={{ mb: 3, textAlign: 'center' }}>
                 <Typography
                   color="textPrimary"

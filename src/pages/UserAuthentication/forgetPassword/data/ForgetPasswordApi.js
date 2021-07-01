@@ -5,6 +5,7 @@ const AbsherOTP = async (IqamaNumber) => {
     const url = '/taheel-apis-utilities-AbsherOTP-v2'
     const queryParams = {
         BeneficiaryId: IqamaNumber,
+        checkIqamaOrIDExist : true,
     }
     const response = await APIRequest({ queryParams, url });
     return response;

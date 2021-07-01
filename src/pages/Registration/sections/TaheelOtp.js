@@ -9,21 +9,11 @@ import {
   Typography,
   InputAdornment,
 } from '@material-ui/core';
-import {APIRequest} from 'src/api/APIRequest';
-import localContext from 'src/localContext'
+import { requestOTPPhoneNum } from '../services/RegistrationAPI';
 
 
 
-const TaheelOtp = ({ Condition }) => {
-  const { otp, setOtp} = useContext(localContext);
-  const { recipient, setRecipient} = useContext(localContext);
-
-  const url = '/taheel-apis-utilities-sendSms-v2';
-  const requestBody = {
-    recipient: recipient,
-    message: `Hi, use this OTP to validate your register: ${otp}.`
-  };
-
+const TaheelOtp = ({ Condition , data, phoneNum}) => {
   return (
     <>
       <Grid
@@ -117,9 +107,7 @@ const TaheelOtp = ({ Condition }) => {
               }}
             >
               <a
-                onClick={() => APIRequest({ requestBody, url })}
-
-              // onClick={() => doRequest(JSON.stringify(bodyRequest))}
+                onClick = {()=> requestOTPPhoneNum(data, phoneNum)}
               >
                 إعادة ارسال رمز التحقق
               </a>

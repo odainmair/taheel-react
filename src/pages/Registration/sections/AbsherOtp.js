@@ -7,17 +7,9 @@ import {
   Grid,
   Typography,
 } from '@material-ui/core';
-import localContext from 'src/localContext'
-import {APIRequest} from 'src/api/APIRequest';
+import { absherSms } from '../services/RegistrationAPI';
 
-const AbsherOtp = () => {
-  const { otp, setOtp} = useContext(localContext);
-  const url = '/taheel-apis-utilities-AbsherOTP-v2'
-  const queryParams = {
-    BeneficiaryId: "273",
-    OTP: otp
-  }
-
+const AbsherOtp = (props) => {
   return (
     <>
       <Grid
@@ -86,9 +78,10 @@ const AbsherOtp = () => {
           }}
         >
           <a
-           onClick={() => APIRequest({ queryParams, url })}
+            onClick={() => absherSms(props.data)}
+
           >
-       
+
             إعادة ارسال رمز التحقق
           </a>
         </Typography>

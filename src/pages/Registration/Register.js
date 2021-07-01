@@ -12,6 +12,7 @@ import {
   Container,
   Grid,
   Link,
+  Alert,
   Button
 } from '@material-ui/core';
 import FinalFromWizard from '../../components/wizard/FinalFormWizard';
@@ -29,6 +30,7 @@ import { CitizenValidate } from './utils'
 import { absherValidate } from './utils'
 import { regitrationValidate } from './utils'
 import { TaheelOtpValidate } from './utils'
+import { AbsherOTPAuth, absherSms, validateCitizenFun, verifyEmailAndIqamaNum, AuthOTPPhoneNum, requestOTPPhoneNum } from './services/RegistrationAPI';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -63,124 +65,91 @@ const Register = () => {
   const [open, setOpen] = React.useState(false);
   const [dialogContent, setDialogContent] = React.useState('');
   const [dialogTitle, setDialogTitle] = React.useState('');
-
-
   let { otp, setOtp } = useContext(localContext);
   const { recipient, setRecipient } = useContext(localContext);
-  const [errMessage, SetErrMessage] = useState('')
-
+  const [errMessage, SetErrMessage] = useState('');
+  const [idNum, setIdNum] = useState('');
+  const [phoneNum, setPhoneNum] = useState('');
+  const [userType, setUserType] = useState("4");
   const [isMobileNavOpen, setMobileNavOpen] = useState(false);
   const [is, setIs] = useState(false)
   const [info, setInfo] = React.useState({});
-  const [avtarColor, setColor] = React.useState({
-    rightAvatar: '#c8d9d9',
-    leftAvatar: '#214256',
+  const [selectedAvatar, setSelectedAvatar] = useState('beneficiary');
+  const [avtarColor, setColor] = useState({
+    beneficiaryAvatar: '#214256',
+    centerAvatar: '#c8d9d9',
   });
 
   const navigate = useNavigate();
   function numberToDay(day) {
     return ('0' + day).slice(-2);
   }
-  const validateCitizenFunc = async (idNumber, birthDate) => {
-    const url = '/taheel-apis-utilities-validateCitizen-v3';
-    const requestBody = {
-      IDNo: idNumber,
-      HijriDateOfBirth: birthDate
-    };
-    const response = await APIRequest({ requestBody, url });
-    return response;
-  };
   const validateAPIFunc = async (values) => {
-    console.log('HIIIIIIIIIII')
     const { idNumber, day, month, year } = values;
-
+    setIdNum(idNumber);
     const verifyEmailAndIqamaNumRs = await verifyEmailAndIqamaNum({ idNumber });
-    console.log("qqqqqqqqqqqqq", verifyEmailAndIqamaNumRs.isSuccessful)
 
     if (!verifyEmailAndIqamaNumRs.isSuccessful) {
       return { isSuccessful: false, message: verifyEmailAndIqamaNumRs.message };
     }
+
+    const absherSmsRe = await absherSms(idNumber);
+    if (!absherSmsRe.isSuccessful) {
+      return { isSuccessful: false, message: absherSmsRe.message };
+    }
+
     const birthDate = year + '' + numberToDay(month) + numberToDay(day);
     const response = { isSuccessful: true, message: '' };
-    const validateCitRs = await validateCitizenFunc(idNumber, birthDate);
+    const validateCitRs = await validateCitizenFun(idNumber, birthDate);
     if (!validateCitRs.isSuccessful) {
       return { isSuccessful: false, message: validateCitRs.message };
     }
     const data = validateCitRs.responseBody.data;
     setInfo(data);
+    return validateCitRs;
+  };
 
-    const url = '/taheel-apis-utilities-AbsherOTP-v2'
-    console.log(otp)
-    const queryParams = {
-      BeneficiaryId: idNumber,
-      OTP: otp
+  // OTP Checking
+  const validateOtp = async (values) => {
+    const { AbsherOtp } = values;
+    const resopnse = { isSuccessful: true, message: '' };
+    const AbsherOTPAuthRs = await AbsherOTPAuth(idNum, AbsherOtp);
+    if (!AbsherOTPAuthRs.isSuccessful) {
+      return { isSuccessful: false, message: AbsherOTPAuthRs.message };
     }
-    const absherSms = await APIRequest({ queryParams, url });
-    return response;
+    return AbsherOTPAuthRs;
   };
 
   const validateEmail = async (values) => {
-    console.log('validateEmail')
     const { email } = values;
-
     const verifyEmailAndIqamaNumRs = await verifyEmailAndIqamaNum({ email });
-    console.log("qqqqqqqqqqqqq", verifyEmailAndIqamaNumRs.isSuccessful)
-
     if (!verifyEmailAndIqamaNumRs.isSuccessful) {
       return { isSuccessful: false, message: verifyEmailAndIqamaNumRs.message };
     }
     return { isSuccessful: true, message: '' };
   }
-  // OTP Checking
-  const validateOtp = async (values) => {
-    const { AbsherOtp } = values;
-    if (otp == AbsherOtp || AbsherOtp == '000000')
-      return { isSuccessful: true, message: '' }
-    return { isSuccessful: false, message: 'رمز التحقق المدخل غير صحيح' };
-  };
-
-  const sendSms = async (recipient) => {
-    otp = Math.floor(Math.random() * (1000000 - 100000) + 100000)
-    setOtp(otp);
-    console.log('OOOTTP:', otp)
-    const requestBody = {
-      recipient: recipient,
-      message: `Hi, use this OTP to validate your register: ${otp}.`
-    };
-    const url = '/taheel-apis-utilities-sendSms-v2';
-    const response = await APIRequest({ requestBody, url });
-    return response;
-  };
-
-  const validateTaheelOtp = async values => {
-    setRecipient(values.phoneNumber)
-    sendSms(values.phoneNumber);
-    return { isSuccessful: true, message: '' };
-
-  };
-  const verifyEmailAndIqamaNum = async ({ idNumber, email }) => {
-    const queryParams = {
-      Email: email,
-      IqamaNum: idNumber
-    };
-    const url = 'taheel-apis-utilities-verifyEmailAndIqamaNum-v2';
-    const response = await APIRequest({ queryParams, url });
-    return response;
-  };
-
   const onSubmit = async (values) => {
-    const response = { isSuccessful: true, message: '' };
     const { taheelOtp, phoneNumber } = values;
     const { idNumber, day, month, year } = values;
+    const response = { isSuccessful: true, message: '' };
+    setPhoneNum(phoneNumber);
     const birthDate = year + '' + numberToDay(month) + numberToDay(day);
-
-    if (phoneNumber && !is) {
-      validateTaheelOtp(values);
+    if (phoneNumber && !taheelOtp && !is) {
+      const sendSmsRs = await requestOTPPhoneNum(idNum, phoneNumber);
+      if (!sendSmsRs.isSuccessful) {
+        return { isSuccessful: false, message: sendSmsRs.message };
+      }
       values.isTaheelValidate = true;
       setIs(true);
+      return response;
     }
 
-    else if ((taheelOtp && otp == taheelOtp) || taheelOtp == '000000') {
+    if (taheelOtp) {
+      const validateSmsRs = await AuthOTPPhoneNum(phoneNumber, idNum, taheelOtp);
+      if (!validateSmsRs.isSuccessful) {
+        SetErrMessage(validateSmsRs.message);
+        return { isSuccessful: false, message: validateSmsRs.message };
+      }
       const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
       await sleep(300);
       const requestBody = {
@@ -189,25 +158,17 @@ const Register = () => {
         idNumIqamaNum: idNumber,
         phoneNumber: values.phoneNumber,
         DOB: moment(birthDate, 'iYYYYiMMiDD').format('iDD/iMM/iYYYY'),
-        userType: 'center owner',
+        userType: userType,
         userPassword: values.password,
       };
       const url = '/taheel-apis-users-registration-v2';
-      const response = await APIRequest({ requestBody, url });
-      if (!response.isSuccessful) {
-        //SetErrMessage(response.message);
-        return { isSuccessful: false, message: response.message };
-
+      const res = await APIRequest({ requestBody, url });
+      if (!res.isSuccessful) {
+        return { isSuccessful: false, message: res.message };
       }
-      handleClickOpen('لقد تم تسجيلك بنجاح', '');
-      return { isSuccessful: true, message: '' };
     }
-    else {
-      console.log("I'mmmmm Here")
-      return { isSuccessful: false, message: 'رمز التحقق المدخل غير صحيح' };
-    }
-
-    return response
+    handleClickOpen('لقد تم تسجيلك بنجاح', '');
+    return { isSuccessful: true, message: '' };
   };
 
   const Condition = ({ when, children }) => (
@@ -242,7 +203,6 @@ const Register = () => {
       }}
     >
       <>
-
         <DashboardNavbar onMobileNavOpen={() => setMobileNavOpen(true)} />
         <MainNavbar
           onMobileClose={() => setMobileNavOpen(false)}
@@ -260,11 +220,7 @@ const Register = () => {
             maxWidth="sm"
           >
             <Box sx={{
-              // backgroundColor: 'white',
-              // borderRadius: 5,
-              // padding: 8,
               mt: '2%',
-              // mb: '2%',
               backgroundColor: 'white',
               borderRadius: 5,
               paddingRight: 3,
@@ -277,34 +233,35 @@ const Register = () => {
               >
                 <Grid container spacing={3} sx={{ margin: "0 auto", width: "auto" }}>
                   <Grid item xs={6}>
-
                     <Avatar
                       className={classes.large + ' ' + classes.avatarHover}
-                      // onClick={() => setColor({ ...avtarColor, rightAvatar: '#214256', leftAvatar: '#c8d9d9' })}
+                      onClick={() => {
+                        setUserType("4");
+                        setSelectedAvatar('beneficiary'),
+                          setColor({ ...avtarColor, beneficiaryAvatar: '#214256', centerAvatar: '#c8d9d9', employeeAvatar: '#c8d9d9' })
+                      }}
                       sx={{
-                        height: '85px', width: '85px', backgroundColor: '#c8d9d9', cursor: "pointer"
+                        height: '85px', width: '85px', backgroundColor: avtarColor.beneficiaryAvatar, cursor: "pointer"
                       }}
                     >
                       أفراد
                     </Avatar>
-
-
                   </Grid>
                   <Grid item xs={6}>
                     <Avatar
                       className={classes.large + ' ' + classes.avatarHover}
-                      // onClick={() => setColor({ ...avtarColor, leftAvatar: '#214256', rightAvatar: '#c8d9d9' })}
-                      sx={{
-                        height: '85px', width: '85px', backgroundColor: '#214256', cursor: "pointer"
+                      onClick={() => {
+                        setUserType("2");
+                        setSelectedAvatar('center'),
+                          setColor({ ...avtarColor, beneficiaryAvatar: '#c8d9d9', centerAvatar: '#214256', employeeAvatar: '#c8d9d9' })
+                      }} sx={{
+                        height: '85px', width: '85px', backgroundColor: avtarColor.centerAvatar, cursor: "pointer"
                       }}
                     >
                       مركز
                     </Avatar>
                   </Grid>
-
                 </Grid>
-
-
               </Box>
               <Box sx={{ mb: 3, textAlign: 'center' }}>
                 <Typography
@@ -323,14 +280,12 @@ const Register = () => {
                 <FinalFromWizard // pass initialValues, onSubmit and 4 childrens
                   initialValues={{
                     disabledBackButt: true,
-                    lastPageErrorHandling: true,
+                    lastPageErrorHandling: false,
                     agree: [false],
                     isTaheelValidate: false
                   }}
                   onSubmit={onSubmit}
-                // counter={counter}
                 >
-
                   <FinalFromWizard.Page
                     label=""
                     validate={CitizenValidate}
@@ -346,7 +301,7 @@ const Register = () => {
                     validate={absherValidate}
                     label=""
                   >
-                    <AbsherOtp
+                    <AbsherOtp data={idNum}
                       Condition={Condition} />
                   </FinalFromWizard.Page>
 
@@ -360,10 +315,12 @@ const Register = () => {
                   </FinalFromWizard.Page>
 
                   <FinalFromWizard.Page
+                    nextFun={(values) => taheelOTPReq(values)}
+
                     validate={TaheelOtpValidate}
                     label=""
                   >
-                    <TaheelOtp
+                    <TaheelOtp data={idNum} phoneNum={phoneNum}
                       Condition={Condition}
                     />
                   </FinalFromWizard.Page>
