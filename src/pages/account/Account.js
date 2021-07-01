@@ -34,12 +34,6 @@ const Account = () => {
     setOpen(false);
   };
 
-  useEffect(() => {
-    const { firstName, lastName, email, phoneNumber, idNumIqamaNum } = getCurrentUser();
-    // setNum(phoneNumber);
-    // setUpdatedEmail(email);
-  }, [setCurrentUser]);
-  
   const onSubmit = async (values) => {
     const response = { isSuccessful: true, message: '' };
     setNum(values.phoneNumber);
@@ -57,14 +51,16 @@ const Account = () => {
         SetErrMessage(ownerInfoUpdateRequest.message);
         return { isSuccessful: false, message: ownerInfoUpdateRequest.message };
       }
-      SetsuccessMessage('لقد تم حفظ المعلومات بنجاح');
-
       setCurrentUser({
         ...getCurrentUser(),
+        // email: "hiiiiiiiiii",
+        // phoneNumber: "hi2",
         email: values.email,
         phoneNumber: values.phoneNumber,
       });
+      SetsuccessMessage('لقد تم حفظ المعلومات بنجاح');
     }
+    console.log("Dataaaaa", email, phoneNumber);
     return response;
   }
   return (
@@ -102,7 +98,7 @@ const Account = () => {
                     {successMessage}
                   </Alert>
                 )}
-                
+
                 {successMessageFromDialog && (
                   <Alert variant="outlined" severity="success">
                     {successMessageFromDialog}
@@ -128,7 +124,7 @@ const Account = () => {
                 </AccountFinalFrom>
 
               </CardContent>
-              <ChangePhonenumberDialog data={{ firstName: firstName, lastName: lastName, email: updatedEmail, phoneNumber: num, idNumIqamaNum: idNumIqamaNum }} setOTP={setOTP} dialogContent={dialogContent} SetsuccessMessageFromDialog= {SetsuccessMessageFromDialog} open={open} onClose={handleClose} />
+              <ChangePhonenumberDialog data={{ firstName: firstName, lastName: lastName, email: updatedEmail, phoneNumber: num, idNumIqamaNum: idNumIqamaNum }} setOTP={setOTP} dialogContent={dialogContent} SetsuccessMessageFromDialog={SetsuccessMessageFromDialog} open={open} onClose={handleClose} />
             </Grid>
           </Grid>
         </Container>
