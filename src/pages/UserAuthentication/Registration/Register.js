@@ -95,11 +95,6 @@ const Register = () => {
       return { isSuccessful: false, message: verifyEmailAndIqamaNumRs.message };
     }
 
-    const absherSmsRe = await absherSms(idNumber);
-    if (!absherSmsRe.isSuccessful) {
-      return { isSuccessful: false, message: absherSmsRe.message };
-    }
-
     const birthDate = year + '' + numberToDay(month) + numberToDay(day);
     console.log("birthDate++++++++++++++",birthDate)
     console.log
@@ -110,7 +105,11 @@ const Register = () => {
     }
     const data = validateCitRs.responseBody.data;
     setInfo(data);
-    return validateCitRs;
+    const absherSmsRe = await absherSms(idNumber);
+    if (!absherSmsRe.isSuccessful) {
+      return { isSuccessful: false, message: absherSmsRe.message };
+    }
+    return absherSmsRe;
   };
 
   // OTP Checking
