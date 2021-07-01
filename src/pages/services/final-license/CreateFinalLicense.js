@@ -354,7 +354,7 @@ const FinalFromWizardPersonsPage = ({ editMode, label, validate, setField, pop, 
 
 const FinalFromWizardSummary = ({ setField, temporaryLicenses, values }) => (
   <>
-  { values.formType && values.formType != LICENSE_FORM_TYPES.RENEW ?
+  { values.formType != LICENSE_FORM_TYPES.RENEW ?
     <Summary
       values={values}
       temporaryLicenses={temporaryLicenses}
