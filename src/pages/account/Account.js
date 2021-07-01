@@ -38,6 +38,12 @@ const Account = () => {
     setNum(values.phoneNumber);
     setUpdatedEmail(values.email);
     if (phoneNumber != values.phoneNumber) {
+      if (successMessage !== null) {
+        SetsuccessMessage('');
+      }
+      if (errMessage !== null) {
+        SetErrMessage('');
+      }
       const smsOTPRequest = await requestOTPPhoneNum(values.phoneNumber);
       if (!smsOTPRequest.isSuccessful) {
         SetErrMessage(smsOTPRequest.message);
