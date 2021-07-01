@@ -39,7 +39,6 @@ const useStyles = makeStyles((theme) => ({
       color: 'white'
     }
   }
-
 }));
 const url = '/taheel-apis-utilities-sendSms-v2'
 const LoginOtp = () => {
@@ -47,17 +46,12 @@ const LoginOtp = () => {
   const [error, setError] = useState('')
   const navigate = useNavigate();
   const classes = useStyles();
-
-
-  // const [avtarColor, setColor] = useState({
-  //   rightAvatar: '#c8d9d9',
-  //   leftAvatar: '#c8d9d9',
-  // });
   const location = useLocation();
-  const otp = location.state.otp;
+  const { otp, avtarColor, selectedAvatar } = location.state;
+  // const otp = location.state.otp;
   const { users, setUser } = useContext(localContext);
   const [isMobileNavOpen, setMobileNavOpen] = useState(false);
-  console.log('OTP::', otp);
+  console.log('OTP:::::::', otp);
   const { requestBody } = location.state;
 
   useEffect(async () => {
@@ -90,15 +84,13 @@ const LoginOtp = () => {
               otp: Yup.string().required('يجب تعبئة الحقل'),
             })}
             onSubmit={async (values) => {
-              if (values.otp == otp || values.otp == '000000') {
+              if (values.otp == otp ) {
                 setCurrentUser(users)
-                navigate('/app/dashboard', { replace: true });
+                navigate('/app/dashboard', { replace: true },{ state: { selectedAvatar }});
               }
               else {
                 setError('رمز التحقق المدخل غير صحيح')
               }
-
-
             }
             }
           >
@@ -139,54 +131,65 @@ const LoginOtp = () => {
                       >
                         <Grid container spacing={3} sx={{ margin: "0 auto", width: "auto" }}>
                           <Grid item xs={4}>
-
                             <Avatar
-                              className={classes.large}
-                              // onClick={() => setColor({ ...avtarColor, rightAvatar: '#214256', leftAvatar: '#c8d9d9' })}
+                              className={classes.large + ' ' + classes.avatarHover}
                               sx={{
-                                height: '85px', width: '85px', backgroundColor: '#c8d9d9'
+                                height: '85px', width: '85px', backgroundColor: avtarColor.beneficiaryAvatar, cursor: "pointer"
                               }}
                             >
                               أفراد
                             </Avatar>
-
-
                           </Grid>
                           <Grid item xs={4}>
                             <Avatar
-                              className={classes.large}
-                              // onClick={() => setColor({ ...avtarColor, leftAvatar: '#214256', rightAvatar: '#c8d9d9' })}
+                              className={classes.large + ' ' + classes.avatarHover}
                               sx={{
-                                height: '85px', width: '85px', backgroundColor: '#214256'
+                                height: '85px', width: '85px', backgroundColor: avtarColor.centerAvatar, cursor: "pointer"
                               }}
                             >
                               مركز
                             </Avatar>
                           </Grid>
                           <Grid item xs={4}>
-                            <a href="https://inspiredemo2.appiancloud.com/suite/sites/takamol-taheel/page/request-Records" target="_blank">
-                              <Avatar
-                                className={classes.large + ' ' + classes.avatarHover}
-                                // onClick={() => setColor({ ...avtarColor, leftAvatar: '#214256', rightAvatar: '#c8d9d9' })}
-                                sx={{
-                                  height: '85px', width: '85px', backgroundColor: '#c8d9d9'
-                                }}
-                              >
-                                موظف
-                              </Avatar>
-                            </a>
+                            <Avatar
+                              className={classes.large + ' ' + classes.avatarHover}
+                              sx={{
+                                height: '85px', width: '85px', backgroundColor: avtarColor.employeeAvatar, cursor: "pointer"
+                              }}
+                            >
+                              موظف
+                            </Avatar>
                           </Grid>
                         </Grid>
-
-
                       </Box>
                       <Box sx={{ mb: 3, textAlign: 'center' }}>
-                        <Typography
-                          color="textPrimary"
-                          variant="h2"
-                        >
-                          تسجيل دخول المركز
-                        </Typography>
+                        {selectedAvatar === "beneficiary" && (
+                          <Typography
+                            color="textPrimary"
+                            variant="h2"
+                          >
+                            تسجيل دخول المستفيد
+                          </Typography>
+                        )
+                        }
+                        {selectedAvatar === "center" && (
+                          <Typography
+                            color="textPrimary"
+                            variant="h2"
+                          >
+                            تسجيل دخول المركز
+                          </Typography>
+                        )
+                        }
+                        {selectedAvatar === "employee" && (
+                          <Typography
+                            color="textPrimary"
+                            variant="h2"
+                          >
+                            تسجيل دخول الموظف
+                          </Typography>
+                        )
+                        }
                       </Box>
                     </Grid>
                   </Grid>

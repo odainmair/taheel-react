@@ -8,7 +8,6 @@ import {
 } from '@material-ui/core';
 import React, { useState, useEffect } from 'react';
 import AccountProfileDetails from './components/AccountProfileDetails';
-import FinalFromWizard from '../../components/wizard/FinalFormWizard';
 import { PersonInfoValidate } from './AccountUtils';
 import AccountFinalFrom from './components/AccountFinalForm';
 import { ownerInfoUpdate, requestOTPPhoneNum } from './data/AccountApi';
@@ -17,7 +16,6 @@ import { getCurrentUser, setCurrentUser } from 'src/utils/UserLocalStorage';
 
 const Account = () => {
   const [dialogContent, setDialogContent] = React.useState('');
-  // const [dialogTitle, setDialogTitle] = React.useState('');
   const [errMessage, SetErrMessage] = useState('');
   const [successMessage, SetsuccessMessage] = useState('');
   const [successMessageFromDialog, SetsuccessMessageFromDialog] = useState('');
@@ -38,8 +36,9 @@ const Account = () => {
 
   useEffect(() => {
     const { firstName, lastName, email, phoneNumber, idNumIqamaNum } = getCurrentUser();
-
-  }, []);
+    // setNum(phoneNumber);
+    // setUpdatedEmail(email);
+  }, [setCurrentUser]);
   
   const onSubmit = async (values) => {
     const response = { isSuccessful: true, message: '' };
