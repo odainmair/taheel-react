@@ -32,6 +32,7 @@ const routes = (isLoggedIn) => [
     children: [
       { path: 'login', element: isLoggedIn === "" ? <Login /> : <Navigate to="/app/dashboard" />},
       { path: 'otplogin', element: <OTPLogin /> },
+      { path: 'downloadDoc', element: <DownloadDoc /> },
       { path: 'Home', element: <Home /> },
       { path: '/about', element: <About /> },
       { path: '/faq', element: <Faq /> },
@@ -58,7 +59,6 @@ const routes = (isLoggedIn) => [
       { path: 'dashboard', element: <Dashboard /> },
       { path: 'products', element: <ProductList /> },
       { path: 'settings', element: <Settings /> },
-      { path: 'downloadDoc', element: <DownloadDoc /> },
 
       { path: '*', element: <Navigate to="/404" /> }
     ]
