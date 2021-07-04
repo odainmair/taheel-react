@@ -7,16 +7,20 @@ import React from 'react';
 import { uploadDocumentApi } from '../services/finalLicenseAPI';
 import { useEffect } from 'react';
 
-const FileUploaderComp = ({ input: { value, name }, label, meta,  setField, values, rowIndex = -1 ,multipleFile}) => {
+const FileUploaderComp = ({ input: { value, name }, label, meta,  setField, values, rowIndex = -1 ,multipleFile, resetAttachment=false }) => {
   const showError = ((meta.submitError && !meta.dirtySinceLastSubmit) || meta.error) && meta.touched;
   const [loading, setLoading] = React.useState(false);
   const hiddenFileInput = React.useRef(null);
-  const [uploadedFileName, setUploadedFileName] = React.useState("");
+  const [uploadedFileName, setUploadedFileName] = React.useState();
   var multipleFileDocs = []
   useEffect(() => {
+    console.log(`-- FileUploaderComp resetAttachment ${resetAttachment}`);
     console.log(`-- FileUploaderComp multipleFile ${multipleFile}`);
     console.log(`-- FileUploaderComp RowIndex ${name}`);
     console.log(`-- FileUploaderComp RowIndex ${rowIndex} ${rowIndex && rowIndex !== -1}`);
+
+    setUploadedFileName("");
+
     let docId = ""
    /* if (rowIndex !== -1) {
       if (values) {
@@ -28,9 +32,9 @@ const FileUploaderComp = ({ input: { value, name }, label, meta,  setField, valu
     docId = (values) ? values[name] : "";
 
     if (docId)
-      setUploadedFileName("تم رفع الملف بنجاح");
+      setUploadedFileName("تم رفع هذا الملف في نجاح");
 
-  }, [])
+  }, [resetAttachment])
 
   const setDocument = (name, docID, multipleFile) => {
     if (!multipleFile)
@@ -55,7 +59,7 @@ const FileUploaderComp = ({ input: { value, name }, label, meta,  setField, valu
       if (!response.isSuccessful)
         SetErrMessage(response.message)
       else {
-        setUploadedFileName("تم رفع الملف بنجاح");
+        setUploadedFileName("تم رفع هذا الملف في نجاح");
         setDocument(name, response.responseBody.docID, multipleFile)
       }
     }
@@ -105,6 +109,7 @@ FileUploaderComp.propTypes = {
   setField: PropTypes.func,
   values: PropTypes.object,
   meta: PropTypes.object,
+  resetAttachment: PropTypes.bool,
   rowIndex: PropTypes.number
 
 }
