@@ -23,7 +23,7 @@ import ForgetPassword from './pages/UserAuthentication/forgetPassword/ForgetPass
 import CentersDetails from './pages/CentersManagement/components/CentersDetails';
 import Centers from './pages/CentersManagement/Centers';
 import AddCommissioner from './pages/CentersManagement/components/AddCommissioner';
-import DownloadDoc from './pages/account/components/DownloadDoc';
+import DownloadDoc from './pages/UserAuthentication/Login/components/DownloadDoc';
 
 const routes = (isLoggedIn) => [
   {
@@ -58,7 +58,7 @@ const routes = (isLoggedIn) => [
       { path: 'dashboard', element: <Dashboard /> },
       { path: 'products', element: <ProductList /> },
       { path: 'settings', element: <Settings /> },
-      { path: '/notifications', element: <DownloadDoc /> },
+      { path: 'downloadDoc', element: <DownloadDoc /> },
 
       { path: '*', element: <Navigate to="/404" /> }
     ]
