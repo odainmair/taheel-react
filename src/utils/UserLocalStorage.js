@@ -1,6 +1,6 @@
 /* eslint-disable */
 const getCurrentUser = () => {
-  const loggedInUser = localStorage.getItem('currentUser');
+  const loggedInUser = sessionStorage.getItem('currentUser');
   if (loggedInUser) {
     const foundUser = JSON.parse(loggedInUser);
     return foundUser;
@@ -8,9 +8,9 @@ const getCurrentUser = () => {
   return { firstName: "", lastName: "" };
 };
 const setCurrentUser = (user) => {
-  localStorage.setItem('currentUser', JSON.stringify(user));
+  sessionStorage.setItem('currentUser', JSON.stringify(user));
 };
 const logoutUser = (props) => {
-  localStorage.clear();
+  sessionStorage.clear();
 };
 export { getCurrentUser, logoutUser, setCurrentUser };
