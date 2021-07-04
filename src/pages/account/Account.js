@@ -32,7 +32,6 @@ const Account = () => {
   const handleClose = () => {
     setOpen(false);
   };
-
   const onSubmit = async (values) => {
     const response = { isSuccessful: true, message: '' };
     setNum(values.phoneNumber);
