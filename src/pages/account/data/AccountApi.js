@@ -39,10 +39,10 @@ const ownerInfoUpdate = async (idNumIqamaNum, email, phoneNumber, OTP) => {
 
 }
 
-const downloadTaheelDoc = async (DocID, DocName) => {
+const downloadTaheelDoc = async (DocID) => {
     console.log(`downloadTaheelDoc ${DocID}`);
     const url = 'taheel-apis-utilities-downloadDocument-v2';
-    const fileName = DocName;
+    const fileName = '';
     const queryParams = {
         DocID: DocID,
         attachment: true,
