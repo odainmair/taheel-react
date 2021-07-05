@@ -161,6 +161,7 @@ const PersonForm = ({ fromEdit, isSaudi, MedicalPracticeCondition, fieldName, se
             setDocument={setDocument}
             values={values}
             rowIndex={rowIndex}
+            tooltipText="مطلوب اخر مؤهل له علاقة بالوظيفة. حجم الملف لا يتجاوز 2MB الملفات المقبولة pdf,png,jpg"
           />
         </Grid>
 
