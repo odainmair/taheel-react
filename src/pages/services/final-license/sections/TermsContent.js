@@ -2,7 +2,7 @@
 const TermsContent = () => (
 	<>
 		<div className="section-1 font-45Light">
-			<p className="section-headline">يجب أن يقر المالك على توفر الشروط التالية في المبنى المقرر لاستخراج الترخيص المؤقت:</p>
+			<p className="section-headline">يجب أن يقر المالك على توفر الشروط التالية في المبنى المقرر لاستخراج الترخيص النهائي:</p>
 			<ul className="unordered-list">
 				<li className="unordered-list-item"> تعهد من المالك أن يكون المركز مستقل و بمداخل خارجية مستقلة و في موقع مناسب للنشاط من حيث الهدوء و سهولة الوصول اليه
 
