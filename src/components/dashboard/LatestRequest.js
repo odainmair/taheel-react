@@ -1,5 +1,6 @@
 // import { v4 as uuid } from 'uuid';
 import PerfectScrollbar from 'react-perfect-scrollbar';
+import { useNavigate } from 'react-router-dom';
 import {
   Box,
   Button,
@@ -122,7 +123,9 @@ const getChipComponentsForStatus = (status) => {
   );
 };
 const LatestRequests = (props) => {
+  const navigate = useNavigate();
   const { loading = false, taheelRequests = [] } = props;
+  taheelRequests.length = 5;
   return (
     <Card>
       <CardHeader title={
@@ -237,6 +240,8 @@ const LatestRequests = (props) => {
               endIcon={<ArrowLeftIcon />}
               size="large"
               variant="text"
+              onClick={() => navigate('/app/orders', { state: { taheelRequests } })}
+
             >
               عرض جميع الطلبات
             </Button>
