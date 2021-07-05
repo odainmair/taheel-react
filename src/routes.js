@@ -24,6 +24,7 @@ import CentersDetails from './pages/CentersManagement/components/CentersDetails'
 import Centers from './pages/CentersManagement/Centers';
 import AddCommissioner from './pages/CentersManagement/components/AddCommissioner';
 import DownloadDoc from './pages/UserAuthentication/Login/components/DownloadDoc';
+import Orders from './pages/Orders';
 
 const routes = (isLoggedIn) => [
   {
@@ -59,6 +60,8 @@ const routes = (isLoggedIn) => [
       { path: 'dashboard', element: <Dashboard /> },
       { path: 'products', element: <ProductList /> },
       { path: 'settings', element: <Settings /> },
+      { path: 'orders', element: <Orders /> },
+
 
       { path: '*', element: <Navigate to="/404" /> }
     ]
