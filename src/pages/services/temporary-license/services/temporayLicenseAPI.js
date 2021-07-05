@@ -61,7 +61,7 @@ const validateAPIFunc = async values => {
     console.log(`idNumber[0] ${idNumber[0]}`);
     const response = { isSuccessful: true, message: '' };
 
-    if(idNumber[0] === "1" && requestType === "2"){
+    if(idNumber[0] === "2" && requestType === "2"){
         return { isSuccessful: false, message: 'لا يسمح بتقديم الطلب كصفة طبيعية لغير السعوديين' }
     }
     if (requestType === "1") {
