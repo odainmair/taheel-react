@@ -18,7 +18,6 @@ import {
     Tooltip
 } from '@material-ui/core';
 import { getCurrentUser } from 'src/utils/UserLocalStorage';
-import ArrowLeftIcon from '@material-ui/icons/ArrowLeft';
 import HistoryOutlinedIcon from '@material-ui/icons/HistoryOutlined';
 import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 import DoneIcon from '@material-ui/icons/Done';
@@ -71,7 +70,7 @@ const getChipComponentsForStatus = (status) => {
     );
 };
 const Orders = () => {
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [taheelRequests, setTaheelRequests] = useState([]);
     const [totalPendingRequests, setTotalPendingRequests] = useState(0);
     const [totalCompletedRequests, setTotalCompletedRequests] = useState(0);
