@@ -177,7 +177,7 @@ const validateCitizenFunc = async (idNumber, birthDate,checkGovermental) => {
 	const requestBody = {
 		IDNo: idNumber,
 		HijriDateOfBirth: birthDate,
-		checkGovermental
+		checkGovermental:checkGovermental
 	};
 	const response = await APIRequest({ requestBody, url });
 	return response;
