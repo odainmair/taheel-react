@@ -72,25 +72,17 @@ const getChipComponentsForStatus = (status) => {
 const Orders = () => {
     const [loading, setLoading] = useState(false);
     const [taheelRequests, setTaheelRequests] = useState([]);
-    const [totalPendingRequests, setTotalPendingRequests] = useState(0);
-    const [totalCompletedRequests, setTotalCompletedRequests] = useState(0);
-    const [totalRejectedRequests, setTotalRejectedRequests] = useState(0);
-    const [totalTahelRequests, setTotalTahelRequests] = useState(0);
 
     const getTaheelRequestsFun = async (email) => {
         const url = 'taheel-apis-records-getRequests-v2';
         const queryParams = { userEmail: email };
         const response = await APIRequest({ url, queryParams });
-        console.log('response +++++++++++++++++++', JSON.stringify(response));
-
         return response;
     };
 
     useEffect(async () => {
         const { email } = getCurrentUser();
         const getTaheelRequestsRs = await getTaheelRequestsFun(email);
-        console.log('getTaheelRequestsRs +++++++++++++++++++', JSON.stringify(getTaheelRequestsRs));
-
         let response = {};
         if (!getTaheelRequestsRs.isSuccessful) {
             setLoading(false);
@@ -100,16 +92,9 @@ const Orders = () => {
             const { data } = getTaheelRequestsRs.responseBody;
             console.log(JSON.stringify(data));
             setTaheelRequests(data);
-            setTotalTahelRequests(data.length);
-            setTotalCompletedRequests(data.filter((request) => request.status === -1).length);
-            setTotalRejectedRequests(data.filter((request) => request.status === -2).length);
-            setTotalPendingRequests(data.filter((request) => request.status !== -1 && request.status !== -2).length);
         }
         return response;
     }, []);
-
-    console.log('taheelRequests +++++++++++++++++++', JSON.stringify(taheelRequests));
-
     return (
         <>
             <Helmet>
