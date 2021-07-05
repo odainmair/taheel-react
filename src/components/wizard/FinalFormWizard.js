@@ -101,7 +101,7 @@ export default class FinalFromWizard extends React.Component {
   }
 
   render() {
-    const { children, isEnableNextBtn = true, isEnableCancelBtn = false, cancelBtnFn, canShowSection = true } = this.props;
+    const { children, isEnableNextBtn = true, isEnableCancelBtn = false, cancelBtnFn, canShowSection = true,enableValidate=false } = this.props;
     const childrenArray = React.Children.toArray(children);
     const { page, values, completed, isNextCallBackFunSuccess, errMessage } = this.state;
     const activePage = React.Children.toArray(children)[page];
@@ -110,7 +110,7 @@ export default class FinalFromWizard extends React.Component {
       <>
         <Form
           initialValues={values}
-          //validate={this.validate}
+          validate={enableValidate && this.validate}
           onSubmit={this.handleSubmit}
           mutators={{
             // expect (field, value) args from the mutator
