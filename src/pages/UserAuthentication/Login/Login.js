@@ -100,8 +100,8 @@ const Login = (props) => {
               const { email, password } = values;
               const LoginReq = await LoginRequest(email, password, userType);
               if (LoginReq.isSuccessful) {
-                
-               console.log('phoneNumber+++++++ ', JSON.stringify(LoginReq.responseBody.data.phoneNumber));
+
+                console.log('phoneNumber+++++++ ', JSON.stringify(LoginReq.responseBody.data.phoneNumber));
                 const sendSmsRs = await requestOTPPhoneNum(LoginReq.responseBody.data.idNumIqamaNum, LoginReq.responseBody.data.phoneNumber);
                 console.log('OTP OTP +++++++ ', JSON.stringify(sendSmsRs.responseBody.data.OTP));
                 const otp = sendSmsRs.responseBody.data.OTP;
@@ -110,7 +110,7 @@ const Login = (props) => {
                   message: `Hello ${LoginReq.responseBody.data.firstName}, use this OTP to validate your login: ${otp}.`
                 };
                 setUser(LoginReq.responseBody.data)
-                navigate('/otplogin', { state: { otp, requestBody, avtarColor , selectedAvatar } });
+                navigate('/otplogin', { state: { otp, requestBody, avtarColor, selectedAvatar } });
               } else {
                 setError('كلمة المرور او رقم الإقامه او رقم الهوية او البريد الالكتروني غير صحيح')
               }
@@ -188,19 +188,21 @@ const Login = (props) => {
                             </Avatar>
                           </Grid>
                           <Grid item xs={4}>
-                            <Avatar
-                              className={classes.large + ' ' + classes.avatarHover}
-                              onClick={() => {
-                                setUserType("1");
-                                setSelectedAvatar('employee'),
-                                  setColor({ ...avtarColor, beneficiaryAvatar: '#c8d9d9', centerAvatar: '#c8d9d9', employeeAvatar: '#214256' })
-                              }}
-                              sx={{
-                                height: '85px', width: '85px', backgroundColor: avtarColor.employeeAvatar, cursor: "pointer"
-                              }}
-                            >
-                              موظف
-                            </Avatar>
+                            <a href="https://inspiredemo2.appiancloud.com/suite/sites/takamol-taheel/page/request-Records" target="_blank">
+                              <Avatar
+                                className={classes.large + ' ' + classes.avatarHover}
+                                onClick={() => {
+                                  setUserType("1");
+                                  setSelectedAvatar('employee'),
+                                    setColor({ ...avtarColor, beneficiaryAvatar: '#c8d9d9', centerAvatar: '#c8d9d9', employeeAvatar: '#214256' })
+                                }}
+                                sx={{
+                                  height: '85px', width: '85px', backgroundColor: avtarColor.employeeAvatar, cursor: "pointer"
+                                }}
+                              >
+                                موظف
+                              </Avatar>
+                            </a>
                           </Grid>
                         </Grid>
                       </Box>
