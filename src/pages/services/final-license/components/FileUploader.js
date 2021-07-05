@@ -28,17 +28,21 @@ const FileUploaderComp = ({ input: { value, name }, label, meta, setField, value
      else */
     docId = (values) ? values[name] : "";
 
-    if (docId)
-      setUploadedFileName("تم رفع الملف بنجاح");
+    if (docId) {
+      setUploadedFileName(`تم رفع الملف ${values[`${name}FileName`]?values[`${name}FileName`]:""} بنجاح`);
+    }
 
   }, [])
 
-  const setDocument = (name, docID, multipleFile) => {
-    if (!multipleFile)
+  const setDocument = (name, docID, multipleFile, fileName) => {
+    if (!multipleFile) {
       setField(name, [docID])
+      setField(`${name}FileName`, fileName);
+    }
     else {
       multipleFileDocs.push(docID)
       setField(name, multipleFileDocs)
+      setField(`${name}FileName`, fileName);
     }
   }
   const handleClick = () => {
@@ -57,8 +61,8 @@ const FileUploaderComp = ({ input: { value, name }, label, meta, setField, value
       if (!response.isSuccessful)
         SetErrMessage(response.message)
       else {
-        setUploadedFileName("تم رفع الملف بنجاح");
-        setDocument(name, response.responseBody.docID, multipleFile)
+        setUploadedFileName(`تم رفع الملف ${fileUploaded[i].name} بنجاح`);
+        setDocument(name, response.responseBody.docID, multipleFile, fileUploaded[i].name)
       }
     }
     setLoading(false);
@@ -84,7 +88,7 @@ const FileUploaderComp = ({ input: { value, name }, label, meta, setField, value
             </InputAdornment>
           ),
           startAdornment: (
-            tooltipText && ( <InputAdornment position="start">
+            tooltipText && (<InputAdornment position="start">
               <Tooltip title={tooltipText} style={{ maxWidth: 'none' }}>
                 <InfoIcon />
               </Tooltip>
