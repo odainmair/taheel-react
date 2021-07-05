@@ -18,16 +18,13 @@ const Centers = (props) => {
   useEffect(async () => {
     const getCentersDetails = await getCenters(email);
     if (!getCentersDetails.isSuccessful) {
-      setLoading(false);
-      response = { isSuccessful: false, message: getCentersDetails.message };
+      setLoading(true);
     } else {
-
       const { Centers } = getCentersDetails.responseBody.data;
       setLoading(true);
       setCenters(Centers)
     }
   }, []);
-  console.log('loDING ++++++++++++++',loading);
   return (
     <>
       <Helmet>

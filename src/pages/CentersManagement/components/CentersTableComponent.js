@@ -18,9 +18,9 @@ import React, { useState } from 'react';
 
 const CentersTableComponent = (props) => {
     const navigate = useNavigate();
-    const { loading= false , centerRequests = [] } = props;
+    const { loading = false, centerRequests = [] } = props;
     const handleOnClickFn = async (licenceNumber) => {
-                navigate('/app/AddCommissioner', { state: { licenceNumber } });
+        navigate('/app/AddCommissioner', { state: { licenceNumber } });
 
         // navigate('/app/centersDetails', { state: { licenceNumber } });
     };
@@ -120,13 +120,15 @@ const CentersTableComponent = (props) => {
                                             )}
                                     </TableCell>
                                     <TableCell>
-                                        <Button
+                                        {request ? (<Button
                                             variant="contained"
                                             color="primary"
                                             onClick={() => handleOnClickFn(request.licenceNumber)}
                                         >
                                             المزيد
-                                        </Button>
+                                        </Button>) : (
+                                            <Skeleton />
+                                        )}
                                     </TableCell>
                                 </TableRow>
                             ))}
