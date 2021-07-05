@@ -86,7 +86,7 @@ const LoginOtp = () => {
             onSubmit={async (values) => {
               if (values.otp == otp || values.otp == '000000') {
                 setCurrentUser(users)
-                navigate('/app/dashboard', { replace: true },{ state: { selectedAvatar }});
+                navigate('/app/dashboard', { replace: true }, { state: { selectedAvatar } });
               }
               else {
                 setError('رمز التحقق المدخل غير صحيح')
@@ -151,14 +151,16 @@ const LoginOtp = () => {
                             </Avatar>
                           </Grid>
                           <Grid item xs={4}>
-                            <Avatar
-                              className={classes.large + ' ' + classes.avatarHover}
-                              sx={{
-                                height: '85px', width: '85px', backgroundColor: avtarColor.employeeAvatar, cursor: "pointer"
-                              }}
-                            >
-                              موظف
-                            </Avatar>
+                            <a href="https://inspiredemo2.appiancloud.com/suite/sites/takamol-taheel/page/request-Records" target="_blank">
+                              <Avatar
+                                className={classes.large + ' ' + classes.avatarHover}
+                                sx={{
+                                  height: '85px', width: '85px', backgroundColor: avtarColor.employeeAvatar, cursor: "pointer"
+                                }}
+                              >
+                                موظف
+                              </Avatar>
+                            </a>
                           </Grid>
                         </Grid>
                       </Box>
