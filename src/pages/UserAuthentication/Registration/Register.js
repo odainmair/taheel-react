@@ -197,16 +197,7 @@ const Register = () => {
     navigate('/login', { replace: true });
   };
   return (
-    <Box
-      sx={{
-        backgroundColor: 'background.default',
-        display: 'flex',
-        height: '100%',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        backgroundSize: "cover"
-      }}
-    >
+ 
       <>
       <Helmet>
         <title>Registration</title>
@@ -220,7 +211,7 @@ const Register = () => {
           sx={{
             backgroundColor: '#fafafa',
             width: '100%',
-
+            height: "100%",
             backgroundSize: "cover"
           }}
         >
@@ -279,7 +270,6 @@ const Register = () => {
                     >
                       تسجيل جديد لمستفيد
                     </Typography>
-
                   )
                   }
                   {selectedAvatar === "center" && (
@@ -289,7 +279,6 @@ const Register = () => {
                     >
                       تسجيل جديد لمركز
                     </Typography>
-
                   )
                   }
               </Box>
@@ -382,13 +371,12 @@ const Register = () => {
                     تسجيل الدخول
                   </Link>
                 </Typography>
+                <AlertDialog dialogContent={dialogContent} dialogTitle={dialogTitle} open={open} onClose={handleClose} acceptBtnName="تم" />
               </Box>
-              <AlertDialog dialogContent={dialogContent} dialogTitle={dialogTitle} open={open} onClose={handleClose} acceptBtnName="تم" />
             </Box>
           </Container>
         </Box>
       </>
-    </Box>
   );
 };
 
