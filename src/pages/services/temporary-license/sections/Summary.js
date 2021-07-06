@@ -49,8 +49,9 @@ const getFieldValue = ({ name, value }) => {
     return '';
 }
 
-const Summary = ({ Condition, dialog }) => {
+const Summary = ({ Condition, dialog, setField, values }) => {
     const [open, setOpen] = React.useState(false);
+    const [isAgree, setIsAgree] = React.useState(false);
     const handleClickOpen = (dialogContent, dialogTitle) => {
         setOpen(true);
     };
@@ -244,7 +245,12 @@ const Summary = ({ Condition, dialog }) => {
                                         name="agree"
                                         component={Checkbox}
                                         type="checkbox"
-                                        value="true"
+                                        value={!!values.agree[0]}
+                                        checked={isAgree}
+                                        onClick={() => {
+                                          setField("agree", values.agree ? [] : [true]); 
+                                          setIsAgree(!isAgree) 
+                                        }}
                                     />
                                 }
                             />
@@ -252,7 +258,12 @@ const Summary = ({ Condition, dialog }) => {
                     )}
                 </Field>
             </Grid>
-            <TermsDialog dialogContent={TermsContent()} dialogTitle={"التعهد"} open={open} onClose={handleClose} acceptBtnName="اوافق" />
+            <TermsDialog setAgreeValue={
+                ()=>{
+                    setIsAgree(true);
+                    setField("agree", [true])
+                }
+                } dialogContent={TermsContent()} dialogTitle={"التعهد"} open={open} onClose={handleClose} acceptBtnName="اوافق" />
 
         </>
     )
@@ -262,5 +273,7 @@ export default Summary;
 
 Summary.propTypes = {
     Condition: PropTypes.func.isRequired,
+    setField: PropTypes.func.isRequired,
+    values: PropTypes.func.isRequired,
     dialog: PropTypes.func.isRequired,
 };

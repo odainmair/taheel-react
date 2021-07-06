@@ -4,6 +4,8 @@ const required = 'يجب تعبئة الحقل'
 
 const CitizenValidate = values => {
   var msg = {}
+  if (!values.nationality)
+  msg.nationality = required;
   if (!values.idNumber)
     msg.idNumber = required;
   console.log(`nationality ${JSON.stringify(values.nationality)}`);

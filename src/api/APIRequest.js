@@ -79,7 +79,7 @@ const uploadFileAPI = async ( requestBody, fileName) =>{
       url: 'https://inspiredemo2.appiancloud.com/suite/webapi/taheel-apis-utilities-uploadDocument-v2',
       headers: { 
         'Appian-API-Key': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2YWUxNjY4OC1kMjMxLTRmZTQtYWYyMy0yYjQ5MWUyMjk2NDkifQ.sVfHaN8hSbxpZuuhIjq1Dd9YOEh_ckc2Qk9pCrX_3Sw',
-        'Appian-Document-Name': 'Profile Picture.jpg', 
+        'Appian-Document-Name': `${fileName}`, 
         'Content-Type': 'text/plain'
       },
       data : requestBody.src

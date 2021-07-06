@@ -366,7 +366,7 @@ export default [
     },{
       id: 'centerCap-required',
       isValidFun: checkIsNumber,
-      alert: 'يرجى ادخل رقم صحيح'
+      alert: 'يرجى إدخال رقم صحيح'
     }],
   },
   {
@@ -414,7 +414,7 @@ export default [
   {
     id: uuid(),
     label: {
-      ar: 'الفئة العمرية للمستفدين',
+      ar: 'جنس المستفدين',
       en: 'targetedGender'
     },
     name: 'targetedGender',

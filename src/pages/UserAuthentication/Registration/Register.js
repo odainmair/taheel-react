@@ -307,6 +307,7 @@ const Register = () => {
                     isTaheelValidate: false
                   }}
                   onSubmit={onSubmit}
+                  enableValidate={true}
                 >
                   <FinalFromWizard.Page
                     label=""
