@@ -41,18 +41,18 @@ export default
       sectionName: 'CenterDetails',
       validators: [],
     },
-    {
-      id: uuid(),
-      label: {
-        ar: 'رقم مالك المركز',
-        en: 'Owner Number'
-      },
-      name: 'ownerID',
-      type: 'Text',
-      gridSize: '6',
-      sectionName: 'CenterDetails',
-      validators: [],
-    },
+    // {
+    //   id: uuid(),
+    //   label: {
+    //     ar: 'رقم مالك المركز',
+    //     en: 'Owner Number'
+    //   },
+    //   name: 'ownerID',
+    //   type: 'Text',
+    //   gridSize: '6',
+    //   sectionName: 'CenterDetails',
+    //   validators: [],
+    // },
     // {
     //   id: uuid(),
     //   label: {
