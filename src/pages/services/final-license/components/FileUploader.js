@@ -69,6 +69,7 @@ const FileUploaderComp = ({ input: { value, name }, label, meta, setField, value
         setDocument(name, response.responseBody.docID, multipleFile, fileUploaded[i].name)
       }
     }
+    event.target.value = "";
     setLoading(false);
   };
 
