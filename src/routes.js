@@ -23,7 +23,8 @@ import ForgetPassword from './pages/UserAuthentication/forgetPassword/ForgetPass
 import CentersDetails from './pages/CentersManagement/components/CentersDetails';
 import Centers from './pages/CentersManagement/Centers';
 import AddCommissioner from './pages/CentersManagement/components/AddCommissioner';
-import DownloadDoc from './pages/account/components/DownloadDoc';
+import DownloadDoc from './pages/UserAuthentication/Login/components/DownloadDoc';
+import Orders from './pages/Orders';
 
 const routes = (isLoggedIn) => [
   {
@@ -32,6 +33,7 @@ const routes = (isLoggedIn) => [
     children: [
       { path: 'login', element: isLoggedIn === "" ? <Login /> : <Navigate to="/app/dashboard" />},
       { path: 'otplogin', element: <OTPLogin /> },
+      { path: 'downloadDoc', element: <DownloadDoc /> },
       { path: 'Home', element: <Home /> },
       { path: '/about', element: <About /> },
       { path: '/faq', element: <Faq /> },
@@ -58,7 +60,8 @@ const routes = (isLoggedIn) => [
       { path: 'dashboard', element: <Dashboard /> },
       { path: 'products', element: <ProductList /> },
       { path: 'settings', element: <Settings /> },
-      { path: '/notifications', element: <DownloadDoc /> },
+      { path: 'orders', element: <Orders /> },
+
 
       { path: '*', element: <Navigate to="/404" /> }
     ]

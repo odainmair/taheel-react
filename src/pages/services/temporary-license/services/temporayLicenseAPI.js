@@ -61,8 +61,8 @@ const validateAPIFunc = async values => {
     console.log(`idNumber[0] ${idNumber[0]}`);
     const response = { isSuccessful: true, message: '' };
 
-    if(idNumber[0] === "1" && requestType === "2"){
-        return { isSuccessful: false, message: 'لا يسمح بتقديم الطلب كصفة طبيعية لغير السعوديين' }
+    if(idNumber[0] === "2" && requestType === "2"){
+        return { isSuccessful: false, message: 'عذرا لا يمكنك التقديم على هذه الخدمة حيث تشير سجلاتنا أن المتقدم غير سعودي/سعودية الجنسية' }
     }
     if (requestType === "1") {
         const validateCompRs = await validateCompanyFunc(licenceNumber);

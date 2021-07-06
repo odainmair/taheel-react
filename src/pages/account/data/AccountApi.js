@@ -1,5 +1,5 @@
 
-import { APIRequest } from 'src/api/APIRequest';
+import { APIRequest, downloadFileAPI } from 'src/api/APIRequest';
 import { getCurrentUser } from 'src/utils/UserLocalStorage';
 
 const requestOTPPhoneNum = async (PhoneNumber) => {
@@ -36,16 +36,22 @@ const ownerInfoUpdate = async (idNumIqamaNum, email, phoneNumber, OTP) => {
     }
     const response = await APIRequest({ queryParams, url });
     return response;
+
 }
 
-const downloadTaheelDoc = async (DocID) => {
-    const url = '/taheel-apis-utilities-downloadDocument-v2/9469';
+const downloadTaheelDoc = async (DocID, DocName) => {
+    console.log(`downloadTaheelDoc ${DocID}`);
+    const url = 'taheel-apis-utilities-downloadDocument-v2';
+    const fileName = DocName;
     const queryParams = {
         DocID: DocID,
         attachment: true,
-    }
-    const response = await APIRequest({ queryParams, url });
-    return response;
-}
+    };
+    try {
+        await downloadFileAPI({ queryParams, url, fileName });
+    } catch {
 
-export { requestOTPPhoneNum, AuthOTPPhoneNum, ownerInfoUpdate,downloadTaheelDoc }
+    }
+    return;
+}
+export { requestOTPPhoneNum, AuthOTPPhoneNum, ownerInfoUpdate, downloadTaheelDoc };

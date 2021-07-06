@@ -59,7 +59,7 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
       return ('0' + day).slice(-2);
     }
     const birthDate = year + '' + numberToDay(month) + numberToDay(day);
-    const response = await validateCitizenFunc(idNumber, birthDate)
+    const response = await validateCitizenFunc(idNumber, birthDate,false)
 
     if (!response.isSuccessful)
       setErrMessage(response.message)
@@ -87,7 +87,7 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
       setLoading(false);
       return;
     }
-    const response = await validateCitizenFunc(iqamaNo);
+    const response = await validateCitizenFunc(iqamaNo,"",false);
     if (!response.isSuccessful)
       setErrMessage(response.message);
     else {

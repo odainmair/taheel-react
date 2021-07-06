@@ -172,11 +172,12 @@ const calculation = async (buildingArea, basementArea) => {
 	return response;
 }
 
-const validateCitizenFunc = async (idNumber, birthDate) => {
+const validateCitizenFunc = async (idNumber, birthDate,checkGovermental) => {
 	const url = "taheel-apis-utilities-validateCitizen-v3"
 	const requestBody = {
 		IDNo: idNumber,
-		HijriDateOfBirth: birthDate
+		HijriDateOfBirth: birthDate,
+		checkGovermental:checkGovermental
 	};
 	const response = await APIRequest({ requestBody, url });
 	return response;

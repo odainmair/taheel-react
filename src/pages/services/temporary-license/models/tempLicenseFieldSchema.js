@@ -414,7 +414,7 @@ export default [
   {
     id: uuid(),
     label: {
-      ar: 'الفئة العمرية للمستفدين',
+      ar: 'جنس المستفدين',
       en: 'targetedGender'
     },
     name: 'targetedGender',

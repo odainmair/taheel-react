@@ -16,6 +16,8 @@ import {
   Monitor as BarChartIcon,
   ShoppingBag as ShoppingBagIcon,
   User as UserIcon,
+  Home as homeIcon,
+  FileText as ordersIcon,
 } from 'react-feather';
 import { getCurrentUser } from 'src/utils/UserLocalStorage';
 import { logoutUser } from 'src/utils/UserLocalStorage';
@@ -45,7 +47,7 @@ const items = [
   },
   {
     href: '/app/centers',
-    icon: UserIcon,
+    icon: homeIcon,
     title: 'المراكز'
   },
   {
@@ -55,14 +57,14 @@ const items = [
   },
   {
     href: '/app/orders',
-    icon: UserIcon,
+    icon: ordersIcon,
     title: 'الطلبات'
   },
-  {
-    href: '/app/notifications',
-    icon: UserIcon,
-    title: 'التنبيهات'
-  },
+  // {
+  //   href: '/app/notifications',
+  //   icon: UserIcon,
+  //   title: 'التنبيهات'
+  // },
   {
     href: '/login',
     icon: LogoutIcon,

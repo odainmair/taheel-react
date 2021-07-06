@@ -92,7 +92,7 @@ const CreateTemporaryLicense = () => {
               validate={(values) => {
                 const error = sectionValidateInput(tempLicenseFieldSchema, "CenterDetails", values);
                 if(values['targetedGender'] === "b" && values['ageGroup'] !== "2-12"){
-                  error['ageGroup']= "يرجى اختيار الفئة العمرية من سنتين الى 12 سنة"
+                  error['ageGroup']= "الفئة العمرية من ١٣-١٨ و ١٩-٤٥ لا تسمح بكلا الجنسين"
                 }
                 if(values['centerCap']<=0){
                   error['centerCap']= "يجب إدخال الطاقة الاستعابية اكبر من صفر "

@@ -5,6 +5,8 @@ import Avatar from '@material-ui/core/Avatar';
 import { makeStyles } from '@material-ui/core/styles';
 import { useState } from 'react';
 import { Field } from 'react-final-form';
+import { Helmet } from 'react-helmet';
+
 import {
   CardContent,
   Typography,
@@ -76,10 +78,10 @@ const Register = () => {
   const [isMobileNavOpen, setMobileNavOpen] = useState(false);
   const [is, setIs] = useState(false)
   const [info, setInfo] = React.useState({});
-  const [selectedAvatar, setSelectedAvatar] = useState('beneficiary');
+  const [selectedAvatar, setSelectedAvatar] = useState('center');
   const [avtarColor, setColor] = useState({
-    beneficiaryAvatar: '#214256',
-    centerAvatar: '#c8d9d9',
+    beneficiaryAvatar: '#c8d9d9',
+    centerAvatar: '#214256' ,
   });
 
   const navigate = useNavigate();
@@ -206,6 +208,9 @@ const Register = () => {
       }}
     >
       <>
+      <Helmet>
+        <title>Registration</title>
+      </Helmet>
         <DashboardNavbar onMobileNavOpen={() => setMobileNavOpen(true)} />
         <MainNavbar
           onMobileClose={() => setMobileNavOpen(false)}
@@ -267,12 +272,26 @@ const Register = () => {
                 </Grid>
               </Box>
               <Box sx={{ mb: 3, textAlign: 'center' }}>
-                <Typography
-                  color="textPrimary"
-                  variant="h2"
-                >
-                  تسجيل جديد للمركز
-                </Typography>
+              {selectedAvatar === "beneficiary" && (
+                    <Typography
+                      color="textPrimary"
+                      variant="h2"
+                    >
+                      تسجيل جديد لمستفيد
+                    </Typography>
+
+                  )
+                  }
+                  {selectedAvatar === "center" && (
+                    <Typography
+                      color="textPrimary"
+                      variant="h2"
+                    >
+                      تسجيل جديد لمركز
+                    </Typography>
+
+                  )
+                  }
               </Box>
               <CardContent sx={{ padding: "0px" }}>
                 {errMessage && (
@@ -288,6 +307,7 @@ const Register = () => {
                     isTaheelValidate: false
                   }}
                   onSubmit={onSubmit}
+                  enableValidate={true}
                 >
                   <FinalFromWizard.Page
                     label=""

@@ -12,18 +12,17 @@ import CentersTableComponent from './components/CentersTableComponent';
 
 const Centers = (props) => {
   const { email } = getCurrentUser();
-  console.log("email+++++++++++++", email);
   const [centers, setCenters] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(async () => {
     const getCentersDetails = await getCenters(email);
     if (!getCentersDetails.isSuccessful) {
-      response = { isSuccessful: false, message: getCentersDetails.message };
+      setLoading(true);
     } else {
       const { Centers } = getCentersDetails.responseBody.data;
+      setLoading(true);
       setCenters(Centers)
-      console.log("Centerssssssssssssssssssssss+++++++++++++", Centers);
     }
   }, []);
   return (
