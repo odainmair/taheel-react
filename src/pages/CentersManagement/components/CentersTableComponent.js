@@ -119,7 +119,7 @@ const CentersTableComponent = (props) => {
                                                 <Skeleton />
                                             )}
                                     </TableCell>
-                                    <TableCell>
+                                    {/* <TableCell>
                                         <Button
                                             variant="contained"
                                             color="primary"
@@ -127,7 +127,7 @@ const CentersTableComponent = (props) => {
                                         >
                                             المزيد
                                         </Button>
-                                    </TableCell>
+                                    </TableCell> */}
                                 </TableRow>
                             ))}
                         </TableBody>

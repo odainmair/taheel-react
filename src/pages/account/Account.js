@@ -60,7 +60,7 @@ const Account = () => {
         email: values.email,
         phoneNumber: values.phoneNumber,
       });
-      SetsuccessMessage('لقد تم حفظ المعلومات بنجاح');
+      SetsuccessMessage('لقد تم حفظ الملف التعريفي بنجاح ');
     }
     return response;
   }
