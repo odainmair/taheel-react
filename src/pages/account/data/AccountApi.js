@@ -37,4 +37,15 @@ const ownerInfoUpdate = async (idNumIqamaNum, email, phoneNumber, OTP) => {
     const response = await APIRequest({ queryParams, url });
     return response;
 }
-export { requestOTPPhoneNum, AuthOTPPhoneNum, ownerInfoUpdate }
+
+const downloadTaheelDoc = async (DocID) => {
+    const url = '/taheel-apis-utilities-downloadDocument-v2/9469';
+    const queryParams = {
+        DocID: DocID,
+        attachment: true,
+    }
+    const response = await APIRequest({ queryParams, url });
+    return response;
+}
+
+export { requestOTPPhoneNum, AuthOTPPhoneNum, ownerInfoUpdate,downloadTaheelDoc }

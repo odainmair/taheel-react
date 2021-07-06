@@ -39,19 +39,29 @@ const items = [
     title: 'لوحة البيانات'
   },
   {
-    href: '/app/products',
-    icon: ShoppingBagIcon,
-    title: 'الخدمات'
-  },
-  {
     href: '/app/account',
     icon: UserIcon,
-    title: 'المعلومات الشخصيه'
+    title: 'الملف التعريفي'
   },
   {
     href: '/app/centers',
     icon: UserIcon,
     title: 'المراكز'
+  },
+  {
+    href: '/app/products',
+    icon: ShoppingBagIcon,
+    title: 'الخدمات'
+  },
+  {
+    href: '/app/orders',
+    icon: UserIcon,
+    title: 'الطلبات'
+  },
+  {
+    href: '/app/notifications',
+    icon: UserIcon,
+    title: 'التنبيهات'
   },
   {
     href: '/login',
