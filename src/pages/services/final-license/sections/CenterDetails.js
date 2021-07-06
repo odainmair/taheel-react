@@ -41,13 +41,13 @@ const CenterDetails = ({ editMode, setEditMode, Condition, values, temporaryLice
       return;
     }
     if (!values.CRNumber) {
-      setErrMessage('يرجى ادخل رقم السجل تجاري');
+      setErrMessage('يرجى إدخال رقم السجل تجاري');
       setLoading(false);
       return;
     }
     console.log(`CRNumber vaildate ${!isNaN(values.CRNumber) && values.CRNumber.length !== 10}`)
     if ( values.CRNumber.length > 10) {
-      setErrMessage('يجب ان الا يزيد رقم السجل تجاري عن 10 خانات');
+      setErrMessage('يجب ان لا يزيد رقم السجل تجاري عن 10 خانات');
       setLoading(false);
       return;
     }

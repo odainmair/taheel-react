@@ -28,6 +28,7 @@ import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 import Collapse from '@material-ui/core/Collapse';
 import { makeStyles } from '@material-ui/core/styles';
+import moment from 'moment-hijri';
 
 const contentField = ({ input: { value, name }, label, inputType }) => (
   <>
@@ -69,9 +70,10 @@ const getFieldValue = ({ name, value }) => {
   return '';
 }
 
-const Summary = ({ values }) => {
+const Summary = ({ values, setField }) => {
 
   const [open, setOpen] = React.useState(false);
+  const [isAgree, setIsAgree] = React.useState(false);
   const [SponsorName, setSponsorName] = React.useState(false)
   const handleClickOpen = (dialogContent, dialogTitle) => {
     setOpen(true);
@@ -98,7 +100,7 @@ const Summary = ({ values }) => {
             {name.idNumber ? name.idNumber : name.iqamaNo}
           </TableCell>
           <TableCell component="th" scope="row">
-            {name.birthDate}
+            {moment(`${name.birthDate}`, 'iYYYYiMMiDD').format('iDD/iMM/iYYYY')}
           </TableCell>
 
           <TableCell component="th" scope="row">
@@ -390,7 +392,12 @@ const Summary = ({ values }) => {
           )}
         </Field>
       </Grid>
-      <TermsDialog dialogContent={TermsContent()} dialogTitle={"التعهد"} open={open} onClose={handleClose} acceptBtnName="اوافق" />
+      <TermsDialog setAgreeValue={
+        ()=>{
+            setIsAgree(true);
+            setField("agree", [true])
+          }
+        } dialogContent={TermsContent()} dialogTitle={"التعهد"} open={open} onClose={handleClose} acceptBtnName="اوافق" />
     </>
   )
 }
@@ -404,6 +411,7 @@ Summary.propTypes = {
   index: PropTypes.number,
   name: PropTypes.string,
   fields: PropTypes.object,
+  setField: PropTypes.func.isRequired,
   setSponsorName: PropTypes.func,
 
 };

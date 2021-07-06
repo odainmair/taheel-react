@@ -8,6 +8,18 @@ export default
     {
       id: uuid(),
       label: {
+        ar: 'نوع المركز',
+        en: 'Center Type'
+      },
+      name: 'centerType',
+      type: 'Text',
+      gridSize: '6',
+      sectionName: 'CenterDetails',
+      validators: [],
+    },
+    {
+      id: uuid(),
+      label: {
         ar: 'اسم المركز',
         en: 'Temporary License Number'
       },
@@ -29,18 +41,18 @@ export default
       sectionName: 'CenterDetails',
       validators: [],
     },
-    {
-      id: uuid(),
-      label: {
-        ar: 'رقم مالك المركز',
-        en: 'Owner Number'
-      },
-      name: 'ownerID',
-      type: 'Text',
-      gridSize: '6',
-      sectionName: 'CenterDetails',
-      validators: [],
-    },
+    // {
+    //   id: uuid(),
+    //   label: {
+    //     ar: 'رقم مالك المركز',
+    //     en: 'Owner Number'
+    //   },
+    //   name: 'ownerID',
+    //   type: 'Text',
+    //   gridSize: '6',
+    //   sectionName: 'CenterDetails',
+    //   validators: [],
+    // },
     // {
     //   id: uuid(),
     //   label: {
