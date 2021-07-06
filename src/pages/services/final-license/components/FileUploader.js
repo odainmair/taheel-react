@@ -8,7 +8,7 @@ import { uploadDocumentApi } from '../services/finalLicenseAPI';
 import InfoIcon from '@material-ui/icons/Info';
 import { useEffect } from 'react';
 
-const FileUploaderComp = ({ input: { value, name }, label, meta, setField, values, rowIndex = -1, multipleFile, tooltipText }) => {
+const FileUploaderComp = ({ input: { value, name }, label, meta, setField, values, rowIndex = -1, multipleFile, tooltipText, resetAttachment=false }) => {
   const showError = ((meta.submitError && !meta.dirtySinceLastSubmit) || meta.error) && meta.touched;
   const [loading, setLoading] = React.useState(false);
   const hiddenFileInput = React.useRef(null);
@@ -123,6 +123,7 @@ FileUploaderComp.propTypes = {
   values: PropTypes.object,
   meta: PropTypes.object,
   tooltipText: PropTypes.string,
+  resetAttachment: PropTypes.bool,
   rowIndex: PropTypes.number
 
 }
