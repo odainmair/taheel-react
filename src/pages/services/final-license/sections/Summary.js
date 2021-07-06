@@ -86,7 +86,7 @@ const Summary = ({ values, setField }) => {
 
   const Row = ({ fields, setSponsorName, name, index }) => {
     const classes = useRowStyles();
-    const [showen, setShowen] = React.useState(false)
+    const [showen, setShowen] = React.useState(true);
 
     return (
       <>
@@ -134,7 +134,7 @@ const Summary = ({ values, setField }) => {
         </TableRow>
         <TableRow >
           <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={12}>
-            <Collapse in={showen} className={`Attach${index}`} timeout="auto" unmountOnExit  >
+            <Collapse in={!showen} className={`Attach${index}`} timeout="auto" unmountOnExit  >
 
               <Grid
                 container
@@ -262,7 +262,8 @@ const Summary = ({ values, setField }) => {
         mb={3}
       >
         {finalLicenseFieldSchema.filter(fintalLicense => fintalLicense.sectionName === "Requirements" && !fintalLicense.dependOn).map(filteredFinalLicense => (
-          <Grid
+          
+          values[filteredFinalLicense.name] > 0 && values[filteredFinalLicense.name][0] ? (<Grid
             item
             key={filteredFinalLicense.id}
             lg={6}
@@ -271,6 +272,7 @@ const Summary = ({ values, setField }) => {
           >
             < DownloadButtTable docIDs={values[filteredFinalLicense.name]} name={filteredFinalLicense.name} label={filteredFinalLicense.label.ar} />
           </Grid>
+        ) : ''
         ))}
       </Grid>
 
@@ -291,33 +293,59 @@ const Summary = ({ values, setField }) => {
         mb={3}
       >
         {finalLicenseFieldSchema.filter(fintalLicense => fintalLicense.sectionName === "HealthServices" && !fintalLicense.dependOn).map(filteredFinalLicense => (
+          values.healthServices === 'yes' ? (
+          <>
+            <Grid
+              item
+              key={filteredFinalLicense.id}
+              lg={6}
+              md={6}
+              xs={12}
+            >
+              <Field
+                label={filteredFinalLicense.label.ar}
+                name={filteredFinalLicense.name}
+                component={contentField}
+                inputType={filteredFinalLicense.type}
+              />
+            </Grid>
+          </>
+          )
+          : filteredFinalLicense.name === 'healthServices' && (
+          <>
+            <Grid
+              item
+              key={filteredFinalLicense.id}
+              lg={6}
+              md={6}
+              xs={12}
+            >
+              <Field
+                label={filteredFinalLicense.label.ar}
+                name={filteredFinalLicense.name}
+                component={contentField}
+                inputType={filteredFinalLicense.type}
+              />
+            </Grid>
+          </>
+          )
+        ))}
+        {values.healthServices === 'yes' && (
           <Grid
             item
-            key={filteredFinalLicense.id}
             lg={6}
             md={6}
             xs={12}
-          >
-            <Field
-              label={filteredFinalLicense.label.ar}
-              name={filteredFinalLicense.name}
-              component={contentField}
-              inputType={filteredFinalLicense.type}
-            />
+            >
+            < DownloadButtTable docIDs={values.healthServiceAttachment} name='healthServiceAttachment' label='مرفقات الخدمات الصحية' />
           </Grid>
-        ))}
-        <Grid
-          item
-          lg={6}
-          md={6}
-          xs={12}
-        >
-          < DownloadButtTable docIDs={values.healthServiceAttachment} name='healthServiceAttachment' label='مرفقات الخدمات الصحية' />
-        </Grid>
+        )}
 
       </Grid>
       <Divider />
 
+      {Array.isArray(values.customers) && values.customers.length > 0 && 
+      <>
       <Typography
         color="textPrimary"
         gutterBottom
@@ -353,15 +381,16 @@ const Summary = ({ values, setField }) => {
                   {SponsorName &&
                     <TableCell > اسم الكفيل</TableCell>
                   }
+                  <TableCell> المرفقات</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                <FieldArray name="customers">
-
-                  {({ fields }) => fields.value.map((name, index) => (
+              {<FieldArray name="customers">
+                  {({ fields }) => fields && fields.value && fields.value.map((name, index) => (
                     <Row key={index} setSponsorName={setSponsorName} fields={fields} name={name} index={index} />
                   ))}
                 </FieldArray>
+              }
               </TableBody>
             </Table>
           </TableContainer>
@@ -369,6 +398,8 @@ const Summary = ({ values, setField }) => {
         </Grid>
       </Grid>
       <Divider />
+      </>
+      }
 
       <Grid
         container
@@ -384,7 +415,12 @@ const Summary = ({ values, setField }) => {
                     name="agree"
                     component={Checkbox}
                     type="checkbox"
-                    value="true"
+                    value={!!values.agree[0]}
+                    checked={isAgree}
+                    onClick={() => {
+                      setField("agree", values.agree ? [] : [true]); 
+                      setIsAgree(!isAgree) 
+                    }}
                   />
                 }
               />
