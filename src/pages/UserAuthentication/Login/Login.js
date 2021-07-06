@@ -268,7 +268,7 @@ const Login = () => {
               </LoginFinalFromWizard.Page>
               </LoginFinalFromWizard>
             </CardContent>
-          <Box
+          {/* <Box
             textAlign="center"
             sx={{
               py: 2,
@@ -277,7 +277,7 @@ const Login = () => {
               flexDirection: 'column',
             }}
           >
-          </Box>
+          </Box> */}
           </Box>
         </Container >
     </Box >
