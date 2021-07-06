@@ -12,12 +12,16 @@ const FileUploaderComp = ({ input: { value, name }, label, meta, setField, value
   const showError = ((meta.submitError && !meta.dirtySinceLastSubmit) || meta.error) && meta.touched;
   const [loading, setLoading] = React.useState(false);
   const hiddenFileInput = React.useRef(null);
-  const [uploadedFileName, setUploadedFileName] = React.useState("");
+  const [uploadedFileName, setUploadedFileName] = React.useState();
   var multipleFileDocs = []
   useEffect(() => {
+    console.log(`-- FileUploaderComp resetAttachment ${resetAttachment}`);
     console.log(`-- FileUploaderComp multipleFile ${multipleFile}`);
     console.log(`-- FileUploaderComp RowIndex ${name}`);
     console.log(`-- FileUploaderComp RowIndex ${rowIndex} ${rowIndex && rowIndex !== -1}`);
+
+    setUploadedFileName("");
+
     let docId = ""
     /* if (rowIndex !== -1) {
        if (values) {
@@ -32,7 +36,7 @@ const FileUploaderComp = ({ input: { value, name }, label, meta, setField, value
       setUploadedFileName(`تم رفع الملف ${values[`${name}FileName`]?values[`${name}FileName`]:""} بنجاح`);
     }
 
-  }, [])
+  }, [resetAttachment])
 
   const setDocument = (name, docID, multipleFile, fileName) => {
     if (!multipleFile) {
