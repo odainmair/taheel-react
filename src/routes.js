@@ -8,6 +8,7 @@ import CreatefinalLicense from 'src/pages/services/final-license/CreateFinalLice
 import CreateFinalLicenseRenewal from 'src/pages/services/final-license/CreateFinalLicenseRenewal';
 import CustomerList from 'src/pages/CustomerList';
 import Dashboard from 'src/pages/Dashboard';
+// import Drafts from 'src/pages/Drafts';
 import Login from 'src/pages/UserAuthentication/Login/Login';
 import NotFound from 'src/pages/NotFound';
 import ProductList from 'src/pages/ProductList';
@@ -58,6 +59,7 @@ const routes = (isLoggedIn) => [
       { path: 'AddCommissioner', element: <AddCommissioner /> },
       { path: 'customers', element: <CustomerList /> },
       { path: 'dashboard', element: <Dashboard /> },
+      // { path: 'drafts', element: <Drafts /> },
       { path: 'products', element: <ProductList /> },
       { path: 'settings', element: <Settings /> },
       { path: 'orders', element: <Orders /> },
@@ -72,6 +74,7 @@ const routes = (isLoggedIn) => [
     children: [
       { path: 'templicense', element: <CreateTemporaryLicense /> },
       { path: 'finallicense', element: <CreatefinalLicense /> },
+      { path: 'updatefinallicenserenewal', element: <CreatefinalLicense /> },
       { path: 'finallicenserenewal', element: <CreateFinalLicenseRenewal /> },
       { path: '*', element: <Navigate to="/404" /> }
     ]
