@@ -7,9 +7,9 @@ const CredentialValidation = values => {
   var msg = {}
   if (!values.email)
     msg.email = required;
-  else if (!checkEmailPattern(values.email)) {
-    msg.email = 'يرجى ادخال البريد الكتروني صحيح';
-  }
+  // else if (!checkEmailPattern(values.email)) {
+  //   msg.email = 'يرجى ادخال البريد الكتروني صحيح';
+  // }
   if (!values.password)
     msg.password = required;
   return msg;
