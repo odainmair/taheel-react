@@ -7,12 +7,16 @@ import React from 'react';
 import { uploadDocumentApi } from '../services/finalLicenseAPI';
 import InfoIcon from '@material-ui/icons/Info';
 import { useEffect } from 'react';
+import { ErrorMessage } from 'mui-rff';
 
 const FileUploaderComp = ({ input: { value, name }, label, meta, setField, values, rowIndex = -1, multipleFile, tooltipText, resetAttachment=false }) => {
-  const showError = ((meta.submitError && !meta.dirtySinceLastSubmit) || meta.error) && meta.touched;
+  const showRequiredError = ((meta.submitError && !meta.dirtySinceLastSubmit) || meta.error) && meta.touched
+  const [showFileError, setShowFileError] = React.useState(false)
   const [loading, setLoading] = React.useState(false);
   const hiddenFileInput = React.useRef(null);
   const [uploadedFileName, setUploadedFileName] = React.useState();
+  const [errMessage, setErrMessage] = React.useState("يرجى ارفاق هذا الملف");
+
   var multipleFileDocs = []
   useEffect(() => {
     console.log(`-- FileUploaderComp resetAttachment ${resetAttachment}`);
@@ -58,12 +62,20 @@ const FileUploaderComp = ({ input: { value, name }, label, meta, setField, value
     console.log(`--fileUploaded ${JSON.stringify(fileUploaded)}`);
     for (let i = 0; i < fileUploaded.length; i++) {
       console.log('...fileUploaded...', JSON.stringify(fileUploaded[i].name))
+      console.log('...fileUploaded :: SIZE: ', JSON.stringify(fileUploaded[i].size) <= (1024*1024*2))
+      if(fileUploaded[i].size > (1024*1024*2)) {
+        setShowFileError(true)
+        setErrMessage("الملف المراد رفعه تجاوز الحد الأقصى (2 ميقابايت)")
+        setLoading(false)
+        return
+      }
+      setShowFileError(false)
       const buf = await uploadDocument(fileUploaded[i]);
       const response = await uploadDocumentApi(fileUploaded[i].name, buf);
 
       console.log('...response...', response)
       if (!response.isSuccessful)
-        SetErrMessage(response.message)
+        setErrMessage(response.message)
       else {
         setUploadedFileName(`تم رفع الملف ${fileUploaded[i].name} بنجاح`);
         setDocument(name, response.responseBody.docID, multipleFile, fileUploaded[i].name)
@@ -83,8 +95,8 @@ const FileUploaderComp = ({ input: { value, name }, label, meta, setField, value
         variant="outlined"
         dir="rtl"
         disabled
-        helperText={showError ? "يرجى ارفاق هذا الملف" : uploadedFileName}
-        error={showError}
+        helperText={showRequiredError || showFileError ? errMessage : uploadedFileName}
+        error={showRequiredError || showFileError}
         className="custom-field"
         InputProps={{
           endAdornment: (
