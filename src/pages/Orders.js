@@ -85,13 +85,13 @@ const Orders = () => {
         const getTaheelRequestsRs = await getTaheelRequestsFun(email);
         let response = {};
         if (!getTaheelRequestsRs.isSuccessful) {
-            setLoading(false);
+            setLoading(true);
             response = { isSuccessful: false, message: getTaheelRequestsRs.message };
         } else {
             setLoading(true);
-            const { data } = getTaheelRequestsRs.responseBody;
-            console.log(JSON.stringify(data));
-            setTaheelRequests(data);
+            const { requests ,totalCount} = getTaheelRequestsRs.responseBody.data;            
+            console.log(JSON.stringify(requests));
+            setTaheelRequests(requests);
         }
         return response;
     }, []);
