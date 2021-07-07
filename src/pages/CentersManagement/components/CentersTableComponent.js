@@ -120,7 +120,7 @@ const CentersTableComponent = (props) => {
                                             )}
                                     </TableCell>
                                     <TableCell>
-                                        {request ? (<Button
+                                       {/*  {request ? (<Button
                                             variant="contained"
                                             color="primary"
                                             onClick={() => handleOnClickFn(request.licenceNumber)}
@@ -128,7 +128,7 @@ const CentersTableComponent = (props) => {
                                             المزيد
                                         </Button>) : (
                                             <Skeleton />
-                                        )}
+                                        )} */}
                                     </TableCell>
                                 </TableRow>
                             ))}
