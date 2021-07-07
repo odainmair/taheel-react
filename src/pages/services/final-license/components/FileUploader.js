@@ -36,7 +36,9 @@ const FileUploaderComp = ({ input: { value, name }, label, meta, setField, value
      else */
     docId = (values) ? values[name] : "";
 
-    if (docId) {
+    // console.log(`========================> docId.length: ${docId.length}`)
+    if (Array.isArray(docId) && docId.length > 0 && docId[0] != null) {
+      // console.log(`========================> docId: ${docId[0]}`)
       setUploadedFileName(`تم رفع الملف ${values[`${name}FileName`]?values[`${name}FileName`]:""} بنجاح`);
     }
 
@@ -63,18 +65,26 @@ const FileUploaderComp = ({ input: { value, name }, label, meta, setField, value
     for (let i = 0; i < fileUploaded.length; i++) {
       console.log('...fileUploaded...', JSON.stringify(fileUploaded[i].name))
       console.log('...fileUploaded :: SIZE: ', JSON.stringify(fileUploaded[i].size) <= (1024*1024*2))
-      if(fileUploaded[i].size > (1024*1024*2)) {
+
+      const fileValidation = validateFile(fileUploaded[i])
+
+      if(fileValidation && !fileValidation.isValid) {
         setShowFileError(true)
-        setErrMessage("الملف المراد رفعه تجاوز الحد الأقصى (2 ميقابايت)")
         setLoading(false)
+        setErrMessage(fileValidation.error)
         return
       }
+      
       setShowFileError(false)
       const buf = await uploadDocument(fileUploaded[i]);
       const response = await uploadDocumentApi(fileUploaded[i].name, buf);
 
       console.log('...response...', response)
-      if (!response.isSuccessful)
+      if (response.status != 200) {
+        setShowFileError(true)
+        setErrMessage(response.status)
+      }
+      else if (!response.isSuccessful)
         setErrMessage(response.message)
       else {
         setUploadedFileName(`تم رفع الملف ${fileUploaded[i].name} بنجاح`);
@@ -139,4 +149,14 @@ FileUploaderComp.propTypes = {
   resetAttachment: PropTypes.bool,
   rowIndex: PropTypes.number
 
+}
+
+function validateFile(file) {
+  const allowedExtensions = ['pdf', 'txt', 'png', 'jpg', 'jpeg', 'docx', 'doc'];
+  if(!allowedExtensions.includes(file.name.split('.').pop().toLowerCase())) {
+    return {isValid:false, error: "امتداد الملف المراد رفعه غير مسموح به"}
+  }
+  else if(file.size > (1024*1024*2)) {
+    return {isValid:false, error: "الملف المراد رفعه تجاوز الحد الأقصى (2 ميجابايت)"}
+  }
 }
