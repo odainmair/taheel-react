@@ -74,7 +74,7 @@ const Register = () => {
   const [errMessage, SetErrMessage] = useState('');
   const [idNum, setIdNum] = useState('');
   const [phoneNum, setPhoneNum] = useState('');
-  const [userType, setUserType] = useState("4");
+  const [userType, setUserType] = useState("2");
   const [isMobileNavOpen, setMobileNavOpen] = useState(false);
   const [is, setIs] = useState(false)
   const [info, setInfo] = React.useState({});
@@ -238,6 +238,7 @@ const Register = () => {
                         setUserType("4");
                         setSelectedAvatar('beneficiary'),
                           setColor({ ...avtarColor, beneficiaryAvatar: '#214256', centerAvatar: '#c8d9d9', employeeAvatar: '#c8d9d9' })
+                          console.log(' beneficiary userType+++++++++++++++',userType);
                       }}
                       sx={{
                         height: '85px', width: '85px', backgroundColor: avtarColor.beneficiaryAvatar, cursor: "pointer"
@@ -253,6 +254,8 @@ const Register = () => {
                         setUserType("2");
                         setSelectedAvatar('center'),
                           setColor({ ...avtarColor, beneficiaryAvatar: '#c8d9d9', centerAvatar: '#214256', employeeAvatar: '#c8d9d9' })
+                          console.log(' center userType+++++++++++++++',userType);
+
                       }} sx={{
                         height: '85px', width: '85px', backgroundColor: avtarColor.centerAvatar, cursor: "pointer"
                       }}
