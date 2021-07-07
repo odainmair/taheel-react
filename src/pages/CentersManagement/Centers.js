@@ -42,22 +42,15 @@ const Centers = (props) => {
             container
             spacing={3}
           >
-            <Grid
-              container
+            <Grid item
               lg={12}
-              md={6}
+              md={12}
               xs={12}
-              marginTop={3}
+              marginBottom={3}
             >
-              <Grid item
-                lg={12}
-                md={12}
-                xs={12}
-                marginBottom={3}
-              >
-                <CentersTableComponent loading={loading} centerRequests={centers} />                </Grid >
-            </Grid>
+              <CentersTableComponent loading={loading} centerRequests={centers} />                </Grid >
           </Grid>
+
         </Container>
       </Box>
     </>
