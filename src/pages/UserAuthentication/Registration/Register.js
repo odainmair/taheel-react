@@ -74,7 +74,7 @@ const Register = () => {
   const [errMessage, SetErrMessage] = useState('');
   const [idNum, setIdNum] = useState('');
   const [phoneNum, setPhoneNum] = useState('');
-  const [userType, setUserType] = useState("4");
+  const [userType, setUserType] = useState("2");
   const [isMobileNavOpen, setMobileNavOpen] = useState(false);
   const [is, setIs] = useState(false)
   const [info, setInfo] = React.useState({});
@@ -197,16 +197,7 @@ const Register = () => {
     navigate('/login', { replace: true });
   };
   return (
-    <Box
-      sx={{
-        backgroundColor: 'background.default',
-        display: 'flex',
-        height: '100%',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        backgroundSize: "cover"
-      }}
-    >
+ 
       <>
       <Helmet>
         <title>Registration</title>
@@ -220,7 +211,7 @@ const Register = () => {
           sx={{
             backgroundColor: '#fafafa',
             width: '100%',
-
+            height: "100%",
             backgroundSize: "cover"
           }}
         >
@@ -247,6 +238,7 @@ const Register = () => {
                         setUserType("4");
                         setSelectedAvatar('beneficiary'),
                           setColor({ ...avtarColor, beneficiaryAvatar: '#214256', centerAvatar: '#c8d9d9', employeeAvatar: '#c8d9d9' })
+                          console.log(' beneficiary userType+++++++++++++++',userType);
                       }}
                       sx={{
                         height: '85px', width: '85px', backgroundColor: avtarColor.beneficiaryAvatar, cursor: "pointer"
@@ -262,6 +254,8 @@ const Register = () => {
                         setUserType("2");
                         setSelectedAvatar('center'),
                           setColor({ ...avtarColor, beneficiaryAvatar: '#c8d9d9', centerAvatar: '#214256', employeeAvatar: '#c8d9d9' })
+                          console.log(' center userType+++++++++++++++',userType);
+
                       }} sx={{
                         height: '85px', width: '85px', backgroundColor: avtarColor.centerAvatar, cursor: "pointer"
                       }}
@@ -279,7 +273,6 @@ const Register = () => {
                     >
                       تسجيل جديد لمستفيد
                     </Typography>
-
                   )
                   }
                   {selectedAvatar === "center" && (
@@ -289,7 +282,6 @@ const Register = () => {
                     >
                       تسجيل جديد لمركز
                     </Typography>
-
                   )
                   }
               </Box>
@@ -382,13 +374,12 @@ const Register = () => {
                     تسجيل الدخول
                   </Link>
                 </Typography>
+                <AlertDialog dialogContent={dialogContent} dialogTitle={dialogTitle} open={open} onClose={handleClose} acceptBtnName="تم" />
               </Box>
-              <AlertDialog dialogContent={dialogContent} dialogTitle={dialogTitle} open={open} onClose={handleClose} acceptBtnName="تم" />
             </Box>
           </Container>
         </Box>
       </>
-    </Box>
   );
 };
 

@@ -58,7 +58,7 @@ const Login = () => {
   const { users, setUser } = useContext(localContext);
   const [errMessage, SetErrMessage] = useState('');
   const [selectedAvatar, setSelectedAvatar] = useState('center');
-  const [userType, setUserType] = useState("1");
+  const [userType, setUserType] = useState("2");
   const [phone, setPhone] = useState('');
   const [iqamaId, setIqamaId] = useState('');
   const [otp, setOtp] = useState('');
@@ -268,7 +268,7 @@ const Login = () => {
               </LoginFinalFromWizard.Page>
               </LoginFinalFromWizard>
             </CardContent>
-          <Box
+          {/* <Box
             textAlign="center"
             sx={{
               py: 2,
@@ -277,7 +277,7 @@ const Login = () => {
               flexDirection: 'column',
             }}
           >
-          </Box>
+          </Box> */}
           </Box>
         </Container >
     </Box >
