@@ -74,7 +74,7 @@ const Register = () => {
   const [errMessage, SetErrMessage] = useState('');
   const [idNum, setIdNum] = useState('');
   const [phoneNum, setPhoneNum] = useState('');
-  const [userType, setUserType] = useState("2");
+  const [userType, setUserType] = useState("1");
   const [isMobileNavOpen, setMobileNavOpen] = useState(false);
   const [is, setIs] = useState(false)
   const [info, setInfo] = React.useState({});

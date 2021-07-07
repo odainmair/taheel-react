@@ -58,7 +58,7 @@ const Login = () => {
   const { users, setUser } = useContext(localContext);
   const [errMessage, SetErrMessage] = useState('');
   const [selectedAvatar, setSelectedAvatar] = useState('center');
-  const [userType, setUserType] = useState("2");
+  const [userType, setUserType] = useState("1");
   const [phone, setPhone] = useState('');
   const [iqamaId, setIqamaId] = useState('');
   const [otp, setOtp] = useState('');
