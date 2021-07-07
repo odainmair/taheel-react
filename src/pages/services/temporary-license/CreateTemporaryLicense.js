@@ -34,7 +34,7 @@ const CreateTemporaryLicense = () => {
     console.log(JSON.stringify(values))
     const response = await createTempLicenseAPIFunc(values);
     console.log(JSON.stringify(response));
-    handleClickOpen(`عزيزي مقدم الطلب، وتم إصدار ترخيص مؤقت ينتهي بتاريخ ${response.responseBody.data.expirationDate}`, '');
+    handleClickOpen(`عزيزي مقدم الطلب، تم إصدار ترخيص مؤقت ينتهي بتاريخ ${response.responseBody.data.expirationDate}`, '');
   };
 
   const handleClickOpen = (dialogContent, dialogTitle) => {
