@@ -277,7 +277,7 @@ const teachersCountComp = ({ maxValue }) => (
             count = fields.value.filter(customer => customer.staffTypes === "معلم تربية خاصة").length
           }
           if (count >= 1) {
-            if (Math.round(maxValue / 8) <= count) {
+            if (Math.ceil(maxValue / 8) <= count) {
               return (<CheckCircleIcon style={{ color: '#04AA6D' }} />);
             } else
               return (<CancelIcon style={{ color: 'red' }} />);

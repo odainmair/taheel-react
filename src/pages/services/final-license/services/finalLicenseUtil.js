@@ -124,7 +124,7 @@ const personsValidation = async values => {
   if (managersCount !== 1)
     return { isSuccessful: false, message: "يرجى استيفاء الشروط" };
 
-  if (Math.round(values.beneficiariesNum / 8) > TeachersCount || TeachersCount < 1)
+  if (Math.ceil(values.beneficiariesNum / 8) > TeachersCount || TeachersCount < 1)
     return { isSuccessful: false, message: "يرجى استيفاء الشروط" };
   return response
 }
