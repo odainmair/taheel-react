@@ -28,9 +28,13 @@ const APIRequest = async ({
 
     } catch (err) {
         response.isSuccessful = false;
-        console.log(`----requestBody err :: ${JSON.stringify(err.response)}`);
+        console.log(`----requestBody err :: ${JSON.stringify(err)}`);
+        console.log(`----requestBody err.response :: ${JSON.stringify(err.response)}`);
         if (err.response.data.message){
             response.message = err.response.data.message.errorMessageAr;
+        }
+        else if(err.response.status === 500) {
+            response.message = err.response.data;
         }
         console.log(`----apiResponse err.message :: ${response.message}`);
     }
@@ -87,11 +91,28 @@ const uploadFileAPI = async ( requestBody, fileName) =>{
     
     const apiResponse= await axios(config)
     .then(function (result) {
+        console.log("====== result.status :: " + result.status)
+        console.log("====== result.header :: " + result.header)
         response.responseBody = result.data;
+        response.status = result.status;
       console.log(JSON.stringify(result.data));
     })
     .catch(function (error) {
-      console.log(error);
+        if (error.response) {
+          // Request made and server responded
+          console.log('============================> data: ' + JSON.stringify(error.response.data));
+          console.log('============================> status: ' + error.response.status);
+          console.log('============================> headers: ' + JSON.stringify(error.response.headers));
+        } else if (error.request) {
+          // The request was made but no response was received
+          console.log('============================> ' + error.request);
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          console.log('============================> Error: ', error.message);
+        }
+      console.log("error ====== error :: " + error)
+      console.log("error ====== error.status :: " + error.status)
+      response.status = error.response.data.status;
     });
     return response
     }
