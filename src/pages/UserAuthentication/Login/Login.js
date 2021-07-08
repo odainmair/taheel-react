@@ -82,6 +82,9 @@ const Login = () => {
     setIqamaId(LoginReq.responseBody.data.idNumIqamaNum);
     if (LoginReq.isSuccessful) {
       const sendSmsRs = await requestOTPPhoneNum(LoginReq.responseBody.data.idNumIqamaNum, LoginReq.responseBody.data.phoneNumber);
+      if (!sendSmsRs.isSuccessful) {
+        return { isSuccessful: false, message: sendSmsRs.message };
+      }
       const otp = sendSmsRs.responseBody.data.OTP;
       setOtp(otp);
       setUser(LoginReq.responseBody.data)
