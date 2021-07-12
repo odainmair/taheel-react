@@ -88,7 +88,7 @@ const FileUploaderComp = ({ input: { value, name }, label, meta, setField, value
         setErrMessage(response.message)
       else {
         setUploadedFileName(`تم رفع الملف ${fileUploaded[i].name} بنجاح`);
-        setDocument(name, response.responseBody.docID, multipleFile, fileUploaded[i].name)
+        setDocument(name, response.responseBody.data.docID, multipleFile, fileUploaded[i].name)
       }
     }
     event.target.value = "";
