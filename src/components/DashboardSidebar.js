@@ -41,6 +41,11 @@ const items = [
     title: 'لوحة البيانات'
   },
   {
+    href: '/app/products',
+    icon: ShoppingBagIcon,
+    title: 'الخدمات'
+  },
+  {
     href: '/app/account',
     icon: UserIcon,
     title: 'الملف التعريفي'
@@ -49,12 +54,7 @@ const items = [
     href: '/app/centers',
     icon: homeIcon,
     title: 'المراكز'
-  },
-  {
-    href: '/app/products',
-    icon: ShoppingBagIcon,
-    title: 'الخدمات'
-  },
+  }, 
   {
     href: '/app/orders',
     icon: ordersIcon,
