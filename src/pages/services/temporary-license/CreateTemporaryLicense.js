@@ -53,7 +53,7 @@ const CreateTemporaryLicense = () => {
     <Container maxWidth="md">
       <Card>
         <CardHeader
-          title="اصدار ترخيص مؤقت لمركز تأهيل أهلي"
+          title="اصدار ترخيص مؤقت لمركز أهلي"
         />
         <Divider />
         <CardContent>
