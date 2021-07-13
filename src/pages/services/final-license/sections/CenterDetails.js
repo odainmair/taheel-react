@@ -16,6 +16,7 @@ import { validateCompanyFunc } from '../services/finalLicenseAPI'
 import { getMunicipalLicenseNoApi } from '../services/finalLicenseAPI'
 import { CentertDetails } from '../services/finalLicenseAPI'
 import { ContentField } from '../services/finalLicenseUtil'
+import { OnChange } from 'react-final-form-listeners';
 
 const CenterDetails = ({ editMode, setEditMode, Condition, values, temporaryLicenses, setField, setIsEnableNextBtn }) => {
   const [loading, setLoading] = useState(false);
@@ -107,6 +108,9 @@ const CenterDetails = ({ editMode, setEditMode, Condition, values, temporaryLice
       }
     }
   }
+	const handleOnChange = (val, nextVal) => {
+		setIsEnableNextBtn(false);
+	};
 
   return (
     <>
@@ -178,6 +182,11 @@ const CenterDetails = ({ editMode, setEditMode, Condition, values, temporaryLice
             dir="rtl"
             className="custom-field"
           />
+					<OnChange name="CRNumber">
+					{(value, previous) => {
+						handleOnChange(value, previous);
+					}}			
+					</OnChange>
         </Grid>
 
         <Grid
