@@ -6,6 +6,7 @@ import {
 	Alert,
 	Typography,
 	Box,
+	Link,
 	CircularProgress,
 } from '@material-ui/core';
 import { Field } from 'react-final-form';
@@ -17,9 +18,11 @@ import { LICENSE_FORM_TYPES } from 'src/utils/enums'
 import { checkIsNumber } from 'src/utils/inputValidator';
 import numeral from 'numeral';
 import { OnChange } from 'react-final-form-listeners';
+import FinancialGuaranteeTerms from './FinancialGuaranteeTerms';
+import TermsDialog from 'src/components/TermsDialog';
 
 const Capacity = ({ editMode, Condition, values, setField, setIsEnableNextBtn }) => {
-
+	const [open, setOpen] = useState(false);
 	const [calculatedData, setCalculatedData] = useState(false);
 	const [errMessage, SetErrMessage] = useState('');
 	const [loading, setLoading] = useState(false);
@@ -99,6 +102,22 @@ const Capacity = ({ editMode, Condition, values, setField, setIsEnableNextBtn })
 		}
 
 	}
+
+	const handleClickOpen = (dialogContent, dialogTitle) => {
+		setOpen(true);
+	  };
+	  const handleClose = (value) => {
+		setOpen(false);
+	  };
+	const termsLabel = (openDialog) => (
+		<>
+		  <Typography gutterBottom variant="h5" component="span">
+		  الضمان المالي 
+			<Link href="#" sx={{ color: '#147fbd' }} onClick={() => openDialog()}> (للاطلاع على الشروط والاحكام انقر هنا) </Link>
+		  </Typography>
+	  
+		</>
+	  )
 
 	const handleOnChange = (val, nextVal) => {
 		setIsEnableNextBtn(false);
@@ -252,7 +271,7 @@ const Capacity = ({ editMode, Condition, values, setField, setIsEnableNextBtn })
 								md={12}
 								xs={12}
 							>
-								< ContentField label='الضمان المالي' value={values.financialGuarantee} />
+								< ContentField label={termsLabel(handleClickOpen)} value={values.financialGuarantee} />
 								<Box
 									direction='rtl'
 									className="custom-label-field"
@@ -266,6 +285,7 @@ const Capacity = ({ editMode, Condition, values, setField, setIsEnableNextBtn })
 					</Condition>
 				</Grid>
 			</Grid>
+      <TermsDialog dialogContent={FinancialGuaranteeTerms()} dialogTitle={"الشروط والاحكام"} open={open} onClose={handleClose} acceptBtnName="اوافق" />
 		</>
 	)
 };
