@@ -16,6 +16,7 @@ import { ContentField } from '../services/finalLicenseUtil'
 import { LICENSE_FORM_TYPES } from 'src/utils/enums'
 import { checkIsNumber } from 'src/utils/inputValidator';
 import numeral from 'numeral';
+import { OnChange } from 'react-final-form-listeners';
 
 const Capacity = ({ editMode, Condition, values, setField, setIsEnableNextBtn }) => {
 
@@ -24,6 +25,8 @@ const Capacity = ({ editMode, Condition, values, setField, setIsEnableNextBtn })
 	const [loading, setLoading] = useState(false);
 
 	useEffect(() => {
+		console.log(`Capacity :: values.capacity: ${values.capacity}`)
+		console.log(`Capacity :: values.beneficiariesNum: ${values.beneficiariesNum}`)
 		if (values.capacity) {
 			setIsEnableNextBtn(true);
 			setCalculatedData(true);
@@ -35,50 +38,71 @@ const Capacity = ({ editMode, Condition, values, setField, setIsEnableNextBtn })
 	const calculate = async () => {
 		setLoading(true);
 		SetErrMessage('');
-		if (!values.beneficiariesNum || !checkIsNumber(values.beneficiariesNum) || values.beneficiariesNum <= 0) {
-			SetErrMessage('يرجى ادخال عدد المستفيدين الفعلي عدد صحيح');
-			setLoading(false);
-			return;
-		}
-		if (!values.buildingArea || !checkIsNumber(values.buildingArea) || values.buildingArea <= 0) {
-			SetErrMessage('يرجى ادخال مساحة مسطح البناء عدد صحيح');
-			setLoading(false);
-			return;
-		}
-		if (!values.basementArea || !checkIsNumber(values.basementArea) || values.basementArea < 0) {
-			SetErrMessage('يرجى ادخال مساحة القبو عدد صحيح');
-			setLoading(false);
-			return;
-		}
-		if (parseInt(values.buildingArea) <= parseInt(values.basementArea)) {
-			SetErrMessage('مساحة القبو يجب ان تكون أقل من مساحة مسطح البناء');
-			setLoading(false);
-			return
-		}
-		if (values.beneficiariesNum > parseInt(values.capacity)) {
-			SetErrMessage('عدد المستفيدين يجب ان لا يتجاوز الطاقة الاستعابية');
-			setLoading(false);
-			return
-		}
-
+		
 		const response = await calculation(values.buildingArea, values.basementArea);
+		const carryingCapacity = response?.responseBody?.body?.carryingCapacity
+		console.log(`Capacity :: values.capacity: ${values.capacity}`)
+		console.log(`Capacity :: response.responseBody.body.carryingCapacity ${(carryingCapacity)}`)
+		console.log(`Capacity numeral :: ${numeral(carryingCapacity).value()}`)
+		console.log(`Is Capacity >= 1 :: ${numeral(carryingCapacity) >= 1}`)
 		if (!response.isSuccessful) {
 			setIsEnableNextBtn(false);
 			SetErrMessage(response.message);
 			setCalculatedData(false);
 		}
 		else {
-			//	setField('capacity', response.responseBody.body.carryingCapacity.toFixed(2).toLocaleString('en-US', {maximumFractionDigits:2}));
-			//setField('financialGuarantee', `${response.responseBody.body.financialGuarantee.toFixed(2).toLocaleString('en-US', {maximumFractionDigits:2})} ر.س.`);
-			setField('capacity', numeral(response.responseBody.body.carryingCapacity).format('00'));
+			setField('capacity', numeral(carryingCapacity).format('00'));
 			setField('financialGuarantee', `${numeral(response.responseBody.body.financialGuarantee).format('0,0.00')} ر.س.`);
-
 			setCalculatedData(true);
-			setIsEnableNextBtn(true);
 
+			if(numeral(carryingCapacity).value() >= 1) {
+				//	setField('capacity', response.responseBody.body.carryingCapacity.toFixed(2).toLocaleString('en-US', {maximumFractionDigits:2}));
+				//setField('financialGuarantee', `${response.responseBody.body.financialGuarantee.toFixed(2).toLocaleString('en-US', {maximumFractionDigits:2})} ر.س.`);
+					// setField('capacity', numeral(response.responseBody.body.carryingCapacity).format('00'));
+					// setField('financialGuarantee', `${numeral(response.responseBody.body.financialGuarantee).format('0,0.00')} ر.س.`);
+					setIsEnableNextBtn(true);
+			}
+			else {
+				setIsEnableNextBtn(false);
+				SetErrMessage('يرجى ادخال عدد المستفيدين الفعلي عدد صحيح أكبر من صفر');
+			}
 		}
 		setLoading(false);
+
+		if (!values.beneficiariesNum || !checkIsNumber(values.beneficiariesNum) || values.beneficiariesNum <= 0) {
+			SetErrMessage('يرجى ادخال عدد المستفيدين الفعلي عدد صحيح أكبر من صفر');
+			setIsEnableNextBtn(false);
+			return;
+		}
+		if (!values.buildingArea || !checkIsNumber(values.buildingArea) || values.buildingArea <= 0) {
+			SetErrMessage('يرجى ادخال مساحة مسطح البناء عدد صحيح');
+			setIsEnableNextBtn(false);
+			return;
+		}
+		if (!values.basementArea || !checkIsNumber(values.basementArea) || values.basementArea < 0) {
+			SetErrMessage('يرجى ادخال مساحة القبو عدد صحيح');
+			setIsEnableNextBtn(false);
+			return;
+		}
+		if (parseInt(values.buildingArea) <= parseInt(values.basementArea)) {
+			SetErrMessage('مساحة القبو يجب ان تكون أقل من مساحة مسطح البناء');
+			setIsEnableNextBtn(false);
+			return
+		}
+		console.log(`Capacity :: values.capacity: ${values.capacity}`)
+		console.log(`Capacity :: values.beneficiariesNum: ${values.beneficiariesNum}`)
+		console.log(`Capacity :: values.beneficiariesNum > values.capacity : ${values.beneficiariesNum > parseInt(values.capacity)}`)
+		if (values.beneficiariesNum > parseInt(numeral(carryingCapacity).value())) {
+			SetErrMessage('عدد المستفيدين يجب ان لا يتجاوز الطاقة الاستعابية');
+			setIsEnableNextBtn(false);
+			return
+		}
+
 	}
+
+	const handleOnChange = (val, nextVal) => {
+		setIsEnableNextBtn(false);
+	};
 
 	return (
 
@@ -115,6 +139,11 @@ const Capacity = ({ editMode, Condition, values, setField, setIsEnableNextBtn })
 						dir="rtl"
 						className="custom-field"
 					/>
+					<OnChange name="beneficiariesNum">
+					{(value, previous) => {
+						handleOnChange(value, previous);
+					}}			
+					</OnChange>		
 				</Grid>
 				<Grid
 					item
@@ -133,6 +162,11 @@ const Capacity = ({ editMode, Condition, values, setField, setIsEnableNextBtn })
 						dir="rtl"
 						className="custom-field"
 					/>
+					<OnChange name="buildingArea">
+					{(value, previous) => {
+						handleOnChange(value, previous);
+					}}			
+					</OnChange>	
 				</Grid>
 				<Grid
 					item
@@ -151,8 +185,12 @@ const Capacity = ({ editMode, Condition, values, setField, setIsEnableNextBtn })
 						dir="rtl"
 						className="custom-field"
 					/>
+					<OnChange name="basementArea">
+					{(value, previous) => {
+						handleOnChange(value, previous);
+					}}			
+					</OnChange>	
 				</Grid>
-
 
 				<Grid
 					item

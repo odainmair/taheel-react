@@ -58,7 +58,7 @@ const Login = () => {
   const { users, setUser } = useContext(localContext);
   const [errMessage, SetErrMessage] = useState('');
   const [selectedAvatar, setSelectedAvatar] = useState('center');
-  const [userType, setUserType] = useState("2");
+  const [userType, setUserType] = useState("1");
   const [phone, setPhone] = useState('');
   const [iqamaId, setIqamaId] = useState('');
   const [otp, setOtp] = useState('');
@@ -82,6 +82,9 @@ const Login = () => {
     setIqamaId(LoginReq.responseBody.data.idNumIqamaNum);
     if (LoginReq.isSuccessful) {
       const sendSmsRs = await requestOTPPhoneNum(LoginReq.responseBody.data.idNumIqamaNum, LoginReq.responseBody.data.phoneNumber);
+      if (!sendSmsRs.isSuccessful) {
+        return { isSuccessful: false, message: sendSmsRs.message };
+      }
       const otp = sendSmsRs.responseBody.data.OTP;
       setOtp(otp);
       setUser(LoginReq.responseBody.data)

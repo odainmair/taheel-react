@@ -120,12 +120,6 @@ const Summary = ({ values, setField }) => {
             {name.nationality}
           </TableCell>
 
-          <TableCell>
-            <IconButton onClick={() => setShowen(!showen)}>
-              {showen ? <VisibilityIcon /> : <VisibilityOffIcon />}
-            </IconButton>
-          </TableCell>
-
           {name.iqamaNo ?
             <>
               {setSponsorName(true)}
@@ -136,6 +130,12 @@ const Summary = ({ values, setField }) => {
             :
             <TableCell></TableCell>
           }
+
+          <TableCell>
+            <IconButton onClick={() => setShowen(!showen)}>
+              {showen ? <VisibilityIcon /> : <VisibilityOffIcon />}
+            </IconButton>
+          </TableCell>
 
         </TableRow>
         <TableRow >
@@ -384,10 +384,10 @@ const Summary = ({ values, setField }) => {
                   <TableCell> نوع الكادر </TableCell>
                   <TableCell> الجنس </TableCell>
                   <TableCell> الجنسية</TableCell>
-                  <TableCell> المرفقات</TableCell>
-                  {/* {SponsorName &&
+                  {SponsorName &&
                     <TableCell > اسم الكفيل</TableCell>
-                  } */}
+                  }
+                  <TableCell> المرفقات</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>

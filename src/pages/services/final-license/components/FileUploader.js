@@ -7,12 +7,16 @@ import React from 'react';
 import { uploadDocumentApi } from '../services/finalLicenseAPI';
 import InfoIcon from '@material-ui/icons/Info';
 import { useEffect } from 'react';
+import { ErrorMessage } from 'mui-rff';
 
 const FileUploaderComp = ({ input: { value, name }, label, meta, setField, values, rowIndex = -1, multipleFile, tooltipText, resetAttachment=false }) => {
-  const showError = ((meta.submitError && !meta.dirtySinceLastSubmit) || meta.error) && meta.touched;
+  const showRequiredError = ((meta.submitError && !meta.dirtySinceLastSubmit) || meta.error) && meta.touched
+  const [showFileError, setShowFileError] = React.useState(false)
   const [loading, setLoading] = React.useState(false);
   const hiddenFileInput = React.useRef(null);
   const [uploadedFileName, setUploadedFileName] = React.useState();
+  const [errMessage, setErrMessage] = React.useState("يرجى ارفاق هذا الملف");
+
   var multipleFileDocs = []
   useEffect(() => {
     console.log(`-- FileUploaderComp resetAttachment ${resetAttachment}`);
@@ -32,7 +36,9 @@ const FileUploaderComp = ({ input: { value, name }, label, meta, setField, value
      else */
     docId = (values) ? values[name] : "";
 
-    if (docId) {
+    // console.log(`========================> docId.length: ${docId.length}`)
+    if (Array.isArray(docId) && docId.length > 0 && docId[0] != null) {
+      // console.log(`========================> docId: ${docId[0]}`)
       setUploadedFileName(`تم رفع الملف ${values[`${name}FileName`]?values[`${name}FileName`]:""} بنجاح`);
     }
 
@@ -58,17 +64,34 @@ const FileUploaderComp = ({ input: { value, name }, label, meta, setField, value
     console.log(`--fileUploaded ${JSON.stringify(fileUploaded)}`);
     for (let i = 0; i < fileUploaded.length; i++) {
       console.log('...fileUploaded...', JSON.stringify(fileUploaded[i].name))
+      console.log('...fileUploaded :: SIZE: ', JSON.stringify(fileUploaded[i].size) <= (1024*1024*2))
+
+      const fileValidation = validateFile(fileUploaded[i])
+
+      if(fileValidation && !fileValidation.isValid) {
+        setShowFileError(true)
+        setLoading(false)
+        setErrMessage(fileValidation.error)
+        return
+      }
+      
+      setShowFileError(false)
       const buf = await uploadDocument(fileUploaded[i]);
       const response = await uploadDocumentApi(fileUploaded[i].name, buf);
 
       console.log('...response...', response)
-      if (!response.isSuccessful)
-        SetErrMessage(response.message)
+      if (response.status != 200) {
+        setShowFileError(true)
+        setErrMessage(response.status)
+      }
+      else if (!response.isSuccessful)
+        setErrMessage(response.message)
       else {
         setUploadedFileName(`تم رفع الملف ${fileUploaded[i].name} بنجاح`);
-        setDocument(name, response.responseBody.docID, multipleFile, fileUploaded[i].name)
+        setDocument(name, response.responseBody.data.docID, multipleFile, fileUploaded[i].name)
       }
     }
+    event.target.value = "";
     setLoading(false);
   };
 
@@ -82,8 +105,8 @@ const FileUploaderComp = ({ input: { value, name }, label, meta, setField, value
         variant="outlined"
         dir="rtl"
         disabled
-        helperText={showError ? "يرجى ارفاق هذا الملف" : uploadedFileName}
-        error={showError}
+        helperText={showRequiredError || showFileError ? errMessage : uploadedFileName}
+        error={showRequiredError || showFileError}
         className="custom-field"
         InputProps={{
           endAdornment: (
@@ -126,4 +149,14 @@ FileUploaderComp.propTypes = {
   resetAttachment: PropTypes.bool,
   rowIndex: PropTypes.number
 
+}
+
+function validateFile(file) {
+  const allowedExtensions = ['pdf', 'txt', 'png', 'jpg', 'jpeg', 'docx', 'doc'];
+  if(!allowedExtensions.includes(file.name.split('.').pop().toLowerCase())) {
+    return {isValid:false, error: "امتداد الملف المراد رفعه غير مسموح به"}
+  }
+  else if(file.size > (1024*1024*2)) {
+    return {isValid:false, error: "الملف المراد رفعه تجاوز الحد الأقصى (2 ميجابايت)"}
+  }
 }

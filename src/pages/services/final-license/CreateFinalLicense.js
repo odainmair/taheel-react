@@ -158,7 +158,7 @@ const CreateFinalLicense = () => {
       <Card>
         {!isLoading && formType != LICENSE_FORM_TYPES.RENEW && (
         <CardHeader
-          title={!editMode?"اصدار ترخيص نهائي لمركز تأهيل أهلي": `تعديل طلب ترخيص نهائي - ${requestNum}`}
+          title={!editMode?"اصدار ترخيص نهائي لمركز أهلي": `تعديل طلب ترخيص نهائي - ${requestNum}`}
         />    
         )}
         {!isLoading && formType === LICENSE_FORM_TYPES.RENEW && ( 

@@ -124,7 +124,7 @@ const personsValidation = async values => {
   if (managersCount !== 1)
     return { isSuccessful: false, message: "يرجى استيفاء الشروط" };
 
-  if (Math.round(values.beneficiariesNum / 8) > TeachersCount || TeachersCount < 1)
+  if (Math.ceil(values.beneficiariesNum / 8) > TeachersCount || TeachersCount < 1)
     return { isSuccessful: false, message: "يرجى استيفاء الشروط" };
   return response
 }
@@ -252,7 +252,7 @@ const validateAddStaffForm = (values, rowIndex, SAForm, forignForm) => {
   console.log(`-- SAForm :: ${SAForm}`)
   console.log(`-- forignForm :: ${forignForm}`)
   console.log(`-- rowIndex :: ${!rowIndex || rowIndex !== -1 ? JSON.stringify(values.customers[rowIndex]) : values}`)
-  const { nationality, year, month, day, idNumber, iqamaNo, staffTypes, EducationalQualification, cv } = !rowIndex || rowIndex !== -1 ? values.customers[rowIndex] : values;
+  const { nationality, year, month, day, idNumber, iqamaNo, staffTypes, EducationalQualification, cv, MedicalPractice } = !rowIndex || rowIndex !== -1 ? values.customers[rowIndex] : values;
   console.log(`-- nationality :: ${nationality}`);
   console.log(`-- idNumber :: ${idNumber}`);
   console.log(`-- year :: ${year}`);
@@ -280,6 +280,7 @@ const validateAddStaffForm = (values, rowIndex, SAForm, forignForm) => {
 
   }
   if (SAForm || forignForm) {
+    console.log('finalLicenseAPI :: staffTypes :: ' + staffTypes)
     if (!staffTypes) {
       return "يرجى اختيار نوع الكادر";
     }
@@ -288,6 +289,9 @@ const validateAddStaffForm = (values, rowIndex, SAForm, forignForm) => {
     }
     if (!cv) {
       return "يرجى رفع السيرة الذاتية";
+    }
+    if (!MedicalPractice && ['أخصائي علاج طبيعي', 'أخصائي علاج وظيفي','ممرض', 'أخصائي نطق و تخاطب'].includes(staffTypes)) {
+      return "يرجى رفع رخصة المزاولة";
     }
 
   }

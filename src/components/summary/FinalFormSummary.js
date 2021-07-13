@@ -112,7 +112,7 @@ function FinalFormSummary (props) {
                       }}
                       onClick={() => {
                         console.log("edit function");
-                        navigate('/services/finallicense', { state: { centerLicenceNumber: values.centerLicenceNumber, formType: LICENSE_FORM_TYPES.RENEW } });
+                        navigate('/services/updatefinallicenserenewal', { state: { centerLicenceNumber: values.centerLicenceNumber, formType: LICENSE_FORM_TYPES.RENEW } });
                       }}
                     >
                     تحديث بيانات طلب تجديد الترخيص
