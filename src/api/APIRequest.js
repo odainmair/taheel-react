@@ -112,6 +112,7 @@ const uploadFileAPI = async ( requestBody, fileName) =>{
         }
       console.log("error ====== error :: " + error)
       console.log("error ====== error.status :: " + error.status)
+      response.message = error.response.data;
       response.status = error.response.data.status;
     });
     return response

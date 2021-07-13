@@ -82,10 +82,10 @@ const FileUploaderComp = ({ input: { value, name }, label, meta, setField, value
       console.log('...response...', response)
       if (response.status != 200) {
         setShowFileError(true)
-        setErrMessage(response.status)
+        setErrMessage(response.message.message.errorMessageAr)
       }
       else if (!response.isSuccessful)
-        setErrMessage(response.message)
+        setErrMessage(response.message.message.errorMessageAr)
       else {
         setUploadedFileName(`تم رفع الملف ${fileUploaded[i].name} بنجاح`);
         setDocument(name, response.responseBody.data.docID, multipleFile, fileUploaded[i].name)
@@ -156,7 +156,7 @@ function validateFile(file) {
   if(!allowedExtensions.includes(file.name.split('.').pop().toLowerCase())) {
     return {isValid:false, error: "امتداد الملف المراد رفعه غير مسموح به"}
   }
-  else if(file.size > (1024*1024*2)) {
-    return {isValid:false, error: "الملف المراد رفعه تجاوز الحد الأقصى (2 ميجابايت)"}
+  else if(file.size > (1024*1024*5)) {
+    return {isValid:false, error: "الملف المراد رفعه تجاوز الحد الأقصى (5 ميجابايت)"}
   }
 }
