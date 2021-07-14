@@ -285,7 +285,7 @@ const Capacity = ({ editMode, Condition, values, setField, setIsEnableNextBtn })
 					</Condition>
 				</Grid>
 			</Grid>
-      <TermsDialog dialogContent={FinancialGuaranteeTerms()} dialogTitle={"الشروط والاحكام"} open={open} onClose={handleClose} acceptBtnName="اوافق" />
+      <TermsDialog setAgreeValue={()=>{}} dialogContent={FinancialGuaranteeTerms()} dialogTitle={"الشروط والاحكام"} open={open} onClose={handleClose} acceptBtnName="اوافق" />
 		</>
 	)
 };
