@@ -30,7 +30,11 @@ const termsLabel = (openDialog) => (
     <>
         <Typography gutterBottom variant="h5" component="span">
             انا اقر واتعهد بالالتزام بالشروط والاحكام الواردة والمتعلقه بالطلب
-            <Link href="#" sx={{ color: '#147fbd' }} onClick={() => openDialog()}> (للاطلاع على الشروط والاحكام انقر هنا)</Link>
+            <Link href="#" sx={{ color: '#147fbd' }} 
+			onClick={(event) => {
+				event.preventDefault()
+				openDialog()}
+			}> (للاطلاع على الشروط والاحكام انقر هنا)</Link>
         </Typography>
 
     </>

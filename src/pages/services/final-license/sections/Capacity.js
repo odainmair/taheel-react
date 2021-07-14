@@ -113,7 +113,11 @@ const Capacity = ({ editMode, Condition, values, setField, setIsEnableNextBtn })
 		<>
 		  <Typography gutterBottom variant="h5" component="span">
 		  الضمان المالي 
-			<Link href="#" sx={{ color: '#147fbd' }} onClick={() => openDialog()}> (للاطلاع على الشروط والاحكام انقر هنا) </Link>
+			<Link href="#" sx={{ color: '#147fbd' }} 
+			onClick={(event) => {
+				event.preventDefault()
+				openDialog()}
+			}> (للاطلاع على الشروط والاحكام انقر هنا) </Link>
 		  </Typography>
 	  
 		</>

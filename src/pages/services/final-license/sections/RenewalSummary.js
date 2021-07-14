@@ -53,7 +53,11 @@ const termsLabel = (openDialog) => (
   <>
     <Typography gutterBottom variant="h5" component="span">
       انا اقر واتعهد بالالتزام بالشروط والاحكام الواردة والمتعلقه بالطلب
-      <Link href="#" sx={{ color: '#147fbd' }} onClick={() => openDialog()}> (للاطلاع على الشروط والاحكام انقر هنا)</Link>
+      <Link href="#" sx={{ color: '#147fbd' }} 
+			onClick={(event) => {
+				event.preventDefault()
+				openDialog()}
+			}> (للاطلاع على الشروط والاحكام انقر هنا)</Link>
     </Typography>
 
   </>
@@ -88,6 +92,7 @@ const Summary = ({ values, setField }) => {
 
 
   const Row = ({ fields, setSponsorName, name, index }) => {
+    console.log(`RenewalSummary :: Row :: name: ${JSON.stringify(name)}`)
     const classes = useRowStyles();
     const [showen, setShowen] = React.useState(true);
     const staffTypes = ["معلم تربية خاصة", "أخصائي اجتماعي", "مراقب اجتماعي", "حارس", "عامل تنظيفات", "مشرف فني عام", "اخصائي نفسي و توجيه اجتماعي", "عامل رعاية شخصية", "مدير", "سائق", "مرافق سائق", "أخصائي علاج طبيعي", "أخصائي علاج وظيفي", "أخصائي نطق و تخاطب", "ممرض"]

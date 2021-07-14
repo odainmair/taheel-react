@@ -75,6 +75,7 @@ const routes = (isLoggedIn) => [
       { path: 'templicense', element: <CreateTemporaryLicense /> },
       { path: 'finallicense', element: <CreatefinalLicense /> },
       { path: 'updatefinallicenserenewal', element: <CreatefinalLicense /> },
+      { path: 'editfinallicense', element: <CreatefinalLicense /> },
       { path: 'finallicenserenewal', element: <CreateFinalLicenseRenewal /> },
       { path: '*', element: <Navigate to="/404" /> }
     ]
