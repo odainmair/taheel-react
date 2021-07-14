@@ -78,7 +78,7 @@ const Capacity = ({ editMode, Condition, values, setField, setIsEnableNextBtn })
 			return;
 		}
 		if (!values.buildingArea || !checkIsNumber(values.buildingArea) || values.buildingArea <= 0) {
-			SetErrMessage('يرجى ادخال مساحة مسطح البناء عدد صحيح');
+			SetErrMessage('يرجى ادخال مساحة مسطح البناء عدد صحيح أكبر من صفر');
 			setIsEnableNextBtn(false);
 			return;
 		}
