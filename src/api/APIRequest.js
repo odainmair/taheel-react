@@ -51,6 +51,7 @@ const downloadFileAPI = async ({
         message: ''
     };
     try {
+        console.log(`:: downloadFileAPI :: `);
         console.log(`----url :: ${url}`);
         console.log(`----queryParams :: ${JSON.stringify(queryParams)}`);
         const headers = {
@@ -60,6 +61,7 @@ const downloadFileAPI = async ({
         const apiResponse = await axios.get(`https://inspiredemo2.appiancloud.com/suite/webapi/${url}`, { headers, responseType: 'blob', params: { ...queryParams } });
         response.responseBody =  { ...apiResponse.data };
         console.log(`----headers :: ${JSON.stringify(apiResponse.headers)}`);
+        fileName = apiResponse.headers['x-suggested-filename']
         fileDownload(apiResponse.data, fileName, apiResponse.headers['content-type']);
     } catch (err) {
         console.log(`----requestBody err :: ${JSON.stringify(err.response)}`);

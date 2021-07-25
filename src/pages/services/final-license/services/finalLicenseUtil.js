@@ -129,10 +129,10 @@ const personsValidation = async values => {
   return response
 }
 
-const downloadFileFn = async (setLoading, loading, licenseNumber) => {
+const downloadFileFn = async (setLoading, loading, licenseNumber, name) => {
   setLoading(true)
-  console.log("responseresponse", licenseNumber)
-  const downloadDoc = await downloadDocument(licenseNumber, true)
+  console.log(`finalLicenseUtil :: downloadFileFn: ${licenseNumber}`)
+  const downloadDoc = await downloadDocument(licenseNumber, true, name)
   if (downloadDoc.isSuccessful) {
     setLoading(false)
   }
@@ -206,7 +206,7 @@ const DownloadButt = ({ index, docID, name, label }) => {
             sx={{
               backgroundColor: '#3c8084',
             }}
-            onClick={() => downloadFileFn(setLoading, loading, docID)}
+            onClick={() => downloadFileFn(setLoading, loading, docID, name)}
           >
             تنزيل
           </Button>
