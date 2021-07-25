@@ -208,13 +208,15 @@ const uploadDocumentApi = async (name, image) => {
 }
 
 
-const downloadDocument = async (DocID, attachment) => {
+const downloadDocument = async (DocID, attachment, name) => {
 	const url = "taheel-apis-utilities-downloadDocument-v2"
+	console.log(`downloadDocument :: ${JSON.stringify(name)}`)
+    const fileName = `${name}`;
 	const queryParams = {
 		DocID: DocID,
 		attachment: attachment
 	};
-	const response = await downloadFileAPI({ url, queryParams });
+	const response = await downloadFileAPI({ url, queryParams, fileName });
 	return response;
 }
 
