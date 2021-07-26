@@ -17,21 +17,24 @@ import { getCurrentUser } from 'src/utils/UserLocalStorage';
 import MyTasksTable from 'src/components/dashboard/MyTasksTable';
 
 const Dashboard = () => {
+  const { userType } = getCurrentUser();
+  console.log('userType+++++++++++', userType);
+
   const getTaheelRequestsFun = async (userEmail) => {
     const url = 'taheel-apis-records-getRequests-v2';
-    const queryParams = { userEmail,startIndex:1,batchSize:5 };
+    const queryParams = { userEmail, startIndex: 1, batchSize: 5 };
     const response = await APIRequest({ url, queryParams });
     return response;
   };
   const getCentersFun = async (userEmail) => {
     const url = 'taheel-apis-records-getCenters-v2';
-    const queryParams = { userEmail,startIndex:1,batchSize:5 };
+    const queryParams = { userEmail, startIndex: 1, batchSize: 5 };
     const response = await APIRequest({ url, queryParams });
     return response;
   };
   const getMyTasksFun = async (userEmail) => {
     const url = 'taheel-apis-utilities-GetGetExternalUserTasks-v2';
-    const queryParams = { userEmail, taskStatus:0 };
+    const queryParams = { userEmail, taskStatus: 0 };
     const response = await APIRequest({ url, queryParams });
     return response;
   };
@@ -51,14 +54,14 @@ const Dashboard = () => {
   const [totalCenters, setTotalCenters] = useState(0);
   const { email } = getCurrentUser();
   useEffect(async () => {
-  
+
     const getTaheelRequestsRs = await getTaheelRequestsFun(email);
     let response = {};
     if (!getTaheelRequestsRs.isSuccessful) {
       setLoadingTaheelRequests(true);
       response = { isSuccessful: false, message: getTaheelRequestsRs.message };
     } else {
-      const { requests ,totalCount,totalAccepted,totalPending,totalRejected} = getTaheelRequestsRs.responseBody.data;
+      const { requests, totalCount, totalAccepted, totalPending, totalRejected } = getTaheelRequestsRs.responseBody.data;
       console.log(JSON.stringify(requests));
       setTaheelRequests(requests);
       setTotalTahelRequests(totalCount);
@@ -68,7 +71,6 @@ const Dashboard = () => {
       setLoadingTaheelRequests(true)
     }
 
-   
     return response;
   }, []);
   useEffect(async () => {
@@ -83,7 +85,7 @@ const Dashboard = () => {
       setCenterRequests(Centers);
       setLoadingCenters(true)
     }
-  },[]);
+  }, []);
   useEffect(async () => {
     const getMyTasksRs = await getMyTasksFun(email);
     let response = {};
@@ -97,7 +99,7 @@ const Dashboard = () => {
       setTotalReturnRequests(data.totalCount)
       setLoadingMyTasks(true);
     }
-  },[]);
+  }, []);
   return (
     <>
       <Helmet>
@@ -176,24 +178,26 @@ const Dashboard = () => {
                 totaltahelrequests={totalTahelRequests}
               />
             </Grid>
-            <Grid
-              item
-              lg={8}
-              md={12}
-              xl={9}
-              xs={12}
-            >
-              <CentersTable loading={loadingCenters} centerRequests={centerRequests} />  
-            </Grid>
-            <Grid
+            {userType === "2" &&
+              <Grid
                 item
-                lg={4}
-                md={6}
-                xl={3}
+                lg={8}
+                md={12}
+                xl={9}
                 xs={12}
               >
-                <MyTasksTable loading={loadingMyTasks} taskRequests={taskRequests} />
+                <CentersTable loading={loadingCenters} centerRequests={centerRequests} />
               </Grid>
+            }
+            <Grid
+              item
+              lg={4}
+              md={6}
+              xl={3}
+              xs={12}
+            >
+              <MyTasksTable loading={loadingMyTasks} taskRequests={taskRequests} />
+            </Grid>
           </Grid>
         </Container>
       </Box>

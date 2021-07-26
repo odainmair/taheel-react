@@ -106,7 +106,7 @@ const Login = () => {
       return { isSuccessful: false, message: OTPAuth.message };
     }
     setCurrentUser(users);
-    navigate('/app/dashboard', { replace: true }, { state: { selectedAvatar, userType } });
+    navigate('/app/dashboard');
     // }
     return true;
   };
