@@ -106,7 +106,7 @@ const Account = () => {
                   label=""
                   validate={PersonInfoValidate}
                 >
-                  <AccountProfileDetails data={{ firstName: firstName, lastName: lastName, email: email, phoneNumber: phoneNumber, idNumIqamaNum: idNumIqamaNum }} setIsDisable={setIsDisable}
+                  <AccountProfileDetails data={{ firstName: firstName, lastName: lastName, email: email, phoneNumber: phoneNumber, idNumIqamaNum: idNumIqamaNum }} setIsDisable={setIsDisable} SetErrMessage={SetErrMessage}
                   />
                 </AccountFinalFrom.Page>
               </AccountFinalFrom>
