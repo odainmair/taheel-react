@@ -1,59 +1,42 @@
-import { Helmet } from 'react-helmet';
-import React, { useState, useEffect } from 'react';
-import {
-  Box,
-  Container,
-  Grid,
-  TextField
-} from '@material-ui/core';
+import React, { useState, useEffect, useMemo } from 'react';
 import { getCurrentUser } from 'src/utils/UserLocalStorage';
 import { getCenters } from './data/CentersApi';
-import CentersTableComponent from './components/CentersTableComponent';
-
-const Centers = (props) => {
+import TableCreator from 'src/Core/Components/TableCreator';
+import CentersTableSchema, { SchemaActions } from './Schema/CentersTableSchema';
+import { TablePaginationObject } from 'src/Core/Utils/TablePagination';
+import TableDataViewEnum from 'src/Core/Utils/TableDataViewEnum';
+const Centers = () => {
   const { email } = getCurrentUser();
+  console.log("email+++++++++++++", email);
   const [centers, setCenters] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [errMessage, SetErrMessage] = useState('')
+  const TPObject = TablePaginationObject(TableDataViewEnum.PAGINATION_DATA)
+  const paramData = useMemo(() => {
+    return {
+      batchSize: TPObject.pagination.batchSize,
+      startIndex: TPObject.pagination.startIndex,
+      filters: TPObject.pagination.filters
+    }
+  }, [TPObject.pagination.batchSize, TPObject.pagination.startIndex, TPObject.pagination.filters])
+  const tableTitle = 'المراكز'
 
   useEffect(async () => {
-    const getCentersDetails = await getCenters(email);
+    // const getCentersRs = await getCentersFun(email);
+    setLoading(true)
+    let response = ''
+    const getCentersDetails = await getCenters(email, paramData.startIndex, paramData.batchSize, paramData.filters);
     if (!getCentersDetails.isSuccessful) {
-      setLoading(true);
+      response = { isSuccessful: false, message: getCentersDetails.message };
+      SetErrMessage(getCentersDetails.message)
     } else {
-      const { Centers } = getCentersDetails.responseBody.data;
-      setLoading(true);
-      setCenters(Centers)
+      const CentersData = getCentersDetails.responseBody;
+      setCenters(CentersData.data)
+      setLoading(false)
     }
-  }, []);
+  }, [paramData]);
   return (
-    <>
-      <Helmet>
-        <title>Centers</title>
-      </Helmet>
-      <Box
-        sx={{
-          backgroundColor: 'background.default',
-          minHeight: '100%',
-          py: 3
-        }}
-      >
-        <Container maxWidth="lg">
-          <Grid
-            container
-            spacing={3}
-          >
-            <Grid item
-              lg={12}
-              md={12}
-              xs={12}
-              marginBottom={3}
-            >
-              <CentersTableComponent loading={loading} centerRequests={centers} />                </Grid >
-          </Grid>
-
-        </Container>
-      </Box>
-    </>
+    <TableCreator tableTitle={tableTitle} tableShcema={ {...CentersTableSchema, ...SchemaActions()} } dataTable={centers.Centers} totalCount={centers.totalCount} loading={loading} TPObject={TPObject} errMessage={errMessage}/>
   );
 }
 

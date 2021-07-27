@@ -37,13 +37,15 @@ const AddCommissioner = (props) => {
         } else {
             const Details = getCenterDetails.responseBody.data;
             setDetails(Details)
-            console.log("Details+++++++++++++", details.staff);
+            console.log("Details+++++++++++++", Details);
             setLoading(false)
         }
 
     }, []);
 
-    return (TableCreator(tableTitle, { ...CrewSchema, ... SchemaActions() }, details.staff, 0, loading, null, errMessage))
+    return (
+    <TableCreator tableTitle={tableTitle} tableShcema={ {...CrewSchema, ...SchemaActions()} } dataTable={details.staff} loading={loading} errMessage={errMessage}/>
+    )
     AddCommissioner.propTypes = {
         // centers: PropTypes.array.isRequired
     }
