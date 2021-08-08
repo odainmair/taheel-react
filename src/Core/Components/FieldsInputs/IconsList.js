@@ -7,6 +7,7 @@ import KeyboardReturnIcon from '@material-ui/icons/KeyboardReturn';
 import ForwardIcon from '@material-ui/icons/Forward';
 import FolderIcon from '@material-ui/icons/Folder';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
+import ExitToAppSharpIcon from '@material-ui/icons/ExitToAppSharp';
 
 export default function IconsList(iconType, label, sx) {
     const IconComponents = {
@@ -18,7 +19,8 @@ export default function IconsList(iconType, label, sx) {
         KeyboardReturnIcon,
         ForwardIcon,
         FolderIcon,
-        ArrowForwardIcon
+        ArrowForwardIcon,
+        ExitToAppSharpIcon,
     }
     const IconTag = IconComponents[iconType]
     return (

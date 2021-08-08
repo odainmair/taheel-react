@@ -8,17 +8,16 @@ class BreakException extends Error {
     }
 }
 
-export default function validateSchema({schema, values, t}) {
+export default function validateSchema({ schema, values, t }) {
     const errors = {}
-    console.log('schema',schema)
+    console.log('schema Validator ===> ', schema)
     schema?.forEach(element => {
         try {
             element?.validators?.forEach(validator => {
-                if(!!DefualtValidatorsFunc[validator]){
+                if (!!DefualtValidatorsFunc[validator]) {
                     validator = DefualtValidatorsFunc[validator]
                 }
-                if (!validator.validatorfn(values[element.name]))
-                {
+                if (!validator.validatorfn(values[element.name])) {
                     //errors[element.name] = t("lang") === "en" ? validator.massege.en : validator.massege.ar
                     errors[element.name] = validator.massege.ar
                     throw new BreakException('Break')

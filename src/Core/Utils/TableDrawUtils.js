@@ -1,26 +1,20 @@
 import { useState } from 'react';
 import {
     Button,
-    Grid,
     Box,
     TableCell,
     IconButton,
-    TextField,
 } from '@material-ui/core';
 import PropTypes from 'prop-types'
-import { Form } from 'react-final-form'
 import FormCreator from '../Components/FormCreator';
 import Menu from '@material-ui/core/Menu';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Skeleton from '@material-ui/lab/Skeleton';
-import MenuItem from '@material-ui/core/MenuItem';
 import IconsList from '../Components/FieldsInputs/IconsList';
+import { getValuesFromFilter } from './CoreUtils';
 
 export function FilterCreator(props) {
-    const tableShcema = props.schema, TPObject = props.TPObject, loading = props.loading
-    console.log('TPObject', TPObject)
-    console.log('tableShcema', tableShcema)
-    console.log('loading', loading)
+    const tableShcema = props.schema, TPObject = props.TPObject, loading = props.loading, initValues = props.initValues
     const [filterData, setfilterData] = useState(/*() => {
          return tableShcema.schema.map((data) => {
                 return {
@@ -29,15 +23,14 @@ export function FilterCreator(props) {
                 }
         }) 
     }*/)
-    const schema = tableShcema.schema.filter((data) => (!!data.filter))
-    const handleSubmit = () => TPObject.dispatch({ payload: { filters: filterData } })
-    function handleFilterData(schema, values) {
+    let filterSchema = tableShcema.schema.filter((data) => (!!data.filter))
+
+    function handleFilterData(value, fieldName, operator) {
         setfilterData(() => {
-            const value = e.target.value
-            if (!!value.trim()) {
+            value = value.trim();
+            if (!!value) {
                 if (filterData) {
                     let currentData = filterData.filter(data => data.fieldName === fieldName);
-                    console.log('currentData', currentData[0])
                     if (operator === 'between') {
                         if (e.target.name = 'from') {
                             if (!!currentData[0]) {
@@ -64,7 +57,10 @@ export function FilterCreator(props) {
             }
         })
     }
-    console.log('filterData ', filterData)
+    let schema = []
+    schema = schema.concat(filterSchema.map(field => {
+        return { ...field, handleChange: handleFilterData, name: field['name'] }
+    }));
     const onSubmit = () => TPObject.dispatch({ payload: { filters: filterData } })
     const submitInfo = { btnName: 'بحث', onSubmit: onSubmit }
     const title = 'فلترة'
@@ -74,7 +70,8 @@ export function FilterCreator(props) {
                 loading ?
                     <Skeleton /> :
                     <Box style={{ pointerEvents: loading ? "none" : '' }}>
-                        <FormCreator schema={schema} title={title} submitInfo={submitInfo} />
+                        <FormCreator schema={schema} title={title} submitInfo={submitInfo} initValues={getValuesFromFilter(TPObject.pagination.filters?.filters)
+                        } />
                     </Box>
             }
         </>) : ('')
@@ -97,7 +94,6 @@ export function TableButtonsDraw(props) {
     const handleClose = () => {
         setAnchorEl(null);
     };
-    console.log("tableShcemaActions", tableShcemaActions)
     if (!!tableShcemaActions?.buttons) {
         if (tableShcemaActions.type === 'MoreVertIcon') {
             return (
@@ -120,7 +116,7 @@ export function TableButtonsDraw(props) {
                                 spacing={1}
                             >
                                 {
-                                    tableShcemaActions.buttons.map((button, idx) => {
+                                    tableShcemaActions.buttons.map((button) => {
                                         return (
                                             <Button
                                                 fullWidth={true}
@@ -160,9 +156,10 @@ export function TableButtonsDraw(props) {
 TableButtonsDraw.propTypes = {
     actions: PropTypes.object,
     responseData: PropTypes.object,
-    loading: PropTypes.object,
+    loading: PropTypes.bool,
 }
 FilterCreator.propTypes = {
+    initValues: PropTypes.object,
     schema: PropTypes.object,
     loading: PropTypes.bool,
     TPObject: PropTypes.object,

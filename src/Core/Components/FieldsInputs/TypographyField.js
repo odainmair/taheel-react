@@ -2,13 +2,13 @@
 import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types'
 import Skeleton from '@material-ui/lab/Skeleton';
-import { Grid, Box } from '@material-ui/core';
+import { Grid, Box, Divider } from '@material-ui/core';
 
 export default function TypographyInput(props) {
     const margin = !!props.margin ? props.margin : 1;
+    const gridSize = !!props.gridSize ? props.gridSize : 12
 
     if (!!props.name) {
-        const gridSize = !!props.gridSize ? props.gridSize : 12
         return (
             <Grid item xs={gridSize} >
                 <Box m={margin} >
@@ -30,17 +30,31 @@ export default function TypographyInput(props) {
                 </Box>
             </Grid>
         )
+    } else if (props.type === 'HeadText') {
+        return (
+            <Grid item xs={gridSize} >
+                <Box m={margin}>
+                    <Typography component="h3">
+                        {props.tLabel}
+                    </Typography>
+                    <Divider />
+                </Box>
+            </Grid>
+        );
     } else {
+        return (
+            <Grid item xs={gridSize} >
 
-        return (<Box m={margin}>
-            <Typography component="h3">
-                {props.textTitle}
-            </Typography>
-        </Box>);
+                <Box m={margin}>
+                    <Typography component="h3">
+                        {props.tLabel}
+                    </Typography>
+                </Box>
+            </Grid>
+        );
     }
 }
 TypographyInput.propTypes = {
-    textTitle: PropTypes.string,
     margin: PropTypes.number,
     values: PropTypes.object,
     gridSize: PropTypes.number,

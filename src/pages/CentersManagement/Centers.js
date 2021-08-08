@@ -20,7 +20,6 @@ const Centers = () => {
     }
   }, [TPObject.pagination.batchSize, TPObject.pagination.startIndex, TPObject.pagination.filters])
   const tableTitle = 'المراكز'
-
   useEffect(async () => {
     // const getCentersRs = await getCentersFun(email);
     setLoading(true)
@@ -28,9 +27,12 @@ const Centers = () => {
     const getCentersDetails = await getCenters(email, paramData.startIndex, paramData.batchSize, paramData.filters);
     if (!getCentersDetails.isSuccessful) {
       response = { isSuccessful: false, message: getCentersDetails.message };
+      setCenters('')
       SetErrMessage(getCentersDetails.message)
+      setLoading(false)
     } else {
       const CentersData = getCentersDetails.responseBody;
+      SetErrMessage('')
       setCenters(CentersData.data)
       setLoading(false)
     }

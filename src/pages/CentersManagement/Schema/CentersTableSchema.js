@@ -18,7 +18,7 @@ export function SchemaActions() {
                 ar: '',
                 en: ''
             },
-            type:'MoreVertIcon',
+            type: 'MoreVertIcon',
             buttons: [{
                 id: uuid(),
                 label: {
@@ -58,9 +58,6 @@ export default {
             name: 'name',
             type: FieldsEnum.TEXT_FIELD,
             gridSize: '6',
-            filter: {
-                operator: FilterOperationEnum.INCLUDES
-            }
         },
         {
             id: uuid(),
@@ -72,9 +69,6 @@ export default {
             attrFunc: getCenterType,
             type: FieldsEnum.TEXT_FIELD,
             gridSize: '6',
-            filter: {
-                operator: FilterOperationEnum.INCLUDES
-            }
         },
         {
             id: uuid(),
@@ -85,9 +79,6 @@ export default {
             name: 'expirationDate',
             type: FieldsEnum.TEXT_FIELD,
             gridSize: '6',
-            filter: {
-                operator: FilterOperationEnum.BETWEEN
-            }
         },
         {
             id: uuid(),
@@ -98,9 +89,6 @@ export default {
             name: 'creationDate',
             type: FieldsEnum.TEXT_FIELD,
             gridSize: '6',
-            filter: {
-                operator: FilterOperationEnum.BETWEEN
-            }
         },
         {
             id: uuid(),
@@ -111,8 +99,5 @@ export default {
             name: 'licenceNumber',
             type: FieldsEnum.TEXT_FIELD,
             gridSize: '6',
-            filter: {
-                operator: FilterOperationEnum.INCLUDES
-            }
         }]
 }

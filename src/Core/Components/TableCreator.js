@@ -1,5 +1,6 @@
 import { Helmet } from 'react-helmet';
-import React, { useState } from 'react';
+import React from 'react';
+import { useNavigate } from 'react-router';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {
     Button,
@@ -16,21 +17,26 @@ import {
     Card,
     TableRow,
 } from '@material-ui/core';
-import Menu from '@material-ui/core/Menu';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Skeleton from '@material-ui/lab/Skeleton';
-import MenuItem from '@material-ui/core/MenuItem';
 import { PaginationDraw } from '../Utils/TablePagination';
 import { FilterCreator, TableButtonsDraw } from '../Utils/TableDrawUtils';
 import PropTypes from 'prop-types'
+import IconsTypeEnum from '../Utils/IconsTypeEnum'
+import IconsList from './FieldsInputs/IconsList'
 
-export default function TableCreator({ tableTitle, tableShcema, dataTable, totalCount, loading, TPObject, errMessage }) {
+export default function TableCreator({ tableTitle, tableShcema, dataTable, totalCount, loading, TPObject, errMessage, navBackUrl }) {
+    const navigateion = useNavigate()
     return (
         <>
             <Helmet>
                 <title>{tableTitle}</title>
             </Helmet>
             <Container maxWidth="lg" >
+                {errMessage && (
+                    <Alert variant="outlined" severity="error">
+                        {errMessage}
+                    </Alert>)
+                }
                 <Grid
                     container
                     lg={12}
@@ -96,10 +102,10 @@ export default function TableCreator({ tableTitle, tableShcema, dataTable, total
                                                                 if (!!responseData) {
                                                                     val = responseData;
                                                                     val = data.name?.includes(".") ?
-                                                                            data['name'].split('.').map(attrName => (
-                                                                                val[attrName]
-                                                                            )) :
-                                                                            responseData[data['name']];
+                                                                        data['name'].split('.').map(attrName => (
+                                                                            val[attrName]
+                                                                        )) :
+                                                                        responseData[data['name']];
                                                                 }
                                                                 return (
                                                                     <TableCell key={idx}>
@@ -144,17 +150,27 @@ export default function TableCreator({ tableTitle, tableShcema, dataTable, total
                         </Card>
                     </Grid >
                 </Grid>
+                {!!navBackUrl ?
+                    (
+                        <Button
+                            color="primary"
+                            variant="contained"
+                            onClick={() =>
+                                navigateion(navBackUrl.url, { state: navBackUrl.state })
+                            }
+                        >
+                            {IconsList(IconsTypeEnum.ARROW_FORWARD_ICON, "العودة للخلف")}
+                        </Button>)
+                    :
+                    ('')
+                }
             </Container >
-            {errMessage && (
-                <Alert variant="outlined" severity="error">
-                    {errMessage}
-                </Alert>)
-            }
         </>
     )
 
 }
 TableCreator.propTypes = {
+    navBackUrl: PropTypes.string,
     tableTitle: PropTypes.string,
     tableShcema: PropTypes.object,
     dataTable: PropTypes.object,
@@ -163,34 +179,3 @@ TableCreator.propTypes = {
     TPObject: PropTypes.object,
     errMessage: PropTypes.string,
 }
-
-/*
-    const windowMaxPosition = useMemo(() => {
-        return document.documentElement.scrollHeight;
-    }
-    )
-    console.log('totalCount', totalCount)
-
-     useEffect(() => {
-        if (!!totalCount && !loading ) {
-            document.addEventListener("scroll", (e) => handleScroll(e , batchSize), true)
-        }else{
-            document.removeEventListener("scroll", (e) => handleScroll(e), true)
-        }
-    }, [totalCount,batchSize,loading]
-    )
-    function handleScroll(e, bbatchSize) {
-        console.log('loading', loading)
-        let windowScrollPosition = e.srcElement.scrollTop
-        console.log('document.documentElement.scrollTop ', e.srcElement.scrollTop)
-        console.log('totalCount', totalCount)
-        console.log('windowScrollPosition', windowScrollPosition)
-        console.log('windowMaxPosition - (windowMaxPosition /2)', windowMaxPosition - (windowMaxPosition / 2))
-        console.log('bbatchSize', bbatchSize)
-        console.log('(windowMaxPosition - (windowMaxPosition / 2) > windowScrollPosition) && (totalCount > batchSize)', (windowMaxPosition - (windowMaxPosition / 2) > windowScrollPosition) && (totalCount > batchSize))
-        if (!!totalCount && (totalCount > bbatchSize) && (windowMaxPosition - (windowMaxPosition * 0.75) > windowScrollPosition)) {
-            batchSize(bbatchSize + 1)
-        } else if (!!totalCount || totalCount === bbatchSize) {
-            document.removeEventListener("scroll", (e) => handleScroll(e), true)
-        }
-    }*/

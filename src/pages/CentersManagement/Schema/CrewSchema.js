@@ -12,7 +12,7 @@ export function SchemaActions() {
                 ar: '',
                 en: ''
             },
-            style:'MoreVertIcon',
+            style: 'MoreVertIcon',
             buttons: [
                 {
                     id: uuid(),
@@ -20,7 +20,7 @@ export function SchemaActions() {
                         ar: 'تعديل',
                         en: 'Edit'
                     },
-                    iconTagFunc: (data)=>{return data.StaffType==='4'?'':IconsTypeEnum.ADD_ICON},
+                    iconTagFunc: (data) => { return data.StaffType === '4' ? '' : IconsTypeEnum.ADD_ICON },
                     iconTag: IconsTypeEnum.ADD_ICON,
                     btnFun: async (data) => {
                         const licenceNumber = data['licenceNumber']
@@ -33,7 +33,7 @@ export function SchemaActions() {
                         ar: 'حذف',
                         en: 'Delete'
                     },
-                    iconTagFunc: (data)=>{return data.StaffType==='4'?'':IconsTypeEnum.ADD_ICON},
+                    iconTagFunc: (data) => { return data.StaffType === '4' ? '' : IconsTypeEnum.ADD_ICON },
                     iconTag: IconsTypeEnum.ADD_ICON,
                     btnFun: async (data) => {
                         const licenceNumber = data['licenceNumber']

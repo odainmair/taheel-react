@@ -27,7 +27,7 @@ export default {
             return validator.isStrongPassword(value)
         }
     },
-    phoneNumberValidator:{
+    phoneNumberValidator: {
         id: "passwordStrength",
         massege: {
             ar: 'رقم الهاتف غير صحيح',

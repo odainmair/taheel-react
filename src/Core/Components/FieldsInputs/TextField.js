@@ -1,14 +1,14 @@
 import React from 'react'
-import {Grid,  Box, TextField as TextFieldCore} from '@material-ui/core';
+import { Grid, Box, TextField as TextFieldCore } from '@material-ui/core';
 import { TextField as TextFieldFinal } from 'final-form-material-ui';
 import { Field } from 'react-final-form';
 import PropTypes from 'prop-types'
+import { OnChange } from 'react-final-form-listeners';
 
 export default function TextField(props) {
     const gridSize = !!props.gridSize ? props.gridSize : 12
-
     if (props.type !== 'date') {
-        if(!!props['attrFunc'] && props.values.length > 0) props.values[props['name']]=props.attrFunc(props.values)
+        if (!!props['attrFunc'] && props.values.length > 0) props.values[props['name']] = props.attrFunc(props.values)
         return (
             <Grid item xs={gridSize} >
                 <Field
@@ -18,10 +18,18 @@ export default function TextField(props) {
                     name={props.name}
                     component={TextFieldFinal}
                     type={props.fieldType}
+                    onChange={props.handleChange}
                     variant="outlined"
                     dir="rtl"
                     className="custom-field"
                 />
+                {
+                    <OnChange name={props.name}>
+                        {(value, previous) => {
+                            !!props.handleChange ? !!props.filter ? props.handleChange(value, props.name, props.filter.operator) : props.handleChange(value, props.name) : ''
+                        }}
+                    </OnChange>
+                }
             </Grid>);
     } else {
         return (
@@ -65,14 +73,14 @@ export default function TextField(props) {
     }
 }
 TextField.propTypes = {
-  labelRootStyle: PropTypes.object,
-  tLabel: PropTypes.string,
-  handleChange: PropTypes.func,
-  gridSize: PropTypes.number,
-  rows: PropTypes.number,
-  type: PropTypes.string,
-  name: PropTypes.string,
-  value: PropTypes.string,
-  multiline: PropTypes.bool,
-  disabled: PropTypes.bool,
+    labelRootStyle: PropTypes.object,
+    tLabel: PropTypes.string,
+    handleChange: PropTypes.func,
+    gridSize: PropTypes.number,
+    rows: PropTypes.number,
+    type: PropTypes.string,
+    name: PropTypes.string,
+    value: PropTypes.string,
+    multiline: PropTypes.bool,
+    disabled: PropTypes.bool,
 }

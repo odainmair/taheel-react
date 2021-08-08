@@ -9,20 +9,6 @@ export default function SelectField(props) {
     //const [t] = useTranslation('common');
     console.log('props ===> ', props)
     console.log('props[attrName] ===> ', props['name'])
-    let options = [];
-    let tOptionLabel = '';
-    if (!!props.fieldLookUp) {
-        props.fieldLookUp.forEach(option => {
-            tOptionLabel = option['name'];
-            options.push({ label: tOptionLabel, value: option.ID })
-        })
-    } else {
-        props.options.forEach(option => {
-            //tOptionLabel = t('lang') === 'en' ? option.label.en : option.label.ar;
-            tOptionLabel = option.label.ar;
-            options.push({ label: tOptionLabel, value: option.value })
-        });
-    }
     let gridSize = !!props.gridSize ? props.gridSize : 12;
     return (
         <Grid
@@ -42,8 +28,8 @@ export default function SelectField(props) {
                 className="custom-field"
                 formControlProps={{ fullWidth: true }}
             >
-                {options.map((option, idx) => {
-                    return <MenuItem value={option.value} className={props.style} key={idx}>{option.label}</MenuItem>
+                {props.options?.map((option, idx) => {
+                    return <MenuItem value={option.value} className={props.style} key={idx}>{option.label.ar}</MenuItem>
                 })}
             </Field>
         </Grid>
@@ -59,4 +45,4 @@ SelectField.propTypes = {
     value: PropTypes.string,
     required: PropTypes.bool,
     fieldLookUp: PropTypes.array,
-  }
+}

@@ -11,7 +11,7 @@ export default function ButtonField(props) {
             type="submit"
             disabled={props.loading}
         >
-            {props.loading && <CircularProgress size={25}  style={{color:'green'}} />}
+            {props.loading && <CircularProgress size={25} style={{ color: 'green' }} />}
             {props.btnName}
         </Button>
     );
@@ -19,4 +19,4 @@ export default function ButtonField(props) {
 ButtonField.propTypes = {
     btnName: PropTypes.string,
     loading: PropTypes.bool,
-  }
+}

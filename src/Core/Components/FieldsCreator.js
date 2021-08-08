@@ -9,29 +9,29 @@ import FormField from './FieldsInputs/FormField'
 //import { useTranslation } from 'react-i18next'
 //import { useStyles } from '../../../styles.js'
 import { getOptions, arrangeFieldType } from '../Utils/CoreUtils'
-import FormTypeEnum from '../Utils/FormTypeEnum'
+import { ConditionComp } from 'src/pages/services/final-license/services/finalLicenseUtil'
+
 export default function FieldsCreator({ lookupObject, schema, fieldsName, sectionNames, values, setField, isLoading, formType }) {
     //const [t] = useTranslation('common')
     //const classes = useStyles()
 
-    let tLabel = '', style = '', labelRootStyle = '', labelshrinkStyle = '', fieldType = ''
+    let tLabel = '', style = '', labelRootStyle = '', labelshrinkStyle = '', fieldType = '', sectionName = ''
     let fieldComponents = []
     const Components = { TextField, RadioButtonField, CheckboxField, SelectField, ButtonField, TypographyField }
     let newSchema = []
 
     if (!!fieldsName) {
-        fieldsName.map(fieldName => {
+        [].concat(fieldsName).map(fieldName => {
             newSchema = newSchema.concat(schema.filter(field => field.name === fieldName)[0])
         })
     } else if (!!sectionNames) {
-        sectionNames.map(secName => {
-            newSchema = newSchema.concat(schema.filter(field => field.sectionName === secName))
+        [].concat(sectionNames).map(secName => {
+            newSchema = newSchema.concat(schema.filter(field => field.sectionName.id === secName))
         })
     } else {
         newSchema = schema
     }
-    console.log('newSchema', newSchema)
-    newSchema.forEach(field => {
+    newSchema.sort((a, b) => (!!a.sectionName?.order ? a.sectionName.order : 999) - (!!b.sectionName?.order ? b.sectionName.order : 999)).map(field => {
         if (!!field) {
             //if (t('lang') === 'ar') { // setting the properities for lang change
             tLabel = field.label.ar
@@ -44,16 +44,28 @@ export default function FieldsCreator({ lookupObject, schema, fieldsName, sectio
                 labelRootStyle = classes.labelRootEn
                 labelshrinkStyle = classes.shrinkEn
             }*/
-            field.options = getOptions(lookupObject, field)
+            if (!!field['sectionName'] && sectionName.id !== field.sectionName.id) {
+                sectionName = field.sectionName
+                fieldComponents.push(<TypographyField type='HeadText' tLabel={sectionName.label.ar} />)
+            }
+            field.options = !!lookupObject ? getOptions(lookupObject[field?.name], field) : field.options
             field = { ...field, tLabel, style, labelRootStyle, labelshrinkStyle, values, setField, isLoading }
-            let Component = []
+            let Component
             fieldType = field['type']
-            if (formType === FormTypeEnum.VIEW) {
-                fieldComponents.push(<FormField {...field} />)
+            if (formType === 'view') {
+                if (!!field.depndOn) {
+                    fieldComponents.push(
+                        <ConditionComp when={filteredTempLicense.dependOn.fieldName} is={filteredTempLicense.dependOn.value}>
+                            <FormField {...field} />
+                        </ConditionComp>
+                    )
+                } else {
+                    fieldComponents.push(<FormField {...field} />)
+                }
             } else {
                 fieldType = arrangeFieldType(fieldType)
                 Component = Components[fieldType]
-                !!Component ? fieldComponents.push(<Component {...field} />) : finalSchema.push(<TypographyField textTitle={'input type not recognized! ' + field['name'] + ' with type ' + field['type']} />)
+                !!Component ? fieldComponents.push(<Component {...field} />) : fieldComponents.push(<TypographyField textTitle={'input type not recognized! ' + field['name'] + ' with type ' + field['type']} />)
             }
         }
     })

@@ -1,52 +1,90 @@
-/* eslint-disable */
-import { Helmet } from 'react-helmet';
-import React, { useState, useEffect, useMemo } from 'react';
-
 import { useLocation } from 'react-router-dom';
-import PropTypes from 'prop-types';
+import React, { useState, useEffect } from 'react';
 import { CentertDetails } from 'src/pages/services/final-license/services/finalLicenseAPI';
-import { TablePaginationObject} from 'src/Core/Utils/TablePagination';
-import CrewSchema , {SchemaActions} from '../Schema/CrewSchema';
-import TableCreator from 'src/Core/Components/TableCreator';
-import TableDataViewEnum from 'src/Core/Utils/TableDataViewEnum';
-
-const AddCommissioner = (props) => {
+import { addCommissionerRs } from '../data/CentersApi';
+import CommissionerDetailsSchema from '../Schema/CommissionerDetailsSchema';
+import FormCreator from 'src/Core/Components/FormCreator';
+const AddCommissioner = () => {
     const location = useLocation();
     const licenceNumber = location.state.licenceNumber;
-    console.log("licenceNumber+_+_+_+_+_+_+", licenceNumber)
-    const [details, setDetails] = React.useState(true);
-    const [errMessage, SetErrMessage] = useState('')
-    const [loading, setLoading] = useState(true);
-    const TPObject = TablePaginationObject(TableDataViewEnum.ALL_DATA)
-    const paramData = useMemo(() => {
-        return {
-          batchSize: TPObject.pagination.batchSize,
-          startIndex: TPObject.pagination.startIndex,
-          filters: TPObject.pagination.filters
-        }
-      }, [TPObject.pagination.batchSize, TPObject.pagination.startIndex, TPObject.pagination.filters])
+    const [errMessage, SetErrMessage] = useState('');
+    const [staffIds, SetStaffIds] = useState([])
+    const [loading, setLoading] = useState(true)
+    const title = " إضافة مفوض"
+    const lookupObject = {
 
-    const tableTitle = 'معلومات الكوادر'
+        'permissions': [
+            {
+                label: { ar: 'إضافة مستفيدين في المركز', en: 'Add beneficiaries in the center' },
+                value: 1
+            },
+            {
+                label: { ar: 'إصدار تراخيص مؤقتة', en: 'Issuance of temporary licenses' },
+                value: 2
+            },
+            {
+                label: { ar: 'إصدار تراخيص نهائية', en: 'Issuance of final licenses' },
+                value: 3
+            },
+            {
+                label: { ar: 'تعديل بيانات مستفيدين في المركز', en: 'Modify the data of beneficiaries in the center' },
+                value: 4
+            },
+            {
+                label: { ar: 'إضافة المركز في برنامج تحمل الدولة للرسوم', en: 'Adding the center to the state fee-bearing program' },
+                value: 5
+            },
+            {
+                label: { ar: 'إزالة مركز من برنامج تحمل الدولة للرسوم', en: 'Remove a center from the state fee-bearing program' },
+                value: 6
+            }],
+        'staffId': staffIds.map(member => (
+            {
+                label: { ar: member.name, en: member.name },
+                value: member.id,
+            }
+        ))
+    }
 
     useEffect(async () => {
-        const getCenterDetails = await CentertDetails(licenceNumber, paramData.startIndex, paramData.batchSize, paramData.filters);
+        const getCenterDetails = await CentertDetails(licenceNumber);
         if (!getCenterDetails.isSuccessful) {
-            const response = { isSuccessful: false, message: getCenterDetails.message };
-            SetErrMessage(getCenterDetails.message)
-            setLoading(true)
-        } else {
-            const Details = getCenterDetails.responseBody.data;
-            setDetails(Details)
-            console.log("Details+++++++++++++", details.staff);
             setLoading(false)
+            response = { isSuccessful: false, message: getCenterDetails.message };
+        } else {
+            setLoading(false)
+            SetStaffIds(getCenterDetails.responseBody.data.staff);
         }
-
     }, []);
 
-    return (TableCreator(tableTitle, { ...CrewSchema, ... SchemaActions() }, details.staff, 0, loading, null, errMessage))
-    AddCommissioner.propTypes = {
-        // centers: PropTypes.array.isRequired
+    const onSubmit = async (values) => {
+        const { staffId, email, jobTitle, permissions } = values;
+        const addCommissioner = await addCommissionerRs(email, jobTitle, staffId, permissions);
+        if (!addCommissioner.isSuccessful) {
+            SetErrMessage(addCommissioner.message);
+            return { isSuccessful: false, message: addCommissioner.message };
+        }
+        return response;
     }
-}
+    const submitInfo = {
+        onSubmit: onSubmit,
+        btnName: 'إضافة'
 
+    }
+    return (
+        <>
+            {
+                <FormCreator
+                    title={title}
+                    schema={CommissionerDetailsSchema}
+                    submitInfo={submitInfo}
+                    lookupObject={lookupObject}
+                    errMessage={errMessage}
+                    isLoading={loading}
+                    navBackUrl={{ url: '/app/CommissionersManagement', state: { licenceNumber }}}
+                />
+            }
+        </>
+    )
+}
 export default AddCommissioner;

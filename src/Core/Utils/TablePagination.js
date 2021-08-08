@@ -108,7 +108,7 @@ export function PaginationDraw(props) {
                                     }
                                 >
                                     {Array.from({ length: (totalCount + 1) / 5 + 1 }, (_, i) => 5 + (i * 5)).map((count, idx) =>
-                                        <MenuItem key={idx} value={count}>{count}</MenuItem>
+                                        <MenuItem key={idx} value={count>totalCount?totalCount:count}>{count>totalCount?totalCount:count}</MenuItem>
                                     )}
                                 </Select></Typography>
                             </Box>
@@ -134,6 +134,7 @@ export function PaginationDraw(props) {
                         <Skeleton />
                     ) : (
                         <Button
+                            fullWidth={true}
                             variant="contained"
                             color="primary"
                             onClick={() => TPObject.dispatch({ payload: { dataViewType: TableDataViewEnum.ALL_DATA } })}
