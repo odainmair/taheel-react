@@ -41,7 +41,6 @@ const useStyles = makeStyles((theme) => ({
 
 export function TablePaginationObject(dataViewType) {
     function reducer(pagination, action) {
-        console.log('action', action)
         if (!!action.payload.startIndex)
             return { ...pagination, batchSize: action.payload.startIndex }
         else if (!!action.payload.batchSize)
@@ -87,9 +86,7 @@ export function PaginationDraw(props) {
     const TPObject = props.TPObject, totalCount = props.totalCount, loading = props.loading
 
     const handleChange = (event, value) => {
-        console.log('betifor', TPObject.pagination)
-        console.log('TPObject pageNo', TPObject.dispatch({ payload: { pageNo: value } }))
-        console.log('after', TPObject.pagination)
+        TPObject.dispatch({ payload: { pageNo: value } })
     };
     switch (!!TPObject ? TPObject.pagination.dataViewType : null) {
         case TableDataViewEnum.PAGINATION_DATA:

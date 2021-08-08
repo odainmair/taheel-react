@@ -7,8 +7,6 @@ import PropTypes from 'prop-types'
 
 export default function SelectField(props) {
     //const [t] = useTranslation('common');
-    console.log('props ===> ', props)
-    console.log('props[attrName] ===> ', props['name'])
     let gridSize = !!props.gridSize ? props.gridSize : 12;
     return (
         <Grid
