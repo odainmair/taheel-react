@@ -24,6 +24,7 @@ import ForgetPassword from './pages/UserAuthentication/forgetPassword/ForgetPass
 import CentersDetails from './pages/CentersManagement/components/CentersDetails';
 import Centers from './pages/CentersManagement/Centers';
 import AddCommissioner from './pages/CentersManagement/components/AddCommissioner';
+import CommissionersManagement from './pages/CentersManagement/components/CommissionersManagement';
 import DownloadDoc from './pages/UserAuthentication/Login/components/DownloadDoc';
 import Orders from './pages/Orders';
 
@@ -57,6 +58,7 @@ const routes = (isLoggedIn) => [
       { path: 'centers', element: <Centers /> },
       { path: 'centersDetails', element: <CentersDetails /> },
       { path: 'AddCommissioner', element: <AddCommissioner /> },
+      { path: 'CommissionersManagement', element: <CommissionersManagement /> },
       { path: 'customers', element: <CustomerList /> },
       { path: 'dashboard', element: <Dashboard /> },
       // { path: 'drafts', element: <Drafts /> },

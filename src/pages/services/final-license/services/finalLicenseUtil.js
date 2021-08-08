@@ -167,7 +167,6 @@ const ConditionComp = ({ when, is, children }) => (
     {({ input: { value } }) => (value == is ? children : null)}
   </Field>
 )
-
 const MedicalPracticeComp = ({ when, is, children }) => (
   <Field name={when} subscription={{ value: true }}>
     {({ input: { value } }) => (is.includes(value) ? children : null)}
@@ -195,7 +194,7 @@ const DownloadButt = ({ index, docID, name, label }) => {
   return (
     <>
       <TableRow>
-        <TableCell> ملف رقم {index + 1} </TableCell>
+        <TableCell style={{ width: '35%' }}>  {'ملف رقم'.concat(index + 1)} </TableCell>
         <TableCell>
           <Button
             startIcon={loading ? <CircularProgress size="1rem" /> : <CloudDownloadIcon />}
@@ -214,7 +213,7 @@ const DownloadButt = ({ index, docID, name, label }) => {
       </TableRow>
     </>)
 }
-const DownloadButtTable = ({ docIDs, name, label }) => {
+const DownloadButtTable = ({ docIDs, name, label, idx }) => {
 
   return (
     <>
@@ -230,13 +229,13 @@ const DownloadButtTable = ({ docIDs, name, label }) => {
               </TableHead>
               <TableBody>
 
-                {docIDs.map((docID, index) => (
+                {[].concat(docIDs).map((docID, index) => (
                   < DownloadButt key={docID + "_" + index} index={index} docID={docID} name={name} label={label} />
-                ))}
+                ))
+                }
               </TableBody>
             </Table>
           </TableContainer>
-
           <>
 
           </>
@@ -290,7 +289,7 @@ const validateAddStaffForm = (values, rowIndex, SAForm, forignForm) => {
     if (!cv) {
       return "يرجى رفع السيرة الذاتية";
     }
-    if (!MedicalPractice && ['أخصائي علاج طبيعي', 'أخصائي علاج وظيفي','ممرض', 'أخصائي نطق و تخاطب'].includes(staffTypes)) {
+    if (!MedicalPractice && ['أخصائي علاج طبيعي', 'أخصائي علاج وظيفي', 'ممرض', 'أخصائي نطق و تخاطب'].includes(staffTypes)) {
       return "يرجى رفع رخصة المزاولة";
     }
 

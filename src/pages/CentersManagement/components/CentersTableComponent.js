@@ -21,8 +21,6 @@ const CentersTableComponent = (props) => {
     const { loading = false, centerRequests = [] } = props;
     const handleOnClickFn = async (licenceNumber) => {
         navigate('/app/AddCommissioner', { state: { licenceNumber } });
-
-        // navigate('/app/centersDetails', { state: { licenceNumber } });
     };
     const getCenterType = (centerType) => {
         if (centerType === '01') {
@@ -120,15 +118,6 @@ const CentersTableComponent = (props) => {
                                             )}
                                     </TableCell>
                                     <TableCell>
-                                       {/*  {request ? (<Button
-                                            variant="contained"
-                                            color="primary"
-                                            onClick={() => handleOnClickFn(request.licenceNumber)}
-                                        >
-                                            المزيد
-                                        </Button>) : (
-                                            <Skeleton />
-                                        )} */}
                                     </TableCell>
                                 </TableRow>
                             ))}

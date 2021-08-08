@@ -1,214 +1,54 @@
 /* eslint-disable */
-import React, { useState, useEffect } from 'react';
-import { Helmet } from 'react-helmet';
-import {
-    Box,
-    Button,
-    Card,
-    CardHeader,
-    Chip,
-    Divider,
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableRow,
-    colors,
-    TableSortLabel,
-    Tooltip
-} from '@material-ui/core';
+import { useState, useEffect, useMemo } from 'react';
+
 import { getCurrentUser } from 'src/utils/UserLocalStorage';
-import HistoryOutlinedIcon from '@material-ui/icons/HistoryOutlined';
-import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
-import DoneIcon from '@material-ui/icons/Done';
-import Skeleton from '@material-ui/lab/Skeleton';
-import PropTypes from 'prop-types';
-import PerfectScrollbar from 'react-perfect-scrollbar';
 import { APIRequest } from 'src/api/APIRequest';
+import OrdersSchema from './Modules/OrdersSchema'
+import TableCreator from 'src/Core/Components/TableCreator';
+import { TablePaginationObject } from 'src/Core/Utils/TablePagination';
+import TableDataViewEnum from "src/Core/Utils/TableDataViewEnum";
 
 
-const getChipComponentsForStatus = (status) => {
-    if (status === -1) {
-        return (
-            <Chip
-                label="مكتمل"
-                variant="outlined"
-                size="medium"
-                icon={<DoneIcon sx={{ color: '#43A047 !important' }} />}
-                sx={{
-                    color: colors.green[600],
-                    borderColor: colors.green[600],
-                }}
-            />
-        );
-    }
-    if (status === -2) {
-        return (
-            <Chip
-                label="مرفوض"
-                variant="outlined"
-                size="medium"
-                icon={<ErrorOutlineIcon sx={{ color: '#e53935 !important' }} />}
-                sx={{
-                    color: colors.red[600],
-                    borderColor: colors.red[600],
-                }}
-            />
-        );
-    }
-    return (
-        <Chip
-            label="قيد المراجعة"
-            variant="outlined"
-            size="medium"
-            icon={<HistoryOutlinedIcon sx={{ color: '#fb8c00 !important' }} />}
-            sx={{
-                color: colors.orange[600],
-                borderColor: colors.orange[600],
-            }}
-        />
-    );
-};
 const Orders = () => {
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [taheelRequests, setTaheelRequests] = useState([]);
+    const [errMessage, SetErrMessage] = useState('')
+    const tableTitle = 'الطلبات المقدمة'
+    const TPObject = TablePaginationObject(TableDataViewEnum.ONLY_FIVE)
+    const paramData = useMemo(() => {
+        return {
+            batchSize: TPObject.pagination.batchSize,
+            startIndex: TPObject.pagination.startIndex
+        }
+    }, [TPObject.pagination.batchSize, TPObject.pagination.startIndex])
 
-    const getTaheelRequestsFun = async (email) => {
+    const getTaheelRequestsFun = async (email, startIndex, batchSize) => {
         const url = 'taheel-apis-records-getRequests-v2';
-        const queryParams = { userEmail: email };
+        const queryParams = { userEmail: email, startIndex, batchSize };
         const response = await APIRequest({ url, queryParams });
         return response;
     };
 
     useEffect(async () => {
+        setLoading(true)
         const { email } = getCurrentUser();
-        const getTaheelRequestsRs = await getTaheelRequestsFun(email);
+        const getTaheelRequestsRs = await getTaheelRequestsFun(email, paramData.startIndex, paramData.batchSize);
         let response = {};
         if (!getTaheelRequestsRs.isSuccessful) {
             setLoading(true);
+            SetErrMessage(getTaheelRequestsRs.message )
             response = { isSuccessful: false, message: getTaheelRequestsRs.message };
         } else {
-            setLoading(true);
-            const { requests ,totalCount} = getTaheelRequestsRs.responseBody.data;            
-            console.log(JSON.stringify(requests));
-            setTaheelRequests(requests);
+            setLoading(false);
+            const data = getTaheelRequestsRs.responseBody.data;
+            setTaheelRequests(data);
         }
+
         return response;
-    }, []);
+    }, [paramData.batchSize, paramData.startIndex]);
     return (
-        <>
-            <Helmet>
-                <title>Orders</title>
-            </Helmet>
-
-            <Card>
-                <CardHeader title={
-                    loading ? (
-                        'الطلبات المقدمة'
-                    ) : (
-                        <Skeleton animation="wave" height={15} width="20%" style={{ marginBottom: 6 }} />
-                    )
-                }
-                />
-                <Divider />
-                <PerfectScrollbar>
-                    <Box sx={{ minWidth: 800, minHeight: 400 }}>
-                        <Table>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell>
-                                        {loading ? 'رقم الطلب'
-                                            : (
-                                                <Skeleton />
-                                            )}
-                                    </TableCell>
-                                    <TableCell>
-                                        {loading ? 'اسم المركز'
-                                            : (
-                                                <Skeleton />
-                                            )}
-                                    </TableCell>
-                                    <TableCell>
-                                        {loading ? 'نوع الطلب'
-                                            : (
-                                                <Skeleton />
-                                            )}
-                                    </TableCell>
-                                    <TableCell sortDirection="desc">
-                                        {loading ? (
-                                            <Tooltip
-                                                enterDelay={300}
-                                                title="Sort"
-                                            >
-                                                <TableSortLabel
-                                                    active
-                                                    direction="desc"
-                                                >
-                                                    تاريخ الطلب
-                                                </TableSortLabel>
-                                            </Tooltip>
-                                        ) : (
-                                            <Skeleton />
-                                        )}
-                                    </TableCell>
-                                    <TableCell>
-                                        {loading ? 'حالة الطلب'
-                                            : (
-                                                <Skeleton />
-                                            )}
-                                    </TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {(!loading ? Array.from(new Array(6)) : taheelRequests).map((request, index) => (
-                                    <TableRow
-                                        hover
-                                        key={request ? request.requestNum : index}
-                                    >
-                                        <TableCell>
-                                            {request ? request.requestNum
-                                                : (
-                                                    <Skeleton />
-                                                )}
-                                        </TableCell>
-                                        <TableCell>
-                                            {request ? request.centerName
-                                                : (
-                                                    <Skeleton />
-                                                )}
-                                        </TableCell>
-                                        <TableCell>
-                                            {request ? request.type
-                                                : (
-                                                    <Skeleton />
-                                                )}
-                                        </TableCell>
-                                        <TableCell>
-                                            {request ? request.requestDate
-                                                : (
-                                                    <Skeleton />
-                                                )}
-                                        </TableCell>
-                                        <TableCell>
-                                            {request ? getChipComponentsForStatus(request.status) : (
-                                                <Skeleton />
-                                            )}
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </Box>
-                </PerfectScrollbar>
-            </Card>
-
-        </>
+    <TableCreator tableTitle={tableTitle} tableShcema={ {...OrdersSchema, actions:''} } dataTable={taheelRequests.requests} totalCount={taheelRequests.totalCount} loading={loading} TPObject={TPObject} errMessage={errMessage}/>
     )
 }
 
 export default Orders;
-
-Orders.propTypes = {
-    // loading: PropTypes.bool.isRequired,
-    // taheelRequests: PropTypes.array.isRequired
-};
