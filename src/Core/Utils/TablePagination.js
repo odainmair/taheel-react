@@ -2,6 +2,7 @@ import React, { useReducer, useCallback } from "react"
 import {
     Box,
     Button,
+    Grid,
 } from '@material-ui/core';
 import MenuItem from '@material-ui/core/MenuItem';
 import Typography from '@material-ui/core/Typography';
@@ -11,6 +12,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import TableDataViewEnum from "./TableDataViewEnum";
 import Skeleton from '@material-ui/lab/Skeleton';
 import PropTypes from 'prop-types'
+import IconsTypeEnum from "./IconsTypeEnum";
+import IconsList from "../Components/FieldsInputs/IconsList";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -105,7 +108,7 @@ export function PaginationDraw(props) {
                                     }
                                 >
                                     {Array.from({ length: (totalCount + 1) / 5 + 1 }, (_, i) => 5 + (i * 5)).map((count, idx) =>
-                                        <MenuItem key={idx} value={count>totalCount?totalCount:count}>{count>totalCount?totalCount:count}</MenuItem>
+                                        <MenuItem key={idx} value={count > totalCount ? totalCount : count}>{count > totalCount ? totalCount : count}</MenuItem>
                                     )}
                                 </Select></Typography>
                             </Box>
@@ -130,14 +133,16 @@ export function PaginationDraw(props) {
                     (
                         <Skeleton />
                     ) : (
-                        <Button
-                            fullWidth={true}
-                            variant="contained"
-                            color="primary"
-                            onClick={() => TPObject.dispatch({ payload: { dataViewType: TableDataViewEnum.ALL_DATA } })}
-                        >
-                            المزيد
-                        </Button>
+                        <Grid container direction='row-reverse'>
+                            <Box m={3} >
+                                <Button
+                                    color="primary"
+                                    onClick={() => TPObject.dispatch({ payload: { dataViewType: TableDataViewEnum.ALL_DATA } })}
+                                >
+                                    {IconsList(IconsTypeEnum.ARROW_LEFT_ICON, 'عرض الجميع')}
+                                </Button>
+                            </Box>
+                        </Grid>
                     )
             )
         default:
