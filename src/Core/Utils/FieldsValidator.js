@@ -10,7 +10,6 @@ class BreakException extends Error {
 
 export default function validateSchema({ schema, values, t }) {
     const errors = {}
-    console.log('schema Validator ===> ', schema)
     schema?.forEach(element => {
         try {
             element?.validators?.forEach(validator => {

@@ -31,7 +31,6 @@ export default function FormCreator({ title, pageName, isLoading, submitInfo, sc
             await submitInfo.onSubmit(values)
         setLoading(false)
     }
-    console.log('==>> navBackUrl ', navBackUrl)
     return (
         <Box style={{ pointerEvents: loading ? "none" : '' }}>
             {<Form

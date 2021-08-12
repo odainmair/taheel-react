@@ -8,5 +8,6 @@ export default {
     FOLDER_ICON             : "FolderIcon",
     ARROW_FORWARD_ICON      : "ArrowForwardIcon",
     DONE_ICON               : "DoneIcon",
-    EXIT_ICON               : "ExitToAppSharpIcon"
+    EXIT_ICON               : "ExitToAppSharpIcon",
+    ARROW_LEFT_ICON         : "ArrowLeftIcon"
 }
