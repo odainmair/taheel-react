@@ -7,6 +7,7 @@ import FormCreator from 'src/Core/Components/FormCreator';
 const AddCommissioner = () => {
     const location = useLocation();
     const licenceNumber = location.state.licenceNumber;
+    console.log('licenceNumber ===> ',licenceNumber)
     const [errMessage, SetErrMessage] = useState('');
     const [staffIds, SetStaffIds] = useState([])
     const [loading, setLoading] = useState(true)
@@ -50,7 +51,7 @@ const AddCommissioner = () => {
         const getCenterDetails = await CentertDetails(licenceNumber);
         if (!getCenterDetails.isSuccessful) {
             setLoading(false)
-            response = { isSuccessful: false, message: getCenterDetails.message };
+            const response = { isSuccessful: false, message: getCenterDetails.message };
         } else {
             setLoading(false)
             SetStaffIds(getCenterDetails.responseBody.data.staff);

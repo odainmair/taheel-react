@@ -39,6 +39,7 @@ const AddCommissioner = (props) => {
             setLoading(true)
         } else {
             const Details = getCenterDetails.responseBody.data;
+            Details.staff.map(data=> data.licenceNumber = licenceNumber)
             setDetails(Details)
             console.log("Details+++++++++++++", Details);
             setLoading(false)

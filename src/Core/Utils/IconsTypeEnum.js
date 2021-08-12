@@ -9,5 +9,7 @@ export default {
     ARROW_FORWARD_ICON      : "ArrowForwardIcon",
     DONE_ICON               : "DoneIcon",
     EXIT_ICON               : "ExitToAppSharpIcon",
-    ARROW_LEFT_ICON         : "ArrowLeftIcon"
+    ARROW_LEFT_ICON         : "ArrowLeftIcon",
+    DELETE_ICON             : "DeleteIcon",
+    EDIT_ICON               : "EditIcon",
 }

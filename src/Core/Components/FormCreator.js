@@ -72,13 +72,13 @@ export default function FormCreator({ title, pageName, isLoading, submitInfo, sc
                                 {!!navBackUrl ?
                                     (
                                         <Button
-                                            color="primary"
                                             variant="contained"
                                             onClick={() =>
                                                 navigateion(navBackUrl.url, { state: navBackUrl.state })
                                             }
+                                            startIcon={IconsList(IconsTypeEnum.ARROW_FORWARD_ICON)}
                                         >
-                                            {IconsList(IconsTypeEnum.ARROW_FORWARD_ICON, "العودة للخلف")}
+                                            العودة للخلف
                                         </Button>)
                                     :
                                     ('')

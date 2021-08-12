@@ -12,7 +12,6 @@ export function SchemaActions() {
                 ar: '',
                 en: ''
             },
-            style: 'MoreVertIcon',
             buttons: [
                 {
                     id: uuid(),
@@ -20,10 +19,13 @@ export function SchemaActions() {
                         ar: 'تعديل',
                         en: 'Edit'
                     },
-                    iconTagFunc: (data) => { return data.StaffType === '4' ? '' : IconsTypeEnum.ADD_ICON },
-                    iconTag: IconsTypeEnum.ADD_ICON,
+                    iconTagFunc: (data)=>{return data.StaffType==='4'?'':IconsTypeEnum.EDIT_ICON},
+                    iconTag: IconsTypeEnum.EDIT_ICON,
                     btnFun: async (data) => {
                         const licenceNumber = data['licenceNumber']
+                        console.log('licenceNumber ===> ',licenceNumber)
+                        console.log('data ===> ',data)
+
                         navigateion('/app/AddCommissioner', { state: { licenceNumber } })
                     }
                 },
@@ -33,8 +35,8 @@ export function SchemaActions() {
                         ar: 'حذف',
                         en: 'Delete'
                     },
-                    iconTagFunc: (data) => { return data.StaffType === '4' ? '' : IconsTypeEnum.ADD_ICON },
-                    iconTag: IconsTypeEnum.ADD_ICON,
+                    iconTagFunc: (data)=>{return data.StaffType==='4'?'':IconsTypeEnum.DELETE_ICON},
+                    iconTag: IconsTypeEnum.DELETE_ICON,
                     btnFun: async (data) => {
                         const licenceNumber = data['licenceNumber']
                         console.log("Delete Function !")

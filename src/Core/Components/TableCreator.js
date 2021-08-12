@@ -153,13 +153,13 @@ export default function TableCreator({ tableTitle, tableShcema, dataTable, total
                 {!!navBackUrl ?
                     (
                         <Button
-                            color="primary"
                             variant="contained"
                             onClick={() =>
                                 navigateion(navBackUrl.url, { state: navBackUrl.state })
                             }
+                            startIcon={IconsList(IconsTypeEnum.ARROW_FORWARD_ICON)}
                         >
-                            {IconsList(IconsTypeEnum.ARROW_FORWARD_ICON, "العودة للخلف")}
+                            العودة للخلف
                         </Button>)
                     :
                     ('')

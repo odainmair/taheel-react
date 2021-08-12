@@ -133,18 +133,14 @@ export function TableButtonsDraw(props) {
             )
         } else {
             return (
-                tableShcemaActions.buttons.map((button, idx) => (
+                tableShcemaActions.buttons.map((button) => (
                     <Button
                         fullWidth={true}
-                        color="primary"
                         onClick={() => button.btnFun(responseData)}
                         key={button.id}
+                        startIcon={!!responseData ? IconsList(!!button.iconTagFunc ? button.iconTagFunc(responseData) : button.iconTag) : (<Skeleton />)}
                     >
-                        {!!responseData ?
-                            IconsList(!!button.iconTagFunc ?
-                                button.iconTagFunc(responseData)
-                                : button.iconTag, button.label.ar)
-                            : <Skeleton />}
+                        {button.label.ar}
                     </Button>
                 ))
             )
