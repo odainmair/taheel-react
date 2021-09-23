@@ -8,6 +8,7 @@ import {
     Grid,
     Alert,
     CardHeader,
+    CardContent,
     Divider,
     Table,
     Paper,
@@ -24,153 +25,159 @@ import PropTypes from 'prop-types'
 import IconsTypeEnum from '../Utils/IconsTypeEnum'
 import IconsList from './FieldsInputs/IconsList'
 
-export default function TableCreator({ tableTitle, tableShcema, dataTable, totalCount, loading, TPObject, errMessage, navBackUrl }) {
+export default function TableCreator({ pageTitle, tableTitle, tableShcema, dataTable, totalCount, loading, TPObject, errMessage, otherFunc, navBackUrl, action }) {
     const navigateion = useNavigate()
     return (
         <>
-            <Helmet>
-                <title>{tableTitle}</title>
-            </Helmet>
-            <Container maxWidth="lg" >
-                {errMessage && (
-                    <Alert variant="outlined" severity="error">
-                        {errMessage}
-                    </Alert>)
-                }
-                <Grid
-                    container
-                    lg={12}
-                    md={6}
-                    xs={12}
-                    marginTop={3}
-                    spacing={3}
-                >
-                    <Grid item
-                        lg={12}
-                        md={12}
-                        xs={12}
-                        marginBottom={3}
-                    >
-                        <FilterCreator schema={tableShcema} TPObject={TPObject} loading={loading} />
+            <Card>
+                <CardHeader
+                    title={!!navBackUrl ?
+                        (
+                            <>
+                                <Button
+                                    variant="contained"
+                                    onClick={() =>
+                                        navigateion(navBackUrl.url, { state: navBackUrl.state })
+                                    }
+                                    startIcon={<IconsList iconType={IconsTypeEnum.ARROW_FORWARD_ICON} color='info' />}
+                                >
+                                    عودة
+                                </Button>
+                                &nbsp;&nbsp;{pageTitle}
+                            </>
+                        )
+                        :
+                        (pageTitle)
+                    }
+                />
+                <Divider />
+                <CardContent >
+                    <Container maxWidth="lg" >
+                        {errMessage && (
+                            <Alert variant="outlined" severity={!!errMessage.type ? errMessage.type : "error"}>
+                                {!!errMessage.msg ? errMessage.msg : errMessage}
+                            </Alert>)
+                        }
+                        <Grid
+                            container
+                            lg={12}
+                            md={6}
+                            xs={12}
+                            marginTop={3}
+                            spacing={3}
+                        >
+                            <Grid item
+                                lg={12}
+                                md={12}
+                                xs={12}
+                                marginBottom={3}
+                            >
+                                <FilterCreator schema={tableShcema} TPObject={TPObject} loading={loading} />
 
-                        <Card>
-                            <CardHeader title={
-                                loading ? (
-                                    <Skeleton animation="wave" height={15} width="20%" style={{ marginBottom: 6 }} />
-                                ) : (
-                                    tableTitle
-                                )
-                            }
-                            />
-                            <Divider />
-                            <PerfectScrollbar>
-                                <Paper container >
-                                    <Table >
-                                        <TableHead >
-                                            <TableRow>
-                                                {tableShcema.schema.map((data) => (
-                                                    <TableCell key={data.id} sortDirection="desc">
-                                                        {loading ?
-                                                            <Skeleton />
-                                                            :
-                                                            (
-                                                                data.label.ar
-                                                            )
-                                                        }
-                                                    </TableCell>
-                                                ))}
-                                                {!!tableShcema.actions.label ?
-                                                    (
-                                                        <TableCell key="btnsColumn">
-                                                            {tableShcema.actions.label.ar}
-                                                        </TableCell>
-                                                    ) :
-                                                    ('')
-                                                }
-                                            </TableRow>
-                                        </TableHead>
-                                        <TableBody>
-                                            {
-                                                (loading || !!dataTable ? ((loading || !dataTable ? Array.from(new Array(4)) : dataTable).map((responseData, index) => {
-                                                    return (
-                                                        <TableRow
-                                                            hover
-                                                            key={responseData ? responseData.requestNum : index}
-                                                        >
-                                                            {tableShcema.schema.map((data, idx) => {
-                                                                let val = ''
-                                                                if (!!responseData) {
-                                                                    val = responseData;
-                                                                    val = data.name?.includes(".") ?
-                                                                        data['name'].split('.').map(attrName => (
-                                                                            val[attrName]
-                                                                        )) :
-                                                                        responseData[data['name']];
+                                <Card>
+                                    <CardHeader title={
+                                        loading ? (
+                                            <Skeleton animation="wave" height={15} width="20%" style={{ marginBottom: 6 }} />
+                                        ) : (
+                                            tableTitle
+                                        )
+                                    }
+                                        action={action}
+                                    />
+                                    <Divider />
+                                    <PerfectScrollbar>
+                                        <Paper container >
+                                            <Table >
+                                                <TableHead >
+                                                    <TableRow>
+                                                        {tableShcema.schema.map((data) => (
+                                                            <TableCell key={data.id} sortDirection="desc">
+                                                                {loading ?
+                                                                    <Skeleton />
+                                                                    :
+                                                                    (
+                                                                        data.label.ar
+                                                                    )
                                                                 }
-                                                                return (
-                                                                    <TableCell key={idx}>
-                                                                        {responseData ?
-                                                                            (
-                                                                                !!data.attrFunc ?
+                                                            </TableCell>
+                                                        ))}
+                                                        {!!tableShcema.actions.label ?
+                                                            (
+                                                                <TableCell key="btnsColumn">
+                                                                    {tableShcema.actions.label.ar}
+                                                                </TableCell>
+                                                            ) :
+                                                            ('')
+                                                        }
+                                                    </TableRow>
+                                                </TableHead>
+                                                <TableBody>
+                                                    {
+                                                        (((loading || !dataTable ? Array.from(new Array(2)) : dataTable).map((responseData, index) => {
+                                                            return (
+                                                                <TableRow
+                                                                    hover
+                                                                    key={responseData ? responseData.requestNum : index}
+                                                                >
+                                                                    {tableShcema.schema.map((data, idx) => {
+                                                                        let val = ''
+                                                                        if (!!responseData) {
+                                                                            val = responseData;
+                                                                            val = data.name?.includes(".") ?
+                                                                                data['name'].split('.').map(attrName => (
+                                                                                    val[attrName]
+                                                                                )) :
+                                                                                responseData[data['name']];
+                                                                        }
+                                                                        return (
+                                                                            <TableCell key={idx}>
+                                                                                {responseData ?
                                                                                     (
-                                                                                        data.attrFunc(responseData)
+                                                                                        !!data.attrFunc ?
+                                                                                            (
+                                                                                                data.attrFunc(responseData)
+                                                                                            )
+                                                                                            : (
+                                                                                                val
+                                                                                            )
                                                                                     )
                                                                                     : (
-                                                                                        val
+                                                                                        <Skeleton />
                                                                                     )
-                                                                            )
-                                                                            : (
-                                                                                <Skeleton />
-                                                                            )
-                                                                        }
-                                                                    </TableCell>
-                                                                )
-                                                            })}
-                                                            <TableButtonsDraw actions={tableShcema.actions} responseData={responseData} loading={loading} index={index} />
-                                                        </TableRow>
-                                                    )
-                                                })
-                                                ) : (
-                                                    <TableRow
-                                                        hover
-                                                    >
+                                                                                }
+                                                                            </TableCell>
+                                                                        )
+                                                                    })}
+                                                                    {!loading ? <TableButtonsDraw otherFunc={otherFunc} actions={tableShcema.actions} responseData={responseData} loading={loading} index={index} /> : ''}
+                                                                </TableRow>
+                                                            )
+                                                        })
+                                                        )
+                                                        )
+                                                    }
+                                                    {!loading && dataTable?.length === 0 ? (<TableRow hover>
                                                         <TableCell colSpan={8} >
                                                             <p style={{ textAlign: 'center' }} >لا يوجد بيانات </p>
                                                         </TableCell>
-                                                    </TableRow>)
-                                                )
-                                            }
-                                        </TableBody>
-                                    </Table>
-                                </Paper>
-
-                                <PaginationDraw totalCount={totalCount} TPObject={TPObject} loading={loading} />
-
-                            </PerfectScrollbar>
-                        </Card>
-                    </Grid >
-                </Grid>
-                {!!navBackUrl ?
-                    (
-                        <Button
-                            variant="contained"
-                            onClick={() =>
-                                navigateion(navBackUrl.url, { state: navBackUrl.state })
-                            }
-                            startIcon={IconsList(IconsTypeEnum.ARROW_FORWARD_ICON)}
-                        >
-                            العودة للخلف
-                        </Button>)
-                    :
-                    ('')
-                }
-            </Container >
+                                                    </TableRow>) : <></>}
+                                                </TableBody>
+                                            </Table>
+                                        </Paper>
+                                        <PaginationDraw totalCount={totalCount} TPObject={TPObject} loading={loading} />
+                                    </PerfectScrollbar>
+                                </Card>
+                            </Grid >
+                        </Grid>
+                    </Container >
+                </CardContent>
+            </Card>
         </>
     )
 
 }
 TableCreator.propTypes = {
     navBackUrl: PropTypes.string,
+    pageTitle: PropTypes.string,
     tableTitle: PropTypes.string,
     tableShcema: PropTypes.object,
     dataTable: PropTypes.object,
@@ -178,4 +185,6 @@ TableCreator.propTypes = {
     loading: PropTypes.bool,
     TPObject: PropTypes.object,
     errMessage: PropTypes.string,
+    otherFunc: PropTypes.func,
+    action: PropTypes.object,
 }

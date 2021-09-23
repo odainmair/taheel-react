@@ -73,6 +73,7 @@ export default function FormField(props) {
                 >
                     <Field
                         label={props.tLabel}
+                        required={props.required}
                         name={props.name}
                         component={contentField}
                         props={props}

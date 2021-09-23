@@ -11,8 +11,9 @@ import ExitToAppSharpIcon from '@material-ui/icons/ExitToAppSharp';
 import ArrowLeftIcon from '@material-ui/icons/ArrowLeft';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
+import PropTypes from 'prop-types'
 
-export default function IconsList(iconType, label, sx) {
+export default function IconsList({iconType, label, color='primary'}) {
     const IconComponents = {
         AddIcon,
         DoneIcon,
@@ -29,11 +30,15 @@ export default function IconsList(iconType, label, sx) {
         EditIcon
     }
     const IconTag = IconComponents[iconType]
-    const color = iconType==='DeleteIcon'? "secondary":'primary'
     return (
         <>
             <IconTag 
             color={color}/> {label}
         </>
     )
+}
+IconsList.propTypes = {
+    label: PropTypes.any,
+    iconType: PropTypes.any,
+    color: PropTypes.any,
 }

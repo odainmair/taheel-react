@@ -1,5 +1,4 @@
 import { v4 as uuid } from 'uuid';
-import IconsList from '../../Core/Components/FieldsInputs/IconsList';
 import {
     Chip,
     colors

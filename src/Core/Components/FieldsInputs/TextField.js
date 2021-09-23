@@ -10,7 +10,7 @@ export default function TextField(props) {
     if (props.type !== 'date') {
         if (!!props['attrFunc'] && props.values.length > 0) props.values[props['name']] = props.attrFunc(props.values)
         return (
-            <Grid item xs={gridSize} >
+            <Grid item md={gridSize} >
                 <Field
                     fullWidth
                     required={props.required}

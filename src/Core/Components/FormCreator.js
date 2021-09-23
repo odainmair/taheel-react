@@ -16,7 +16,7 @@ import {
     Divider,
 } from '@material-ui/core'
 import PropTypes from 'prop-types'
-import { Navigate, useNavigate } from 'react-router'
+import { useNavigate } from 'react-router'
 import IconsTypeEnum from '../Utils/IconsTypeEnum'
 import IconsList from './FieldsInputs/IconsList'
 
@@ -46,7 +46,24 @@ export default function FormCreator({ title, pageName, isLoading, submitInfo, sc
                     <form onSubmit={handleSubmit}>
                         <Card>
                             <CardHeader
-                                title={title}
+                                title={!!navBackUrl ?
+                                    (
+                                        <>
+                                            <Button
+                                                variant="contained"
+                                                onClick={() =>
+                                                    navigateion(navBackUrl.url, { state: navBackUrl.state })
+                                                }
+                                                startIcon={<IconsList iconType={IconsTypeEnum.ARROW_FORWARD_ICON} color='info' />}
+                                            >
+                                                عودة
+                                            </Button>
+                                            &nbsp;&nbsp;{title}
+                                        </>
+                                    )
+                                    :
+                                    (title)
+                                }
                             />
                             <Divider />
                             <CardContent >
@@ -63,25 +80,17 @@ export default function FormCreator({ title, pageName, isLoading, submitInfo, sc
                                 >
                                     {FieldsCreator({ schema, fieldsName, sectionNames, lookupObject, formType, values, isLoading, setField })}
                                 </Grid>
-                                {!!submitInfo ? <Box m={2} >
-                                    <ButtonField btnName={submitInfo.btnName} loading={loading} />
-                                    {additionalFields}
-                                </Box>
+                                {additionalFields}
+                                {!!submitInfo ?
+                                    <Grid
+                                        container
+                                        direction="row"
+                                        justifyContent="center"
+                                        alignItems="center"
+                                    >
+                                        <ButtonField btnName={submitInfo.btnName} loading={loading} />
+                                    </Grid>
                                     : ''
-                                }
-                                {!!navBackUrl ?
-                                    (
-                                        <Button
-                                            variant="contained"
-                                            onClick={() =>
-                                                navigateion(navBackUrl.url, { state: navBackUrl.state })
-                                            }
-                                            startIcon={IconsList(IconsTypeEnum.ARROW_FORWARD_ICON)}
-                                        >
-                                            العودة للخلف
-                                        </Button>)
-                                    :
-                                    ('')
                                 }
                             </CardContent>
                         </Card>

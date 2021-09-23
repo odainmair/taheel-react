@@ -32,6 +32,7 @@
     "@material-ui/icons": "^5.0.0-alpha.28",
     "@material-ui/lab": "^4.0.0-alpha.58",
     "@material-ui/styles": "^4.10.0",
+    "@mui/material": "^5.0.1",
     "axios": "^0.21.1",
     "chart.js": "^2.9.4",
     "chokidar": "^3.5.2",
@@ -74,6 +75,7 @@
     "react-router-dom": "^6.0.0-beta.0",
     "react-scripts": "^4.0.0",
     "uuid": "^8.3.0",
+    "validator": "^13.6.0",
     "yup": "^0.29.3"
   },
   "devDependencies": {

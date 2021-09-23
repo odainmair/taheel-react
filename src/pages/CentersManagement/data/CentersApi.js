@@ -24,12 +24,27 @@ const centerDetails = async (licenseNum) => {
 const addCommissionerRs = async (email, jobTitle, staffId, permissions) => {
     const url = 'tt-api-utilities-commissioner-services';
     const requestBody = {
-        email: email,
-        jobTitle: jobTitle,
-        staffId: staffId,
-        permissions: permissions,
+        "serviceType": "1",
+        "commissioner": {
+            "email": email,
+            "jobTitle": jobTitle,
+            "staffId": '' + staffId,
+            "permissions": permissions
+        }
     };
+
     const response = await APIRequest({ requestBody, url });
     return response;
 };
-export { getCenters, centerDetails, addCommissionerRs }
+const deleteCommissionerRs = async (email) => {
+    const url = 'tt-api-utilities-commissioner-services';
+    const requestBody = {
+        "serviceType": "3",
+        "commissioner": {
+            "email": email
+        }
+    }
+    const response = await APIRequest({ requestBody, url });
+    return response;
+};
+export { getCenters, centerDetails, addCommissionerRs, deleteCommissionerRs }

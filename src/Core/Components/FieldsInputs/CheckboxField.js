@@ -13,23 +13,31 @@ export default function CheckboxField(props) {
 
     return (
         <Grid
-            item
-            md={6}
+            container
+            md={12}
             xs={gridSize}
+            direction="row"
             className="custom-label-field"
         >
-            <Typography>
-                {props.tLabel}
-            </Typography>
+            <Grid
+                item
+                md={12}
+                xs={4}
+                className="custom-label-field"
+            >
+                <Typography>
+                    {props.tLabel}
+                </Typography>
+            </Grid>
             {!!props.options ? (props.options.map((option, idx) => (
                 <Grid
                     item
-                    md={6}
-                    xs={gridSize}
+                    md={5}
+                    xs={4}
                     key={idx}
                     className="custom-label-field"
                 >
-                    <Field key={idx} name={props.name.concat('[' + option.value + ']')} mt={3}>
+                    <Field key={idx} required={props.required} name={props.name.concat('[' + option.value + ']')} mt={3}>
                         {({ meta }) => ( // eslint-disable-line no-unused-vars
                             <FormControl key={idx} component="fieldset" error={meta.error} required>
                                 <FormControlLabel
@@ -56,6 +64,7 @@ export default function CheckboxField(props) {
                             control={
                                 <Field
                                     name={props.name}
+                                    required={props.required}
                                     component={Checkbox}
                                     type="checkbox"
                                 />

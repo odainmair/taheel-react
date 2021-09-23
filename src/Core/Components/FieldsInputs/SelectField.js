@@ -11,7 +11,6 @@ export default function SelectField(props) {
     return (
         <Grid
             item
-            md={6}
             xs={gridSize}
             className="custom-label-field"
         >

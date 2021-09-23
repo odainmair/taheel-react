@@ -28,12 +28,21 @@ export default {
         }
     },
     phoneNumberValidator: {
-        id: "passwordStrength",
+        id: "phoneNumberValidator",
         massege: {
             ar: 'رقم الهاتف غير صحيح',
             en: 'Phone Number is not correct'
         },
+    },
+    selectRequieredValidator: {
+        id: "selectRequieredValidator",
+        massege: {
+            ar: 'هذا الحقل مطلوب',
+            en: 'this field is required'
+        },
+        validatorfn: (value) => {
+            console.log('validatorfn Select === ', value)
+            return !!value
+        }
     }
-
-
 }

@@ -4,12 +4,16 @@ import { CentertDetails } from 'src/pages/services/final-license/services/finalL
 import { addCommissionerRs } from '../data/CentersApi';
 import CommissionerDetailsSchema from '../Schema/CommissionerDetailsSchema';
 import FormCreator from 'src/Core/Components/FormCreator';
+import { useNavigate } from 'react-router'
+
 const AddCommissioner = () => {
     const location = useLocation();
     const licenceNumber = location.state.licenceNumber;
-    console.log('licenceNumber ===> ',licenceNumber)
+    console.log('licenceNumber ===> ', licenceNumber)
     const [errMessage, SetErrMessage] = useState('');
-    const [staffIds, SetStaffIds] = useState([])
+    const [staffIds, SetStaffIds] = useState(location.state.candidateStaff)
+    console.log('staffIds ----> ', staffIds)
+    const navigateion = useNavigate()
     const [loading, setLoading] = useState(true)
     const title = " إضافة مفوض"
     const lookupObject = {
@@ -47,30 +51,29 @@ const AddCommissioner = () => {
         ))
     }
 
-    useEffect(async () => {
-        const getCenterDetails = await CentertDetails(licenceNumber);
-        if (!getCenterDetails.isSuccessful) {
-            setLoading(false)
-            const response = { isSuccessful: false, message: getCenterDetails.message };
-        } else {
-            setLoading(false)
-            SetStaffIds(getCenterDetails.responseBody.data.staff);
-        }
-    }, []);
-
     const onSubmit = async (values) => {
+
         const { staffId, email, jobTitle, permissions } = values;
-        const addCommissioner = await addCommissionerRs(email, jobTitle, staffId, permissions);
-        if (!addCommissioner.isSuccessful) {
-            SetErrMessage(addCommissioner.message);
-            return { isSuccessful: false, message: addCommissioner.message };
+        let cheackedPermission = [];
+        permissions?.map((permission, idx) => permission === true ? cheackedPermission.push(idx) : '')
+        if (cheackedPermission.length == 0) {
+            setLoading(false)
+            SetErrMessage("يرجى اختيار الصلاحيات");
+            return { isSquccessful: false, message: errMessage };
         }
-        return response;
+        const addCommissioner = await addCommissionerRs(email, jobTitle, staffId, cheackedPermission);
+        if (!addCommissioner.isSuccessful) {
+            setLoading(false)
+            SetErrMessage(addCommissioner.message);
+            return { isSquccessful: false, message: addCommissioner.message };
+        }
+        SetErrMessage("");
+        navigateion("/app/CommissionersManagement", { state: { licenceNumber, message: { msg: email + " تم الإضافة بنجاح", type: "success" } } })
+        return { msg: email + " تم الإضافة بنجاح", type: "success" };
     }
     const submitInfo = {
         onSubmit: onSubmit,
         btnName: 'إضافة'
-
     }
     return (
         <>
@@ -82,7 +85,7 @@ const AddCommissioner = () => {
                     lookupObject={lookupObject}
                     errMessage={errMessage}
                     isLoading={loading}
-                    navBackUrl={{ url: '/app/CommissionersManagement', state: { licenceNumber }}}
+                    navBackUrl={{ url: '/app/CommissionersManagement', state: { licenceNumber } }}
                 />
             }
         </>
