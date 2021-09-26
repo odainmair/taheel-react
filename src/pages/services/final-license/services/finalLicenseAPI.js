@@ -46,7 +46,7 @@ const getStaff = (values) => {
 			else if (key === 'idNumber' || key === 'iqamaNo') {
 				console.log(`--getStaff::customer.idNumber ${customer.idNumber}`);
 				console.log(`--getStaff::customer.iqamaNo ${customer.iqamaNo}`);
-				customer[newKey] = customer.idNumber ? customer.idNumber : customer.iqamaNo;
+				customer[newKey] = customer.idNumber  === undefined || !customer.idNumber? customer.iqamaNo : customer.idNumber;
 			}
 			else if (key === 'staffTypes')
 				customer[newKey] = staffTypesNo[customer[key]]
