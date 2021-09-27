@@ -1,9 +1,7 @@
-import { Helmet } from 'react-helmet';
 import React from 'react';
 import { useNavigate } from 'react-router';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {
-    Button,
     Container,
     Grid,
     Alert,
@@ -17,40 +15,49 @@ import {
     TableHead,
     Card,
     TableRow,
+    Badge,
 } from '@material-ui/core';
 import Skeleton from '@material-ui/lab/Skeleton';
 import { PaginationDraw } from '../Utils/TablePagination';
 import { FilterCreator, TableButtonsDraw } from '../Utils/TableDrawUtils';
 import PropTypes from 'prop-types'
 import IconsTypeEnum from '../Utils/IconsTypeEnum'
+import Fab from '@mui/material/Fab';
 import IconsList from './FieldsInputs/IconsList'
 
 export default function TableCreator({ pageTitle, tableTitle, tableShcema, dataTable, totalCount, loading, TPObject, errMessage, otherFunc, navBackUrl, action }) {
     const navigateion = useNavigate()
     return (
         <>
-            <Card>
-                <CardHeader
-                    title={!!navBackUrl ?
-                        (
-                            <>
-                                <Button
-                                    variant="contained"
-                                    onClick={() =>
-                                        navigateion(navBackUrl.url, { state: navBackUrl.state })
-                                    }
-                                    startIcon={<IconsList iconType={IconsTypeEnum.ARROW_FORWARD_ICON} color='info' />}
-                                >
-                                    عودة
-                                </Button>
-                                &nbsp;&nbsp;{pageTitle}
-                            </>
-                        )
-                        :
-                        (pageTitle)
-                    }
-                />
-                <Divider />
+            <Card style={{ padding: "20px", minHeight: "100%" }}>
+                {!!pageTitle ?
+                    <>
+                        <CardHeader
+                            title={!!navBackUrl ?
+                                (
+                                    <Grid container spacing={4}>
+                                        <Grid item>
+                                            <Badge
+                                                badgeContent={
+                                                    < Fab size="small" color="primary" aria-label="add" onClick={() => navigateion(navBackUrl.url, { state: navBackUrl.state })}>
+                                                        <IconsList iconType={IconsTypeEnum.ARROW_FORWARD_ICON} color="info" />
+                                                    </Fab>}
+                                                onClick={() =>
+                                                    navigateion(navBackUrl.url, { state: navBackUrl.state })
+                                                }
+                                            >
+                                            </Badge>
+                                        </Grid>
+                                        <Grid item><p style={{ fontWeight: "bold" }} >{pageTitle} </p> </Grid>
+                                    </Grid>
+                                )
+                                :
+                                <p style={{ fontWeight: "bold" }} >{pageTitle} </p>
+                            }
+                        />
+                        <Divider />
+                    </> : <></>}
+
                 <CardContent >
                     <Container maxWidth="lg" >
                         {errMessage && (
@@ -75,15 +82,16 @@ export default function TableCreator({ pageTitle, tableTitle, tableShcema, dataT
                                 <FilterCreator schema={tableShcema} TPObject={TPObject} loading={loading} />
 
                                 <Card>
-                                    <CardHeader title={
-                                        loading ? (
-                                            <Skeleton animation="wave" height={15} width="20%" style={{ marginBottom: 6 }} />
-                                        ) : (
-                                            tableTitle
-                                        )
-                                    }
-                                        action={action}
-                                    />
+                                    {!!tableTitle ?
+                                        <CardHeader title={
+                                            loading ? (
+                                                <Skeleton animation="wave" height={15} width="20%" style={{ marginBottom: 6 }} />
+                                            ) : (
+                                                tableTitle
+                                            )
+                                        }
+                                            action={action}
+                                        /> : <></>}
                                     <Divider />
                                     <PerfectScrollbar>
                                         <Paper container >
@@ -113,7 +121,7 @@ export default function TableCreator({ pageTitle, tableTitle, tableShcema, dataT
                                                 </TableHead>
                                                 <TableBody>
                                                     {
-                                                        (((loading || !dataTable ? Array.from(new Array(2)) : dataTable).map((responseData, index) => {
+                                                        (((loading || !dataTable ? Array.from(new Array(4)) : dataTable).map((responseData, index) => {
                                                             return (
                                                                 <TableRow
                                                                     hover
@@ -163,7 +171,7 @@ export default function TableCreator({ pageTitle, tableTitle, tableShcema, dataT
                                                 </TableBody>
                                             </Table>
                                         </Paper>
-                                        <PaginationDraw totalCount={totalCount} TPObject={TPObject} loading={loading} />
+                                        {loading ? <Skeleton /> : <PaginationDraw totalCount={totalCount} TPObject={TPObject} loading={loading} />}
                                     </PerfectScrollbar>
                                 </Card>
                             </Grid >

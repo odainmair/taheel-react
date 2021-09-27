@@ -1,8 +1,7 @@
 /* eslint-disable */
-import { Helmet } from 'react-helmet';
 import { useNavigate } from 'react-router';
 import React, { useState, useEffect, useMemo } from 'react';
-import { Button, Grid } from '@material-ui/core';
+import { Grid, Link } from '@material-ui/core';
 import { useLocation } from 'react-router-dom';
 import { CentertDetails } from 'src/pages/services/final-license/services/finalLicenseAPI';
 import { TablePaginationObject } from 'src/Core/Utils/TablePagination';
@@ -40,11 +39,25 @@ const AddCommissioner = (props) => {
     const pageTitle = 'إدارة المفوضين'
     const tableAction = () => {
         return (
-            candidateStaff.length > 0 ?
-                (<>إضافة مفوض &nbsp;
-                    < Fab size="small" color="primary" aria-label="add" onClick={() => navigateion('/app/AddCommissioner', { state: { licenceNumber, candidateStaff } })}>
-                        <IconsList iconType={IconsTypeEnum.ADD_ICON} color="info" />
-                    </Fab ></>
+            candidateStaff?.length > 0 ?
+                (<Grid container direction="row" spacing={1}>
+                    <Grid item style={{ fontWeight: "bold" }} >
+                        <Link
+                            component="button"
+                            variant="body2"
+                            fontWeight="bold"
+                            fontSize="large"
+                            onClick={() => navigateion('/app/AddCommissioner', { state: { licenceNumber, candidateStaff } })}
+                        >
+                            إضافة مفوض
+                        </Link>
+                    </Grid>
+                    <Grid item>
+                        < Fab size="small" color="primary" aria-label="add" onClick={() => navigateion('/app/AddCommissioner', { state: { licenceNumber, candidateStaff } })}>
+                            <IconsList iconType={IconsTypeEnum.ADD_ICON} color="info" />
+                        </Fab >
+                    </Grid>
+                </Grid>
                 )
                 : ('')
         )
@@ -78,9 +91,10 @@ const AddCommissioner = (props) => {
     useEffect(async () => {
         const getCenterDetails = await CentertDetails(licenceNumber, paramData.startIndex, paramData.batchSize, paramData.filters);
         if (!getCenterDetails.isSuccessful) {
+            setLoading(false)
             const response = { isSuccessful: false, message: getCenterDetails.message };
             SetErrMessage(getCenterDetails.message)
-            setLoading(true)
+            return response;
         } else {
             const Details = getCenterDetails.responseBody.data;
             Details.staff.map(data => data.licenceNumber = licenceNumber)

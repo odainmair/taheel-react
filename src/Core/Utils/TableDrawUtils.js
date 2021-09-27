@@ -117,16 +117,17 @@ export function TableButtonsDraw(props) {
                                 spacing={1}
                             >
                                 {
-                                    tableShcemaActions.buttons.map((button) => {
+                                    tableShcemaActions.buttons.map((button, idx) => {
                                         return (
-                                            <Button
-                                                fullWidth={true}
-                                                color="primary"
-                                                key={button.id}
-                                                onClick={() => button.btnFun(responseData, props.otherFunc)}
-                                            >
-                                                {button ? <IconsList iconType={!!button.iconTagFunc ? button.iconTagFunc(responseData) : button.iconTag} label={button.label.ar} color={button.color} /> : <Skeleton />}
-                                            </Button>)
+                                            <Grid item key={idx}>
+                                                <Button
+                                                    color="primary"
+                                                    key={button.id}
+                                                    onClick={() => button.btnFun(responseData, props.otherFunc)}
+                                                >
+                                                    {button ? <IconsList iconType={!!button.iconTagFunc ? button.iconTagFunc(responseData) : button.iconTag} label={button.label.ar} color={button.color} /> : <Skeleton />}
+                                                </Button>
+                                            </Grid>)
                                     })}
                             </Menu></>
                     }

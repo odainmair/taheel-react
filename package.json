@@ -48,6 +48,7 @@
     "js-file-download": "^0.4.12",
     "jss-rtl": "^0.3.0",
     "lodash": "^4.17.19",
+    "material-ui-popup-state": "^1.9.3",
     "moment": "^2.27.0",
     "moment-hijri": "^2.1.2",
     "mui-rff": "^3.0.6",

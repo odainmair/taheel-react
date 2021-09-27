@@ -13,7 +13,8 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import PropTypes from 'prop-types'
 
-export default function IconsList({iconType, label, color='primary'}) {
+export default function IconsList(props) {
+    const { iconType, label, color = 'primary' } = props
     const IconComponents = {
         AddIcon,
         DoneIcon,
@@ -27,18 +28,18 @@ export default function IconsList({iconType, label, color='primary'}) {
         ExitToAppSharpIcon,
         ArrowLeftIcon,
         DeleteIcon,
-        EditIcon
+        EditIcon,
     }
     const IconTag = IconComponents[iconType]
     return (
         <>
-            <IconTag 
-            color={color}/> {label}
+            <IconTag
+                color={color} /> {label}
         </>
     )
 }
 IconsList.propTypes = {
-    label: PropTypes.any,
-    iconType: PropTypes.any,
-    color: PropTypes.any,
+    label: PropTypes.string,
+    iconType: PropTypes.string,
+    color: PropTypes.string,
 }

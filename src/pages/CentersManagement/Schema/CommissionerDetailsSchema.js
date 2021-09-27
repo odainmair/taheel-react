@@ -17,7 +17,6 @@ export default [
         type: FieldsEnum.SELECT_FIELD,
         validators: ['selectRequieredValidator'],
         sectionName:infoSection,
-        require: true,
         gridSize: 4,
     },
     {
@@ -29,7 +28,6 @@ export default [
         name: 'jobTitle',
         type: FieldsEnum.TEXT_FIELD,
         sectionName:infoSection,
-        required: true,
         gridSize: 4,
     },
     {
@@ -42,7 +40,6 @@ export default [
         fieldType: 'email',
         type: FieldsEnum.TEXT_FIELD,
         sectionName:infoSection,
-        required: true,
         gridSize: 8,
     },
     {
