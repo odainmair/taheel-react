@@ -1,16 +1,34 @@
 import { v4 as uuid } from 'uuid';
 import FieldsEnum from 'src/Core/Utils/FieldsEnum';
 
+const infoSection= {
+    id: 'Informaion',
+    label: { ar: 'المعلومات العامة', en: 'Public informaion' },
+    order: 1
+}
 export default [
     {
         id: uuid(),
         label: {
-            ar: 'رقم الكادر',
+            ar: 'اختيار المفوض',
             en: 'Staff ID'
         },
         name: 'staffId',
         type: FieldsEnum.SELECT_FIELD,
-        gridSize: 7,
+        validators: ['selectRequieredValidator'],
+        sectionName:infoSection,
+        gridSize: 4,
+    },
+    {
+        id: uuid(),
+        label: {
+            ar: 'المسمى الوظيفي',
+            en: 'Job title'
+        },
+        name: 'jobTitle',
+        type: FieldsEnum.TEXT_FIELD,
+        sectionName:infoSection,
+        gridSize: 4,
     },
     {
         id: uuid(),
@@ -21,23 +39,19 @@ export default [
         name: 'email',
         fieldType: 'email',
         type: FieldsEnum.TEXT_FIELD,
-        gridSize: 7,
+        sectionName:infoSection,
+        gridSize: 8,
     },
     {
         id: uuid(),
         label: {
-            ar: 'المسمى الوظيفي',
-            en: 'Job title'
+            ar: '',
+            en: ''
         },
-        name: 'jobTitle',
-        type: FieldsEnum.TEXT_FIELD,
-        gridSize: 7,
-    },
-    {
-        id: uuid(),
-        label: {
-            ar: 'الصلاحيات',
-            en: 'permissions'
+        sectionName: {
+            id: 'CenterDetails',
+            label: { ar: 'الصلاحيات', en: 'permissions' },
+            order: 1
         },
         name: 'permissions',
         type: FieldsEnum.CHECKBOX_FIELD,

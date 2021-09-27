@@ -107,7 +107,7 @@ export function PaginationDraw(props) {
                                         TPObject.dispatch({ payload: { batchSize: e.target.value } })
                                     }
                                 >
-                                    {Array.from({ length: (totalCount + 1) / 5 + 1 }, (_, i) => 5 + (i * 5)).map((count, idx) =>
+                                    {Array.from({ length: totalCount >= 5 ?(totalCount + 1) / 5 + 1 : 1 }, (_, i) => 5 + (i * 5)).map((count, idx) =>
                                         <MenuItem key={idx} value={count > totalCount ? totalCount : count}>{count > totalCount ? totalCount : count}</MenuItem>
                                     )}
                                 </Select></Typography>
@@ -139,7 +139,7 @@ export function PaginationDraw(props) {
                                     color="primary"
                                     onClick={() => TPObject.dispatch({ payload: { dataViewType: TableDataViewEnum.ALL_DATA } })}
                                 >
-                                    {IconsList(IconsTypeEnum.ARROW_LEFT_ICON, 'عرض الجميع')}
+                                    <IconsList iconType={IconsTypeEnum.ARROW_LEFT_ICON} label='عرض الجميع' />
                                 </Button>
                             </Box>
                         </Grid>

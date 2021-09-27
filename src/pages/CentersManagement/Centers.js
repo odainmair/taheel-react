@@ -19,7 +19,7 @@ const Centers = () => {
       filters: TPObject.pagination.filters
     }
   }, [TPObject.pagination.batchSize, TPObject.pagination.startIndex, TPObject.pagination.filters])
-  const tableTitle = 'المراكز'
+  const pageTitle = 'المراكز'
   useEffect(async () => {
     // const getCentersRs = await getCentersFun(email);
     setLoading(true)
@@ -38,7 +38,7 @@ const Centers = () => {
     }
   }, [paramData]);
   return (
-    <TableCreator tableTitle={tableTitle} tableShcema={ {...CentersTableSchema, ...SchemaActions()} } dataTable={centers.Centers} totalCount={centers.totalCount} loading={loading} TPObject={TPObject} errMessage={errMessage}/>
+    <TableCreator pageTitle={pageTitle} tableShcema={ {...CentersTableSchema, ...SchemaActions()} } dataTable={centers.Centers} totalCount={centers.totalCount} loading={loading} TPObject={TPObject} errMessage={errMessage}/>
   );
 }
 

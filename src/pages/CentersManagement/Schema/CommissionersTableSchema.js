@@ -12,32 +12,34 @@ export function SchemaActions() {
                 ar: '',
                 en: ''
             },
-            style: 'MoreVertIcon',
             buttons: [
-                {
+                /* {
                     id: uuid(),
                     label: {
                         ar: 'تعديل',
                         en: 'Edit'
                     },
-                    iconTagFunc: (data) => { return data.StaffType === '4' ? '' : IconsTypeEnum.ADD_ICON },
-                    iconTag: IconsTypeEnum.ADD_ICON,
+                    iconTagFunc: (data)=>{return data.StaffType==='4'?'':IconsTypeEnum.EDIT_ICON},
+                    iconTag: IconsTypeEnum.EDIT_ICON,
                     btnFun: async (data) => {
                         const licenceNumber = data['licenceNumber']
+                        console.log('licenceNumber ===> ',licenceNumber)
+                        console.log('data ===> ',data)
+
                         navigateion('/app/AddCommissioner', { state: { licenceNumber } })
                     }
-                },
+                }, */
                 {
                     id: uuid(),
                     label: {
                         ar: 'حذف',
                         en: 'Delete'
                     },
-                    iconTagFunc: (data) => { return data.StaffType === '4' ? '' : IconsTypeEnum.ADD_ICON },
-                    iconTag: IconsTypeEnum.ADD_ICON,
-                    btnFun: async (data) => {
-                        const licenceNumber = data['licenceNumber']
-                        console.log("Delete Function !")
+                    iconTag: IconsTypeEnum.DELETE_ICON,
+                    color: 'secondary',
+                    btnFun: async (data, otherFunc) => {
+                        console.log("async data samer ====> ",data)
+                        otherFunc(data)
                     }
                 }]
         }
@@ -49,6 +51,7 @@ export default {
             inputType: 'TextField',
             type: 'text',
             label: { ar: 'الاسم الكامل', en: 'Full Name' },
+            attrFunc: (data) => { return data['firstName'] + ' ' + data['lastName'] },
             name: 'name',
             gridSize: '6',
             disabled: true
@@ -65,7 +68,7 @@ export default {
             inputType: 'TextField',
             type: 'text',
             label: { ar: 'تاريخ الميلاد', en: 'Birthday' },
-            attrFunc: (d) => { return dateFormatter(d['birthDate'], 'iYYYYiMMiDD') },
+            attrFunc: (d) => { return dateFormatter(d['DOB'], 'iDDiMMiYYYY') },
             name: 'birthDate',
             gridSize: '6',
             disabled: true
@@ -73,9 +76,8 @@ export default {
         {
             inputType: 'TextField',
             type: 'text',
-            label: { ar: 'نوع الكادر', en: 'Crew type' },
-            attrFunc: (data) => { return staffTypes[data['StaffType']] },
-            name: 'StaffType',
+            label: { ar: 'البريد الاكتروني', en: 'Email' },
+            name: 'email',
             gridSize: '6',
             disabled: true
         },
@@ -101,14 +103,6 @@ export default {
             type: 'text',
             label: { ar: 'اسم الكفيل', en: 'Sponser Name' },
             name: 'sponsorName',
-            gridSize: '6',
-            disabled: true
-        },
-        {
-            inputType: 'TextField',
-            type: 'label',
-            label: { ar: 'المرفقات', en: 'Documents' },
-            name: 'crInfo_r.MoMRA_Licence',
             gridSize: '6',
             disabled: true
         }

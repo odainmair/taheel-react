@@ -13,6 +13,7 @@ export default function validateSchema({ schema, values, t }) {
     schema?.forEach(element => {
         try {
             element?.validators?.forEach(validator => {
+                console.log("validator ==> ",validator)
                 if (!!DefualtValidatorsFunc[validator]) {
                     validator = DefualtValidatorsFunc[validator]
                 }
@@ -23,7 +24,9 @@ export default function validateSchema({ schema, values, t }) {
                 }
             })
         } catch (e) {
-            console.log(e.message)
+            if (e instanceof BreakException) {
+                console.log(e.message)
+            }
         }
     })
     return errors

@@ -73,6 +73,15 @@ export default {
         {
             id: uuid(),
             label: {
+                ar: 'رقم رخصة',
+                en: 'License No'
+            },
+            name: 'licenceNumber',
+            type: FieldsEnum.TEXT_FIELD,
+            gridSize: '6',
+        },{
+            id: uuid(),
+            label: {
                 ar: 'تاريخ انتهاء الرخصة',
                 en: 'License expiration date'
             },
@@ -90,14 +99,5 @@ export default {
             type: FieldsEnum.TEXT_FIELD,
             gridSize: '6',
         },
-        {
-            id: uuid(),
-            label: {
-                ar: 'رقم رخصة',
-                en: 'License No'
-            },
-            name: 'licenceNumber',
-            type: FieldsEnum.TEXT_FIELD,
-            gridSize: '6',
-        }]
+        ]
 }

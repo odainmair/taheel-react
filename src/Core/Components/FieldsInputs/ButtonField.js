@@ -9,6 +9,9 @@ export default function ButtonField(props) {
             variant="contained"
             color="primary"
             type="submit"
+            size="large"
+            fontSize="large"
+            style={{width:"25%"}}
             disabled={props.loading}
         >
             {props.loading && <CircularProgress size={25} style={{ color: 'green' }} />}

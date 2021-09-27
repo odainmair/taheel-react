@@ -2,6 +2,7 @@ import { useState } from 'react';
 import {
     Button,
     Box,
+    Grid,
     TableCell,
     IconButton,
 } from '@material-ui/core';
@@ -116,16 +117,17 @@ export function TableButtonsDraw(props) {
                                 spacing={1}
                             >
                                 {
-                                    tableShcemaActions.buttons.map((button) => {
+                                    tableShcemaActions.buttons.map((button, idx) => {
                                         return (
-                                            <Button
-                                                fullWidth={true}
-                                                color="primary"
-                                                key={button.id}
-                                                onClick={() => button.btnFun(responseData)}
-                                            >
-                                                {button ? IconsList(!!button.iconTagFunc ? button.iconTagFunc(responseData) : button.iconTag, button.label.ar) : <Skeleton />}
-                                            </Button>)
+                                            <Grid item key={idx}>
+                                                <Button
+                                                    color="primary"
+                                                    key={button.id}
+                                                    onClick={() => button.btnFun(responseData, props.otherFunc)}
+                                                >
+                                                    {button ? <IconsList iconType={!!button.iconTagFunc ? button.iconTagFunc(responseData) : button.iconTag} label={button.label.ar} color={button.color} /> : <Skeleton />}
+                                                </Button>
+                                            </Grid>)
                                     })}
                             </Menu></>
                     }
@@ -133,20 +135,24 @@ export function TableButtonsDraw(props) {
             )
         } else {
             return (
-                tableShcemaActions.buttons.map((button, idx) => (
+                <Grid
+                    container
+                    direction="column"
+                    justifyContent="center"
+                    alignItems="center"
+                    style={{ padding: '10px' }}
+                > {tableShcemaActions.buttons.map((button) => (
                     <Button
                         fullWidth={true}
-                        color="primary"
-                        onClick={() => button.btnFun(responseData)}
+                        onClick={() => button.btnFun(responseData, props.otherFunc)}
                         key={button.id}
+                        startIcon={!!responseData ? <IconsList iconType={!!button.iconTagFunc ? button.iconTagFunc(responseData) : button.iconTag} color={button.color} /> : (<Skeleton />)}
                     >
-                        {!!responseData ?
-                            IconsList(!!button.iconTagFunc ?
-                                button.iconTagFunc(responseData)
-                                : button.iconTag, button.label.ar)
-                            : <Skeleton />}
+                        {button.label.ar}
                     </Button>
-                ))
+
+                ))}
+                </Grid>
             )
         }
     }
@@ -157,6 +163,7 @@ TableButtonsDraw.propTypes = {
     actions: PropTypes.object,
     responseData: PropTypes.object,
     loading: PropTypes.bool,
+    otherFunc: PropTypes.func,
 }
 FilterCreator.propTypes = {
     initValues: PropTypes.object,

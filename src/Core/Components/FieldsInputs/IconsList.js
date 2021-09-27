@@ -9,8 +9,12 @@ import FolderIcon from '@material-ui/icons/Folder';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import ExitToAppSharpIcon from '@material-ui/icons/ExitToAppSharp';
 import ArrowLeftIcon from '@material-ui/icons/ArrowLeft';
+import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
+import PropTypes from 'prop-types'
 
-export default function IconsList(iconType, label, sx) {
+export default function IconsList(props) {
+    const { iconType, label, color = 'primary' } = props
     const IconComponents = {
         AddIcon,
         DoneIcon,
@@ -23,11 +27,19 @@ export default function IconsList(iconType, label, sx) {
         ArrowForwardIcon,
         ExitToAppSharpIcon,
         ArrowLeftIcon,
+        DeleteIcon,
+        EditIcon,
     }
     const IconTag = IconComponents[iconType]
     return (
         <>
-            <IconTag /> {label}
+            <IconTag
+                color={color} /> {label}
         </>
     )
+}
+IconsList.propTypes = {
+    label: PropTypes.string,
+    iconType: PropTypes.string,
+    color: PropTypes.string,
 }

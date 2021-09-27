@@ -35,7 +35,7 @@ const Orders = () => {
         const getTaheelRequestsRs = await getTaheelRequestsFun(email, paramData.startIndex, paramData.batchSize);
         let response = {};
         if (!getTaheelRequestsRs.isSuccessful) {
-            setLoading(true);
+            setLoading(false);
             SetErrMessage(getTaheelRequestsRs.message )
             response = { isSuccessful: false, message: getTaheelRequestsRs.message };
         } else {

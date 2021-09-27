@@ -3,10 +3,8 @@ import FieldsCreator from "./FieldsCreator"
 import { Form } from 'react-final-form'
 import ButtonField from './FieldsInputs/ButtonField'
 //import { useTranslation } from 'react-i18next'
-import TypographyField from './FieldsInputs/TypographyField'
 import FieldsValidator from '../Utils/FieldsValidator'
 import {
-    Button,
     Grid,
     Box,
     Card,
@@ -14,11 +12,13 @@ import {
     CardContent,
     CardHeader,
     Divider,
+    Badge,
 } from '@material-ui/core'
 import PropTypes from 'prop-types'
-import { Navigate, useNavigate } from 'react-router'
+import { useNavigate } from 'react-router'
 import IconsTypeEnum from '../Utils/IconsTypeEnum'
 import IconsList from './FieldsInputs/IconsList'
+import Fab from '@mui/material/Fab';
 
 export default function FormCreator({ title, pageName, isLoading, submitInfo, schema, initValues, navBackUrl, sectionNames, cancel, formType, lookupObject, additionalFields, fieldsName, errMessage }) {
     //const [t] = useTranslation('common')
@@ -44,12 +44,37 @@ export default function FormCreator({ title, pageName, isLoading, submitInfo, sc
                 render={({ handleSubmit, values }) => (
 
                     <form onSubmit={handleSubmit}>
-                        <Card>
-                            <CardHeader
-                                title={title}
-                            />
-                            <Divider />
-                            <CardContent >
+                        <Card style={{ padding: "20px", minHeight: "100%" }}>
+                            {title ?
+                                <>
+                                    <CardHeader
+                                        title={!!navBackUrl ?
+                                            (
+                                                <Grid container spacing={4}>
+                                                    <Grid item>
+                                                        <Badge
+                                                            badgeContent={
+                                                                < Fab size="small" color="primary" aria-label="add" onClick={() => navigateion(navBackUrl.url, { state: navBackUrl.state })}>
+                                                                    <IconsList iconType={IconsTypeEnum.ARROW_FORWARD_ICON} color="info" />
+                                                                </Fab>}
+                                                            onClick={() =>
+                                                                navigateion(navBackUrl.url, { state: navBackUrl.state })
+                                                            }
+                                                        >
+                                                        </Badge>
+                                                    </Grid>
+                                                    <Grid item><p style={{ fontWeight: "bold" }} >{title} </p> </Grid>
+                                                </Grid>
+                                            )
+                                            :
+                                            <p style={{ fontWeight: "bold" }} >{title} </p>
+                                        }
+                                    />
+                                    <Divider />
+                                </> :
+                                <></>
+                            }
+                            <CardContent  >
                                 {errMessage && (
                                     <Alert variant="outlined" severity="error">
                                         {errMessage}
@@ -60,28 +85,21 @@ export default function FormCreator({ title, pageName, isLoading, submitInfo, sc
                                     spacing={3}
                                     mt={3}
                                     mb={3}
+                                    style={{ paddingRight: formType === 'view' ? '70px' : '' }}
                                 >
                                     {FieldsCreator({ schema, fieldsName, sectionNames, lookupObject, formType, values, isLoading, setField })}
                                 </Grid>
-                                {!!submitInfo ? <Box m={2} >
-                                    <ButtonField btnName={submitInfo.btnName} loading={loading} />
-                                    {additionalFields}
-                                </Box>
+                                {additionalFields}
+                                {!!submitInfo ?
+                                    <Grid
+                                        container
+                                        direction="row"
+                                        justifyContent="center"
+                                        alignItems="center"
+                                    >
+                                        <ButtonField btnName={submitInfo.btnName} loading={loading} />
+                                    </Grid>
                                     : ''
-                                }
-                                {!!navBackUrl ?
-                                    (
-                                        <Button
-                                            color="primary"
-                                            variant="contained"
-                                            onClick={() =>
-                                                navigateion(navBackUrl.url, { state: navBackUrl.state })
-                                            }
-                                        >
-                                            {IconsList(IconsTypeEnum.ARROW_FORWARD_ICON, "العودة للخلف")}
-                                        </Button>)
-                                    :
-                                    ('')
                                 }
                             </CardContent>
                         </Card>
