@@ -271,8 +271,20 @@ export default
             },
             validators: [],
         },
-
-
+        {
+            id: uuid(),
+            label: {
+                ar: 'وثيقة الترخيص',
+                en: 'License Documents'
+            },
+            name: 'operationPlan',
+            valueFunc: (values) => (values?.licenseDoc),
+            type: 'file',
+            gridSize: '12',
+            sectionName: Sections.Requirements,
+            options: [],
+            validators: [],
+        },
         {
             id: uuid(),
             label: {
