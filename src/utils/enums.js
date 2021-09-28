@@ -1,5 +1,11 @@
 export const LICENSE_FORM_TYPES = {
     NEW: "new",
     EDIT: "edit",
-    RENEW: "renew"
+    RENEW: "renew",
+    DRAFT: "draft"
+}
+export const REQUEST_STATUS = {
+    COMPLETED: -1,
+    REJECTED: -2,
+    DRAFT: -3,
 }

@@ -10,6 +10,7 @@ import {
 	CircularProgress,
 } from '@material-ui/core';
 import { Field } from 'react-final-form';
+import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { TextField as TextFieldFinal, Select } from 'final-form-material-ui';
 import { calculation } from '../services/finalLicenseAPI'
@@ -26,11 +27,15 @@ const Capacity = ({ editMode, Condition, values, setField, setIsEnableNextBtn })
 	const [calculatedData, setCalculatedData] = useState(false);
 	const [errMessage, SetErrMessage] = useState('');
 	const [loading, setLoading] = useState(false);
+	const location = useLocation();
+	const fromDraft = location.state ? location.state.fromDraft : false;
 
 	useEffect(() => {
 		console.log(`Capacity :: values.capacity: ${values.capacity}`)
 		console.log(`Capacity :: values.beneficiariesNum: ${values.beneficiariesNum}`)
-		if (values.capacity) {
+		console.log("Capacity :: fromDraft: " + fromDraft)
+		
+		if (values.capacity && !fromDraft) {
 			setIsEnableNextBtn(true);
 			setCalculatedData(true);
 		} else {

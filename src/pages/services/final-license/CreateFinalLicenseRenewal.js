@@ -40,9 +40,16 @@ const CreateFinalLicenseRenewal = () => {
   const [showSummary, setShowSummary] = useState(false);
   const [errMessage, SetErrMessage] = useState('')
   const taskID = location.state ? location.state.taskID : null;
+  const requestNum = location.state ? location.state.requestNum : "";
+  const fromDraft = location.state ? location.state.fromDraft : false;
+  const formType = location.state ? location.state.formType : null;
 
   useEffect(async () => {
     console.log(" ==> CreateFinalLicenseRenewal ")
+    console.log("===> formType: " + formType)
+    console.log("===> centerLicenceNumber: " + centerLicenceNumber)
+    console.log("===> requestNum: " + requestNum)
+    console.log("===> fromDraft: " + fromDraft)
     const { email } = await getCurrentUser();
     console.log("------------------------------- email " + email)
     const getCentersRs = await getCentersForFinal(email);
@@ -56,6 +63,12 @@ const CreateFinalLicenseRenewal = () => {
       setRenewableLicenses(Centers);
       setIsLoading(false);
     }
+    
+    if (fromDraft) {
+      setIsEnableNextBtn(false);
+      setCheckData(true)
+    }
+    
     console.log("------------------------------- centerLicenceNumber: " + centerLicenceNumber)
   }, [])
 
@@ -71,8 +84,8 @@ const CreateFinalLicenseRenewal = () => {
       // console.log('===> fNum: ' + JSON.stringify(fNum))
       // const attach = response.responseBody.data.center && response.responseBody.data.center.healthCareServices_r && response.responseBody.data.center.healthCareServices_r.attachment;
       // console.log('===> attach: ' + JSON.stringify(attach))
-      const attach = response.responseBody.data.center && response.responseBody.data.center.centerInfo_r && response.responseBody.data.center.centerInfo_r.operationPlan && response.responseBody.data.center.centerInfo_r.operationPlan.id;
-      console.log('===> attach: ' + JSON.stringify(attach))
+      // const attach = response.responseBody.data.center && response.responseBody.data.center.centerInfo_r && response.responseBody.data.center.centerInfo_r.operationPlan && response.responseBody.data.center.centerInfo_r.operationPlan.id;
+      // console.log('===> attach: ' + JSON.stringify(attach))
       const crNum = response.responseBody.data.center.crInfo_r.crNumber;
 
       if(crNum != ''){
@@ -118,10 +131,14 @@ const CreateFinalLicenseRenewal = () => {
   }
 
   const onSubmit = async (values) => {
-    console.log("===================== onSubmit")
+    console.log("CreateFinalLicenseRenewal :: onSubmit")
+    console.log('CreateFinalLicenseRenewal :: editMode: ' + editMode)
+    // console.log('CreateFinalLicenseRenewal :: formType ' + formType)
+    console.log('CreateFinalLicenseRenewal :: values.isDraft ' + values.isDraft)
+    console.log('CreateFinalLicenseRenewal :: values: ' + JSON.stringify(values))
     let response = null
-    // if (!editMode) {
-      response = await updateFinalLicenseAPIFunc(values, LICENSE_FORM_TYPES.RENEW, 0);
+    if(!values.isDraft) {
+      response = await updateFinalLicenseAPIFunc(values, LICENSE_FORM_TYPES.RENEW, 0, false);
       
       if (response.isSuccessful) {
         handleClickOpen(`${response.responseBody.data[0]}`, '');
@@ -130,6 +147,18 @@ const CreateFinalLicenseRenewal = () => {
         SetErrMessage(`${response.message}`);
         setIsLoading(false)
       }
+    }
+    else {
+      // handleClickOpen(` the application is draft and formType is ${values.formType} `, '');
+      response = await updateFinalLicenseAPIFunc(values, formType, 0, true);
+      if (response.isSuccessful) {
+        handleClickOpen(`${response.responseBody.data.message[0]} طلب رقم ${response.responseBody.data.requestNumber}`, '');
+      }
+      else {
+        SetErrMessage(`${response.message}`);
+        setIsLoading(false)
+      }
+    }
   };
 
   const handleClickOpen = (dialogContent, dialogTitle) => {
