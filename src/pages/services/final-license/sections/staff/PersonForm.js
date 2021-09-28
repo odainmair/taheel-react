@@ -38,6 +38,7 @@ const PersonForm = ({ fromEdit, isSaudi, MedicalPracticeCondition, fieldName, se
   }
 
   const staffTypes = ["معلم تربية خاصة", "أخصائي اجتماعي", "مراقب اجتماعي", "حارس", "عامل تنظيفات", "مشرف فني عام", "اخصائي نفسي و توجيه اجتماعي", "عامل رعاية شخصية", "مدير", "سائق", "مرافق سائق", "أخصائي علاج طبيعي", "أخصائي علاج وظيفي", "أخصائي نطق و تخاطب", "ممرض"]
+  const medicalStaffTypes = ['أخصائي علاج طبيعي', 'أخصائي علاج وظيفي','ممرض', 'أخصائي نطق و تخاطب']
   return (
     <>
       <Grid
@@ -165,7 +166,7 @@ const PersonForm = ({ fromEdit, isSaudi, MedicalPracticeCondition, fieldName, se
           />
         </Grid>
 
-        <MedicalPracticeCondition when={fieldName === null ? "staffTypes" : `staffTypes`} is={['أخصائي علاج طبيعي', 'أخصائي علاج وظيفي','ممرض', 'أخصائي نطق و تخاطب']}>
+        <MedicalPracticeCondition when={fieldName === null ? "staffTypes" : `staffTypes`} is={medicalStaffTypes}>
           <Grid
             item
             md={6}

@@ -118,7 +118,7 @@ const Row = ({ editMode, SponsorName, setSponsorName, values, fromEdit, setFromE
               xs={12}
             >
               <IconButton onClick={() => setShowen(!showen)}>
-                {showen ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                {!showen ? <VisibilityIcon /> : <VisibilityOffIcon />}
               </IconButton>
             </Grid>
             <Grid
