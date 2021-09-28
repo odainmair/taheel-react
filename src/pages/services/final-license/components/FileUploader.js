@@ -37,7 +37,7 @@ const FileUploaderComp = ({ input: { value, name }, label, meta, setField, value
     docId = (values) ? values[name] : "";
 
     // console.log(`========================> docId.length: ${docId.length}`)
-    if (Array.isArray(docId) && docId.length > 0 && docId[0] != null) {
+    if (Array.isArray(docId) && docId.length > 0 && !!docId[0]) {
       // console.log(`========================> docId: ${docId[0]}`)
       setUploadedFileName(`تم رفع الملف ${values[`${name}FileName`]?values[`${name}FileName`]:""} بنجاح`);
     }
