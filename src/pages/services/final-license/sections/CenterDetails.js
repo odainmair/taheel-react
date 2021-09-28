@@ -18,18 +18,23 @@ import { CentertDetails } from '../services/finalLicenseAPI'
 import { ContentField } from '../services/finalLicenseUtil'
 import { OnChange } from 'react-final-form-listeners';
 
-const CenterDetails = ({ editMode, setEditMode, Condition, values, temporaryLicenses, setField, setIsEnableNextBtn }) => {
+const CenterDetails = ({ editMode, setEditMode, Condition, values, temporaryLicenses, setField, setIsEnableNextBtn, fromDraft }) => {
   const [loading, setLoading] = useState(false);
   const [checkData, setCheckData] = useState(false);
   const [errMessage, setErrMessage] = useState('');
 
   useEffect(() => {
     console.log(" -- CenterDetails -- useEffect");
+    console.log(" -- CenterDetails -- fromDraft " + fromDraft);
     console.log(" -- CenterDetails -- useEffect" + JSON.stringify(values));
     if (values.municipLicenseNo) {
       console.log("-- CenterDetails -- useEffect  -- if");
       setCheckData(true);
       setIsEnableNextBtn(true);
+    }
+    if (fromDraft) {
+      setIsEnableNextBtn(false);
+      setCheckData(true)
     }
   }, []);
 
@@ -47,7 +52,7 @@ const CenterDetails = ({ editMode, setEditMode, Condition, values, temporaryLice
       return;
     }
     console.log(`CRNumber vaildate ${!isNaN(values.CRNumber) && values.CRNumber.length !== 10}`)
-    if ( values.CRNumber.length > 10) {
+    if (values.CRNumber.length > 10) {
       setErrMessage('يجب ان لا يزيد رقم السجل تجاري عن 10 خانات');
       setLoading(false);
       return;
@@ -108,9 +113,9 @@ const CenterDetails = ({ editMode, setEditMode, Condition, values, temporaryLice
       }
     }
   }
-	const handleOnChange = (val, nextVal) => {
-		setIsEnableNextBtn(false);
-	};
+  const handleOnChange = (val, nextVal) => {
+    setIsEnableNextBtn(false);
+  };
 
   return (
     <>
@@ -152,17 +157,20 @@ const CenterDetails = ({ editMode, setEditMode, Condition, values, temporaryLice
             </Field>
             :
             <Field
-              disabled
+              disabled={!fromDraft}
               fullWidth
               required
               label="رقم الترخيص المؤقت"
               name="temporaryLicenceNum"
-              component={TextFieldFinal}
-              type="text"
+              component={fromDraft ? Select : TextFieldFinal}
+              type={fromDraft ? "" : "text"}
               variant="outlined"
               dir="rtl"
               className="custom-field"
-            />
+              formControlProps={{ fullWidth: fromDraft ? true : false }}
+            >
+              {temporaryLicenses.map((license, index) => <MenuItem key={index} value={license.licenceNumber}>{license.licenceNumber}</MenuItem>)}
+            </Field>
           }
         </Grid>
         <Grid
@@ -182,11 +190,11 @@ const CenterDetails = ({ editMode, setEditMode, Condition, values, temporaryLice
             dir="rtl"
             className="custom-field"
           />
-					<OnChange name="CRNumber">
-					{(value, previous) => {
-						handleOnChange(value, previous);
-					}}			
-					</OnChange>
+          <OnChange name="CRNumber">
+            {(value, previous) => {
+              handleOnChange(value, previous);
+            }}
+          </OnChange>
         </Grid>
 
         <Grid
@@ -276,4 +284,5 @@ CenterDetails.propTypes = {
   setIsEnableNextBtn: PropTypes.func.isRequired,
   editMode: PropTypes.bool.isRequired,
   setEditMode: PropTypes.func.isRequired,
+  fromDraft: PropTypes.bool,
 };

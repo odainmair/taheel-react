@@ -7,7 +7,7 @@ import { LICENSE_FORM_TYPES } from 'src/utils/enums'
 
 const getFurnitures = (values) => {
 	const furnitures = []
-	values.Furniture.map((docId, index) => {
+	values.Furniture && values.Furniture.map((docId, index) => {
 		furnitures.push({ Document: docId })
 	})
 	return furnitures
@@ -36,18 +36,18 @@ const getStaff = (values) => {
 
 
 
-	var staff = JSON.parse(JSON.stringify(values.customers))
+	var staff = JSON.parse(JSON.stringify(values.customers ? values.customers : []))
 
 	staff.map((customer) => {
 		Object.keys(customer).map((key) => {
 			const newKey = newKeys[key] || key;
 			if (key === 'gender')
 				customer[newKey] = customer[key] === 'انثى' ? 'f' : 'm'
-			else if (key === 'idNumber' || key === 'iqamaNo') {
-				console.log(`--getStaff::customer.idNumber ${customer.idNumber}`);
-				console.log(`--getStaff::customer.iqamaNo ${customer.iqamaNo}`);
-				customer[newKey] = customer.idNumber  === undefined || !customer.idNumber? customer.iqamaNo : customer.idNumber;
-			}
+				else if (key === 'idNumber' || key === 'iqamaNo') {
+					console.log(`--getStaff::customer.idNumber ${customer.idNumber}`);
+					console.log(`--getStaff::customer.iqamaNo ${customer.iqamaNo}`);
+					customer[newKey] = customer.idNumber  === undefined || !customer.idNumber? customer.iqamaNo : customer.idNumber;
+				}
 			else if (key === 'staffTypes')
 				customer[newKey] = staffTypesNo[customer[key]]
 			else if (key === 'day' || key === 'month' || key === 'year') {
@@ -70,7 +70,7 @@ const getStaff = (values) => {
 	return staff
 }
 
-const updateFinalLicenseAPIFunc = async (values, actionType, TaskID) => {
+const updateFinalLicenseAPIFunc = async (values, actionType, TaskID, isDraft) => {
 	const requestBody = {
 		"userCreationEmail": getCurrentUser().email,
 		"staff": getStaff(values),
@@ -96,12 +96,12 @@ const updateFinalLicenseAPIFunc = async (values, actionType, TaskID) => {
 				"buildingArea": values.buildingArea,
 				"basementArea": values.basementArea,
 				"carryingnumber": values.capacity,
-				"financialGuarantee": values.financialGuarantee.substring(0, values.financialGuarantee.length - 5),
-				"financialGuarbteeAtt": values.FinancialGuaranteeAtt[0],
-				"executivePlan": values.ExecutivePlan[0],
-				"operationPlan": values.OperationalPlan[0],
-				"engineeringPlan": values.OfficeReport[0],
-				"securityReport": values.SecurityReport[0],
+				"financialGuarantee": values.financialGuarantee && values.financialGuarantee.substring(0, values.financialGuarantee.length - 5),
+				"financialGuarbteeAtt": values.FinancialGuaranteeAtt && values.FinancialGuaranteeAtt[0],
+				"executivePlan": values.ExecutivePlan && values.ExecutivePlan[0],
+				"operationPlan": values.OperationalPlan && values.OperationalPlan[0],
+				"engineeringPlan": values.OfficeReport && values.OfficeReport[0],
+				"securityReport": values.SecurityReport && values.SecurityReport[0],
 				"beneficiaryCount": values.beneficiariesNum,
 				"furniturePhoto_r": getFurnitures(values)
 			},
@@ -117,17 +117,27 @@ const updateFinalLicenseAPIFunc = async (values, actionType, TaskID) => {
 	}
 
 	let url = "taheel-apis-services-createFinalLicense-v2";
-	if (actionType === LICENSE_FORM_TYPES.RENEW) {
-		url = "taheel-apis-services-renewLicenseV2";
+
+	if (isDraft) {
+		requestBody.isDraft = true;
+		requestBody.draft_values = values;
+		if (actionType === LICENSE_FORM_TYPES.RENEW) {
+			url = "taheel-apis-services-renewLicenseV2";
+		}
 	}
-	else if (actionType === LICENSE_FORM_TYPES.EDIT) {
-		requestBody.externalUserTaskID = TaskID
-		requestBody.cancel = "false"
-		url = "taheel-apis-services-continueFinalLicense-v2";
+	else {
+		if (actionType === LICENSE_FORM_TYPES.RENEW) {
+			url = "taheel-apis-services-renewLicenseV2";
+		}
+		else if (actionType === LICENSE_FORM_TYPES.EDIT) {
+			requestBody.externalUserTaskID = TaskID
+			requestBody.cancel = "false"
+			url = "taheel-apis-services-continueFinalLicense-v2";
+		}
 	}
 
-	console.log('#==> requestBody ' + JSON.stringify(requestBody))
-	// return '';
+	console.log('updateFinalLicenseAPIFunc :: requestBody :: ' + JSON.stringify(requestBody))
+	// const response = {isSuccessful:false, message:"DUMMY"}
 	const response = await APIRequest({ requestBody, url });
 	return response;
 }
@@ -200,6 +210,12 @@ const CentertDetails = async (licenseNumber) => {
 	return response;
 }
 
+const DraftDetails = async (reqNum) => {
+	const url = 'taheel-apis-records-RequestDetails-v2';
+	const queryParams = { reqNum };
+	const response = await APIRequest({ url, queryParams });
+	return response;
+};
 
 const uploadDocumentApi = async (name, image) => {
 	const url = "taheel-apis-utilities-uploadDocument-v2"
@@ -213,7 +229,8 @@ const uploadDocumentApi = async (name, image) => {
 
 const downloadDocument = async (DocID, attachment, name) => {
 	const url = "taheel-apis-utilities-downloadDocument-v2"
-	console.log(`downloadDocument :: ${JSON.stringify(name)}`)
+	console.log(`downloadDocument :: attachment :: ${JSON.stringify(attachment)}`)
+	console.log(`downloadDocument :: name :: ${JSON.stringify(name)}`)
 	const fileName = `${name}`;
 	const queryParams = {
 		DocID: DocID,
@@ -224,4 +241,4 @@ const downloadDocument = async (DocID, attachment, name) => {
 }
 
 
-export { getCentersForFinal, validateCompanyFunc, updateFinalLicenseAPIFunc, calculation, validateCitizenFunc, uploadDocumentApi, getTempLicense, getMunicipalLicenseNoApi, downloadDocument, TaskDetails, CentertDetails };
+export { getCentersForFinal, validateCompanyFunc, updateFinalLicenseAPIFunc, calculation, validateCitizenFunc, uploadDocumentApi, getTempLicense, getMunicipalLicenseNoApi, downloadDocument, TaskDetails, CentertDetails, DraftDetails };

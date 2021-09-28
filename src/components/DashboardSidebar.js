@@ -14,6 +14,7 @@ import {
 import {
   LogOut as LogoutIcon,
   Monitor as BarChartIcon,
+  Archive as DraftsIcon,
   ShoppingBag as ShoppingBagIcon,
   User as UserIcon,
   Home as homeIcon,
@@ -65,6 +66,11 @@ const items = [
   //   icon: UserIcon,
   //   title: 'التنبيهات'
   // },
+  {
+    href: '/app/drafts',
+    icon: DraftsIcon,
+    title: 'المسودات'
+  },
   {
     href: '/login',
     icon: LogoutIcon,

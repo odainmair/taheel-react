@@ -19,8 +19,19 @@ export default class FinalFromWizard extends React.Component {
       completed: false,
       open: false,
       isNextCallBackFunSuccess: true,
+      isDraft: false,
       errMessage: ""
     };
+  }
+
+  end = (values) => {
+    const { onSubmit } = this.props;
+    console.log("--- end  ----");
+    this.setState((state) => ({ open: false, isDraft: true }))
+    console.log("--- values  ----" + JSON.stringify(values));
+    this.handleSubmit(values)
+    console.log("FINALFORMWIZARD :: return onSubmit  ");
+    return onSubmit({ ...values, isDraft: true })
   }
 
   next = (values) => {
@@ -44,7 +55,7 @@ export default class FinalFromWizard extends React.Component {
    */
 
   validate = (values) => {
-    console.log("--- validate  ----");
+    console.log("FINALFORMWIZARD :: --- validate  ----" + JSON.stringify(values));
     const activePage = React.Children.toArray(this.props.children)[
       this.state.page
     ];
@@ -52,12 +63,23 @@ export default class FinalFromWizard extends React.Component {
   }
 
   handleSubmit = async (values) => {
-    console.log("--- handleSubmit  ----" + this.state.values.formType);
-    const errors = this.validate(values);
-    if (Object.keys(errors).length > 0)
-      return this.validate(values);
     const { children, onSubmit } = this.props;
-    const { page } = this.state;
+    const { page, isDraft } = this.state;
+
+    console.log("FINALFORMWIZARD :: handleSubmit  isDraft: " + isDraft);
+    console.log("FINALFORMWIZARD :: handleSubmit  values.isDraft: " + values.isDraft);
+    console.log("FINALFORMWIZARD :: handleSubmit  values.managersCount: " + values.managersCount);
+    console.log("FINALFORMWIZARD :: handleSubmit " + JSON.stringify(values));
+
+    if (isDraft) {
+      console.log("FINALFORMWIZARD :: return onSubmit  ");
+      return onSubmit({ ...values, isDraft: true })
+    }
+    const errors = this.validate(values);
+    if (Object.keys(errors).length > 0) {
+      console.log(`FINALFORMWIZARD :: Object.keys(errors).length ${Object.keys(errors).length}`)
+      return this.validate(values);
+    }
     const isLastPage = page === React.Children.count(children) - 1;
     const activePage = React.Children.toArray(this.props.children)[
       this.state.page
@@ -101,7 +123,7 @@ export default class FinalFromWizard extends React.Component {
   }
 
   render() {
-    const { children, isEnableNextBtn = true, isEnableCancelBtn = false, cancelBtnFn, canShowSection = true,enableValidate=false } = this.props;
+    const { children, isEnableNextBtn = true, isEnableCancelBtn = false, isEnableEndBtn = false, cancelBtnFn, canShowSection = true, enableValidate = false } = this.props;
     const childrenArray = React.Children.toArray(children);
     const { page, values, completed, isNextCallBackFunSuccess, errMessage } = this.state;
     const activePage = React.Children.toArray(children)[page];
@@ -143,7 +165,7 @@ export default class FinalFromWizard extends React.Component {
                   push: form.mutators.push,
                   values: values
                 }) : ""}
-                <Grid container direction="row" spacing={2} mt={3} justifyContent={isEnableCancelBtn ? "space-between" : "flex-end"}>
+                <Grid container direction="row" spacing={2} mt={3} justifyContent={isEnableCancelBtn || isEnableEndBtn ? "space-between" : "flex-end"}>
                   {isEnableCancelBtn && (
                     <Grid item>
                       <Button
@@ -155,6 +177,20 @@ export default class FinalFromWizard extends React.Component {
                         }}
                       >
                         الغاء
+                      </Button>
+                    </Grid>
+                  )}
+                  {isEnableEndBtn && (
+                    <Grid item>
+                      <Button
+                        variant="contained"
+                        onClick={() => { this.setState((state) => ({ open: true })) }}
+                        sx={{
+                          backgroundColor: '#E2E8EB',
+                          color: '#000'
+                        }}
+                      >
+                        إنهاء
                       </Button>
                     </Grid>
                   )}
@@ -208,19 +244,44 @@ export default class FinalFromWizard extends React.Component {
                   </Grid>
                 </Grid>
                 {/* {<pre dir="ltr">{JSON.stringify(values, 0, 2)}</pre>}  */}
+
+                {isEnableCancelBtn && (
+                  <ConfirmationDialog
+                    acceptBtnName="نعم"
+                    cancelBtnName="لا"
+                    dialogTitle="هل انت متأكد من إلغاء الطلب؟"
+                    open={this.state.open}
+                    onCloseFn={() => this.setState((state) => ({ open: false }))}
+                    onAcceptFn={() => cancelBtnFn()}></ConfirmationDialog>)}
+                {isEnableEndBtn && (
+                  <ConfirmationDialog
+                    acceptBtnName="حفظ مسودة"
+                    cancelBtnName="إلغاء الطلب"
+                    dialogTitle="هل انت متأكد من إنهاء الطلب؟"
+                    open={this.state.open}
+                    onEscapeKeyDown={() => {
+                      console.log("===================== onEscapeKeyDown")
+                      this.setState((state) => ({ open: false }))
+                    }
+                    }
+                    onBackdropClick={() => {
+                      console.log("===================== onBackdropClick")
+                      console.log(`values: ${JSON.stringify(values)}`)
+                      this.setState((state) => ({ open: false }))
+                    }
+                    }
+                    onAcceptFn={() => this.end(values)}
+                    onCloseFn={() => {
+                      console.log("===================== onCloseFn")
+                      this.setState((state) => ({ open: false }))
+                      cancelBtnFn()
+                    }
+                    }></ConfirmationDialog>)}
               </form>
             )
           }}
 
         </Form>
-        {isEnableCancelBtn && (
-          <ConfirmationDialog
-            acceptBtnName="نعم"
-            cancelBtnName="لا"
-            dialogTitle="هل انت متأكد من إلغاء الطلب؟"
-            open={this.state.open}
-            onCloseFn={() => this.setState((state) => ({ open: false }))}
-            onAcceptFn={() => cancelBtnFn()}></ConfirmationDialog>)}
       </>
     )
   }

@@ -9,16 +9,35 @@ import PropTypes from 'prop-types';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
 export default function ConfirmationDialog(props) {
-  const { onCloseFn,onAcceptFn, dialogContent, dialogTitle, open, acceptBtnName,cancelBtnName } = props;
+  const { onCloseFn, onAcceptFn, dialogContent, dialogTitle, open, acceptBtnName,cancelBtnName, onEscapeKeyDown, onBackdropClick } = props;
   const handleClose = () => {
     onCloseFn();
   };
   const handleAccept = () => {
     onAcceptFn();
   };
+  const handleBackdropClick = () => {
+    onBackdropClick();
+  };
+  const handleEscapeKeyDown = () => {
+    onEscapeKeyDown();
+  };
   return (
     <Dialog
-      onClose={handleClose}
+      fullWidth
+      maxWidth="sm"
+      onClose={(event, reason) => {
+        console.log("reason :: " + reason)
+           if (reason === 'backdropClick') {
+            handleBackdropClick();
+           }
+           else if (reason === 'escapeKeyDown') {
+            handleEscapeKeyDown();
+           }
+           else {
+            handleClose();
+           }
+         }}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
       open={open}
