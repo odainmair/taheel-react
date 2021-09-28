@@ -78,16 +78,17 @@ const Login = () => {
     if (!LoginReq.isSuccessful) {
       return { isSuccessful: false, message: LoginReq.message };
     }
-    setPhone(LoginReq.responseBody.data.phoneNumber);
-    setIqamaId(LoginReq.responseBody.data.idNumIqamaNum);
+    const userRes =LoginReq.responseBody.data.user;
+    setPhone(userRes.phoneNumber);
+    setIqamaId(userRes.idNumIqamaNum);
     if (LoginReq.isSuccessful) {
-      const sendSmsRs = await requestOTPPhoneNum(LoginReq.responseBody.data.idNumIqamaNum, LoginReq.responseBody.data.phoneNumber);
+      const sendSmsRs = await requestOTPPhoneNum(userRes.idNumIqamaNum, userRes.phoneNumber);
       if (!sendSmsRs.isSuccessful) {
         return { isSuccessful: false, message: sendSmsRs.message };
       }
       const otp = sendSmsRs.responseBody.data.OTP;
       setOtp(otp);
-      setUser(LoginReq.responseBody.data)
+      setUser(userRes)
       if (!sendSmsRs.isSuccessful) {
         // SetErrMessage(sendSmsRs.message);
         return { isSuccessful: false, message: sendSmsRs.message };
