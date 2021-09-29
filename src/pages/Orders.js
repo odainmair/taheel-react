@@ -8,9 +8,11 @@ import TableCreator from 'src/Core/Components/TableCreator';
 import { TablePaginationObject } from 'src/Core/Utils/TablePagination';
 import TableDataViewEnum from "src/Core/Utils/TableDataViewEnum";
 import { LICENSE_FORM_TYPES, REQUEST_STATUS } from 'src/utils/enums'
+import { useNavigate } from 'react-router';
 
 
 const Orders = (props) => {
+    const navigate = useNavigate();
     const { type } = props
     const [loading, setLoading] = useState(true);
     const [totalCount, setTotalCount] = useState();
@@ -61,7 +63,7 @@ const Orders = (props) => {
         return response;
     }, [paramData.batchSize, paramData.startIndex, type]);
     return (
-    <TableCreator tableTitle={tableTitle} tableShcema={ {...OrdersSchema, actions:''} } dataTable={taheelRequests} totalCount={totalCount} loading={loading} TPObject={TPObject} errMessage={errMessage}/>
+    <TableCreator tableTitle={tableTitle} tableShcema={ {...OrdersSchema(navigate), actions:''} } dataTable={taheelRequests} totalCount={totalCount} loading={loading} TPObject={TPObject} errMessage={errMessage}/>
     )
 }
 

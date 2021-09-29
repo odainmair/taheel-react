@@ -274,7 +274,7 @@ const Summary = ({ values, setField }) => {
       >
         {finalLicenseFieldSchema.filter(fintalLicense => fintalLicense.sectionName === "Requirements" && !fintalLicense.dependOn).map(filteredFinalLicense => (
           
-          values[filteredFinalLicense.name] > 0 && values[filteredFinalLicense.name][0] ? (<Grid
+          values[filteredFinalLicense.name] && values[filteredFinalLicense.name][0] ? (<Grid
             item
             key={filteredFinalLicense.id}
             lg={6}

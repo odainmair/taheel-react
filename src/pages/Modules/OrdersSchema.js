@@ -45,14 +45,14 @@ const getChipComponentsForStatus = (data) => {
     else if (status === REQUEST_STATUS.DRAFT) {
         return (
             <Chip
-            label="مسودة"
-            variant="outlined"
-            size="medium"
-            icon={<DraftsTwoToneIcon sx={{ color: 'grey !important' }} />}
-            sx={{
-                color: colors.grey[600],
-                borderColor: colors.grey[600],
-            }}
+                label="مسودة"
+                variant="outlined"
+                size="medium"
+                icon={<DraftsTwoToneIcon sx={{ color: 'grey !important' }} />}
+                sx={{
+                    color: colors.grey[600],
+                    borderColor: colors.grey[600],
+                }}
             />
         );
     }
@@ -70,19 +70,36 @@ const getChipComponentsForStatus = (data) => {
     );
 };
 
-const getRequestValues = (taskType) => {
-    const navigate = useNavigate();
+const getRequestValues = (navigate,taskType, data) => {
     console.log(`LatestDraft :: getDraftValues :: taskType: ${taskType}`)
-    if(taskType.trim() === 'إنشاء رخصة نهائية') {
-      return {navigatinURL:'/services/finallicense', draftFormType: LICENSE_FORM_TYPES.NEW}
+    let navigatinURL = '', draftFormType = ''
+    if (taskType.trim() === 'إنشاء رخصة نهائية') {
+        navigatinURL = '/services/finallicense'
+        draftFormType = LICENSE_FORM_TYPES.NEW
+        //return { navigatinURL: '/services/finallicense', draftFormType: LICENSE_FORM_TYPES.NEW }
     }
-    else if(taskType.trim() === 'تجديد رخصة') {
-      return {navigatinURL:'/services/updatefinallicenserenewal', draftFormType: LICENSE_FORM_TYPES.RENEW}
+    else if (taskType.trim() === 'تجديد رخصة') {
+        navigatinURL = '/services/finallicense'
+        draftFormType = LICENSE_FORM_TYPES.RENEW
+        //return { navigatinURL: '/services/updatefinallicenserenewal', draftFormType: LICENSE_FORM_TYPES.RENEW }
+    } else {
+        navigatinURL = '/services/finallicense'
+        draftFormType = LICENSE_FORM_TYPES.NEW
+        //return { navigatinURL: '/services/finallicense', draftFormType: LICENSE_FORM_TYPES.NEW }
     }
-    return {navigatinURL:'/services/finallicense', draftFormType: LICENSE_FORM_TYPES.NEW}
+
+    navigate(navigatinURL, {
+        state: {
+            centerLicenceNumber: data.centerLicenceNumber,
+            taskID: data.ID,
+            requestNum: data.requestNum,
+            formType: draftFormType,
+            fromDraft: true
+        }
+    })
 }
 
-export default {
+export default (navigate)=> {return {
     schema: [
         {
             id: uuid(),
@@ -92,28 +109,21 @@ export default {
             },
             name: 'requestNum',
             attrFunc: (data) => {
-                if(data.status === REQUEST_STATUS.DRAFT) {
+                if (data.status === REQUEST_STATUS.DRAFT) {
                     return (
-                    <>
-                    {data.requestNum}
-                      <IconButton
-                        color="primary"
-                        component="span"
-                        onClick={() => {
-                          console.log(`LatestDraft :: navigate to: ${data.type}, taskID: ${data.ID}, requestNum: ${data.requestNum}`);
-                          navigate(getRequestValues(data.type).navigatinURL, { 
-                            state: { 
-                              centerLicenceNumber: data.centerLicenceNumber, 
-                              taskID: data.ID,
-                              requestNum:data.requestNum, 
-                              formType: getRequestValues(data.type).draftFormType, 
-                              fromDraft: true
-                            } });
-                        }}
-                      >
-                        <VisibilityIcon />
-                      </IconButton>
-                      </>)
+                        <>
+                            {data.requestNum}
+                            <IconButton
+                                color="primary"
+                                component="span"
+                                onClick={() => {
+                                    console.log(`LatestDraft :: navigate to: ${data.type}, taskID: ${data.ID}, requestNum: ${data.requestNum}`);
+                                    getRequestValues(navigate,data.type, data);
+                                }}
+                            >
+                                <VisibilityIcon />
+                            </IconButton>
+                        </>)
                 }
                 else {
                     return data.requestNum
@@ -157,4 +167,4 @@ export default {
             attrFunc: getChipComponentsForStatus,
             type: 'Text'
         }],
-}
+}}
