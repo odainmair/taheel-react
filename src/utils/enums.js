@@ -1,4 +1,5 @@
 export const LICENSE_FORM_TYPES = {
+    ALL: "all",
     NEW: "new",
     EDIT: "edit",
     RENEW: "renew",
