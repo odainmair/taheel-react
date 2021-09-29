@@ -56,7 +56,7 @@ const capacityValidation = values => {
     msg.buildingArea = 'يجب ان يكون مساحة مسطح البناء عدد صحيح'
   }
 
-  if (!values.basementArea)
+  if (!values.basementArea && values.basementArea != 0)
     msg.basementArea = required
   else if (parseInt(values.basementArea) < 0) {
       msg.basementArea = 'يجب ان يكون مساحة القبو اكبر من صفر'
@@ -233,7 +233,7 @@ const DownloadButtTable = ({ docIDs, name, label }) => {
               <TableBody>
 
                 {[].concat(docIDs).map((docID, index) => (
-                  < DownloadButt key={docID + "_" + index} index={index} docID={docID} name={name} label={label} />
+                  <DownloadButt key={!docID.id ? docID.id : docID  + "_" + index} index={index} docID={docID.id ? docID.id : docID} name={name} label={label} />
                 ))
                 }
               </TableBody>
