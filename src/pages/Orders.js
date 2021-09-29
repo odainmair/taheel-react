@@ -7,13 +7,16 @@ import OrdersSchema from './Modules/OrdersSchema'
 import TableCreator from 'src/Core/Components/TableCreator';
 import { TablePaginationObject } from 'src/Core/Utils/TablePagination';
 import TableDataViewEnum from "src/Core/Utils/TableDataViewEnum";
+import { LICENSE_FORM_TYPES, REQUEST_STATUS } from 'src/utils/enums'
 
 
-const Orders = () => {
+const Orders = (props) => {
+    const { type } = props
     const [loading, setLoading] = useState(true);
+    const [totalCount, setTotalCount] = useState();
     const [taheelRequests, setTaheelRequests] = useState([]);
     const [errMessage, SetErrMessage] = useState('')
-    const tableTitle = 'الطلبات المقدمة'
+    const tableTitle = type === LICENSE_FORM_TYPES.DRAFT ? 'المسودات' : 'الطلبات المقدمة'
     const TPObject = TablePaginationObject(TableDataViewEnum.ONLY_FIVE)
     const paramData = useMemo(() => {
         return {
@@ -24,7 +27,12 @@ const Orders = () => {
 
     const getTaheelRequestsFun = async (email, startIndex, batchSize) => {
         const url = 'taheel-apis-records-getRequests-v2';
-        const queryParams = { userEmail: email, startIndex, batchSize };
+        let queryParams = { userEmail: email, startIndex, batchSize };
+        console.log(`ORDERS ::1 queryParams ${JSON.stringify(queryParams)}`)
+        if(type === LICENSE_FORM_TYPES.DRAFT){
+            queryParams = {...queryParams, status: 4}
+        }
+        console.log(`ORDERS ::2 queryParams ${JSON.stringify(queryParams)}`)
         const response = await APIRequest({ url, queryParams });
         return response;
     };
@@ -41,13 +49,19 @@ const Orders = () => {
         } else {
             setLoading(false);
             const data = getTaheelRequestsRs.responseBody.data;
-            setTaheelRequests(data);
+            setTotalCount(data.totalCount)
+            if(type === LICENSE_FORM_TYPES.DRAFT){
+                setTaheelRequests(data.requests);
+            }
+            else {
+                setTaheelRequests(data.requests.filter(r => r.status != REQUEST_STATUS.DRAFT));
+            }
         }
 
         return response;
-    }, [paramData.batchSize, paramData.startIndex]);
+    }, [paramData.batchSize, paramData.startIndex, type]);
     return (
-    <TableCreator tableTitle={tableTitle} tableShcema={ {...OrdersSchema, actions:''} } dataTable={taheelRequests.requests} totalCount={taheelRequests.totalCount} loading={loading} TPObject={TPObject} errMessage={errMessage}/>
+    <TableCreator tableTitle={tableTitle} tableShcema={ {...OrdersSchema, actions:''} } dataTable={taheelRequests} totalCount={totalCount} loading={loading} TPObject={TPObject} errMessage={errMessage}/>
     )
 }
 

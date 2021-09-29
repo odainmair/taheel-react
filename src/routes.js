@@ -27,6 +27,7 @@ import AddCommissioner from './pages/CentersManagement/components/AddCommissione
 import CommissionersManagement from './pages/CentersManagement/components/CommissionersManagement';
 import DownloadDoc from './pages/UserAuthentication/Login/components/DownloadDoc';
 import Orders from './pages/Orders';
+import { LICENSE_FORM_TYPES, REQUEST_STATUS } from 'src/utils/enums'
 
 const routes = (isLoggedIn) => [
   {
@@ -61,10 +62,11 @@ const routes = (isLoggedIn) => [
       { path: 'CommissionersManagement', element: <CommissionersManagement /> },
       { path: 'customers', element: <CustomerList /> },
       { path: 'dashboard', element: <Dashboard /> },
-      { path: 'drafts', element: <Drafts /> },
+      // { path: 'drafts', element: <Drafts /> },
       { path: 'products', element: <ProductList /> },
       { path: 'settings', element: <Settings /> },
-      { path: 'orders', element: <Orders /> },
+      { path: 'orders', element: <Orders type={LICENSE_FORM_TYPES.ALL} /> },
+      { path: 'drafts', element: <Orders type={LICENSE_FORM_TYPES.DRAFT} /> },
 
 
       { path: '*', element: <Navigate to="/404" /> }

@@ -173,7 +173,7 @@ const CreateFinalLicense = () => {
     if (!values.isDraft) {
       if (values && values.formType === LICENSE_FORM_TYPES.RENEW) {
         response = await updateFinalLicenseAPIFunc(values, formType, 0, false);
-        if (response.isSuccessful) {
+        if (response.isSuccessful && !!response?.responseBody?.data) {
           handleClickOpen(`${response.responseBody.data[0]}`, '');
         }
         else {
@@ -181,19 +181,31 @@ const CreateFinalLicense = () => {
           setIsLoading(false)
         }
       }
-      else if (!editMode) {
+      else if (!editMode) { 
         response = await updateFinalLicenseAPIFunc(values, formType, 0, false);
-        handleClickOpen(` تم تقديم طلب ${response.responseBody.data.requestNumber} لإصدار الترخيص النهائي رقم ${values.temporaryLicenceNum} يرجى تسليم أصل الضمان البنكي إلى وكالة التأهيل والتوجيه الإجتماعي بوزارة الموارد البشرية والتنمية الإجتماعية لانهاء إجراءات الطلب خلال 3 أيام عمل`, '');
+        if (response.isSuccessful && !!response?.responseBody?.data) {
+          handleClickOpen(` تم تقديم طلب ${response.responseBody.data.requestNumber} لإصدار الترخيص النهائي رقم ${values.temporaryLicenceNum} يرجى تسليم أصل الضمان البنكي إلى وكالة التأهيل والتوجيه الإجتماعي بوزارة الموارد البشرية والتنمية الإجتماعية لانهاء إجراءات الطلب خلال 3 أيام عمل`, '');
+        }
+        else {
+          SetErrMessage(`${response.message}`);
+          setIsLoading(false)
+        }
       }
-      else {
+      else {      
         response = await updateFinalLicenseAPIFunc(values, formType, taskID, false);
-        handleClickOpen(` تم إرسال طلب ${requestNum} لإصدار الترخيص النهائي رقم ${values.temporaryLicenceNum}`, '');
+        if (response.isSuccessful && !!response?.responseBody?.data) {
+          handleClickOpen(` تم إرسال طلب ${requestNum} لإصدار الترخيص النهائي رقم ${values.temporaryLicenceNum}`, '');
+        }
+        else {
+          SetErrMessage(`${response.message}`);
+          setIsLoading(false)
+        }
       }
     }
     else {
       // handleClickOpen(` the application is draft and formType is ${values.formType} `, '');
       response = await updateFinalLicenseAPIFunc(values, formType, 0, true);
-      if (response.isSuccessful) {
+      if (response.isSuccessful && !!response?.responseBody?.data) {
         handleClickOpen(`${response.responseBody.data.message[0]} طلب رقم ${response.responseBody.data.requestNumber}`, '');
       }
       else {
