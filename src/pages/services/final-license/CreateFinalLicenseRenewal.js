@@ -138,7 +138,7 @@ const CreateFinalLicenseRenewal = () => {
     console.log('CreateFinalLicenseRenewal :: values: ' + JSON.stringify(values))
     let response = null
     if(!values.isDraft) {
-      response = await updateFinalLicenseAPIFunc(values, LICENSE_FORM_TYPES.RENEW, 0, false);
+      response = await updateFinalLicenseAPIFunc(values, LICENSE_FORM_TYPES.RENEW, 0, false, requestNum);
       
       if (response.isSuccessful) {
         handleClickOpen(`${response.responseBody.data[0]}`, '');
@@ -150,7 +150,7 @@ const CreateFinalLicenseRenewal = () => {
     }
     else {
       // handleClickOpen(` the application is draft and formType is ${values.formType} `, '');
-      response = await updateFinalLicenseAPIFunc(values, formType, 0, true);
+      response = await updateFinalLicenseAPIFunc(values, formType, 0, true, requestNum);
       if (response.isSuccessful) {
         handleClickOpen(`${response.responseBody.data.message[0]} طلب رقم ${response.responseBody.data.requestNumber}`, '');
       }
