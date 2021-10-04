@@ -85,7 +85,7 @@ export default function FormCreator({ title, pageName, isLoading, submitInfo, sc
                                     spacing={3}
                                     mt={3}
                                     mb={3}
-                                    style={{ paddingRight: formType === 'view' ? '70px' : '' }}
+                                    style={{ paddingRight: formType === 'view' ? '80px' : '',paddingLeft: formType === 'view' ? '150px' : '' }}
                                 >
                                     {FieldsCreator({ schema, fieldsName, sectionNames, lookupObject, formType, values, isLoading, setField })}
                                 </Grid>

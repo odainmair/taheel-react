@@ -233,7 +233,7 @@ const DownloadButtTable = ({ docIDs, name, label }) => {
               <TableBody>
 
                 {[].concat(docIDs).map((docID, index) => (
-                  <DownloadButt key={!docID.id ? docID.id : docID  + "_" + index} index={index} docID={docID.id ? docID.id : docID} name={name} label={label} />
+                  <DownloadButt key={!!docID?.id ? docID.id : docID  + "_" + index} index={index} docID={docID?.id ? docID.id : docID} name={name} label={label} />
                 ))
                 }
               </TableBody>
