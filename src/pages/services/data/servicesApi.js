@@ -20,4 +20,14 @@ const getRequestDetails = async (reqNum) => {
   const response = await APIRequest({ url, queryParams });
   return response;
 }
-export { getMyTasksFun, cancelTCRequest, getRequestDetails }
+
+const getCentersForFinalNoExpired = async (userEmail) => {
+  const url = 'taheel-apis-records-getCenters-v2';
+  // const queryParams = { userEmail, isExpired: false, licenseType: 'رخصة مؤقتة' };
+  const queryParams = { userEmail, isExpired: false, isEligibleForFinal: true, licenseType: 'رخصة نهائية' };
+  // const queryParams = { userEmail, forRenewal: true};
+  const response = await APIRequest({ url, queryParams });
+  // console.log("response===============> " + JSON.parse(response));
+  return response;
+};
+export { getMyTasksFun, cancelTCRequest, getRequestDetails, getCentersForFinalNoExpired }

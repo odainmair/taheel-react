@@ -17,7 +17,8 @@ import { ConditionComp, sectionValidateInput } from '../../temporary-license/ser
 import { validateAPIFunc, validateCompanyFunc } from '../../temporary-license/services/temporayLicenseAPI';
 import { getCurrentUser } from 'src/utils/UserLocalStorage';
 import FinalLicenseData from '../sections/FinalLicenseData';
-import { CentertDetails, getCentersForFinal, getCentersForFinalNoExpired, getMunicipalLicenseNoApi } from '../../final-license/services/finalLicenseAPI';
+import { CentertDetails, getCentersForFinal, getMunicipalLicenseNoApi } from '../../final-license/services/finalLicenseAPI';
+import { getCentersForFinalNoExpired } from 'src/pages/services/data/servicesApi'
 import NewLocationData from '../sections/NewLocationData';
 import NewCenterAddress from '../sections/NewCenterAddress';
 import Terms from '../sections/Terms';
@@ -133,7 +134,7 @@ const TransferCenterLocationRequest = () => {
     };
 
     const onSubmit = async (values) => {
-       
+
 
 
 
