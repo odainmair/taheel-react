@@ -24,6 +24,7 @@ const NewLocationData = ({ setField, values, setIsEnableNextBtn }) => {
     const [calculatedData, setCalculatedData] = useState(false);
     const [errMessage, SetErrMessage] = useState('');
     const [loading, setLoading] = useState(false);
+	console.log('#==> values__values__values ' + JSON.stringify(values))
 
     useEffect(() => {
 
@@ -164,9 +165,13 @@ const NewLocationData = ({ setField, values, setIsEnableNextBtn }) => {
                             type="button"
                             sx={{
                                 height: 55,
-                                backgroundColor: '#3c8084',
+                                backgroundColor: 'white',
                                 width: '100%',
-                                color: 'white',
+                                color: '#3c8084',
+                                ':hover': {
+                                    backgroundColor: '#3c8084',
+                                    color: 'white',
+                                }
                             }}
                             onClick={calculate}
                         >

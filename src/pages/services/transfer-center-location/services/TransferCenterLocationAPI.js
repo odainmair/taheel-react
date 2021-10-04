@@ -1,16 +1,11 @@
 
 import { getCurrentUser } from 'src/utils/UserLocalStorage';
 import { APIRequest } from 'src/api/APIRequest';
-
-// const getFurnitures = (values) => {
-// 	const furnitures = []
-// 	values.Furniture.map((docId, index) => {
-// 		furnitures.push({ Document: docId })
-// 	})
-// 	return furnitures
-// }
+import { calculation } from '../../final-license/services/finalLicenseAPI';
 
 export const centerLocationTransferAPIFunc = async (values) => {
+	console.log('#==> valuesvaluesvalues ' + JSON.stringify(values))
+
 
 	function numberToDay(day) {
 		return ('0' + day).slice(-2);
@@ -18,6 +13,11 @@ export const centerLocationTransferAPIFunc = async (values) => {
 	const { email } = getCurrentUser();
 	const { day, month, year } = values;
 	const expiryDate = year + '' + numberToDay(month) + numberToDay(day);
+
+
+	const res = await calculation(values.buildingArea, values.basementArea);
+	const financialGuarantee = res?.responseBody?.body?.financialGuarantee
+
 	const requestBody = {
 		serviceStatus: 1,
 		isDraft: false,
@@ -25,18 +25,20 @@ export const centerLocationTransferAPIFunc = async (values) => {
 		center: {
 			licenceNumber: values.centerLicenceNumber,
 			centerInfo_r: {
+				financialGuarantee : financialGuarantee,
 				ID: values.centerInfo_r,
 				buildingArea: values.buildingArea,
 				basementArea: values.basementArea,
 				carryingnumber: values.capacity,
 				furniturePhoto_r: [
 					{
-						Document: values.docId,
+						Document: values.Furniture[0],
 					}
 				],
-				fireDepartmentLicense: values.fireDepartmentLicense,
-				expirarionDateForFireDepartmentLicenseGreg: expiryDate,
+				fireDepartmentLicense: values.fireDepartmentLicense[0],
+				expirarionDateForFireDepartmentLicenseHijri: expiryDate,
 				engineeringPlan: values.OfficeReport[0],
+				momraDoc: values.municipLicenseNo[0],
 			},
 			centerLocation_r: {
 				city: values.city,

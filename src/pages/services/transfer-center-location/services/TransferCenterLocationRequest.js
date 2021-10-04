@@ -28,7 +28,7 @@ import { dateFormatter, reverseRange } from 'src/utils/utilFunctions';
 import { LICENSE_FORM_TYPES } from 'src/utils/enums'
 import numeral from 'numeral';
 import { centerLocationTransferAPIFunc } from './TransferCenterLocationAPI';
-import { AttachementValidation } from './TransferCenterLoactionUtil';
+import { AttachementValidation, NewAddressValidation } from './TransferCenterLoactionUtil';
 
 
 const TransferCenterLocationRequest = () => {
@@ -39,7 +39,7 @@ const TransferCenterLocationRequest = () => {
     const [dialogContent, setDialogContent] = useState("");
     const [dialogTitle, setDialogTitle] = useState("");
     const [open, setOpen] = useState(false);
-    const [isEnableNextBtn, setIsEnableNextBtn] = useState(true);
+    const [isEnableNextBtn, setIsEnableNextBtn] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [editInitValues, setEditInitValues] = useState({});
     const [editMode, setEditMode] = useState(false);
@@ -134,10 +134,6 @@ const TransferCenterLocationRequest = () => {
     };
 
     const onSubmit = async (values) => {
-
-
-
-
         console.log("values++++++++++++", JSON.stringify(values))
         const response = await centerLocationTransferAPIFunc(values);
         console.log("response.isSuccessful", response.isSuccessful);
@@ -187,7 +183,7 @@ const TransferCenterLocationRequest = () => {
                                 CRNumber: center && center.crInfo_r && center.crInfo_r.crNumber,
                                 companyName: center && center.crInfo_r && center.crInfo_r.entityName,
                                 activities: center && center.crInfo_r && center.crInfo_r.crActivityType,
-                                municipLicenseNo: center && center.crInfo_r && center.crInfo_r.MoMRA_Licence,
+                                // municipLicenseNo: center && center.crInfo_r && center.crInfo_r.MoMRA_Licence,
                                 beneficiariesNum: center && center.centerInfo_r && center.centerInfo_r.beneficiaryCount,
                                 newCapacity: center && center.centerInfo_r && numeral(center.centerInfo_r.carryingnumber).format('0,0'),
                                 financialGuarantee: center && center.centerInfo_r && `${numeral(center.centerInfo_r.financialGuarantee).format('0,0.00')} ر.س.`,
@@ -198,10 +194,12 @@ const TransferCenterLocationRequest = () => {
                                 ExecutivePlan: [center && center.centerInfo_r && center.centerInfo_r.executivePlan && (center.centerInfo_r.executivePlan || center.centerInfo_r.executivePlan.id)],
                                 // OfficeReport: [center && center.centerInfo_r && center.centerInfo_r.engineeringPlan && (center.centerInfo_r.engineeringPlan || center.centerInfo_r.engineeringPlan.id)],
                                 OfficeReport: null,
+                                fireDepartmentLicense: null,
+                                municipLicenseNo: null,
+                                Furniture: null,
 
                                 SecurityReport: center && center.centerInfo_r && [center.centerInfo_r.securityReport && (center.centerInfo_r.securityReport || center.centerInfo_r.securityReport.id)],
                                 // Furniture: center && center.centerInfo_r && center.centerInfo_r.furniturePhoto_r && (center.centerInfo_r.furniturePhoto_r.map(d => d.Document) || center.centerInfo_r.furniturePhoto_r.map(d => d.Document.id)),
-                                Furniture: null,
                                 FinancialGuaranteeAtt: [center && center.centerInfo_r && center.centerInfo_r.financialGuarbteeAtt && (center.centerInfo_r.financialGuarbteeAtt || center.centerInfo_r.financialGuarbteeAtt.id)],
                                 healthServices: center && center.centerInfo_r && center.isHealthCareServices ? "yes" : "no",
                                 healthServiceType: center && center.centerInfo_r && center.healthCareServices_r && center.healthCareServices_r.type,
@@ -236,7 +234,7 @@ const TransferCenterLocationRequest = () => {
                             />
                             <FinalFromWizardAddressPage
                                 label="تعبئة بيانات العنوان الوطني "
-                                // validate={(values) => sectionValidateInput(tempLicenseFieldSchema, "CenterAddress", values)}
+                                validate={(values) => NewAddressValidation(values)}
                                 setIsEnableNextBtn={(isEnable) => setIsEnableNextBtn(isEnable)}
 
                             />

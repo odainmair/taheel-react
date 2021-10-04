@@ -14,7 +14,11 @@ import { useEffect } from 'react';
 const FinalLicenseData = ({ setField, renewableLicenses, values, setCenterLicenceNumber, getCentertDetails, showSummary, setShowSummary, isLoading,setIsEnableNextBtn }) => {
   
   useEffect(() => {
-    setIsEnableNextBtn(false);
+    //  if ( values.centerLicenceNumber) {
+      setIsEnableNextBtn(true);
+    //   console.log("editing++++++++++", values.centerLicenceNumber);
+    // }
+    // setIsEnableNextBtn(false);
 
 }, []);
   console.log("======>values from final: " + JSON.stringify(values))
@@ -55,14 +59,16 @@ const FinalLicenseData = ({ setField, renewableLicenses, values, setCenterLicenc
               </Field>
               <OnChange name="centerLicenceNumber">
                 {async (value) => {
-                  console.log(`centerLicenceNumber + ${value}`);
+                  console.log(`onChangecenterLicenceNumber + ${value}`);
                   if (value != 1) {
                     await getCentertDetails(value);
                     setIsEnableNextBtn(true)
-
+                 
                   }
                   else {
                     setShowSummary(false);
+                    setIsEnableNextBtn(false)
+
                   }
                 }}
               </OnChange>

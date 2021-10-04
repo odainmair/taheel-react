@@ -5,28 +5,17 @@ import {
 import { Field } from 'react-final-form';
 import PropTypes from 'prop-types';
 import FileUploaderComp from '../../final-license/components/FileUploader';
-import { useEffect, useState } from 'react';
 
 const Attachements = ({ setField, values, setIsEnableNextBtn }) => {
   var multipleFileDocs = []
-  const [errMessage, SetErrMessage] = useState('');
 
-  useEffect(()=>{
-    if (!values.Furniture) {
-      SetErrMessage('يرجى ادخال مرفق الأثاث للمبنى الجديد');
-      console.log('Furniture not found');
-      setIsEnableNextBtn(false);
-      return;
-  }}, []);
   const setDocument = (name, docID, multipleFile) => {
     if (!multipleFile)
       setField(name, [docID])
     else {
       multipleFileDocs.push(docID)
       setField(name, multipleFileDocs)
-
     }
-   
   }
   return (
     <>
@@ -63,7 +52,7 @@ const Attachements = ({ setField, values, setIsEnableNextBtn }) => {
         >
           <Field
             label="رخصة البلدية (للمبنى الجديد)"
-            name="municipLicense"
+            name="municipLicenseNo"
             component={FileUploaderComp}
             multipleFile={false}
             setField={setField}
@@ -94,7 +83,7 @@ const Attachements = ({ setField, values, setIsEnableNextBtn }) => {
           <Field
             label="رخصة دفاع المدني (للمبنى الجديد)"
             // name="municipLicense"
-            name="fireDepartmentLicens"
+            name="fireDepartmentLicense"
             component={FileUploaderComp}
             multipleFile={false}
             setField={setField}

@@ -37,20 +37,22 @@ const sampleData = {
   ],
 };
 
-const NewCenterAddress = ({ Condition, setField, setIsEnableNextBtn }) => {
+const NewCenterAddress = ({ values,Condition, setField, setIsEnableNextBtn }) => {
 
   const inputEl = useRef(null);
   const [streetAddr, setStreetAddr] = useState(sampleData.vendorStreetAddress);
 
-  useEffect(() => {
-    console.log('kkkkk+++++++++++++++++++++++++');
 
-    setIsEnableNextBtn(false);
+  useEffect(() => {
+    // if ( values) {
+      setIsEnableNextBtn(true);
+    // }
+ 
   }, []);
 
   const getStreetAddrPartsFromGeoResult = (geoResult) => {
 
-    console.log('geoResultgeoResultgeoResultgeoResult',geoResult);
+    console.log('geoResultgeoResultgeoResultgeoResult', geoResult);
     const addressArray = geoResult.address_components;
 
     const currentAddress = {
@@ -67,7 +69,7 @@ const NewCenterAddress = ({ Condition, setField, setIsEnableNextBtn }) => {
       address: geoResult.formatted_address,
       lat: geoResult.geometry.location.lat,
       lng: geoResult.geometry.location.lng,
-      // additionalNo: (addressArray.find((x) => x.types[0] === 'postal_code') || {}).long_name || '',
+      additionalNo: null,
     };
 
     setStreetAddr(currentAddress);
@@ -106,10 +108,10 @@ const NewCenterAddress = ({ Condition, setField, setIsEnableNextBtn }) => {
             الرجاء تحديد موقع المركز الجديد على الخريطة
           </Typography>
           <WithGoogleApi apiKey="AIzaSyC43U2-wqXxYEk1RBrTLdkYt3aDoOxO4Fw">
-            <GmapsAddress value={streetAddr} 
-            onChange={setFieldValue}
+            <GmapsAddress value={streetAddr}
+              onChange={setFieldValue}
               getStreetAddrPartsFromGeoResultMine={getStreetAddrPartsFromGeoResult}
-               />
+            />
           </WithGoogleApi>
         </Grid>
         <Grid
