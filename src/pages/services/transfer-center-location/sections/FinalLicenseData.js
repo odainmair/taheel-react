@@ -11,16 +11,16 @@ import CenterSummary from './CenterSummary';
 import { CardContent, CircularProgress } from '@mui/material';
 import { useEffect } from 'react';
 
-const FinalLicenseData = ({ setField, renewableLicenses, values, setCenterLicenceNumber, getCentertDetails, showSummary, setShowSummary, isLoading,setIsEnableNextBtn }) => {
-  
+const FinalLicenseData = ({ setField, renewableLicenses, formEdit, values, setCenterLicenceNumber, getCentertDetails, showSummary, setShowSummary, isLoading, setIsEnableNextBtn }) => {
+
   useEffect(() => {
     //  if ( values.centerLicenceNumber) {
-      setIsEnableNextBtn(true);
+    setIsEnableNextBtn(true);
     //   console.log("editing++++++++++", values.centerLicenceNumber);
     // }
     // setIsEnableNextBtn(false);
 
-}, []);
+  }, []);
   console.log("======>values from final: " + JSON.stringify(values))
   console.log("======>valuesrenewableLicenses: " + JSON.stringify(renewableLicenses))
 
@@ -50,7 +50,7 @@ const FinalLicenseData = ({ setField, renewableLicenses, values, setCenterLicenc
                 variant="outlined"
                 className="custom-field"
                 formControlProps={{ fullWidth: true }}
-                disabled={!Array.isArray(renewableLicenses) || !renewableLicenses.length}
+                disabled={!Array.isArray(renewableLicenses) || !renewableLicenses.length || formEdit}
               >
                 <MenuItem value="1" key="1" selected={true}>اختيار</MenuItem>
                 {renewableLicenses.map(item => (
@@ -63,7 +63,7 @@ const FinalLicenseData = ({ setField, renewableLicenses, values, setCenterLicenc
                   if (value != 1) {
                     await getCentertDetails(value);
                     setIsEnableNextBtn(true)
-                 
+
                   }
                   else {
                     setShowSummary(false);

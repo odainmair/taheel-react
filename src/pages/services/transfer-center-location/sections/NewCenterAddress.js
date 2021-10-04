@@ -69,7 +69,6 @@ const NewCenterAddress = ({ values,Condition, setField, setIsEnableNextBtn }) =>
       address: geoResult.formatted_address,
       lat: geoResult.geometry.location.lat,
       lng: geoResult.geometry.location.lng,
-      additionalNo: null,
     };
 
     setStreetAddr(currentAddress);

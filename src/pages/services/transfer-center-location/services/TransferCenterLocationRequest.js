@@ -29,6 +29,8 @@ import { LICENSE_FORM_TYPES } from 'src/utils/enums'
 import numeral from 'numeral';
 import { centerLocationTransferAPIFunc } from './TransferCenterLocationAPI';
 import { AttachementValidation, NewAddressValidation } from './TransferCenterLoactionUtil';
+import { getRequestDetails } from 'src/pages/services/data/servicesApi'
+import { getDateFromObject } from 'src/pages/services/transfer-center-location/services/TransferCenterLoactionUtil'
 
 
 const TransferCenterLocationRequest = () => {
@@ -44,27 +46,68 @@ const TransferCenterLocationRequest = () => {
     const [editInitValues, setEditInitValues] = useState({});
     const [editMode, setEditMode] = useState(false);
     const [centerLicenceNumber, setCenterLicenceNumber] = useState(location.state ? location.state.centerLicenceNumber : "1");
+    const reqNum = location.state?.reqNum;
+    const taskID = location.state?.taskID;
+    const formEdit = location.state?.formEdit
     const [showSummary, setShowSummary] = useState(false);
-    const taskID = location.state ? location.state.taskID : null;
+    const [expDate, setExpDate] = useState({});
     const formType = location.state ? location.state.formType : null;
     const [staffTypes, setStaffTypes] = useState([]);
     const [center, setCenter] = useState({});
+    const [details, setDetails] = useState({});
 
     useEffect(async () => {
         console.log("TransferCenterLocationRequest :: centerLicenceNumber: " + centerLicenceNumber)
         const { email } = await getCurrentUser();
-        console.log("------------------------------- email " + email)
-        setIsLoading(true);
-        const getCentersRs = await getCentersForFinalNoExpired(email);
+        if (!!formEdit) {
+            setIsLoading(true);
+            setRenewableLicenses([{ licenceNumber: centerLicenceNumber }]);
+            await getCentertDetails(centerLicenceNumber);
 
-        SetErrMessage("");
-        if (!getCentersRs.isSuccessful) {
-            SetErrMessage(getCentersRs.message);
-            setIsLoading(false);
+            setIsLoading(true);
+            const getReqDetails = await getRequestDetails(reqNum)
+            if (!getReqDetails.isSuccessful) {
+                SetErrMessage(getReqDetails.message)
+            } else {
+                let Details = getReqDetails.responseBody.requestDetails.data
+                Details = { NewCenterLocationData: { ...Details.processVariablesDump.NewCenterLocationData }, center: { ...Details.center } }
+                console.log("Details+++++++++++++", Details)
+                const date = Details?.NewCenterLocationData?.centerInfo_r?.expirarionDateForFireDepartmentLicenseHijri;
+                const expDate = {}
+                if (!!date) {
+                    let returned = getDateFromObject(date, 'iDDiMMiYYYY', 'iDD');
+                    if (!isNaN(returned)) {
+                        expDate.day = returned
+                    }
+                    returned = getDateFromObject(date, 'iDDiMMiYYYY', 'iMM');
+                    if (!isNaN(returned)) {
+                        expDate.month = returned
+                    }
+                    returned = getDateFromObject(date, 'iDDiMMiYYYY', 'iYYYY');
+                    if (!isNaN(returned)) {
+                        expDate.year = returned
+                    }
+                }
+                setExpDate(expDate)
+                setDetails(Details)
+                setIsEnableNextBtn(true)
+                setIsLoading(false);
+            }
         } else {
-            const { Centers } = getCentersRs.responseBody.data;
-            setRenewableLicenses(Centers);
-            setIsLoading(false);
+            console.log("------------------------------- email " + email)
+
+            setIsLoading(true);
+            const getCentersRs = await getCentersForFinalNoExpired(email);
+
+            SetErrMessage("");
+            if (!getCentersRs.isSuccessful) {
+                SetErrMessage(getCentersRs.message);
+                setIsLoading(false);
+            } else {
+                const { Centers } = getCentersRs.responseBody.data;
+                setRenewableLicenses(Centers);
+                setIsLoading(false);
+            }
         }
     }, [])
 
@@ -135,7 +178,7 @@ const TransferCenterLocationRequest = () => {
 
     const onSubmit = async (values) => {
         console.log("values++++++++++++", JSON.stringify(values))
-        const response = await centerLocationTransferAPIFunc(values);
+        const response = await centerLocationTransferAPIFunc(values, !!formEdit, taskID);
         console.log("response.isSuccessful", response.isSuccessful);
         if (response.isSuccessful) {
             handleClickOpen(`${response.responseBody.data.message}`, '');
@@ -187,18 +230,29 @@ const TransferCenterLocationRequest = () => {
                                 beneficiariesNum: center && center.centerInfo_r && center.centerInfo_r.beneficiaryCount,
                                 newCapacity: center && center.centerInfo_r && numeral(center.centerInfo_r.carryingnumber).format('0,0'),
                                 financialGuarantee: center && center.centerInfo_r && `${numeral(center.centerInfo_r.financialGuarantee).format('0,0.00')} ر.س.`,
-                                buildingArea: null,
-                                basementArea: null,
+
+                                //getting the formEdit Data if exist
+                                buildingArea: details?.NewCenterLocationData?.centerInfo_r?.buildingArea,
+                                basementArea: details?.NewCenterLocationData?.centerInfo_r?.basementArea,
+                                buildNo: details?.NewCenterLocationData?.centerLocation_r?.buildNo,
                                 capacity: null,
-                                OperationalPlan: [center && center.centerInfo_r && center.centerInfo_r.operationPlan && (center.centerInfo_r.operationPlan || center.centerInfo_r.operationPlan.id)],
-                                ExecutivePlan: [center && center.centerInfo_r && center.centerInfo_r.executivePlan && (center.centerInfo_r.executivePlan || center.centerInfo_r.executivePlan.id)],
+                                ...expDate,
+                                city: details?.NewCenterLocationData?.centerLocation_r?.city,
+                                buildNo: details?.NewCenterLocationData?.centerLocation_r?.buildNo,
+                                street: details?.NewCenterLocationData?.centerLocation_r?.street,
+                                sub: details?.NewCenterLocationData?.centerLocation_r?.area,
+                                postalCode: details?.NewCenterLocationData?.centerLocation_r?.postalCode,
+                                additionalNo: details?.NewCenterLocationData?.centerLocation_r?.additionalNo,
                                 // OfficeReport: [center && center.centerInfo_r && center.centerInfo_r.engineeringPlan && (center.centerInfo_r.engineeringPlan || center.centerInfo_r.engineeringPlan.id)],
-                                OfficeReport: null,
-                                fireDepartmentLicense: null,
-                                municipLicenseNo: null,
-                                Furniture: null,
+                                Furniture: [details?.NewCenterLocationData?.centerInfo_r?.furniturePhoto_r.map(f => f.Document)],
+                                municipLicenseNo: [details?.NewCenterLocationData?.centerInfo_r?.momraDoc],
+                                fireDepartmentLicense: [details?.NewCenterLocationData?.centerInfo_r?.fireDepartmentLicense],
+                                OfficeReport: [details?.NewCenterLocationData?.centerInfo_r?.engineeringPlan],
 
                                 SecurityReport: center && center.centerInfo_r && [center.centerInfo_r.securityReport && (center.centerInfo_r.securityReport || center.centerInfo_r.securityReport.id)],
+                                OperationalPlan: [center && center.centerInfo_r && center.centerInfo_r.operationPlan && (center.centerInfo_r.operationPlan || center.centerInfo_r.operationPlan.id)],
+                                ExecutivePlan: [center && center.centerInfo_r && center.centerInfo_r.executivePlan && (center.centerInfo_r.executivePlan || center.centerInfo_r.executivePlan.id)],
+
                                 // Furniture: center && center.centerInfo_r && center.centerInfo_r.furniturePhoto_r && (center.centerInfo_r.furniturePhoto_r.map(d => d.Document) || center.centerInfo_r.furniturePhoto_r.map(d => d.Document.id)),
                                 FinancialGuaranteeAtt: [center && center.centerInfo_r && center.centerInfo_r.financialGuarbteeAtt && (center.centerInfo_r.financialGuarbteeAtt || center.centerInfo_r.financialGuarbteeAtt.id)],
                                 healthServices: center && center.centerInfo_r && center.isHealthCareServices ? "yes" : "no",
@@ -218,6 +272,7 @@ const TransferCenterLocationRequest = () => {
                         >
                             <FinalFromWizardLicenseDataPage
                                 label="بيانات الترخيص النهائي "
+                                formEdit={!!formEdit}
                                 validate={CenterDetailsValidation}
                                 renewableLicenses={renewableLicenses}
                                 setCenterLicenceNumber={setCenterLicenceNumber}
@@ -258,10 +313,11 @@ const TransferCenterLocationRequest = () => {
     );
 }
 
-const FinalFromWizardLicenseDataPage = ({ validate, setIsEnableNextBtn, setCenterLicenceNumber, values, showSummary, isLoading, getCentertDetails, setShowSummary, renewableLicenses, setField }) => (
+const FinalFromWizardLicenseDataPage = ({ validate, formEdit, setIsEnableNextBtn, setCenterLicenceNumber, values, showSummary, isLoading, getCentertDetails, setShowSummary, renewableLicenses, setField }) => (
     <Box>
         <FinalLicenseData
             values={values}
+            formEdit={formEdit}
             setField={(fieldName, fieldValue) => setField(fieldName, fieldValue)}
             validate={CenterDetailsValidation}
             renewableLicenses={renewableLicenses}

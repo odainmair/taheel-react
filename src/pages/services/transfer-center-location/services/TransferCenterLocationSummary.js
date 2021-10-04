@@ -38,11 +38,11 @@ const TransferCenterLocationSummary = () => {
     };
     useEffect(async () => {
         setLoading(true)
-        const getCenterDetails = await getRequestDetails(reqNum)
-        if (!getCenterDetails.isSuccessful) {
-            SetErrMessage(getCenterDetails.message)
+        const getReqDetails = await getRequestDetails(reqNum)
+        if (!getReqDetails.isSuccessful) {
+            SetErrMessage(getReqDetails.message)
         } else {
-            let Details = getCenterDetails.responseBody.requestDetails.data
+            let Details = getReqDetails.responseBody.requestDetails.data
             setTaskID(Details?.externalTaskData?.ID)
             Details = { NewCenterLocationData: { ...Details.processVariablesDump.NewCenterLocationData }, center: { ...Details.center } }
             console.log("Details+++++++++++++", Details)
@@ -95,7 +95,9 @@ const TransferCenterLocationSummary = () => {
                                 navigate("/services/transfercenter", {
                                     state: {
                                         centerLicenceNumber: licenceNumber,
-                                        taskID
+                                        taskID,
+                                        reqNum,
+                                        formEdit:true
                                     }
                                 })
                             }}

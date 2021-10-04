@@ -1,4 +1,6 @@
-const required  ='يجب تعبئة الحقل';
+import moment from 'moment-hijri';
+
+const required = 'يجب تعبئة الحقل';
 
 const AttachementValidation = values => {
   var msg = {}
@@ -15,10 +17,10 @@ const AttachementValidation = values => {
     msg.municipLicenseNo = "يرجى ارفاق هذا الملف";
 
 
-  if (!values.day || !values.month|| !values.year ) {
+  if (!values.day || !values.month || !values.year) {
     msg.day = required
-    msg.month =  required
-    msg.year =  required
+    msg.month = required
+    msg.year = required
   }
   return msg;
 }
@@ -34,25 +36,29 @@ const NewAddressValidation = values => {
   if (!values.street) {
     msg.street = required
   }
-if (!values.buildNo) {
-  msg.buildNo = required
-}
-if (!values.postalCode) {
-  msg.postalCode =required
-}
-if (!values.additionalNo) {
-  msg.additionalNo = required
-}
-// console.log("values.additionalNo++++ ", values.additionalNo)
-// console.log("length++++ ", values.additionalNo.length)
-
-if (values?.additionalNo?.length != 4 ) {
+  if (!values.buildNo) {
+    msg.buildNo = required
+  }
+  if (!values.postalCode) {
+    msg.postalCode = required
+  }
+  if (!values.additionalNo) {
+    msg.additionalNo = required
+  }
+  // console.log("values.additionalNo++++ ", values.additionalNo)
   // console.log("length++++ ", values.additionalNo.length)
 
-  msg.additionalNo ='يجب ان يحتوي الرقم الاضافي على 4 خانات'
-}
-return msg;
+  if (values?.additionalNo?.length != 4) {
+    // console.log("length++++ ", values.additionalNo.length)
+
+    msg.additionalNo = 'يجب ان يحتوي الرقم الاضافي على 4 خانات'
+  }
+  return msg;
 }
 
+const getDateFromObject = (date, format, req) => {
+  console.log('Samer ===> '+req, moment(date, format).format(req))
+  return moment(date, format).format(req);
+}
 
-export { AttachementValidation, NewAddressValidation };
+export { AttachementValidation, NewAddressValidation, getDateFromObject };

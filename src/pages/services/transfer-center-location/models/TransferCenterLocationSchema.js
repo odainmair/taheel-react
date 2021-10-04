@@ -89,7 +89,7 @@ export default
                 ar: 'الطاقة الإستعابية القصوى',
                 en: 'Center Carrying Capacity'
             },
-            name: 'center.centerInfo_r.carryingnumber',//here
+            name: 'NewCenterLocationData.centerInfo_r.carryingnumber',//here
             type: 'Text',
             gridSize: '6',
             sectionName: Sections.Capacity,
@@ -234,7 +234,7 @@ export default
                 en: 'Fire department License Expiry Date'
             },
             name: 'NewCenterLocationData.centerInfo_r.expirarionDateForFireDepartmentLicenseHijri',
-            attrFunc:(value) => {return moment(`${value}`, 'iYYYYiMMiDD').format('iDD/iMM/iYYYY')},
+            attrFunc:(value) => {return moment(`${value}`, 'iDDiMMiYYYY').format('iDD/iMM/iYYYY')},
             type: 'Text',
             gridSize: '6',
             sectionName: Sections.Location,

@@ -3,7 +3,7 @@ import { getCurrentUser } from 'src/utils/UserLocalStorage';
 import { APIRequest } from 'src/api/APIRequest';
 import { calculation } from '../../final-license/services/finalLicenseAPI';
 
-export const centerLocationTransferAPIFunc = async (values) => {
+export const centerLocationTransferAPIFunc = async (values, editForm, taskID) => {
 	console.log('#==> valuesvaluesvalues ' + JSON.stringify(values))
 
 
@@ -25,7 +25,7 @@ export const centerLocationTransferAPIFunc = async (values) => {
 		center: {
 			licenceNumber: values.centerLicenceNumber,
 			centerInfo_r: {
-				financialGuarantee : financialGuarantee,
+				financialGuarantee: financialGuarantee,
 				ID: values.centerInfo_r,
 				buildingArea: values.buildingArea,
 				basementArea: values.basementArea,
@@ -52,7 +52,10 @@ export const centerLocationTransferAPIFunc = async (values) => {
 			}
 		}
 	}
-
+	if (editForm) {
+		requestBody.serviceStatus = 2
+		requestBody.externalUserTaskID = taskID
+	}
 	let url = "taheel-apis-services-initiate-center-location-change-request";
 
 	console.log('#==> requestBody ' + JSON.stringify(requestBody))
