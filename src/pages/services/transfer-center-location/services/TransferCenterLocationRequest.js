@@ -77,15 +77,15 @@ const TransferCenterLocationRequest = () => {
                 if (!!date) {
                     let returned = getDateFromObject(date, 'iDDiMMiYYYY', 'iDD');
                     if (!isNaN(returned)) {
-                        expDate.day = returned
+                        expDate.day = Number.parseInt(returned)
                     }
                     returned = getDateFromObject(date, 'iDDiMMiYYYY', 'iMM');
                     if (!isNaN(returned)) {
-                        expDate.month = returned
+                        expDate.month = Number.parseInt(returned)
                     }
                     returned = getDateFromObject(date, 'iDDiMMiYYYY', 'iYYYY');
                     if (!isNaN(returned)) {
-                        expDate.year = returned
+                        expDate.year = Number.parseInt(returned)
                     }
                 }
                 setExpDate(expDate)
