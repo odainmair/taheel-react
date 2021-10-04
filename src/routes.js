@@ -28,13 +28,15 @@ import CommissionersManagement from './pages/CentersManagement/components/Commis
 import DownloadDoc from './pages/UserAuthentication/Login/components/DownloadDoc';
 import Orders from './pages/Orders';
 import { LICENSE_FORM_TYPES, REQUEST_STATUS } from 'src/utils/enums'
+import TransferCenterLocationRequest from 'src/pages/services/transfer-center-location/services/TransferCenterLocationRequest';
+import TransferCenterLocationSummary from 'src/pages/services/transfer-center-location/services/TransferCenterLocationSummary';
 
 const routes = (isLoggedIn) => [
   {
     path: '/',
     element: <MainLayout />,
     children: [
-      { path: 'login', element: isLoggedIn === "" ? <Login /> : <Navigate to="/app/dashboard" />},
+      { path: 'login', element: isLoggedIn === "" ? <Login /> : <Navigate to="/app/dashboard" /> },
       { path: 'otplogin', element: <OTPLogin /> },
       { path: 'downloadDoc', element: <DownloadDoc /> },
       { path: 'Home', element: <Home /> },
@@ -81,6 +83,9 @@ const routes = (isLoggedIn) => [
       { path: 'updatefinallicenserenewal', element: <CreatefinalLicense /> },
       { path: 'editfinallicense', element: <CreatefinalLicense /> },
       { path: 'finallicenserenewal', element: <CreateFinalLicenseRenewal /> },
+      { path: 'transfercenter', element: <TransferCenterLocationRequest /> },
+      { path: 'transfercentersummary', element: <TransferCenterLocationSummary /> },
+
       { path: '*', element: <Navigate to="/404" /> }
     ]
   }

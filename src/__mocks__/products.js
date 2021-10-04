@@ -29,9 +29,9 @@ export default [
     id: uuid(),
     description: 'تتيح هذه الخدمة للمركز تقييم جاهزيته',
     media: '/static/images/products/checklist.png',
-    title: 'التقيم الذاتي - تقييم الجاهزية',
-    url: '/services/survey',
-    isActive: false
+    title: 'نقل مقر مركز أهلي',
+    url: '/services/transfercenter',
+    isActive: true
   },
   {
     id: uuid(),
