@@ -9,8 +9,14 @@ import { TextField as TextFieldFinal, Select } from 'final-form-material-ui';
 import { OnChange } from 'react-final-form-listeners';
 import CenterSummary from './CenterSummary';
 import { CardContent, CircularProgress } from '@mui/material';
+import { useEffect } from 'react';
 
-const FinalLicenseData = ({ setField, renewableLicenses, values, setCenterLicenceNumber, getCentertDetails, showSummary, setShowSummary, isLoading }) => {
+const FinalLicenseData = ({ setField, renewableLicenses, values, setCenterLicenceNumber, getCentertDetails, showSummary, setShowSummary, isLoading,setIsEnableNextBtn }) => {
+  
+  useEffect(() => {
+    setIsEnableNextBtn(false);
+
+}, []);
   console.log("======>values from final: " + JSON.stringify(values))
   console.log("======>valuesrenewableLicenses: " + JSON.stringify(renewableLicenses))
 
@@ -52,6 +58,7 @@ const FinalLicenseData = ({ setField, renewableLicenses, values, setCenterLicenc
                   console.log(`centerLicenceNumber + ${value}`);
                   if (value != 1) {
                     await getCentertDetails(value);
+                    setIsEnableNextBtn(true)
 
                   }
                   else {

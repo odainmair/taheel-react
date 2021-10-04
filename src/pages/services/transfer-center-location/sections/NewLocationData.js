@@ -17,20 +17,17 @@ import { calculation } from '../../final-license/services/finalLicenseAPI';
 import Attachements from './Attachements';
 import numeral from 'numeral';
 import { checkIsNumber } from 'src/utils/inputValidator';
+import Calendar from 'src/components/calendar'
 
 const NewLocationData = ({ setField, values, setIsEnableNextBtn }) => {
     const [calculatedData, setCalculatedData] = useState(false);
     const [errMessage, SetErrMessage] = useState('');
     const [loading, setLoading] = useState(false);
-    // const [isEnableNextBtn, setIsEnableNextBtn] = useState(false);
 
     useEffect(() => {
-        if (values.capacity) {
-            setIsEnableNextBtn(false);
-            setCalculatedData(true);
-        } else {
-            setIsEnableNextBtn(false);
-        }
+
+        setIsEnableNextBtn(false);
+
     }, []);
 
     const calculate = async () => {
@@ -71,6 +68,8 @@ const NewLocationData = ({ setField, values, setIsEnableNextBtn }) => {
             setIsEnableNextBtn(false);
             return
         }
+        setIsEnableNextBtn(true);
+
     }
 
     const handleOnChange = (val, nextVal) => {
@@ -81,136 +80,151 @@ const NewLocationData = ({ setField, values, setIsEnableNextBtn }) => {
             <Typography
                 color="textPrimary"
                 gutterBottom
-                mb={4}
+                // mb={4}
                 mt={6}
                 variant="h4"
             >
                 بيانات الموقع الجديد
             </Typography>
+
             <Grid
+                container
+            >    <Grid
                 container
                 spacing={3}
                 mt={3}
             >
-                <Grid
-                    item
-                    md={12}
-                    xs={12}
-                >
-                    {errMessage && (
-                        <Alert variant="outlined" severity="error">
-                            {errMessage}
-                        </Alert>
-                    )}
-                </Grid>
-                <Grid
-                    item
-                    md={6}
-                    xs={12}
-                    className="custom-label-field"
-                >
-                    <Field
-                        fullWidth
-                        required
-                        label=" مساحة القبو ( للمبنى الجديد)"
-                        name="basementArea"
-                        component={TextFieldFinal}
-                        type="number"
-                        variant="outlined"
-                        dir="rtl"
-                        className="custom-field"
-                    />
-                    <OnChange name="basementArea">
-                        {(value, previous) => {
-                            handleOnChange(value, previous);
-                        }}
-                    </OnChange>
-                </Grid>
-
-                <Grid
-                    item
-                    md={6}
-                    xs={12}
-                    className="custom-label-field"
-                >
-                    <Field
-                        fullWidth
-                        required
-                        label="مساحة سطح البناء ( للمبنى الجديد)"
-                        name="buildingArea"
-                        component={TextFieldFinal}
-                        type="number"
-                        variant="outlined"
-                        dir="rtl"
-                        className="custom-field"
-                    />
-                    <OnChange name="buildingArea">
-                        {(value, previous) => {
-                            handleOnChange(value, previous);
-                        }}
-                    </OnChange>
-                </Grid>
-                <Grid
-                    item
-                    md={6}
-                    xs={12}
-                >
-                    <Button
-                        startIcon={loading ? <CircularProgress size="1rem" /> : null}
-                        variant='outlined'
-                        type="button"
-                        sx={{
-                            height: 55,
-                            backgroundColor: '#3c8084',
-                            width: '100%',
-                            color: 'white',
-                        }}
-                        onClick={calculate}
+                    <Grid
+                        item
+                        md={12}
+                        xs={12}
                     >
-                        احتساب الطاقة الاستيعابية
-                    </Button>
-                </Grid>
-                <Grid
-                    item
-                    md={6}
-                    xs={12}
-                >
-                    <Field
-                        fullWidth
-                        label=" الطاقه الاستيعابيه ( للمبنى الجديد) "
-                        required
-                        name="capacity"
-                        component={TextFieldFinal}
-                        type="number"
-                        variant="outlined"
-                        dir="rtl"
-                        className="custom-field"
-                    />
-                    <OnChange name="capacity">
-                        {(value, previous) => {
-                            handleOnChange(value, previous);
-                        }}
-                    </OnChange>
+                        {errMessage && (
+                            <Alert variant="outlined" severity="error">
+                                {errMessage}
+                            </Alert>
+                        )}
+                    </Grid>
+                    <Grid
+                        item
+                        md={6}
+                        xs={12}
+                        className="custom-label-field"
+                    >
+                        <Field
+                            fullWidth
+                            required
+                            label=" مساحة القبو ( للمبنى الجديد)"
+                            name="basementArea"
+                            component={TextFieldFinal}
+                            type="number"
+                            variant="outlined"
+                            dir="rtl"
+                            className="custom-field"
+                        />
+                        <OnChange name="basementArea">
+                            {(value, previous) => {
+                                handleOnChange(value, previous);
+                            }}
+                        </OnChange>
+                    </Grid>
+
+                    <Grid
+                        item
+                        md={6}
+                        xs={12}
+                        className="custom-label-field"
+                    >
+                        <Field
+                            fullWidth
+                            required
+                            label="مساحة سطح البناء ( للمبنى الجديد)"
+                            name="buildingArea"
+                            component={TextFieldFinal}
+                            type="number"
+                            variant="outlined"
+                            dir="rtl"
+                            className="custom-field"
+                        />
+                        <OnChange name="buildingArea">
+                            {(value, previous) => {
+                                handleOnChange(value, previous);
+                            }}
+                        </OnChange>
+                    </Grid>
+                    <Grid
+                        item
+                        md={6}
+                        xs={12}
+                    >
+                        <Button
+                            startIcon={loading ? <CircularProgress size="1rem" /> : null}
+                            variant='outlined'
+                            type="button"
+                            sx={{
+                                height: 55,
+                                backgroundColor: '#3c8084',
+                                width: '100%',
+                                color: 'white',
+                            }}
+                            onClick={calculate}
+                        >
+                            احتساب الطاقة الاستيعابية
+                        </Button>
+                    </Grid>
+                    <Grid
+                        item
+                        md={6}
+                        xs={12}
+                    >
+                        <Field
+                            fullWidth
+                            label=" الطاقه الاستيعابيه ( للمبنى الجديد) "
+                            required
+                            name="capacity"
+                            component={TextFieldFinal}
+                            type="number"
+                            variant="outlined"
+                            dir="rtl"
+                            className="custom-field"
+                            disabled='true'
+                        />
+                        <OnChange name="capacity">
+                            {(value, previous) => {
+                                handleOnChange(value, previous);
+                            }}
+                        </OnChange>
+                    </Grid>
                 </Grid>
                 <Divider />
                 <Typography
                     color="textPrimary"
                     gutterBottom
-                    mb={4}
+                    // mb={4}
                     mt={6}
                     variant="h4"
                 >
                     المرفقات
                 </Typography>
+                <Attachements
+                    values={values}
+                    setField={(fieldName, fieldValue) => setField(fieldName, fieldValue)}
+                    setIsEnableNextBtn={setIsEnableNextBtn}
+                />
+                <Divider />
                 <Grid
                     container
-                    spacing={10}
-                    mb={3}
+                    spacing={3}
+                    mt={2}
                 >
-                    <Attachements
-                        values={values}
-                        setField={(fieldName, fieldValue) => setField(fieldName, fieldValue)}
-                    />
+                    <Grid
+                        item
+                        md={12}
+                        xs={12}
+                    >
+                        <Typography> تاريخ الانتهاء</Typography>
+                    </Grid>
+                    < Calendar FeiledWidth={4} fieldName={null} />
                 </Grid>
             </Grid>
         </>

@@ -28,7 +28,8 @@ import CommissionersManagement from './pages/CentersManagement/components/Commis
 import DownloadDoc from './pages/UserAuthentication/Login/components/DownloadDoc';
 import Orders from './pages/Orders';
 import { LICENSE_FORM_TYPES, REQUEST_STATUS } from 'src/utils/enums'
-import TransferCenterLocationRequest from './pages/services/transfer-center-location/services/TransferCenterLocationRequest';
+import TransferCenterLocationRequest from 'src/pages/services/transfer-center-location/services/TransferCenterLocationRequest';
+import TransferCenterLocationSummary from 'src/pages/services/transfer-center-location/services/TransferCenterLocationSummary';
 
 const routes = (isLoggedIn) => [
   {
@@ -83,6 +84,7 @@ const routes = (isLoggedIn) => [
       { path: 'editfinallicense', element: <CreatefinalLicense /> },
       { path: 'finallicenserenewal', element: <CreateFinalLicenseRenewal /> },
       { path: 'transfercenter', element: <TransferCenterLocationRequest /> },
+      { path: 'transfercentersummary', element: <TransferCenterLocationSummary /> },
 
       { path: '*', element: <Navigate to="/404" /> }
     ]

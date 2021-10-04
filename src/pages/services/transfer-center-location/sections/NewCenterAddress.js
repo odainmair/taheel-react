@@ -1,5 +1,5 @@
-/* eslint-disable no-unused-vars */
-import React, { useState, useRef } from 'react';
+/* eslint-disable */
+import React, { useState, useRef, useEffect } from 'react';
 import { Grid, Typography } from '@material-ui/core';
 import { Field } from 'react-final-form';
 import PropTypes from 'prop-types';
@@ -37,175 +37,191 @@ const sampleData = {
   ],
 };
 
-const NewCenterAddress = ({ Condition, setField }) => {
-    const inputEl = useRef(null);
-    const [streetAddr, setStreetAddr] = useState(sampleData.vendorStreetAddress);
-    const getStreetAddrPartsFromGeoResult = (geoResult) => {
-      console.log('odai');
-      const addressArray = geoResult.address_components;
-      const currentAddress = {
-        area:
-          (addressArray.find((x) => x.types.some((t) => ['sublocality_level_1', 'locality'].includes(t))) || {}).long_name
-          || '',
-        country: (addressArray.find((x) => x.types[0] === 'country') || {}).long_name || '',
-        street: (addressArray.find((x) => x.types[0] === 'route') || {}).long_name || '',
-        streetNumber: (addressArray.find((x) => x.types[0] === 'street_number') || {}).long_name || '',
-        postalCode: (addressArray.find((x) => x.types[0] === 'postal_code') || {}).long_name || '',
-        postalCodeSuffix: (addressArray.find((x) => x.types[0] === 'postal_code_suffix') || {}).long_name || '',
-        city: (addressArray.find((x) => x.types[0] === 'administrative_area_level_2') || {}).long_name || '',
-        state: (addressArray.find((x) => x.types[0] === 'administrative_area_level_1') || {}).long_name || '',
-        address: geoResult.formatted_address,
-        lat: geoResult.geometry.location.lat,
-        lng: geoResult.geometry.location.lng,
-      };
-      setStreetAddr(currentAddress);
-      setField('sub', currentAddress.area);
-      setField('city', currentAddress.city);
-      setField('street', currentAddress.street);
-      setField('buildNo', currentAddress.streetNumber);
-      setField('postalCode', `${currentAddress.postalCode}-${currentAddress.postalCodeSuffix}`);
-      setField('lat', currentAddress.lat);
-      setField('lng', currentAddress.lng);
-  
-      console.log(inputEl.current);
-      return currentAddress;
+const NewCenterAddress = ({ Condition, setField, setIsEnableNextBtn }) => {
+
+  const inputEl = useRef(null);
+  const [streetAddr, setStreetAddr] = useState(sampleData.vendorStreetAddress);
+
+  useEffect(() => {
+    console.log('kkkkk+++++++++++++++++++++++++');
+
+    setIsEnableNextBtn(false);
+  }, []);
+
+  const getStreetAddrPartsFromGeoResult = (geoResult) => {
+
+    console.log('geoResultgeoResultgeoResultgeoResult',geoResult);
+    const addressArray = geoResult.address_components;
+
+    const currentAddress = {
+      area:
+        (addressArray.find((x) => x.types.some((t) => ['sublocality_level_1', 'locality'].includes(t))) || {}).long_name
+        || '',
+      country: (addressArray.find((x) => x.types[0] === 'country') || {}).long_name || '',
+      street: (addressArray.find((x) => x.types[0] === 'route') || {}).long_name || '',
+      streetNumber: (addressArray.find((x) => x.types[0] === 'street_number') || {}).long_name || '',
+      postalCode: (addressArray.find((x) => x.types[0] === 'postal_code') || {}).long_name || '',
+      postalCodeSuffix: (addressArray.find((x) => x.types[0] === 'postal_code_suffix') || {}).long_name || '',
+      city: (addressArray.find((x) => x.types[0] === 'administrative_area_level_2') || {}).long_name || '',
+      state: (addressArray.find((x) => x.types[0] === 'administrative_area_level_1') || {}).long_name || '',
+      address: geoResult.formatted_address,
+      lat: geoResult.geometry.location.lat,
+      lng: geoResult.geometry.location.lng,
+      // additionalNo: (addressArray.find((x) => x.types[0] === 'postal_code') || {}).long_name || '',
     };
-    const setFieldValue = (streetAddress) => {
-      console.log('odai');
-      console.log(JSON.stringify(streetAddress));
-      console.log('odai');
-    };
-    return (
-      <>
+
+    setStreetAddr(currentAddress);
+    setField('sub', currentAddress.area);
+    setField('city', currentAddress.city);
+    setField('street', currentAddress.street);
+    setField('buildNo', currentAddress.streetNumber);
+    setField('postalCode', `${currentAddress.postalCode}-${currentAddress.postalCodeSuffix}`);
+    setField('lat', currentAddress.lat);
+    setField('lng', currentAddress.lng);
+    // setField('additionalNo', currentAddress.postalCode);
+    setIsEnableNextBtn(true)
+
+    console.log(inputEl.current);
+    return currentAddress;
+  };
+  const setFieldValue = (streetAddress) => {
+    console.log('odai');
+    console.log(JSON.stringify(streetAddress));
+    console.log('odai');
+  };
+  return (
+    <>
+      <Grid
+        container
+        spacing={3}
+        mt={3}
+      >
+
         <Grid
-          container
-          spacing={3}
-          mt={3}
+          item
+          md={12}
+          xs={12}
         >
-  
-          <Grid
-            item
-            md={12}
-            xs={12}
-          >
-            <Typography gutterBottom variant="body2" color="textSecondary" component="p">
-              الرجاء تحديد موقع المركز الجديد على الخريطة
-            </Typography>
-            <WithGoogleApi apiKey="AIzaSyC43U2-wqXxYEk1RBrTLdkYt3aDoOxO4Fw">
-              <GmapsAddress value={streetAddr} onChange={setFieldValue} getStreetAddrPartsFromGeoResultMine={getStreetAddrPartsFromGeoResult} />
-            </WithGoogleApi>
-          </Grid>
-          <Grid
-            item
-            md={6}
-            xs={12}
-          >
-            <Field
-              fullWidth
-              required
-              label="المدينة"
-              name="city"
-              component={TextFieldFinal}
-              type="text"
-              variant="outlined"
-              dir="rtl"
-              className="custom-field"
-            />
-          </Grid>
-          <Grid
-            item
-            md={6}
-            xs={12}
-          >
-            <Field
-              fullWidth
-              required
-              label="الحي"
-              name="sub"
-              component={TextFieldFinal}
-              type="text"
-              variant="outlined"
-              dir="rtl"
-              className="custom-field"
-            />
-  
-          </Grid>
-          <Grid
-            item
-            md={6}
-            xs={12}
-          >
-            <Field
-              fullWidth
-              required
-              label="الشارع"
-              name="street"
-              component={TextFieldFinal}
-              type="text"
-              variant="outlined"
-              dir="rtl"
-              className="custom-field"
-            />
-          </Grid>
-          <Grid
-            item
-            md={6}
-            xs={12}
-          >
-            <Field
-              fullWidth
-              required
-              label="رقم المبنى"
-              name="buildNo"
-              component={TextFieldFinal}
-              type="text"
-              variant="outlined"
-              dir="rtl"
-              className="custom-field"
-            />
-          </Grid>
-          <Grid
-            item
-            md={6}
-            xs={12}
-          >
-            <Field
-              fullWidth
-              required
-              label="الرمز البريدي"
-              name="postalCode"
-              component={TextFieldFinal}
-              type="text"
-              variant="outlined"
-              dir="rtl"
-              className="custom-field"
-            />
-          </Grid>
-          <Grid
-            item
-            md={6}
-            xs={12}
-          >
-            <Field
-              fullWidth
-              required
-              label="الرقم الاضافي"
-              name="additionalNum"
-              component={TextFieldFinal}
-              type="text"
-              variant="outlined"
-              dir="rtl"
-              className="custom-field"
-            />
-          </Grid>
+          <Typography gutterBottom variant="body2" color="textSecondary" component="p">
+            الرجاء تحديد موقع المركز الجديد على الخريطة
+          </Typography>
+          <WithGoogleApi apiKey="AIzaSyC43U2-wqXxYEk1RBrTLdkYt3aDoOxO4Fw">
+            <GmapsAddress value={streetAddr} 
+            onChange={setFieldValue}
+              getStreetAddrPartsFromGeoResultMine={getStreetAddrPartsFromGeoResult}
+               />
+          </WithGoogleApi>
         </Grid>
-      </>
-    );
-  };
-  export default NewCenterAddress;
-  
-  NewCenterAddress.propTypes = {
-    Condition: PropTypes.func.isRequired,
-    setField: PropTypes.func
-  };
-  
+        <Grid
+          item
+          md={6}
+          xs={12}
+        >
+          <Field
+            fullWidth
+            required
+            label="المدينة"
+            name="city"
+            component={TextFieldFinal}
+            type="text"
+            variant="outlined"
+            dir="rtl"
+            className="custom-field"
+          />
+        </Grid>
+        <Grid
+          item
+          md={6}
+          xs={12}
+        >
+          <Field
+            fullWidth
+            required
+            label="الحي"
+            name="sub"
+            component={TextFieldFinal}
+            type="text"
+            variant="outlined"
+            dir="rtl"
+            className="custom-field"
+          />
+
+        </Grid>
+        <Grid
+          item
+          md={6}
+          xs={12}
+        >
+          <Field
+            fullWidth
+            required
+            label="الشارع"
+            name="street"
+            component={TextFieldFinal}
+            type="text"
+            variant="outlined"
+            dir="rtl"
+            className="custom-field"
+          />
+        </Grid>
+        <Grid
+          item
+          md={6}
+          xs={12}
+        >
+          <Field
+            fullWidth
+            required
+            label="رقم المبنى"
+            name="buildNo"
+            component={TextFieldFinal}
+            type="text"
+            variant="outlined"
+            dir="rtl"
+            className="custom-field"
+          />
+        </Grid>
+        <Grid
+          item
+          md={6}
+          xs={12}
+        >
+          <Field
+            fullWidth
+            required
+            label="الرمز البريدي"
+            name="postalCode"
+            component={TextFieldFinal}
+            type="text"
+            variant="outlined"
+            dir="rtl"
+            className="custom-field"
+          />
+        </Grid>
+        <Grid
+          item
+          md={6}
+          xs={12}
+        >
+          <Field
+            fullWidth
+            required
+            label="الرقم الاضافي"
+            name="additionalNo"
+            component={TextFieldFinal}
+            type="text"
+            variant="outlined"
+            dir="rtl"
+            className="custom-field"
+          />
+        </Grid>
+      </Grid>
+    </>
+  );
+};
+export default NewCenterAddress;
+
+NewCenterAddress.propTypes = {
+  Condition: PropTypes.func.isRequired,
+  setField: PropTypes.func
+};

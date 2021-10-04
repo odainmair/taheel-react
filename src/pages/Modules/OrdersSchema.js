@@ -70,28 +70,33 @@ const getChipComponentsForStatus = (data) => {
     );
 };
 
-const getRequestValues = (navigate,taskType, data) => {
+const getRequestValues = (navigate, taskType, data) => {
     console.log(`LatestDraft :: getDraftValues :: taskType: ${taskType}`)
     let navigatinURL = '', draftFormType = ''
-    if (taskType.trim() === 'إنشاء رخصة نهائية') {
-        navigatinURL = '/services/finallicense'
-        draftFormType = LICENSE_FORM_TYPES.NEW
-        //return { navigatinURL: '/services/finallicense', draftFormType: LICENSE_FORM_TYPES.NEW }
-    }
-    else if (taskType.trim() === 'تجديد رخصة') {
-        navigatinURL = '/services/finallicense'
-        draftFormType = LICENSE_FORM_TYPES.RENEW
-        //return { navigatinURL: '/services/updatefinallicenserenewal', draftFormType: LICENSE_FORM_TYPES.RENEW }
+    if (data.type === REQUEST_STATUS.DRAFT) {
+        if (taskType.trim() === 'إنشاء رخصة نهائية') {
+            navigatinURL = '/services/finallicense'
+            draftFormType = LICENSE_FORM_TYPES.NEW
+            //return { navigatinURL: '/services/finallicense', draftFormType: LICENSE_FORM_TYPES.NEW }
+        }
+        else if (taskType.trim() === 'تجديد رخصة') {
+            navigatinURL = '/services/finallicense'
+            draftFormType = LICENSE_FORM_TYPES.RENEW
+            //return { navigatinURL: '/services/updatefinallicenserenewal', draftFormType: LICENSE_FORM_TYPES.RENEW }
+        } else {
+            navigatinURL = '/services/finallicense'
+            draftFormType = LICENSE_FORM_TYPES.NEW
+            //return { navigatinURL: '/services/finallicense', draftFormType: LICENSE_FORM_TYPES.NEW }
+        }
     } else {
-        navigatinURL = '/services/finallicense'
+        navigatinURL = '/services/transfercentersummary'
         draftFormType = LICENSE_FORM_TYPES.NEW
-        //return { navigatinURL: '/services/finallicense', draftFormType: LICENSE_FORM_TYPES.NEW }
     }
 
     navigate(navigatinURL, {
         state: {
-            centerLicenceNumber: data.centerLicenceNumber,
-            taskID: data.ID,
+            licenceNumber: data.centerLicenceNumber[0],
+            taskID: data.id,
             requestNum: data.requestNum,
             formType: draftFormType,
             fromDraft: true
@@ -99,72 +104,76 @@ const getRequestValues = (navigate,taskType, data) => {
     })
 }
 
-export default (navigate)=> {return {
-    schema: [
-        {
-            id: uuid(),
-            label: {
-                ar: 'رقم الطلب',
-                en: 'Orders Number'
+export default ({ navigate, taskRequests }) => {
+    return {
+        schema: [
+            {
+                id: uuid(),
+                label: {
+                    ar: 'رقم الطلب',
+                    en: 'Orders Number'
+                },
+                name: 'requestNum',
+                attrFunc: (data) => {
+                    const req = taskRequests.filter(d => d.requestNum === data.requestNum)[0];
+                    if (data.status === REQUEST_STATUS.DRAFT || !!req) {
+                        data = { ...data, id: req?.ID }
+                        return (
+                            <>
+                                {data.requestNum}
+                                <IconButton
+                                    color="primary"
+                                    component="span"
+                                    onClick={() => {
+                                        console.log(`LatestDraft :: navigate to: ${data.type}, taskID: ${req?.ID}, requestNum: ${data.requestNum}`);
+                                        getRequestValues(navigate, data.type, data);
+                                    }}
+                                >
+                                    <VisibilityIcon />
+                                </IconButton>
+                            </>)
+                    }
+                    else {
+                        return data.requestNum
+                    }
+                },
+                type: 'Text',
             },
-            name: 'requestNum',
-            attrFunc: (data) => {
-                if (data.status === REQUEST_STATUS.DRAFT) {
-                    return (
-                        <>
-                            {data.requestNum}
-                            <IconButton
-                                color="primary"
-                                component="span"
-                                onClick={() => {
-                                    console.log(`LatestDraft :: navigate to: ${data.type}, taskID: ${data.ID}, requestNum: ${data.requestNum}`);
-                                    getRequestValues(navigate,data.type, data);
-                                }}
-                            >
-                                <VisibilityIcon />
-                            </IconButton>
-                        </>)
-                }
-                else {
-                    return data.requestNum
-                }
+            {
+                id: uuid(),
+                label: {
+                    ar: 'اسم المركز',
+                    en: 'Center Name'
+                },
+                name: 'centerName',
+                type: 'Text',
             },
-            type: 'Text',
-        },
-        {
-            id: uuid(),
-            label: {
-                ar: 'اسم المركز',
-                en: 'Center Name'
+            {
+                id: uuid(),
+                label: {
+                    ar: 'نوع الطلب',
+                    en: 'Request Type'
+                },
+                name: 'type',
+                type: 'Text',
             },
-            name: 'centerName',
-            type: 'Text',
-        },
-        {
-            id: uuid(),
-            label: {
-                ar: 'نوع الطلب',
-                en: 'Request Type'
+            {
+                id: uuid(),
+                label: {
+                    ar: 'تاريخ الطلب',
+                    en: 'Order request date'
+                },
+                name: 'requestDate',
+                type: 'Text',
             },
-            name: 'type',
-            type: 'Text',
-        },
-        {
-            id: uuid(),
-            label: {
-                ar: 'تاريخ الطلب',
-                en: 'Order request date'
-            },
-            name: 'requestDate',
-            type: 'Text',
-        },
-        {
-            id: uuid(),
-            label: {
-                ar: 'حالة الطلب',
-                en: 'Order status'
-            },
-            attrFunc: getChipComponentsForStatus,
-            type: 'Text'
-        }],
-}}
+            {
+                id: uuid(),
+                label: {
+                    ar: 'حالة الطلب',
+                    en: 'Order status'
+                },
+                attrFunc: getChipComponentsForStatus,
+                type: 'Text'
+            }],
+    }
+}

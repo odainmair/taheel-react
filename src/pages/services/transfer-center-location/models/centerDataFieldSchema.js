@@ -47,7 +47,7 @@ export default
         ar: 'الطاقة الاستعابية',
         en: 'capacity'
       },
-      name: 'capacity',
+      name: 'newCapacity',
       type: 'Text',
       gridSize: '6',
       sectionName: 'CenterDetails',

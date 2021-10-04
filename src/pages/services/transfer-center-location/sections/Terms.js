@@ -1,12 +1,8 @@
-
-
-
 /* eslint-disable */
-import React, { useState, useRef } from 'react';
+import React from 'react';
 import {
     Grid,
     FormControl,
-    Typography,
     FormControlLabel,
 } from '@material-ui/core';
 import { TextField as TextFieldFinal, Checkbox } from 'final-form-material-ui';
@@ -25,18 +21,13 @@ const Terms = ({ setField, values }) => {
                 xs={12}
                 mt={3}
             >
-
-
-
                 <div className="section-1 font-45Light">
                     <p className="section-headline">يجب أن يقر المالك على توفر الشروط التالية في المبنى المقرر الستخراج الترخيص المؤقت :</p>
                     <ul className="unordered-list">
                         <li className="unordered-list-item"> تعهد من المالك أن تكون األرض المخصصة للمركز على شارعين احدهما تجاري ال يقل عن عرض 15 متر
-
                         </li>
                         <li className="unordered-list-item"> تعهد من المالك أن يكون المركز مستقل و بمداخل خارجية مستقلة و في موقع مناسب للنشاط من حيث الهدوء و
                             سهولة الوصول اليه
-
                         </li>
                         <li className="unordered-list-item">
                             تعهد من المالك أال يكون المركز قريبا من مناطق صناعيه والتقل المسافة بين الموقع واقرب محطة وقود قائمة عن
@@ -58,9 +49,6 @@ const Terms = ({ setField, values }) => {
                                 على مزاولة النشاط و يجدد سنويا</li>
 
                             <li className="ordered-list-item">  توفير تقرير من مكتب هندسي معتمد و مرخص من هيئة المهندسين يثبت :
-
-
-
                                 <ul className="unordered-list">
                                     <li className="unordered-list-item">  أن تكون جميع مرافق المبنى سليمه انشائيا و كهربائيا و ممتازه من حيث التشطيب و خالية من
                                         العيوب الفنية و أن تراعى فيها ظروف األشخاص ذوي اإلعاقة بخدماتها و متطلبات الفئة
@@ -93,7 +81,6 @@ const Terms = ({ setField, values }) => {
                                         مسطح البناء( مع وجود مدخل مستقل من الشارع للمرفق الصحي؛ يمكن للمركز االستغناء عن
                                         ترخيص وزارة الصحة في حال توقيع عقد شراكة مع منشأه مرخصة من وزارة الصحة لتقديم
                                         الخدمات الصحية مع ضرورة االلتزام باشتراطات وزارة الصحة المتعلقة بالمرفق الصحي . </li>
-
                                     <li className="unordered-list-item">  وجود مواقف مخصصة للكوادر و المراجعين بحيث يتوفر مواقف مخصصة لذوي اإلعاقة واحد
                                         لكل 20 حالة </li>
                                     <li className="unordered-list-item">  </li>
@@ -103,20 +90,14 @@ const Terms = ({ setField, values }) => {
                             <li className="ordered-list-item"> وجود كاميرات مراقبة شاملة لجميع المرافق و الممرات و الساحات لمراقبة سالمة المستفيد مع أهمية
                                 االحتفاظ بالتسجيالت لمدة مئة و ثمانين يوما على األقل و أن تكون سجالت المراقبة لألقسام النسائية لدى
                                 القسم النسائي  </li>
-
                             <li className="ordered-list-item">  وجود نظام الكتروني داخلي في المركز لتسجيل المستفيدين و حفظ ملفاتهم و لمتابعة الخطط التأهيلية و
                                 تطور الحالة  </li>
-
                             <li className="ordered-list-item"> توقيع المالك على تعهد بعدم استقبال المستفيدين و تأهيلهم اال بعد الحصول على الترخيص النهائي  </li>
-
                             <li className="ordered-list-item">  الحصول على الترخيص المؤقت ال يعني تأكيد حصول على الترخيص النهائي، حيث أن الترخيص النهائي
                                 مرتبط بتوفر كافة اشتراطات البنية التحتية </li>
-
                             <li className="ordered-list-item">  أن مدة الترخيص المؤقت سنة واحدة فقط و تلغى تلقائيا بعد انتهاء الفترة و ال تملك الوزارة صالحية
                                 االستثناء للتمديد و يمكن للمالك إعادة التقديم على الترخيص الؤقت والبدأ من جديد </li>
-
                             <li className="ordered-list-item">حصولك على الترخيص المؤقت او النهائي ال يضمن حصولك على دعم الدولة للرسوم    </li>
-
                             <li className="ordered-list-item"> في حال الرغبة الحصول على الدعم فيجب التقديم على برنامج دعم الدولة للرسوم بشكل مستقل بعد استيفاء
                                 الشروط الخاصة بها  </li>
                         </ol>
@@ -133,10 +114,10 @@ const Terms = ({ setField, values }) => {
                                         name="agree"
                                         component={Checkbox}
                                         type="checkbox"
-                                        // value={!!values.agree[0]}
+                                        value={!!values.agree[0]}
                                         checked={false}
                                         onClick={() => {
-                                            // setField("agree", values.agree ? [] : [true]);
+                                            setField("agree", values.agree ? [] : [true]);
                                             setIsAgree(!isAgree)
                                         }}
                                     />

@@ -1,101 +1,114 @@
-/* eslint-disable no-unused-vars */
+/* eslint-disable  */
 import {
-    Grid,
-  } from '@material-ui/core';
-  import { Field } from 'react-final-form';
-  import PropTypes from 'prop-types';
+  Grid,
+} from '@material-ui/core';
+import { Field } from 'react-final-form';
+import PropTypes from 'prop-types';
 import FileUploaderComp from '../../final-license/components/FileUploader';
-  
-  const Attachements = ({ setField, values }) => {
-    var multipleFileDocs = []
-    const setDocument = (name, docID, multipleFile) => {
-      if (!multipleFile)
-        setField(name, [docID])
-      else {
-        multipleFileDocs.push(docID)
-        setField(name, multipleFileDocs)
-      }
+import { useEffect, useState } from 'react';
+
+const Attachements = ({ setField, values, setIsEnableNextBtn }) => {
+  var multipleFileDocs = []
+  const [errMessage, SetErrMessage] = useState('');
+
+  useEffect(()=>{
+    if (!values.Furniture) {
+      SetErrMessage('يرجى ادخال مرفق الأثاث للمبنى الجديد');
+      console.log('Furniture not found');
+      setIsEnableNextBtn(false);
+      return;
+  }}, []);
+  const setDocument = (name, docID, multipleFile) => {
+    if (!multipleFile)
+      setField(name, [docID])
+    else {
+      multipleFileDocs.push(docID)
+      setField(name, multipleFileDocs)
+
     }
-    return (
-      <>
+   
+  }
+  return (
+    <>
+      <Grid
+        container
+        spacing={3}
+        mt={3}
+      >
         <Grid
-          container
-          spacing={3}
-          mt={3}
+          item
+          md={12}
+          xs={12}
         >
-          <Grid
-            item
-            md={12}
-            xs={12}
-          >
-          </Grid>
-          <Grid
-            item
-            md={5}
-            xs={12}
-          >
-            <Field
-              label= "ارفاق صور الأثاث و الأجهزة الكهربائية (للمبنى الجديد)"
-              name="Furniture"
-              component={FileUploaderComp}
-              multipleFile={false}
-              setField={setField}
-              setDocument={setDocument}
-              values={values}
-            />
-          </Grid>
-          <Grid
-            item
-            md={5}
-            xs={12}
-          >
-            <Field
-              label="رخصة البلدية (للمبنى الجديد)"
-              name="municipLicense"
-              component={FileUploaderComp}
-              multipleFile={false}
-              setField={setField}
-              setDocument={setDocument}
-              values={values}
-            />
-          </Grid>
-          <Grid
-            item
-            md={5}
-            xs={12}
-          >
-            <Field
-              label= "(للمبنى الجديد) تقرير مكتب هندسي معتمد"
-              name="OfficeReport"
-              component={FileUploaderComp}
-              multipleFile={false}
-              setField={setField}
-              setDocument={setDocument}
-              values={values}
-            />
-          </Grid>
-          <Grid
-            item
-            md={5}
-            xs={12}
-          >
-            <Field
-              label="رخصة دفاع المدني (للمبنى الجديد)"
-              name="CivilDefenseLicense"
-              component={FileUploaderComp}
-              multipleFile={false}
-              setField={setField}
-              setDocument={setDocument}
-              values={values}
-            />
-          </Grid>    
         </Grid>
-      </>
-    )
-  };
-  
-  export default Attachements;
-  Attachements.propTypes = {
-    setField: PropTypes.func.isRequired,
-    values: PropTypes.object.isRequired,
-  };
+        <Grid
+          item
+          md={6}
+          xs={12}
+        >
+          <Field
+            label="ارفاق صور الأثاث و الأجهزة الكهربائية (للمبنى الجديد)"
+            name="Furniture"
+            component={FileUploaderComp}
+            multipleFile={false}
+            setField={setField}
+            setDocument={setDocument}
+            values={values}
+          />
+        </Grid>
+        <Grid
+          item
+          md={6}
+          xs={12}
+        >
+          <Field
+            label="رخصة البلدية (للمبنى الجديد)"
+            name="municipLicense"
+            component={FileUploaderComp}
+            multipleFile={false}
+            setField={setField}
+            setDocument={setDocument}
+            values={values}
+          />
+        </Grid>
+        <Grid
+          item
+          md={6}
+          xs={12}
+        >
+          <Field
+            label=" تقرير مكتب هندسي معتمد (للمبنى الجديد)"
+            name="OfficeReport"
+            component={FileUploaderComp}
+            multipleFile={false}
+            setField={setField}
+            setDocument={setDocument}
+            values={values}
+          />
+        </Grid>
+        <Grid
+          item
+          md={6}
+          xs={12}
+        >
+          <Field
+            label="رخصة دفاع المدني (للمبنى الجديد)"
+            // name="municipLicense"
+            name="fireDepartmentLicens"
+            component={FileUploaderComp}
+            multipleFile={false}
+            setField={setField}
+            setDocument={setDocument}
+            values={values}
+          />
+        </Grid>
+      </Grid>
+    </>
+  )
+};
+
+export default Attachements;
+Attachements.propTypes = {
+  setField: PropTypes.func.isRequired,
+  values: PropTypes.object.isRequired,
+};

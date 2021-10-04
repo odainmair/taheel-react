@@ -10,21 +10,24 @@ import {
     CardHeader,
     Divider,
     Container,
+    Alert,
 } from '@material-ui/core';
 import FinalFromWizard from 'src/components/wizard/FinalFormWizard';
 import { ConditionComp, sectionValidateInput } from '../../temporary-license/services/temporayLicenseUtil';
 import { validateAPIFunc, validateCompanyFunc } from '../../temporary-license/services/temporayLicenseAPI';
 import { getCurrentUser } from 'src/utils/UserLocalStorage';
 import FinalLicenseData from '../sections/FinalLicenseData';
-import { CentertDetails, getCentersForFinal, getMunicipalLicenseNoApi } from '../../final-license/services/finalLicenseAPI';
+import { CentertDetails, getCentersForFinal, getCentersForFinalNoExpired, getMunicipalLicenseNoApi } from '../../final-license/services/finalLicenseAPI';
 import NewLocationData from '../sections/NewLocationData';
 import NewCenterAddress from '../sections/NewCenterAddress';
 import Terms from '../sections/Terms';
-import { CenterDetailsValidation, calculationConditionComp, centerTypeJSON, getStaff } from '../../final-license/services/finalLicenseUtil';
+import { CenterDetailsValidation, calculationConditionComp, centerTypeJSON, getStaff, RequirementsValidation } from '../../final-license/services/finalLicenseUtil';
 import AlertDialog from 'src/components/AlertDialog';
 import { dateFormatter, reverseRange } from 'src/utils/utilFunctions';
 import { LICENSE_FORM_TYPES } from 'src/utils/enums'
 import numeral from 'numeral';
+import { centerLocationTransferAPIFunc } from './TransferCenterLocationAPI';
+import { AttachementValidation } from './TransferCenterLoactionUtil';
 
 
 const TransferCenterLocationRequest = () => {
@@ -51,7 +54,7 @@ const TransferCenterLocationRequest = () => {
         const { email } = await getCurrentUser();
         console.log("------------------------------- email " + email)
         setIsLoading(true);
-        const getCentersRs = await getCentersForFinal(email);
+        const getCentersRs = await getCentersForFinalNoExpired(email);
 
         SetErrMessage("");
         if (!getCentersRs.isSuccessful) {
@@ -130,25 +133,22 @@ const TransferCenterLocationRequest = () => {
     };
 
     const onSubmit = async (values) => {
-        let response = true
-        // let response = null
-
-        // if (!editMode) {
-        console.log("valllllllllllllllll", values)
-        // response = await centerLocationTransferAPIFunc(values);
-
-        // if (response.isSuccessful) {
-        // handleClickOpen(`${response.responseBody.data[0]}`, '');
-        handleClickOpen('تم تقديم طلب نقل مقر المركز الأهلي بنجاح', '');
-
-        // }
-        // else {
-        //     SetErrMessage(`${response.message}`);
-        //     setIsLoading(false)
-        // }
+       
 
 
-    }
+
+        console.log("values++++++++++++", JSON.stringify(values))
+        const response = await centerLocationTransferAPIFunc(values);
+        console.log("response.isSuccessful", response.isSuccessful);
+        if (response.isSuccessful) {
+            handleClickOpen(`${response.responseBody.data.message}`, '');
+        }
+        else {
+            SetErrMessage(`${response.message}`);
+            setIsLoading(false)
+        }
+    };
+
     return (
         <Container maxWidth="md">
             <Card>
@@ -188,17 +188,19 @@ const TransferCenterLocationRequest = () => {
                                 activities: center && center.crInfo_r && center.crInfo_r.crActivityType,
                                 municipLicenseNo: center && center.crInfo_r && center.crInfo_r.MoMRA_Licence,
                                 beneficiariesNum: center && center.centerInfo_r && center.centerInfo_r.beneficiaryCount,
-                                capacity: center && center.centerInfo_r && numeral(center.centerInfo_r.carryingnumber).format('0,0'),
+                                newCapacity: center && center.centerInfo_r && numeral(center.centerInfo_r.carryingnumber).format('0,0'),
                                 financialGuarantee: center && center.centerInfo_r && `${numeral(center.centerInfo_r.financialGuarantee).format('0,0.00')} ر.س.`,
-                                // buildingArea: center && center.centerInfo_r && center.centerInfo_r.buildingArea,
                                 buildingArea: null,
                                 basementArea: null,
+                                capacity: null,
                                 OperationalPlan: [center && center.centerInfo_r && center.centerInfo_r.operationPlan && (center.centerInfo_r.operationPlan || center.centerInfo_r.operationPlan.id)],
                                 ExecutivePlan: [center && center.centerInfo_r && center.centerInfo_r.executivePlan && (center.centerInfo_r.executivePlan || center.centerInfo_r.executivePlan.id)],
-                                OfficeReport: [center && center.centerInfo_r && center.centerInfo_r.engineeringPlan && (center.centerInfo_r.engineeringPlan || center.centerInfo_r.engineeringPlan.id)],
+                                // OfficeReport: [center && center.centerInfo_r && center.centerInfo_r.engineeringPlan && (center.centerInfo_r.engineeringPlan || center.centerInfo_r.engineeringPlan.id)],
+                                OfficeReport: null,
+
                                 SecurityReport: center && center.centerInfo_r && [center.centerInfo_r.securityReport && (center.centerInfo_r.securityReport || center.centerInfo_r.securityReport.id)],
-                                Furniture: center && center.centerInfo_r && center.centerInfo_r.furniturePhoto_r && (center.centerInfo_r.furniturePhoto_r.map(d => d.Document) || center.centerInfo_r.furniturePhoto_r.map(d => d.Document.id)),
-                                // Furniture: [1202],
+                                // Furniture: center && center.centerInfo_r && center.centerInfo_r.furniturePhoto_r && (center.centerInfo_r.furniturePhoto_r.map(d => d.Document) || center.centerInfo_r.furniturePhoto_r.map(d => d.Document.id)),
+                                Furniture: null,
                                 FinancialGuaranteeAtt: [center && center.centerInfo_r && center.centerInfo_r.financialGuarbteeAtt && (center.centerInfo_r.financialGuarbteeAtt || center.centerInfo_r.financialGuarbteeAtt.id)],
                                 healthServices: center && center.centerInfo_r && center.isHealthCareServices ? "yes" : "no",
                                 healthServiceType: center && center.centerInfo_r && center.healthCareServices_r && center.healthCareServices_r.type,
@@ -211,26 +213,10 @@ const TransferCenterLocationRequest = () => {
                             }}
                             cancelBtnFn={() => { navigate('/app/products', { replace: true }); }}
                             isEnableCancelBtn={true}
-                            // onSubmit={onSubmit}
                             isEnableNextBtn={isEnableNextBtn}
                             showSummary={showSummary}
                             onSubmit={onSubmit}
                         >
-                            {/* <FinalFromWizard.Page
-                            label="بيانات الترخيص النهائي "
-                        //   validate={(values) => sectionValidateInput(tempLicenseFieldSchema, "CenterInfo", values)}
-                        //   nextFun={(values) => validateAPIFunc(values)}
-                        >
-                            <FinalLicenseData
-                                validate={CenterDetailsValidation}
-                                renewableLicenses={renewableLicenses}
-                                setCenterLicenceNumber={setCenterLicenceNumber}
-                                showSummary={showSummary}
-                                setShowSummary={setShowSummary}
-                                isLoading={isLoading}
-                                getCentertDetails={getCentertDetails}
-                            />
-                        </FinalFromWizard.Page> */}
                             <FinalFromWizardLicenseDataPage
                                 label="بيانات الترخيص النهائي "
                                 validate={CenterDetailsValidation}
@@ -243,17 +229,20 @@ const TransferCenterLocationRequest = () => {
                             />
                             <FinalFromWizarLocationDataPage
                                 label="بيانات المقر الجديد للمركز "
+                                validate={(values) => AttachementValidation(values)}
+
                                 setIsEnableNextBtn={(isEnable) => setIsEnableNextBtn(isEnable)}
                             />
                             <FinalFromWizardAddressPage
                                 label="تعبئة بيانات العنوان الوطني "
-                            // validate={(values) => sectionValidateInput(tempLicenseFieldSchema, "CenterAddress", values)}
+                                // validate={(values) => sectionValidateInput(tempLicenseFieldSchema, "CenterAddress", values)}
+                                setIsEnableNextBtn={(isEnable) => setIsEnableNextBtn(isEnable)}
+
                             />
-                            <FinalFromWizard.Page
+                            <FinalFromWizarTermsPage
                                 label="الإقرار والتعهد"
-                            >
-                                <Terms />
-                            </FinalFromWizard.Page>
+                                setIsEnableNextBtn={(isEnable) => setIsEnableNextBtn(isEnable)}
+                            />
                         </FinalFromWizard>
                         :
                         <CircularProgress size="15rem" style={{
@@ -296,16 +285,28 @@ const FinalFromWizarLocationDataPage = ({ values, validate, setField, setIsEnabl
             setIsEnableNextBtn={(isEnable) => setIsEnableNextBtn(isEnable)}
         />
     </Box>
-
 );
 
-const FinalFromWizardAddressPage = ({ validate, setField }) => (
+const FinalFromWizardAddressPage = ({ validate, setField, setIsEnableNextBtn }) => (
     <Box>
-        <NewCenterAddress Condition={ConditionComp} setField={(fieldName, fieldValue) => setField(fieldName, fieldValue)} />
+        <NewCenterAddress
+            Condition={ConditionComp}
+            setField={(fieldName, fieldValue) => setField(fieldName, fieldValue)}
+            setIsEnableNextBtn={(isEnable) => setIsEnableNextBtn(isEnable)}
+        />
+    </Box>
+);
+
+const FinalFromWizarTermsPage = ({ values, validate, setField, setIsEnableNextBtn }) => (
+    <Box>
+        <Terms
+            values={values}
+            setField={(fieldName, fieldValue) => setField(fieldName, fieldValue)}
+            setIsEnableNextBtn={(isEnable) => setIsEnableNextBtn(isEnable)}
+        />
     </Box>
 
 );
-
 
 export default TransferCenterLocationRequest;
 

@@ -1,64 +1,61 @@
 
 import { getCurrentUser } from 'src/utils/UserLocalStorage';
+import { APIRequest } from 'src/api/APIRequest';
 
-const getFurnitures = (values) => {
-	const furnitures = []
-	values.Furniture.map((docId, index) => {
-		furnitures.push({ Document: docId })
-	})
-	return furnitures
-}
+// const getFurnitures = (values) => {
+// 	const furnitures = []
+// 	values.Furniture.map((docId, index) => {
+// 		furnitures.push({ Document: docId })
+// 	})
+// 	return furnitures
+// }
 
-const centerLocationTransferAPIFunc = async (values, actionType, TaskID) => {
-	const {  email } = getCurrentUser();
+export const centerLocationTransferAPIFunc = async (values) => {
 
+	function numberToDay(day) {
+		return ('0' + day).slice(-2);
+	}
+	const { email } = getCurrentUser();
+	const { day, month, year } = values;
+	const expiryDate = year + '' + numberToDay(month) + numberToDay(day);
 	const requestBody = {
-
-		"isDraft": false,
-		"userCreationEmail": email,
-		"center": {
-			"licenceNumber": values.temporaryLicenceNum,
-			"centerInfo_r": {
-				"ID": values.centerInfo_r,
-				"buildingArea": values.buildingArea,
-				"basementArea": values.basementArea,
-				"carryingnumber": values.capacity,
-				"furniturePhoto_r": [
+		serviceStatus: 1,
+		isDraft: false,
+		userCreationEmail: email,
+		center: {
+			licenceNumber: values.centerLicenceNumber,
+			centerInfo_r: {
+				ID: values.centerInfo_r,
+				buildingArea: values.buildingArea,
+				basementArea: values.basementArea,
+				carryingnumber: values.capacity,
+				furniturePhoto_r: [
 					{
-						"Document": values.docId,
+						Document: values.docId,
 					}
 				],
-				"fireDepartmentLicense": "///Document///",
-				"expirarionDateForFireDepartmentLicenseGreg": "///Date Object///",
-				"engineeringPlan": values.OfficeReport[0],
+				fireDepartmentLicense: values.fireDepartmentLicense,
+				expirarionDateForFireDepartmentLicenseGreg: expiryDate,
+				engineeringPlan: values.OfficeReport[0],
 			},
-			"centerLocation_r": {
-				"city": values.city,
-				"area": values.sub,
-				"street": values.street,
-				"buildNo": values.buildNo,
-				"lat": values.lat,
-				"lng": values.lng,
-				"postalCode": values.postalCode,
-				"additionalNo": values.additionalNo,
+			centerLocation_r: {
+				city: values.city,
+				area: values.sub,
+				street: values.street,
+				buildNo: values.buildNo,
+				lat: values.lat,
+				lng: values.lng,
+				postalCode: values.postalCode,
+				additionalNo: values.additionalNo,
 			}
 		}
 	}
 
-let url = "taheel-apis-services-initiate-center-location-change-request";
-// if (actionType === LICENSE_FORM_TYPES.RENEW) {
-// 	url = "taheel-apis-services-renewLicenseV2";
-// }
-// else if (actionType === LICENSE_FORM_TYPES.EDIT) {
-// 	requestBody.externalUserTaskID = TaskID
-// 	requestBody.cancel = "false"
-// 	url = "taheel-apis-services-continueFinalLicense-v2";
-// }
+	let url = "taheel-apis-services-initiate-center-location-change-request";
 
-console.log('#==> requestBody ' + JSON.stringify(requestBody))
-// return '';
-const response = await APIRequest({ requestBody, url });
-return response;
+	console.log('#==> requestBody ' + JSON.stringify(requestBody))
+	const response = await APIRequest({ requestBody, url });
+	return response;
 }
 
-export { centerLocationTransferAPIFunc };
+// export { centerLocationTransferAPIFunc };
