@@ -18,9 +18,9 @@ const Sections = {
         label: { ar: 'الطاقة الإستعابية', en: 'Capacity' },
         order: 2
     },
-    HealthServices: {
-        id: 'HealthServices',
-        label: { ar: 'الخدمات الصحية', en: 'Health Services' },
+    Location: {
+        id: 'LocaitonDetails',
+        label: { ar: 'العنوان الوطني (للمبنى الجديد)', en: 'National Address' },
         order: 3
     },
     Requirements: {
@@ -90,7 +90,7 @@ export default
                 ar: 'الطاقة الإستعابية القصوى',
                 en: 'Center Carrying Capacity'
             },
-            name: 'CCC',//here
+            name: 'centerInfo_r.carryingnumber',//here
             type: 'Text',
             gridSize: '6',
             sectionName: Sections.Capacity,
@@ -103,7 +103,7 @@ export default
                 ar: 'الضمان المالي',
                 en: 'Financial Guarantee'
             },
-            name: 'financialGuarantee',
+            name: 'centerInfo_r.financialGuarantee',
             type: 'Text',
             gridSize: '6',
             sectionName: Sections.Capacity,
@@ -116,7 +116,20 @@ export default
                 ar: 'عدد المستفيدين المطلوب',
                 en: 'Ceneter Benificires Number'
             },
-            name: 'CBN',
+            name: 'targetedBeneficiary',
+            type: 'Text',
+            gridSize: '6',
+            sectionName: Sections.Capacity,
+            options: [],
+            validators: [],
+        },
+        {
+            id: uuid(),
+            label: {
+                ar: 'مساحة القبو',
+                en: 'Basement Space'
+            },
+            name: 'basementArea',
             type: 'Text',
             gridSize: '6',
             sectionName: Sections.Capacity,
@@ -139,13 +152,91 @@ export default
         {
             id: uuid(),
             label: {
-                ar: 'مساحة القبو',
-                en: 'Basement Space'
+                ar: 'رقم المبنى',
+                en: 'Building No'
             },
-            name: 'basementArea',
+            name: 'buildNo',
             type: 'Text',
             gridSize: '6',
-            sectionName: Sections.Capacity,
+            sectionName: Sections.Location,
+            options: [],
+            validators: [],
+        },
+        {
+            id: uuid(),
+            label: {
+                ar: 'اسم الشارع',
+                en: 'Street Name'
+            },
+            name: 'street',
+            type: 'Text',
+            gridSize: '6',
+            sectionName: Sections.Location,
+            options: [],
+            validators: [],
+        },
+        {
+            id: uuid(),
+            label: {
+                ar: 'الحي',
+                en: 'District'
+            },
+            name: 'area',
+            type: 'Text',
+            gridSize: '6',
+            sectionName: Sections.Location,
+            options: [],
+            validators: [],
+        },
+        {
+            id: uuid(),
+            label: {
+                ar: 'المدينة',
+                en: 'city'
+            },
+            name: 'city',
+            type: 'Text',
+            gridSize: '6',
+            sectionName: Sections.Location,
+            options: [],
+            validators: [],
+        },
+        {
+            id: uuid(),
+            label: {
+                ar: 'الرمز البريدي',
+                en: 'Postal Code'
+            },
+            name: 'postalCode',
+            type: 'Text',
+            gridSize: '6',
+            sectionName: Sections.Location,
+            options: [],
+            validators: [],
+        },
+        {
+            id: uuid(),
+            label: {
+                ar: 'الرقم الإضافي',
+                en: 'Additional No'
+            },
+            name: 'city',
+            type: 'Text',
+            gridSize: '6',
+            sectionName: Sections.Location,
+            options: [],
+            validators: [],
+        },
+        {
+            id: uuid(),
+            label: {
+                ar: 'المدينة',
+                en: 'city'
+            },
+            name: 'city',
+            type: 'Text',
+            gridSize: '6',
+            sectionName: Sections.Location,
             options: [],
             validators: [],
         },

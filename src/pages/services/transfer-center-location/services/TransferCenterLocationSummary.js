@@ -42,7 +42,7 @@ const TransferCenterLocationSummary = () => {
         if (!getCenterDetails.isSuccessful) {
             SetErrMessage(getCenterDetails.message)
         } else {
-            const Details = getCenterDetails.responseBody.data.center
+            const Details = getCenterDetails.responseBody.requestDetails.data.center
             setDetails({ ...Details, ...Details.centerInfo_r })
             console.log("Details+++++++++++++", Details)
             setLoading(false)
