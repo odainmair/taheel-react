@@ -276,7 +276,7 @@ export default
                 en: 'Engineering Report'
             },
             name: 'engineeringPlan',
-            valueFunc: (values) => (values?.NewCenterLocationData.centerInfo_r?.engineeringPlan),
+            valueFunc: (values) => (values?.NewCenterLocationData?.centerInfo_r?.engineeringPlan),
             type: 'file',
             gridSize: '6',
             sectionName: Sections.Attachments,
@@ -290,7 +290,7 @@ export default
                 en: 'Furniture'
             },
             name: 'Furniture',
-            valueFunc: (values) => (values?.NewCenterLocationData.furniturePhoto_r),
+            valueFunc: (values) => (values?.NewCenterLocationData?.furniturePhoto_r),
             type: 'file',
             gridSize: '6',
             sectionName: Sections.Attachments,
