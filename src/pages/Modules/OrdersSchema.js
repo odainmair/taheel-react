@@ -92,7 +92,6 @@ const getRequestValues = (navigate, taskType, data) => {
     navigate(navigatinURL, {
         state: {
             licenceNumber: data.centerLicenceNumber[0],
-            taskID: data.id,
             formType: draftFormType,
             requestNum: data.requestNum,
             fromDraft: true
@@ -119,7 +118,7 @@ export default ({ navigate, taskRequests }) => {
                                     color="primary"
                                     component="span"
                                     onClick={() => {
-                                        console.log(`LatestDraft :: navigate to: ${data.type}, taskID: ${data.ID}, requestNum: ${data.requestNum}`);
+                                        console.log(`LatestDraft :: navigate to: ${data.type}, requestNum: ${data.requestNum}`);
                                         getRequestValues(navigate, data.type, data);
                                     }}
                                 >

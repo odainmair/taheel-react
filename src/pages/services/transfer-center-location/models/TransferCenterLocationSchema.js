@@ -233,8 +233,8 @@ export default
                 ar: 'تاريخ انتهاء رخصة الدفاع المدني',
                 en: 'Fire department License Expiry Date'
             },
-            name: 'NewCenterLocationData.centerInfo_r.expirarionDateForFireDepartmentLicenseGreg',
-            attrFunc:(value) => {console.log(value);moment(`${value}`, 'iYYYYiMMiDD').format('iDD/iMM/iYYYY')},
+            name: 'NewCenterLocationData.centerInfo_r.expirarionDateForFireDepartmentLicenseHijri',
+            attrFunc:(value) => {return moment(`${value}`, 'iYYYYiMMiDD').format('iDD/iMM/iYYYY')},
             type: 'Text',
             gridSize: '6',
             sectionName: Sections.Location,
@@ -262,7 +262,7 @@ export default
                 en: 'Municiplity License for the New building'
             },
             name: 'MoMRA_Licence',
-            valueFunc: (values) => (values?.centerInfo_r?.MoMRA_Licence),
+            valueFunc: (values) => (values?.NewCenterLocationData?.centerInfo_r?.momraDoc),
             type: 'file',
             gridSize: '6',
             sectionName: Sections.Attachments,

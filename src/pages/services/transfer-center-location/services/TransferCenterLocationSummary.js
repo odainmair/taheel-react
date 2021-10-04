@@ -19,11 +19,11 @@ const TransferCenterLocationSummary = () => {
     const location = useLocation()
     const navigate = useNavigate();
     const licenceNumber = location.state.licenceNumber
-    const taskID = location.state.taskID
+    const [taskID, setTaskID] = useState()
     const reqNum = location.state.requestNum
     console.log("licenceNumber+_+_+_+_+_+_+", licenceNumber)
-    console.log("taskID+_+_+_+_+_+_+", taskID)
     console.log("reqNum+_+_+_+_+_+_+", reqNum)
+    console.log("taskID+_+_+_+_+_+_+", taskID)
     const [details, setDetails] = useState(false)
     const [isAgree, setIsAgree] = useState(false)
     const [errMessage, SetErrMessage] = useState('')
@@ -43,6 +43,7 @@ const TransferCenterLocationSummary = () => {
             SetErrMessage(getCenterDetails.message)
         } else {
             let Details = getCenterDetails.responseBody.requestDetails.data
+            setTaskID(Details?.externalTaskData?.ID)
             Details = { NewCenterLocationData: { ...Details.processVariablesDump.NewCenterLocationData }, center: { ...Details.center } }
             console.log("Details+++++++++++++", Details)
             setDetails(Details)
@@ -70,7 +71,8 @@ const TransferCenterLocationSummary = () => {
     }
     const title = 'تفاصيل طلب نقل المركز'
     const additionalFields = (isAgree, setIsAgree) => {
-        return (
+        return !!taskID?
+         (
             <Grid container spacing={2} mt={3} justifyContent="space-between">
                 <Grid item>
                     <Button
@@ -96,7 +98,7 @@ const TransferCenterLocationSummary = () => {
                             navigate("/services/transfercenter", {
                                 state: {
                                     centerLicenceNumber: licenceNumber,
-                                    taskID: taskID,
+                                    taskID
                                 }
                             })
                         }}
@@ -105,7 +107,7 @@ const TransferCenterLocationSummary = () => {
                     </Button>
                 </Grid>
             </Grid>
-        )
+        ):''
     }
     return (
         <>
