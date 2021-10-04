@@ -1,3 +1,8 @@
+/*
+    TO BE DELETED
+    THIS HAS BEEN IMPLEMENTED INSIDE ORDERS WITH FILTERATION FOR DRAFTS
+*/
+
 // import { v4 as uuid } from 'uuid';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import VisibilityIcon from '@material-ui/icons/Visibility';
