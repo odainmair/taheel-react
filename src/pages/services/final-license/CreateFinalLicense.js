@@ -172,7 +172,7 @@ const CreateFinalLicense = () => {
     let response = null
     if (!values.isDraft) {
       if (values && values.formType === LICENSE_FORM_TYPES.RENEW) {
-        response = await updateFinalLicenseAPIFunc(values, formType, 0, false);
+        response = await updateFinalLicenseAPIFunc(values, formType, 0, false, requestNum);
         if (response.isSuccessful && !!response?.responseBody?.data) {
           handleClickOpen(`${response.responseBody.data[0]}`, '');
         }
@@ -182,7 +182,7 @@ const CreateFinalLicense = () => {
         }
       }
       else if (!editMode) { 
-        response = await updateFinalLicenseAPIFunc(values, formType, 0, false);
+        response = await updateFinalLicenseAPIFunc(values, formType, 0, false, requestNum);
         if (response.isSuccessful && !!response?.responseBody?.data) {
           handleClickOpen(` تم تقديم طلب ${response.responseBody.data.requestNumber} لإصدار الترخيص النهائي رقم ${values.temporaryLicenceNum} يرجى تسليم أصل الضمان البنكي إلى وكالة التأهيل والتوجيه الإجتماعي بوزارة الموارد البشرية والتنمية الإجتماعية لانهاء إجراءات الطلب خلال 3 أيام عمل`, '');
         }
@@ -192,7 +192,7 @@ const CreateFinalLicense = () => {
         }
       }
       else {      
-        response = await updateFinalLicenseAPIFunc(values, formType, taskID, false);
+        response = await updateFinalLicenseAPIFunc(values, formType, taskID, false, requestNum);
         if (response.isSuccessful && !!response?.responseBody?.data) {
           handleClickOpen(` تم إرسال طلب ${requestNum} لإصدار الترخيص النهائي رقم ${values.temporaryLicenceNum}`, '');
         }
@@ -204,7 +204,7 @@ const CreateFinalLicense = () => {
     }
     else {
       // handleClickOpen(` the application is draft and formType is ${values.formType} `, '');
-      response = await updateFinalLicenseAPIFunc(values, formType, 0, true);
+      response = await updateFinalLicenseAPIFunc(values, formType, 0, true, requestNum);
       if (response.isSuccessful && !!response?.responseBody?.data) {
         handleClickOpen(`${response.responseBody.data.message[0]} طلب رقم ${response.responseBody.data.requestNumber}`, '');
       }
