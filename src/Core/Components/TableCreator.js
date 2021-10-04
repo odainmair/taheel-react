@@ -188,7 +188,7 @@ TableCreator.propTypes = {
     pageTitle: PropTypes.string,
     tableTitle: PropTypes.string,
     tableShcema: PropTypes.object,
-    dataTable: PropTypes.object,
+    dataTable: PropTypes.array,
     totalCount: PropTypes.number,
     loading: PropTypes.bool,
     TPObject: PropTypes.object,

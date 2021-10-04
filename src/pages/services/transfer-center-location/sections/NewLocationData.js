@@ -18,6 +18,7 @@ import Attachements from './Attachements';
 import numeral from 'numeral';
 import { checkIsNumber } from 'src/utils/inputValidator';
 import Calendar from 'src/components/calendar'
+import moment from 'moment-hijri';
 
 const NewLocationData = ({ setField, values, setIsEnableNextBtn }) => {
     const [calculatedData, setCalculatedData] = useState(false);
@@ -224,7 +225,7 @@ const NewLocationData = ({ setField, values, setIsEnableNextBtn }) => {
                     >
                         <Typography> تاريخ الانتهاء</Typography>
                     </Grid>
-                    < Calendar FeiledWidth={4} fieldName={null} />
+                    < Calendar FeiledWidth={4} fieldName={null} yearCalender={{ start: moment().format('iYYYY'), end: 1543 }} />
                 </Grid>
             </Grid>
         </>

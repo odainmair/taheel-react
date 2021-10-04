@@ -10,7 +10,7 @@ import DoneIcon from '@material-ui/icons/Done';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import DraftsTwoToneIcon from '@material-ui/icons/DraftsTwoTone';
 import { useNavigate } from 'react-router';
-import { LICENSE_FORM_TYPES, REQUEST_STATUS } from 'src/utils/enums'
+import { LICENSE_FORM_TYPES, REQUEST_STATUS, REQUEST_TYPES } from 'src/utils/enums'
 
 const getChipComponentsForStatus = (data) => {
     const status = data.status
@@ -77,28 +77,24 @@ const getRequestValues = (navigate, taskType, data) => {
         if (taskType.trim() === 'إنشاء رخصة نهائية') {
             navigatinURL = '/services/finallicense'
             draftFormType = LICENSE_FORM_TYPES.NEW
-            //return { navigatinURL: '/services/finallicense', draftFormType: LICENSE_FORM_TYPES.NEW }
         }
         else if (taskType.trim() === 'تجديد رخصة') {
             navigatinURL = '/services/finallicense'
             draftFormType = LICENSE_FORM_TYPES.RENEW
-            //return { navigatinURL: '/services/updatefinallicenserenewal', draftFormType: LICENSE_FORM_TYPES.RENEW }
         } else {
             navigatinURL = '/services/finallicense'
             draftFormType = LICENSE_FORM_TYPES.NEW
-            //return { navigatinURL: '/services/finallicense', draftFormType: LICENSE_FORM_TYPES.NEW }
         }
     } else {
         navigatinURL = '/services/transfercentersummary'
-        draftFormType = LICENSE_FORM_TYPES.NEW
     }
 
     navigate(navigatinURL, {
         state: {
             licenceNumber: data.centerLicenceNumber[0],
             taskID: data.id,
-            requestNum: data.requestNum,
             formType: draftFormType,
+            requestNum: data.requestNum,
             fromDraft: true
         }
     })
@@ -115,9 +111,7 @@ export default ({ navigate, taskRequests }) => {
                 },
                 name: 'requestNum',
                 attrFunc: (data) => {
-                    const req = taskRequests.filter(d => d.requestNum === data.requestNum)[0];
-                    if (data.status === REQUEST_STATUS.DRAFT || !!req) {
-                        data = { ...data, id: req?.ID }
+                    if (data.status === REQUEST_STATUS.DRAFT || data.typeId === REQUEST_TYPES.TRANS_CENTER) {
                         return (
                             <>
                                 {data.requestNum}
@@ -125,7 +119,7 @@ export default ({ navigate, taskRequests }) => {
                                     color="primary"
                                     component="span"
                                     onClick={() => {
-                                        console.log(`LatestDraft :: navigate to: ${data.type}, taskID: ${req?.ID}, requestNum: ${data.requestNum}`);
+                                        console.log(`LatestDraft :: navigate to: ${data.type}, taskID: ${data.ID}, requestNum: ${data.requestNum}`);
                                         getRequestValues(navigate, data.type, data);
                                     }}
                                 >

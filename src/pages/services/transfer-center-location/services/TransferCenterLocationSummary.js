@@ -42,9 +42,10 @@ const TransferCenterLocationSummary = () => {
         if (!getCenterDetails.isSuccessful) {
             SetErrMessage(getCenterDetails.message)
         } else {
-            const Details = getCenterDetails.responseBody.requestDetails.data.center
-            setDetails({ ...Details, ...Details.centerInfo_r })
+            let Details = getCenterDetails.responseBody.requestDetails.data
+            Details = { NewCenterLocationData: { ...Details.processVariablesDump.NewCenterLocationData }, center: { ...Details.center } }
             console.log("Details+++++++++++++", Details)
+            setDetails(Details)
             setLoading(false)
         }
     }, [])
@@ -67,7 +68,7 @@ const TransferCenterLocationSummary = () => {
             return { isSquccessful: true, message: email + " تم الحذف بنجاح" };
         }
     }
-    const title = 'تفاصيل طلب نفل المركز'
+    const title = 'تفاصيل طلب نقل المركز'
     const additionalFields = (isAgree, setIsAgree) => {
         return (
             <Grid container spacing={2} mt={3} justifyContent="space-between">

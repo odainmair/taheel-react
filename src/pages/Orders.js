@@ -11,7 +11,7 @@ import { LICENSE_FORM_TYPES, REQUEST_STATUS } from 'src/utils/enums'
 import { useNavigate } from 'react-router';
 import { getMyTasksFun } from 'src/pages/services/data/servicesApi'
 import { useLocation } from 'react-router-dom'
-
+import { getTaheelRequestsFun } from 'src/pages/services/data/servicesApi'
 const Orders = (props) => {
     const location = useLocation()
     const navigate = useNavigate();
@@ -20,7 +20,6 @@ const Orders = (props) => {
     const [loading, setLoading] = useState(true);
     const [totalCount, setTotalCount] = useState();
     const [taheelRequests, setTaheelRequests] = useState([]);
-    const [taskRequests, setTaskRequests] = useState([]);
     const [errMessage, SetErrMessage] = useState('')
     const tableTitle = type === LICENSE_FORM_TYPES.DRAFT ? 'المسودات' : 'الطلبات المقدمة'
     const TPObject = TablePaginationObject(TableDataViewEnum.ALL_DATA)
@@ -31,26 +30,14 @@ const Orders = (props) => {
         }
     }, [TPObject.pagination.batchSize, TPObject.pagination.startIndex])
 
-    const getTaheelRequestsFun = async (email, startIndex, batchSize) => {
-        const url = 'taheel-apis-records-getRequests-v2';
-        let queryParams = { userEmail: email, startIndex, batchSize };
-        console.log(`ORDERS ::1 queryParams ${JSON.stringify(queryParams)}`)
-        if (type === LICENSE_FORM_TYPES.DRAFT) {
-            queryParams = { ...queryParams, status: 4 }
-        }
-        console.log(`ORDERS ::2 queryParams ${JSON.stringify(queryParams)}`)
-        const response = await APIRequest({ url, queryParams });
-        return response;
-    };
-
     useEffect(async () => {
-        if(successDeleted === true){
+        if (successDeleted === true) {
             SetErrMessage({ msg: email + " تم الحذف بنجاح", type: "success" });
 
         }
         setLoading(true)
         const { email } = getCurrentUser();
-        const getTaheelRequestsRs = await getTaheelRequestsFun(email, paramData.startIndex, paramData.batchSize);
+        const getTaheelRequestsRs = await getTaheelRequestsFun(email, paramData.startIndex, paramData.batchSize, type);
         let response = {};
         if (!getTaheelRequestsRs.isSuccessful) {
             setLoading(false);
@@ -63,15 +50,7 @@ const Orders = (props) => {
                 setTaheelRequests(data.requests);
             }
             else {
-                const getMyTasksRs = await getMyTasksFun(email);
-                if (!getMyTasksRs.isSuccessful) {
-                    console.log('getMyTasksRs isSuccessful: false, message:' + getMyTasksRs.message)
-                    response = { isSuccessful: false, message: getMyTasksRs.message };
-                } else {
-                    const { data } = getMyTasksRs.responseBody;
-                    console.log('TaskRequests' + JSON.stringify(data));
-                    setTaskRequests(data);
-                }
+                const { data } = getTaheelRequestsRs.responseBody;
                 setTaheelRequests(data.requests.filter(r => r.status != REQUEST_STATUS.DRAFT));
             }
             setLoading(false);
@@ -80,7 +59,7 @@ const Orders = (props) => {
         return response;
     }, [paramData.batchSize, paramData.startIndex, type]);
     return (
-        <TableCreator tableTitle={tableTitle} tableShcema={{ ...OrdersSchema({navigate,taskRequests}), actions: '' }} dataTable={taheelRequests} totalCount={totalCount} loading={loading} TPObject={TPObject} errMessage={errMessage} />
+        <TableCreator tableTitle={tableTitle} tableShcema={{ ...OrdersSchema({ navigate }), actions: '' }} dataTable={taheelRequests} totalCount={totalCount} loading={loading} TPObject={TPObject} errMessage={errMessage} />
     )
 }
 
