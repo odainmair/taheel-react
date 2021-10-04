@@ -290,7 +290,7 @@ export default
                 en: 'Furniture'
             },
             name: 'Furniture',
-            valueFunc: (values) => (values?.NewCenterLocationData?.furniturePhoto_r),
+            valueFunc: (values) => (values?.NewCenterLocationData?.centerInfo_r?.furniturePhoto_r?.map(d => d?.Document) || values?.NewCenterLocationData?.centerInfo_r?.furniturePhoto_r?.map(d => d?.Document?.id)),
             type: 'file',
             gridSize: '6',
             sectionName: Sections.Attachments,

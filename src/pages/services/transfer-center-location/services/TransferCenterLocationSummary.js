@@ -57,57 +57,54 @@ const TransferCenterLocationSummary = () => {
             SetErrMessage(deleteCommissioner.message);
             return { isSquccessful: false, message: deleteCommissioner.message };
         } else {
-            candidateStaff.push(staff.filter(st => st.idNumIqamaNum === currentSelected.idNumIqamaNum)[0])
             setLoading(false)
             navigate("/app/orders", {
                 state: {
                     centerLicenceNumber: licenceNumber,
                     taskID: taskID,
-                    successDeleted: true
+                    successCanceled: true
                 }
             })
-            return { isSquccessful: true, message: email + " تم الحذف بنجاح" };
+            return { isSquccessful: true, message: "تم الحذف بنجاح" };
         }
     }
     const title = 'تفاصيل طلب نقل المركز'
     const additionalFields = (isAgree, setIsAgree) => {
-        return !!taskID?
-         (
-            <Grid container spacing={2} mt={3} justifyContent="space-between">
-                <Grid item>
-                    <Button
-                        startIcon={loading ? <CircularProgress size="1rem" /> : null}
-                        variant="contained"
-                        color="secondary"
-                        onClick={() => setOpen(true)}
-                    >
-                        <IconsList iconType={IconsTypeEnum.DELETE_ICON} label="إلغاء الطلب" color="info" />
+        return !!taskID ?
+            (
+                <Grid container spacing={2} mt={3} justifyContent="space-between">
+                    <Grid item>
+                        <Button
+                            variant="contained"
+                            color="secondary"
+                            onClick={() => setOpen(true)}
+                        >
+                            <IconsList iconType={IconsTypeEnum.DELETE_ICON} label="إلغاء الطلب" color="info" />
 
 
-                    </Button>
+                        </Button>
+                    </Grid>
+                    <Grid item>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            sx={{
+                                backgroundColor: '#3c8084',
+                            }}
+                            onClick={() => {
+                                navigate("/services/transfercenter", {
+                                    state: {
+                                        centerLicenceNumber: licenceNumber,
+                                        taskID
+                                    }
+                                })
+                            }}
+                        >
+                            <IconsList iconType={IconsTypeEnum.EDIT_ICON} label="تعديل بيانات طلب نقل المركز" color="info" />
+                        </Button>
+                    </Grid>
                 </Grid>
-                <Grid item>
-                    <Button
-                        startIcon={loading ? <CircularProgress size="1rem" /> : null}
-                        variant="contained"
-                        color="primary"
-                        sx={{
-                            backgroundColor: '#3c8084',
-                        }}
-                        onClick={() => {
-                            navigate("/services/transfercenter", {
-                                state: {
-                                    centerLicenceNumber: licenceNumber,
-                                    taskID
-                                }
-                            })
-                        }}
-                    >
-                        <IconsList iconType={IconsTypeEnum.EDIT_ICON} label="تعديل بيانات طلب نقل المركز" color="info" />
-                    </Button>
-                </Grid>
-            </Grid>
-        ):''
+            ) : ''
     }
     return (
         <>
