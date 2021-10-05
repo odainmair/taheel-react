@@ -72,14 +72,20 @@ const getChipComponentsForStatus = (data) => {
 
 const getRequestValues = (navigate, taskType, data) => {
     console.log(`LatestDraft :: getDraftValues :: taskType: ${taskType}`)
+    console.log(`LatestDraft :: getDraftValues :: data.type: ${data.type}`)
+    console.log(`LatestDraft :: getDraftValues :: data.status: ${data.status}`)
     let navigatinURL = '', draftFormType = ''
-    if (data.type === REQUEST_STATUS.DRAFT) {
+    if (data.status === REQUEST_STATUS.DRAFT) {
         if (taskType.trim() === 'إنشاء رخصة نهائية') {
             navigatinURL = '/services/finallicense'
             draftFormType = LICENSE_FORM_TYPES.NEW
         }
         else if (taskType.trim() === 'تجديد رخصة') {
             navigatinURL = '/services/finallicense'
+            draftFormType = LICENSE_FORM_TYPES.RENEW
+        }
+        else if (taskType.trim() === 'نقل مركز') {
+            navigatinURL = '/services/transfercenter'
             draftFormType = LICENSE_FORM_TYPES.RENEW
         } else {
             navigatinURL = '/services/finallicense'

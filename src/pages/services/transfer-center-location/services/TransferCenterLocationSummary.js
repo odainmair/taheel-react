@@ -20,9 +20,9 @@ const TransferCenterLocationSummary = () => {
     const navigate = useNavigate();
     const licenceNumber = location.state.licenceNumber
     const [taskID, setTaskID] = useState()
-    const reqNum = location.state.requestNum
+    const requestNum = location.state.requestNum
     console.log("licenceNumber+_+_+_+_+_+_+", licenceNumber)
-    console.log("reqNum+_+_+_+_+_+_+", reqNum)
+    console.log("requestNum+_+_+_+_+_+_+", requestNum)
     console.log("taskID+_+_+_+_+_+_+", taskID)
     const [details, setDetails] = useState(false)
     const [isAgree, setIsAgree] = useState(false)
@@ -38,7 +38,7 @@ const TransferCenterLocationSummary = () => {
     };
     useEffect(async () => {
         setLoading(true)
-        const getReqDetails = await getRequestDetails(reqNum)
+        const getReqDetails = await getRequestDetails(requestNum)
         if (!getReqDetails.isSuccessful) {
             SetErrMessage(getReqDetails.message)
         } else {
@@ -96,7 +96,7 @@ const TransferCenterLocationSummary = () => {
                                     state: {
                                         centerLicenceNumber: licenceNumber,
                                         taskID,
-                                        reqNum,
+                                        requestNum,
                                         formEdit:true
                                     }
                                 })
