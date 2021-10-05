@@ -15,7 +15,6 @@ import { getTaheelRequestsFun } from 'src/pages/services/data/servicesApi'
 const Orders = (props) => {
     const location = useLocation()
     const navigate = useNavigate();
-    const successCanceled = location.state?.successCanceled
     const { type } = props
     const [loading, setLoading] = useState(true);
     const [totalCount, setTotalCount] = useState();
@@ -31,9 +30,6 @@ const Orders = (props) => {
     }, [TPObject.pagination.batchSize, TPObject.pagination.startIndex])
 
     useEffect(async () => {
-        if (successCanceled === true) {
-            SetErrMessage({ msg: " تم الإلغاء بنجاح", type: "success" });
-        }
         setLoading(true)
         const { email } = getCurrentUser();
         const getTaheelRequestsRs = await getTaheelRequestsFun(email, paramData.startIndex, paramData.batchSize, type);
