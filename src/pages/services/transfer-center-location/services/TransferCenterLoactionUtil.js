@@ -57,7 +57,6 @@ const NewAddressValidation = values => {
 }
 
 const getDateFromObject = (date, format, req) => {
-  console.log('Samer ===> '+req, moment(date, format).format(req))
   return moment(date, format).format(req);
 }
 

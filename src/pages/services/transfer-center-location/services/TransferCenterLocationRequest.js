@@ -11,7 +11,9 @@ import {
     Divider,
     Container,
     Alert,
+    AlertTitle,
 } from '@material-ui/core';
+import DraftsTwoToneIcon from '@material-ui/icons/DraftsTwoTone';
 import FinalFromWizard from 'src/components/wizard/FinalFormWizard';
 import { ConditionComp, sectionValidateInput } from '../../temporary-license/services/temporayLicenseUtil';
 import { validateAPIFunc, validateCompanyFunc } from '../../temporary-license/services/temporayLicenseAPI';
@@ -45,51 +47,81 @@ const TransferCenterLocationRequest = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [editInitValues, setEditInitValues] = useState({});
     const [editMode, setEditMode] = useState(false);
-    const [centerLicenceNumber, setCenterLicenceNumber] = useState(location.state ? location.state.centerLicenceNumber : "1");
-    const reqNum = location.state?.reqNum;
+    const [centerLicenceNumber, setCenterLicenceNumber] = useState(location.state ? location.state.licenceNumber : "1");
+    const requestNum = location.state?.requestNum;
     const taskID = location.state?.taskID;
     const formEdit = location.state?.formEdit
+    const fromDraft = location.state?.fromDraft
     const [showSummary, setShowSummary] = useState(false);
-    const [expDate, setExpDate] = useState({});
     const formType = location.state ? location.state.formType : null;
     const [staffTypes, setStaffTypes] = useState([]);
     const [center, setCenter] = useState({});
-    const [details, setDetails] = useState({});
+    const [formInits, setFormInits] = useState({});
 
     useEffect(async () => {
+        console.log("TransferCenterLocationRequest :: fromDraft: " + fromDraft)
         console.log("TransferCenterLocationRequest :: centerLicenceNumber: " + centerLicenceNumber)
         const { email } = await getCurrentUser();
-        if (!!formEdit) {
+        if (!!formEdit || fromDraft) {
+
+
             setIsLoading(true);
             setRenewableLicenses([{ licenceNumber: centerLicenceNumber }]);
             await getCentertDetails(centerLicenceNumber);
 
             setIsLoading(true);
-            const getReqDetails = await getRequestDetails(reqNum)
+
+            const getReqDetails = await getRequestDetails(requestNum)
             if (!getReqDetails.isSuccessful) {
                 SetErrMessage(getReqDetails.message)
             } else {
                 let Details = getReqDetails.responseBody.requestDetails.data
-                Details = { NewCenterLocationData: { ...Details.processVariablesDump.NewCenterLocationData }, center: { ...Details.center } }
-                console.log("Details+++++++++++++", Details)
-                const date = Details?.NewCenterLocationData?.centerInfo_r?.expirarionDateForFireDepartmentLicenseHijri;
-                const expDate = {}
-                if (!!date) {
-                    let returned = getDateFromObject(date, 'iDDiMMiYYYY', 'iDD');
-                    if (!isNaN(returned)) {
-                        expDate.day = Number.parseInt(returned)
-                    }
-                    returned = getDateFromObject(date, 'iDDiMMiYYYY', 'iMM');
-                    if (!isNaN(returned)) {
-                        expDate.month = Number.parseInt(returned)
-                    }
-                    returned = getDateFromObject(date, 'iDDiMMiYYYY', 'iYYYY');
-                    if (!isNaN(returned)) {
-                        expDate.year = Number.parseInt(returned)
-                    }
+                console.log("TransferCenterLocationRequest :: Details: ", JSON.stringify(Details))
+                console.log("TransferCenterLocationRequest :: Details.draft_values.isDraft: ", JSON.stringify(Details.draft_values.isDraft))
+                console.log("TransferCenterLocationRequest :: Details.draft_values.draft_values: ", JSON.stringify(Details.draft_values.draft_values))
+                // console.log("TransferCenterLocationRequest :: draft_values?.draft_values?.buildingArea: ", draft_values?.draft_values?.buildingArea)
+
+                if (Details.draft_values.isDraft) {
+                    setFormInits({
+                        buildingArea: Details.draft_values?.draft_values?.buildingArea,
+                        basementArea: Details.draft_values?.draft_values?.basementArea,
+                        buildNo: Details.draft_values?.draft_values?.buildNo,
+                        capacity: Details.draft_values?.draft_values?.capacity,
+                        ...extractDate(Details.draft_values?.center?.centerInfo_r?.expirarionDateForFireDepartmentLicenseHijri),
+                        city: Details.draft_values?.draft_values?.city,
+                        buildNo: Details.draft_values?.draft_values?.buildNo,
+                        street: Details.draft_values?.draft_values?.street,
+                        sub: Details.draft_values?.draft_values?.sub,
+                        postalCode: Details.draft_values?.draft_values?.postalCode,
+                        additionalNo: Details.draft_values?.draft_values?.additionalNo,
+                        Furniture: [Details.draft_values?.draft_values?.Furniture],
+                        municipLicenseNo: [Details.draft_values?.draft_values?.municipLicenseNo],
+                        fireDepartmentLicense: [Details.draft_values?.draft_values?.fireDepartmentLicense],
+                        OfficeReport: [Details.draft_values?.draft_values?.OfficeReport],
+                    })
                 }
-                setExpDate(expDate)
-                setDetails(Details)
+                else {
+                    Details = { NewCenterLocationData: { ...Details.processVariablesDump.NewCenterLocationData }, center: { ...Details.center } }
+                    const date = Details?.NewCenterLocationData?.centerInfo_r?.expirarionDateForFireDepartmentLicenseHijri;
+                    setFormInits({
+                        buildingArea: Details?.NewCenterLocationData?.centerInfo_r?.buildingArea,
+                        basementArea: Details?.NewCenterLocationData?.centerInfo_r?.basementArea,
+                        buildNo: Details?.NewCenterLocationData?.centerLocation_r?.buildNo,
+                        capacity: null,
+                        ...extractDate(date),
+                        city: Details?.NewCenterLocationData?.centerLocation_r?.city,
+                        buildNo: Details?.NewCenterLocationData?.centerLocation_r?.buildNo,
+                        street: Details?.NewCenterLocationData?.centerLocation_r?.street,
+                        sub: Details?.NewCenterLocationData?.centerLocation_r?.area,
+                        postalCode: Details?.NewCenterLocationData?.centerLocation_r?.postalCode,
+                        additionalNo: Details?.NewCenterLocationData?.centerLocation_r?.additionalNo,
+                        // OfficeReport: [center && center.centerInfo_r && center.centerInfo_r.engineeringPlan && (center.centerInfo_r.engineeringPlan || center.centerInfo_r.engineeringPlan.id)],
+                        Furniture: [Details?.NewCenterLocationData?.centerInfo_r?.furniturePhoto_r.map(f => f.Document)],
+                        municipLicenseNo: [Details?.NewCenterLocationData?.centerInfo_r?.momraDoc],
+                        fireDepartmentLicense: [Details?.NewCenterLocationData?.centerInfo_r?.fireDepartmentLicense],
+                        OfficeReport: [Details?.NewCenterLocationData?.centerInfo_r?.engineeringPlan],
+                    })
+                }
                 setIsEnableNextBtn(true)
                 setIsLoading(false);
             }
@@ -111,6 +143,26 @@ const TransferCenterLocationRequest = () => {
         }
     }, [])
 
+    const extractDate = (dateObject) => {
+        console.log(`extractDate =============================> ${dateObject}`)
+        const expDate = {}
+        if (!!dateObject) {
+            let returned = getDateFromObject(dateObject, 'iYYYYiMMiDD', 'iDD');
+            if (!isNaN(returned)) {
+                expDate.day = Number.parseInt(returned)
+            }
+            returned = getDateFromObject(dateObject, 'iYYYYiMMiDD', 'iMM');
+            if (!isNaN(returned)) {
+                expDate.month = Number.parseInt(returned)
+            }
+            returned = getDateFromObject(dateObject, 'iYYYYiMMiDD', 'iYYYY');
+            if (!isNaN(returned)) {
+                expDate.year = Number.parseInt(returned)
+            }
+        }
+        console.log(`expDate =============================> ${JSON.stringify(expDate)}`)
+        return expDate
+    }
     const getCentertDetails = async (licenceNumber) => {
         setIsLoading(true)
         SetErrMessage("");
@@ -177,11 +229,17 @@ const TransferCenterLocationRequest = () => {
     };
 
     const onSubmit = async (values) => {
+        setIsLoading(true);
         console.log("values++++++++++++", JSON.stringify(values))
-        const response = await centerLocationTransferAPIFunc(values, !!formEdit, taskID);
+        const response = await centerLocationTransferAPIFunc(values);
         console.log("response.isSuccessful", response.isSuccessful);
-        if (response.isSuccessful) {
-            handleClickOpen(`${response.responseBody.data.message}`, '');
+        if(response.isSuccessful) {
+            if(values.isDraft && !!response?.responseBody?.data) {
+                handleClickOpen(`${response.responseBody.data.message[0]} طلب رقم ${response.responseBody.data.requestNumber}`, '');
+            }
+            else {
+                handleClickOpen(`${response.responseBody.data.message}`, '');
+            }
         }
         else {
             SetErrMessage(`${response.message}`);
@@ -196,6 +254,12 @@ const TransferCenterLocationRequest = () => {
                     title="نقل مقر مركز أهلي"
                 />
                 <Divider />
+                {!isLoading && fromDraft &&
+                <Alert icon={<DraftsTwoToneIcon sx={{ color: 'grey !important' }} />} variant="outlined" severity="info" sx={{ marginLeft: 2, marginRight: 2, marginTop: 1, color: 'grey !important', borderColor: 'grey !important' }}>
+                    <AlertTitle> مسودة رقم {requestNum}</AlertTitle>
+                    {editInitValues?.chairmanComment && editInitValues.chairmanComment?.comment}
+                </Alert>
+                }
                 {errMessage && (
                     <Alert variant="outlined" severity="error">
                         {errMessage}
@@ -231,23 +295,9 @@ const TransferCenterLocationRequest = () => {
                                 newCapacity: center && center.centerInfo_r && numeral(center.centerInfo_r.carryingnumber).format('0,0'),
                                 financialGuarantee: center && center.centerInfo_r && `${numeral(center.centerInfo_r.financialGuarantee).format('0,0.00')} ر.س.`,
 
-                                //getting the formEdit Data if exist
-                                buildingArea: details?.NewCenterLocationData?.centerInfo_r?.buildingArea,
-                                basementArea: details?.NewCenterLocationData?.centerInfo_r?.basementArea,
-                                buildNo: details?.NewCenterLocationData?.centerLocation_r?.buildNo,
-                                capacity: null,
-                                ...expDate,
-                                city: details?.NewCenterLocationData?.centerLocation_r?.city,
-                                buildNo: details?.NewCenterLocationData?.centerLocation_r?.buildNo,
-                                street: details?.NewCenterLocationData?.centerLocation_r?.street,
-                                sub: details?.NewCenterLocationData?.centerLocation_r?.area,
-                                postalCode: details?.NewCenterLocationData?.centerLocation_r?.postalCode,
-                                additionalNo: details?.NewCenterLocationData?.centerLocation_r?.additionalNo,
-                                // OfficeReport: [center && center.centerInfo_r && center.centerInfo_r.engineeringPlan && (center.centerInfo_r.engineeringPlan || center.centerInfo_r.engineeringPlan.id)],
-                                Furniture: [details?.NewCenterLocationData?.centerInfo_r?.furniturePhoto_r.map(f => f.Document)],
-                                municipLicenseNo: [details?.NewCenterLocationData?.centerInfo_r?.momraDoc],
-                                fireDepartmentLicense: [details?.NewCenterLocationData?.centerInfo_r?.fireDepartmentLicense],
-                                OfficeReport: [details?.NewCenterLocationData?.centerInfo_r?.engineeringPlan],
+                                //getting the form initial values if exist
+                                ...formInits,
+                                requestNum: requestNum,
 
                                 SecurityReport: center && center.centerInfo_r && [center.centerInfo_r.securityReport && (center.centerInfo_r.securityReport || center.centerInfo_r.securityReport.id)],
                                 OperationalPlan: [center && center.centerInfo_r && center.centerInfo_r.operationPlan && (center.centerInfo_r.operationPlan || center.centerInfo_r.operationPlan.id)],
@@ -265,7 +315,8 @@ const TransferCenterLocationRequest = () => {
 
                             }}
                             cancelBtnFn={() => { navigate('/app/products', { replace: true }); }}
-                            isEnableCancelBtn={true}
+                            isEnableCancelBtn={false}
+                            isEnableEndBtn={true}
                             isEnableNextBtn={isEnableNextBtn}
                             showSummary={showSummary}
                             onSubmit={onSubmit}
@@ -280,6 +331,7 @@ const TransferCenterLocationRequest = () => {
                                 setShowSummary={setShowSummary}
                                 getCentertDetails={getCentertDetails}
                                 setIsEnableNextBtn={(isEnable) => setIsEnableNextBtn(isEnable)}
+                                fromDraft={fromDraft}
                             />
                             <FinalFromWizarLocationDataPage
                                 label="بيانات المقر الجديد للمركز "
@@ -313,7 +365,7 @@ const TransferCenterLocationRequest = () => {
     );
 }
 
-const FinalFromWizardLicenseDataPage = ({ validate, formEdit, setIsEnableNextBtn, setCenterLicenceNumber, values, showSummary, isLoading, getCentertDetails, setShowSummary, renewableLicenses, setField }) => (
+const FinalFromWizardLicenseDataPage = ({ validate, formEdit, setIsEnableNextBtn, setCenterLicenceNumber, values, showSummary, isLoading, getCentertDetails, setShowSummary, renewableLicenses, setField, fromDraft }) => (
     <Box>
         <FinalLicenseData
             values={values}
@@ -327,6 +379,7 @@ const FinalFromWizardLicenseDataPage = ({ validate, formEdit, setIsEnableNextBtn
             setIsEnableNextBtn={(isEnable) => setIsEnableNextBtn(isEnable)}
             isLoading={isLoading}
             getCentertDetails={getCentertDetails}
+            fromDraft={fromDraft}
         />
     </Box>
 
