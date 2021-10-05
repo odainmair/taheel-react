@@ -75,15 +75,15 @@ const TransferCenterLocationRequest = () => {
                 const date = Details?.NewCenterLocationData?.centerInfo_r?.expirarionDateForFireDepartmentLicenseHijri;
                 const expDate = {}
                 if (!!date) {
-                    let returned = getDateFromObject(date, 'iDDiMMiYYYY', 'iDD');
+                    let returned = getDateFromObject(date, 'iYYYYiMMiDD', 'iDD');
                     if (!isNaN(returned)) {
                         expDate.day = Number.parseInt(returned)
                     }
-                    returned = getDateFromObject(date, 'iDDiMMiYYYY', 'iMM');
+                    returned = getDateFromObject(date, 'iYYYYiMMiDD', 'iMM');
                     if (!isNaN(returned)) {
                         expDate.month = Number.parseInt(returned)
                     }
-                    returned = getDateFromObject(date, 'iDDiMMiYYYY', 'iYYYY');
+                    returned = getDateFromObject(date, 'iYYYYiMMiDD', 'iYYYY');
                     if (!isNaN(returned)) {
                         expDate.year = Number.parseInt(returned)
                     }

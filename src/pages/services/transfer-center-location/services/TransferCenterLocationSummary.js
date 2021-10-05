@@ -28,13 +28,13 @@ const TransferCenterLocationSummary = () => {
     const [isAgree, setIsAgree] = useState(false)
     const [errMessage, SetErrMessage] = useState('')
     const [loading, setLoading] = useState(true)
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState(false)
+    const [btnsOptions, setBtnsOptions] = useState({})
+    const [dialogContent, setDialogContent] = useState("")
+    const [dialogTitle, setDialogTitle] = useState("")
     const handleClickOpen = (data) => {
         SetErrMessage('')
         setOpen(true);
-    };
-    const handleClose = () => {
-        setOpen(false);
     };
     useEffect(async () => {
         setLoading(true)
@@ -58,15 +58,23 @@ const TransferCenterLocationSummary = () => {
             return { isSquccessful: false, message: deleteCommissioner.message };
         } else {
             setLoading(false)
-            navigate("/app/orders", {
-                state: {
-                    centerLicenceNumber: licenceNumber,
-                    taskID: taskID,
-                    successCanceled: true
+            setBtnsOptions({
+                acceptBtnName: "تم", onClose: () => {
+                    navigate("/app/orders", {
+                        state: {
+                            centerLicenceNumber: licenceNumber,
+                            taskID: taskID
+                        }
+                    })
                 }
-            })
-            return { isSquccessful: true, message: "تم الحذف بنجاح" };
+            });
+            setDialogContent(`${deleteCommissioner.responseBody.data.message} `+reqNum);
+            setDialogTitle('')
+            setOpen(true);
+
+            console.log('navegate');
         }
+        return { isSquccessful: true, message: "تم الحذف بنجاح" };
     }
     const title = 'تفاصيل طلب نقل المركز'
     const additionalFields = (isAgree, setIsAgree) => {
@@ -77,7 +85,13 @@ const TransferCenterLocationSummary = () => {
                         <Button
                             variant="contained"
                             color="secondary"
-                            onClick={() => setOpen(true)}
+                            onClick={() => {
+                                setBtnsOptions({ onClose: () => { setOpen(false) }, buttons: { leftBtn: { title: 'نعم', func: () => { setOpen(false); onCancelTCRequest(); } }, rightBtn: { title: 'لا', func: ()=>{setOpen(false)} } } });
+                                setDialogContent('هل انت متأكد من الغاء طلب نقل المركز ؟ ');
+                                setDialogTitle('إلغاء طلب نقل المركز')
+                                setOpen(true);
+                            }
+                            }
                         >
                             <IconsList iconType={IconsTypeEnum.DELETE_ICON} label="إلغاء الطلب" color="info" />
 
@@ -97,7 +111,7 @@ const TransferCenterLocationSummary = () => {
                                         centerLicenceNumber: licenceNumber,
                                         taskID,
                                         reqNum,
-                                        formEdit:true
+                                        formEdit: true
                                     }
                                 })
                             }}
@@ -105,12 +119,12 @@ const TransferCenterLocationSummary = () => {
                             <IconsList iconType={IconsTypeEnum.EDIT_ICON} label="تعديل بيانات طلب نقل المركز" color="info" />
                         </Button>
                     </Grid>
-                </Grid>
+                </Grid >
             ) : ''
     }
     return (
         <>
-            <AlertDialog open={open} onClose={() => { setOpen(false) }} dialogTitle="إلغاء طلب نقل المركز" dialogContent={"هل انت متأكد من الغاء طلب نقل المركز ؟ "} buttons={{ leftBtn: { title: 'نعم', func: () => { setOpen(false); onCancelTCRequest(); } }, rightBtn: { title: 'لا', func: handleClose } }} />
+            <AlertDialog dialogContent={dialogContent} dialogTitle={dialogTitle} open={open} {...btnsOptions} />
             <FormCreator
                 title={title}
                 schema={TransferCenterLocationSchema}
