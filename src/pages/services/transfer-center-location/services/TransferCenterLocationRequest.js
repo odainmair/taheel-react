@@ -271,7 +271,6 @@ const TransferCenterLocationRequest = () => {
                                 companyName: center && center.crInfo_r && center.crInfo_r.entityName,
                                 activities: center && center.crInfo_r && center.crInfo_r.crActivityType,
                                 // municipLicenseNo: center && center.crInfo_r && center.crInfo_r.MoMRA_Licence,
-                                beneficiariesNum: center && center.centerInfo_r && center.centerInfo_r.beneficiaryCount,
                                 newCapacity: center && center.centerInfo_r && numeral(center.centerInfo_r.carryingnumber).format('0,0'),
                                 financialGuarantee: center && center.centerInfo_r && `${numeral(center.centerInfo_r.financialGuarantee).format('0,0.00')} ر.س.`,
                                 beneficiariesNum: center && center.centerInfo_r && center.centerInfo_r.beneficiaryCount,
