@@ -2,6 +2,7 @@ import moment from 'moment-hijri';
 
 const required = 'يجب تعبئة الحقل';
 const FielsRequired = 'يرجى ارفاق هذا الملف';
+const InvalidDate = 'تاريخ غير صالح';
 
 const AttachementValidation = (values) => {
   var msg = {};
@@ -20,6 +21,17 @@ const AttachementValidation = (values) => {
     msg.day = required;
     msg.month = required;
     msg.year = required;
+  }
+
+  let currentDate = moment().format('iYYYY/iM/iD');
+  let enteredDate = moment(
+    `${values.year} / ${values.month} / ${values.day}`,
+    'iYYYY/iM/iD'
+  ).format('iYYYY/iM/iD');
+  if (moment(enteredDate).isBefore(currentDate)) {
+    msg.day = InvalidDate;
+    msg.month = InvalidDate;
+    msg.year = InvalidDate;
   }
 
   return msg;
