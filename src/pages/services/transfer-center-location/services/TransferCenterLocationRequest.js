@@ -276,6 +276,7 @@ const TransferCenterLocationRequest = () => {
                                 //getting the form initial values if exist
                                 ...formInits,
                                 requestNum: requestNum,
+                                isDraft: false,
 
                                 SecurityReport: center && center.centerInfo_r && [center.centerInfo_r.securityReport && (center.centerInfo_r.securityReport || center.centerInfo_r.securityReport.id)],
                                 OperationalPlan: [center && center.centerInfo_r && center.centerInfo_r.operationPlan && (center.centerInfo_r.operationPlan || center.centerInfo_r.operationPlan.id)],

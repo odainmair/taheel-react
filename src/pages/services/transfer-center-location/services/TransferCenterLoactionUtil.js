@@ -9,6 +9,13 @@ const OldDate = "لا يمكن أن يكون تاريخ الإنتهاء قبل 
 
 const AttachementValidation = (values) => {
   var msg = {};
+  let currentDate = moment().format("iYYYY/iM/iD");
+  let hijriDate = moment(
+    `${values.year} / ${values.month} / ${values.day}`,
+    "iYYYY/iM/iD"
+  );
+  let enteredDate = moment(hijriDate).format("iYYYY/iM/iD");
+
   if (!values.fireDepartmentLicense || !values.fireDepartmentLicense[0])
     msg.fireDepartmentLicense = FielsRequired;
 
@@ -25,21 +32,13 @@ const AttachementValidation = (values) => {
     msg.month = required;
     msg.year = required;
   }
-
-  let currentDate = moment().format("iYYYY/iM/iD");
-  let hijriDate = moment(
-    `${values.year} / ${values.month} / ${values.day}`,
-    "iYYYY/iM/iD"
-  );
-  let enteredDate = moment(hijriDate).format("iYYYY/iM/iD");
+  else if (!hijriDate.isValid()) {
+    msg.day = InvalidDate;
+  }
   if (moment(enteredDate).isBefore(currentDate)) {
     msg.day = OldDate;
     msg.month = OldDate;
     msg.year = OldDate;
-  }
-
-  if (!hijriDate.isValid()) {
-    msg.day = "day doesnt exist";
   }
 
   return msg;
