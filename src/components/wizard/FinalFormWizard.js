@@ -199,12 +199,46 @@ export default class FinalFromWizard extends React.Component {
                     )}
                   </Grid>
                 </Grid>
-              </Grid>
-                 {/*<pre dir="ltr">{JSON.stringify(values, 0, 2)}</pre>*/ }
-            </form>
-          )
-        }}
-      </Form>
+                {/* {<pre dir="ltr">{JSON.stringify(values, 0, 2)}</pre>}  */}
+
+                {isEnableCancelBtn && (
+                  <ConfirmationDialog
+                    acceptBtnName="نعم"
+                    cancelBtnName="لا"
+                    dialogTitle="هل انت متأكد من إلغاء الطلب؟"
+                    open={this.state.open}
+                    onCloseFn={() => this.setState((state) => ({ open: false }))}
+                    onAcceptFn={() => cancelBtnFn()}></ConfirmationDialog>)}
+                {isEnableEndBtn && (
+                  <ConfirmationDialog
+                    acceptBtnName="حفظ مسودة"
+                    cancelBtnName="إلغاء الطلب"
+                    dialogTitle="هل انت متأكد من إنهاء الطلب؟"
+                    open={this.state.open}
+                    onEscapeKeyDown={() => {
+                      console.log("===================== onEscapeKeyDown")
+                      this.setState((state) => ({ open: false }))
+                    }
+                    }
+                    onBackdropClick={() => {
+                      console.log("===================== onBackdropClick")
+                      console.log(`values: ${JSON.stringify(values)}`)
+                      this.setState((state) => ({ open: false }))
+                    }
+                    }
+                    onAcceptFn={() => this.end({...values, isDraft: true})}
+                    onCloseFn={() => {
+                      console.log("===================== onCloseFn")
+                      this.setState((state) => ({ open: false }))
+                      cancelBtnFn()
+                    }
+                    }></ConfirmationDialog>)}
+              </form>
+            )
+          }}
+
+        </Form>
+      </>
     )
   }
 }

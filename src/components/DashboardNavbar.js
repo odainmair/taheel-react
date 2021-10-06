@@ -16,7 +16,44 @@ import InputIcon from '@material-ui/icons/Input';
 import Logo from './Logo';
 
 const DashboardNavbar = ({ onMobileNavOpen, ...rest }) => {
-  const [notifications] = useState(['1', '2']);
+  const useStyles = makeStyles({
+    cardHovered: {
+      background: "white",
+      '&:hover': {
+        background: "lightBlue",
+        cursor: "pointer"
+      },
+    },
+  });
+  const classes = useStyles()
+  const [allNotif, setAllNotif] = useState([]);
+  const [unreadNotif, setUnreadNotif] = useState(0);
+  const getNotifications = async (email) => {
+    const url = 'taheel-apis-utilities-get-web-notifications';
+    const queryParams = { email, "in": "query", "schema": { "type": "string" } };
+    const response = await APIRequest({ url, queryParams });
+    return response;
+  };
+  const changeNotificationStatus = async (notif) => {
+    setUnreadNotif(unreadNotif-1);
+    notif.isRead=true
+    const url = 'taheel-apis-utilities-change-web-notification-status';
+    const queryParams = { notificationId: notif.ID };
+    const res = await APIRequest({ url, queryParams });
+    return res;
+  };
+  useEffect(async () => {
+    const { email } = getCurrentUser()
+    if(email){ 
+      const notifications = await getNotifications(email)
+      if (notifications.isSuccessful) {
+        console.log("notifications --> ", notifications.responseBody.data.content)
+        setAllNotif(notifications?.responseBody?.data?.content)
+      
+        setUnreadNotif(notifications?.responseBody?.data?.content?.filter(notif => !notif.isRead)?.length)
+      }
+    }
+  }, []);
 
   return (
     <AppBar
@@ -29,15 +66,63 @@ const DashboardNavbar = ({ onMobileNavOpen, ...rest }) => {
         </RouterLink>
         <Box sx={{ flexGrow: 1 }} />
         <Hidden lgDown>
-          <IconButton color="inherit">
-            <Badge
-              badgeContent={2 + notifications.length}
-              color="primary"
-              variant="dot"
-            >
-              <NotificationsIcon />
-            </Badge>
-          </IconButton>
+          <PopupState variant="popover" popupId="demo-popup-menu" classes={{ maxWidth: '100px' }} class="hideBar">
+            {(popupState) => (
+              <React.Fragment>
+                <IconButton color="inherit" {...bindTrigger(popupState)}>
+                  <Badge
+                    badgeContent={unreadNotif}
+                    color="secondary"
+                  >
+                    <NotificationsIcon />
+                  </Badge>
+                </IconButton>
+                <Menu {...bindMenu(popupState)} dense={true} >
+                  <Card sx={{ maxWidth: 345, borderColor: 'white' }}>
+                    <CardHeader style={{ position: 'fixed', zIndex: '1', background: 'white', width: '345px' }}
+                      avatar={
+                        <>
+                          <Avatar
+                            sx={{
+                              backgroundColor: '#103145',
+                            }}
+                          >
+                            <NotificationsIcon />
+                          </Avatar>
+                        </>
+                      }
+                      action={
+                        <IconButton aria-label="settings" color="primary">
+                          <MoreVertIcon />
+                        </IconButton>
+                      }
+                      title={<Grid item style={{ paddingRight: "20px" }}>{"التنبيهات"}</Grid>}
+                    />
+                    <CardContent onClick={popupState.close} style={{ paddingTop: '75px' }}>
+                      <List dense={true}  >
+                        {allNotif.map((notif, idx) =>
+                          <>
+                            <ListItem className={classes.cardHovered} onClick={() => { changeNotificationStatus(notif)}}>
+                              {!notif.isRead ? <FiberManualRecordIcon fontSize="small" /> : ''}
+                              <ListItemAvatar>
+                                <Avatar>
+                                  <ImageIcon />
+                                </Avatar>
+                              </ListItemAvatar>
+                              <ListItemText primary={notif.content} secondary={notif.date} />
+                            </ListItem>
+                            <Divider component="li" />
+                          </>
+                        )}
+                      </List>
+                    </CardContent>
+                  </Card>
+                </Menu>
+              </React.Fragment>
+            )}
+          </PopupState>
+
+
           {/* <IconButton color="inherit" onClick={() => { logoutUser(); }}>
             <InputIcon />
           </IconButton> */}
