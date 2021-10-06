@@ -195,7 +195,7 @@ export default function TableCreator({ pageTitle, tableTitle, tableShcema, dataT
                                                 </Table>)
                                             }
                                         </Paper>
-                                        <PaginationDraw totalCount={totalCount} TPObject={TPObject} loading={loading} />
+                                        {loading ? <Skeleton /> : <PaginationDraw totalCount={totalCount} TPObject={TPObject} loading={loading} />}
                                     </PerfectScrollbar>
                                 </Card>
                             </Grid >
