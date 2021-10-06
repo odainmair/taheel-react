@@ -52,6 +52,14 @@ const DashboardNavbar = ({ onMobileNavOpen, ...rest }) => {
     const response = await APIRequest({ url, queryParams });
     return response;
   };
+  const changeNotificationStatus = async (notif) => {
+    setUnreadNotif(unreadNotif-1);
+    notif.isRead=true
+    const url = 'taheel-apis-utilities-change-web-notification-status';
+    const queryParams = { notificationId: notif.ID };
+    const res = await APIRequest({ url, queryParams });
+    return res;
+  };
   useEffect(async () => {
     const { email } = getCurrentUser()
     if(email){ 
@@ -59,6 +67,7 @@ const DashboardNavbar = ({ onMobileNavOpen, ...rest }) => {
       if (notifications.isSuccessful) {
         console.log("notifications --> ", notifications.responseBody.data.content)
         setAllNotif(notifications?.responseBody?.data?.content)
+      
         setUnreadNotif(notifications?.responseBody?.data?.content?.filter(notif => !notif.isRead)?.length)
       }
     }
@@ -111,7 +120,7 @@ const DashboardNavbar = ({ onMobileNavOpen, ...rest }) => {
                       <List dense={true}  >
                         {allNotif.map((notif, idx) =>
                           <>
-                            <ListItem className={classes.cardHovered} onClick={() => { notif.isRead = true; }}>
+                            <ListItem className={classes.cardHovered} onClick={() => { changeNotificationStatus(notif)}}>
                               {!notif.isRead ? <FiberManualRecordIcon fontSize="small" /> : ''}
                               <ListItemAvatar>
                                 <Avatar>

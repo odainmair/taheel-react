@@ -22,7 +22,6 @@ const Attachements = ({ setField, values, setIsEnableNextBtn }) => {
       <Grid
         container
         spacing={3}
-        mt={3}
       >
         <Grid
           item
@@ -39,10 +38,11 @@ const Attachements = ({ setField, values, setIsEnableNextBtn }) => {
             label="ارفاق صور الأثاث و الأجهزة الكهربائية (للمبنى الجديد)"
             name="Furniture"
             component={FileUploaderComp}
-            multipleFile={false}
+            multipleFile={true}
             setField={setField}
             setDocument={setDocument}
             values={values}
+            imgOnly = {true}
           />
         </Grid>
         <Grid
@@ -73,6 +73,7 @@ const Attachements = ({ setField, values, setIsEnableNextBtn }) => {
             setField={setField}
             setDocument={setDocument}
             values={values}
+            
           />
         </Grid>
         <Grid

@@ -1,6 +1,7 @@
 import { checkIsfilled } from 'src/utils/inputValidator';
 import { v4 as uuid } from 'uuid';
 import moment from 'moment-hijri';
+import { getDocId } from 'src/utils/TaheelUtils';
 
 const getCenterType = (value) => {
     if (value === '01') {
@@ -234,7 +235,7 @@ export default
                 en: 'Fire department License Expiry Date'
             },
             name: 'NewCenterLocationData.centerInfo_r.expirarionDateForFireDepartmentLicenseHijri',
-            attrFunc:(value) => {return moment(`${value}`, 'iYYYYiMMiDD').format('iDD/iMM/iYYYY')},
+            attrFunc: (value) => { return moment(`${value}`, 'iYYYYiMMiDD').format('iDD/iMM/iYYYY') },
             type: 'Text',
             gridSize: '6',
             sectionName: Sections.Location,
@@ -248,7 +249,7 @@ export default
                 en: 'Fire department License'
             },
             name: 'FireDepartmentLicense',
-            valueFunc: (values) => (values?.NewCenterLocationData?.centerInfo_r?.fireDepartmentLicense),
+            valueFunc: (values) => (getDocId(values?.NewCenterLocationData?.centerInfo_r?.fireDepartmentLicense)),
             type: 'file',
             gridSize: '6',
             sectionName: Sections.Attachments,
@@ -262,7 +263,7 @@ export default
                 en: 'Municiplity License for the New building'
             },
             name: 'MoMRA_Licence',
-            valueFunc: (values) => (values?.NewCenterLocationData?.centerInfo_r?.momraDoc),
+            valueFunc: (values) => (getDocId(values?.NewCenterLocationData?.centerInfo_r?.momraDoc)),
             type: 'file',
             gridSize: '6',
             sectionName: Sections.Attachments,
@@ -276,7 +277,7 @@ export default
                 en: 'Engineering Report'
             },
             name: 'engineeringPlan',
-            valueFunc: (values) => (values?.NewCenterLocationData?.centerInfo_r?.engineeringPlan),
+            valueFunc: (values) => (getDocId(values?.NewCenterLocationData?.centerInfo_r?.engineeringPlan)),
             type: 'file',
             gridSize: '6',
             sectionName: Sections.Attachments,
@@ -290,7 +291,7 @@ export default
                 en: 'Furniture'
             },
             name: 'Furniture',
-            valueFunc: (values) => (values?.NewCenterLocationData?.centerInfo_r?.furniturePhoto_r?.Document?.id || values?.NewCenterLocationData?.centerInfo_r?.furniturePhoto_r?.Document?.map(d => d?.id) || values?.NewCenterLocationData?.centerInfo_r?.furniturePhoto_r?.map(d => d?.Document) || values?.NewCenterLocationData?.centerInfo_r?.furniturePhoto_r?.map(d => d?.Document?.id)),
+            valueFunc: (values) => (getDocId(values?.NewCenterLocationData?.centerInfo_r?.furniturePhoto_r)),
             type: 'file',
             gridSize: '6',
             sectionName: Sections.Attachments,

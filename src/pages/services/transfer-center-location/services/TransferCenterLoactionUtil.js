@@ -1,81 +1,75 @@
-import moment from 'moment-hijri';
-moment.locale('ar-SA');
+import { checkIsNumber } from 'src/utils/inputValidator';
 
-const required = 'يجب تعبئة الحقل';
-const FielsRequired = 'يرجى ارفاق هذا الملف';
-const InvalidDate = 'تاريخ غير صالح';
+const required  ='يجب تعبئة الحقل';
 
-const AttachementValidation = (values) => {
-  var msg = {};
+const AttachementValidation = values => {
+  var msg = {}
   if (!values.fireDepartmentLicense || !values.fireDepartmentLicense[0])
-    msg.fireDepartmentLicense = FielsRequired;
+    msg.fireDepartmentLicense = "يرجى ارفاق هذا الملف";
 
   if (!values.OfficeReport || !values.OfficeReport[0])
-    msg.OfficeReport = FielsRequired;
+    msg.OfficeReport = "يرجى ارفاق هذا الملف";
 
-  if (!values.Furniture || !values.Furniture[0]) msg.Furniture = FielsRequired;
+  if (!values.Furniture || !values.Furniture[0])
+    msg.Furniture = "يرجى ارفاق هذا الملف";
 
   if (!values.municipLicenseNo || !values.municipLicenseNo[0])
-    msg.municipLicenseNo = FielsRequired;
+    msg.municipLicenseNo = "يرجى ارفاق هذا الملف";
+
 
   if (!values.day || !values.month || !values.year) {
-    msg.day = required;
-    msg.month = required;
-    msg.year = required;
+    msg.day = required
+    msg.month = required
+    msg.year = required
   }
 
-  let currentDate = moment().format('iYYYY/iM/iD');
-  let hijriDate = moment(
-    `${values.year} / ${values.month} / ${values.day}`,
-    'iYYYY/iM/iD'
-  );
-  let enteredDate = moment(hijriDate).format('iYYYY/iM/iD');
-  if (moment(enteredDate).isBefore(currentDate)) {
-    msg.day = InvalidDate;
-    msg.month = InvalidDate;
-    msg.year = InvalidDate;
-  }
+  
 
-  if (!hijriDate.isValid()) {
-    msg.day = 'day doesnt exist';
-  }
+
 
   return msg;
-};
+}
 
-const NewAddressValidation = (values) => {
-  var msg = {};
+const NewAddressValidation = values => {
+  var msg = {}
+  const format = /[^a-zA-Z \u0600-\u065F\u066A-\u06EF\u06FA-\u06FF]/;
+  // const EnglishFormat = /[\u0600-\u065F\u066A-\u06EF\u06FA-\u06FF]/;
+
   if (!values.sub) {
-    msg.sub = required;
+    msg.sub = required
+  }else if (format.test(values.sub)){
+    msg.sub = 'يجب ان يحتوي على أحرف فقط'
   }
+
   if (!values.city) {
-    msg.city = required;
+    msg.city = required
+  }else if (format.test(values.city)){
+    msg.city = 'يجب ان يحتوي على أحرف فقط'
   }
   if (!values.street) {
-    msg.street = required;
+    msg.street = required
+  }else if (format.test(values.street)){
+    msg.street = 'يجب ان يحتوي على أحرف فقط'
   }
-  if (!values.buildNo) {
-    msg.buildNo = required;
-  }
-  if (!values.postalCode) {
-    msg.postalCode = required;
-  }
-  if (!values.additionalNo) {
-    msg.additionalNo = required;
-  }
-  // console.log("values.additionalNo++++ ", values.additionalNo)
-  // console.log("length++++ ", values.additionalNo.length)
+if (!values.buildNo) {
+  msg.buildNo = required
+}else if ( !checkIsNumber(values.buildNo)) {
+  msg.buildNo ='يجب ان يحتوي رقم المبنى على ارقام فقط'
+}
 
-  if (values?.additionalNo?.length != 4) {
-    // console.log("length++++ ", values.additionalNo.length)
+if (!values.postalCode) {
+  msg.postalCode =required
+}
 
-    msg.additionalNo = 'يجب ان يحتوي الرقم الاضافي على 4 خانات';
-  }
-  return msg;
-};
+if (!values.additionalNo) {
+  msg.additionalNo = required
+}else if ( !checkIsNumber(values.additionalNo)) {
+  msg.additionalNo ='يجب ان يحتوي الرقم الاضافي على ارقام فقط'
+}else if (values?.additionalNo?.length != 4 ) {
+  msg.additionalNo ='يجب ان يحتوي الرقم الاضافي على 4 خانات'
+}
 
-const getDateFromObject = (date, format, req) => {
-  return moment(date, format).format(req);
-};
+return msg;
+}
 
-export { AttachementValidation, NewAddressValidation, getDateFromObject };
+export { AttachementValidation, NewAddressValidation };

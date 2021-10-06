@@ -27,7 +27,7 @@ export default [
   },
   {
     id: uuid(),
-    description: 'تتيح هذه الخدمة للمركز تقييم جاهزيته',
+    description: 'نقل مقر مركز أهلي',
     media: '/static/images/products/checklist.png',
     title: 'نقل مقر مركز أهلي',
     url: '/services/transfercenter',
