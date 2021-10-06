@@ -251,7 +251,7 @@ const NewLocationData = ({ setField, values, setIsEnableNextBtn }) => {
         <Divider />
         <Grid container spacing={3} mt={2}>
           <Grid item md={12} xs={12}>
-            <Typography> تاريخ الانتهاء</Typography>
+            <Typography>تاريخ انتهاء رخصة الدفاع المدني</Typography>
           </Grid>
           <Calendar
             FeiledWidth={4}
