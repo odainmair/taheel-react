@@ -10,22 +10,23 @@ const dateFormatter = (date, formate = 'iDD/iMM/iYYYY', formateTo = 'iDD iMMM iY
 }
 
 const getDocId = (docs) => {
-    console.log('Samer=--->', docs)
     if (!!docs) {
         if (docs.length > 0) {
             if (!!docs?.Document?.id || !!docs?.Document?.map(d => d?.id)[0] || !!docs?.map(d => d?.Document)[0] || !!docs?.map(d => d?.Document?.id)[0] || !!docs?.id) {
-                console.log('Samer2=--->', docs)
                 return docs?.Document?.id || docs?.Document?.map(d => d?.id) || docs?.map(d => d?.Document) || docs?.map(d => d?.Document?.id) || docs?.id
             } else if (!!docs[0] && docs[0] != '') {
-                console.log('Samer3=--->', docs)
                 return docs
             } else {
-                console.log('Samer4=--->', docs)
                 return null
             }
         } else if (!!docs?.id) {
             return docs.id
-        } else {
+        } else if (!!docs?.ID) {
+            return docs.ID
+        } else if (docs != '') {
+            return [docs]
+        }
+        else {
             return null
         }
     }

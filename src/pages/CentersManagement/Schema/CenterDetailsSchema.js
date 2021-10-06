@@ -1,4 +1,5 @@
 import { checkIsfilled } from 'src/utils/inputValidator';
+import { getDocId } from 'src/utils/TaheelUtils';
 import { v4 as uuid } from 'uuid';
 
 const getCenterType = (value) => {
@@ -380,7 +381,7 @@ export default
                 en: 'Health care service documents'
             },
             name: 'healthCareServices_r',
-            valueFunc: (values) => (values?.healthCareServices_r?.ID),
+            valueFunc: (values) => (getDocId(values?.healthCareServices_r)),
             type: 'file',
             gridSize: '6',
             sectionName: Sections.Requirements,
