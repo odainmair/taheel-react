@@ -39,7 +39,7 @@ export default [
     media: '/static/images/products/help_hand.png',
     title: 'برنامج تحمل الدولة للرسوم',
     url: '/services/survey',
-    isActive: true
+    isActive: false
   },
   {
     id: uuid(),
