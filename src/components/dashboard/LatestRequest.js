@@ -1,5 +1,6 @@
 // import { v4 as uuid } from 'uuid';
 import PerfectScrollbar from 'react-perfect-scrollbar';
+import { useNavigate } from 'react-router-dom';
 import {
   Box,
   Button,
@@ -19,9 +20,11 @@ import {
 import ArrowLeftIcon from '@material-ui/icons/ArrowLeft';
 import HistoryOutlinedIcon from '@material-ui/icons/HistoryOutlined';
 import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
+import DraftsTwoToneIcon from '@material-ui/icons/DraftsTwoTone';
 import DoneIcon from '@material-ui/icons/Done';
 import Skeleton from '@material-ui/lab/Skeleton';
 import PropTypes from 'prop-types';
+import { REQUEST_STATUS } from 'src/utils/enums'
 
 /* const requests = [
   {
@@ -80,7 +83,7 @@ import PropTypes from 'prop-types';
   }
 ]; */
 const getChipComponentsForStatus = (status) => {
-  if (status === -1) {
+  if (status === REQUEST_STATUS.COMPLETED) {
     return (
       <Chip
         label="مكتمل"
@@ -94,7 +97,7 @@ const getChipComponentsForStatus = (status) => {
       />
     );
   }
-  if (status === -2) {
+  else if (status === REQUEST_STATUS.REJECTED) {
     return (
       <Chip
         label="مرفوض"
@@ -104,6 +107,20 @@ const getChipComponentsForStatus = (status) => {
         sx={{
           color: colors.red[600],
           borderColor: colors.red[600],
+        }}
+      />
+    );
+  }
+  else if (status === REQUEST_STATUS.DRAFT) {
+    return (
+      <Chip
+        label="مسودة"
+        variant="outlined"
+        size="medium"
+        icon={<DraftsTwoToneIcon sx={{ color: 'grey !important' }} />}
+        sx={{
+          color: colors.grey[600],
+          borderColor: colors.grey[600],
         }}
       />
     );
@@ -122,7 +139,9 @@ const getChipComponentsForStatus = (status) => {
   );
 };
 const LatestRequests = (props) => {
+  const navigate = useNavigate();
   const { loading = false, taheelRequests = [] } = props;
+  taheelRequests.length = 5;
   return (
     <Card>
       <CardHeader title={
@@ -183,7 +202,7 @@ const LatestRequests = (props) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {(!loading ? Array.from(new Array(6)) : taheelRequests).map((request, index) => (
+              {(!loading ? Array.from(new Array(6)) : taheelRequests).filter(t => t?.status != REQUEST_STATUS.DRAFT).map((request, index) => ( // remove filter (status REQUEST_STATUS.DRAFT) to show drafts
                 <TableRow
                   hover
                   key={request ? request.requestNum : index}
@@ -237,6 +256,8 @@ const LatestRequests = (props) => {
               endIcon={<ArrowLeftIcon />}
               size="large"
               variant="text"
+              onClick={() => navigate('/app/orders', { state: { taheelRequests } })}
+
             >
               عرض جميع الطلبات
             </Button>

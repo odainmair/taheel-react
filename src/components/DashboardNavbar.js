@@ -1,19 +1,37 @@
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import 'src/Core/Contexts/MainMenu.css'
 import {
   AppBar,
   Badge,
+  Grid,
   Box,
   Hidden,
+  Card,
+  CardHeader,
+  CardContent,
+  Avatar,
   IconButton,
-  Toolbar
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Divider,
+  Toolbar,
+  makeStyles
 } from '@material-ui/core';
+import ImageIcon from '@material-ui/icons/Image';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
 import MenuIcon from '@material-ui/icons/Menu';
 import { logoutUser } from 'src/utils/UserLocalStorage';
 import NotificationsIcon from '@material-ui/icons/NotificationsOutlined';
-import InputIcon from '@material-ui/icons/Input';
 import Logo from './Logo';
+import { APIRequest } from 'src/api/APIRequest';
+import { getCurrentUser } from 'src/utils/UserLocalStorage';
+import Menu from '@mui/material/Menu';
+import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
+import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 
 const DashboardNavbar = ({ onMobileNavOpen, ...rest }) => {
   const useStyles = makeStyles({
@@ -136,7 +154,7 @@ const DashboardNavbar = ({ onMobileNavOpen, ...rest }) => {
           </IconButton>
         </Hidden>
       </Toolbar>
-    </AppBar>
+    </AppBar >
   );
 };
 

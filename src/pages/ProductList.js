@@ -49,11 +49,11 @@ const ProductList = () => (
             pt: 3
           }}
         >
-          <Pagination
+          {products.length > 9 ? (<Pagination
             color="primary"
             count={3}
             size="small"
-          />
+          />) : ''}
         </Box>
       </Container>
     </Box>

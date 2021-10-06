@@ -2,13 +2,12 @@ import { Helmet } from 'react-helmet';
 import {
   Box,
   Container,
-  Grid,
+  Card,
   Alert,
   CardContent
 } from '@material-ui/core';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import AccountProfileDetails from './components/AccountProfileDetails';
-import FinalFromWizard from '../../components/wizard/FinalFormWizard';
 import { PersonInfoValidate } from './AccountUtils';
 import AccountFinalFrom from './components/AccountFinalForm';
 import { ownerInfoUpdate, requestOTPPhoneNum } from './data/AccountApi';
@@ -17,7 +16,6 @@ import { getCurrentUser, setCurrentUser } from 'src/utils/UserLocalStorage';
 
 const Account = () => {
   const [dialogContent, setDialogContent] = React.useState('');
-  // const [dialogTitle, setDialogTitle] = React.useState('');
   const [errMessage, SetErrMessage] = useState('');
   const [successMessage, SetsuccessMessage] = useState('');
   const [successMessageFromDialog, SetsuccessMessageFromDialog] = useState('');
@@ -25,7 +23,6 @@ const Account = () => {
   const [isDisable, setIsDisable] = useState(false);
   const [num, setNum] = useState('');
   const [updatedEmail, setUpdatedEmail] = useState('');
-
   const [open, setOpen] = useState(false);
   const { firstName, lastName, email, phoneNumber, idNumIqamaNum } = getCurrentUser();
 
@@ -35,12 +32,17 @@ const Account = () => {
   const handleClose = () => {
     setOpen(false);
   };
-
   const onSubmit = async (values) => {
     const response = { isSuccessful: true, message: '' };
     setNum(values.phoneNumber);
     setUpdatedEmail(values.email);
     if (phoneNumber != values.phoneNumber) {
+      if (successMessage !== null) {
+        SetsuccessMessage('');
+      }
+      if (errMessage !== null) {
+        SetErrMessage('');
+      }
       const smsOTPRequest = await requestOTPPhoneNum(values.phoneNumber);
       if (!smsOTPRequest.isSuccessful) {
         SetErrMessage(smsOTPRequest.message);
@@ -53,12 +55,12 @@ const Account = () => {
         SetErrMessage(ownerInfoUpdateRequest.message);
         return { isSuccessful: false, message: ownerInfoUpdateRequest.message };
       }
-      SetsuccessMessage('لقد تم حفظ المعلومات بنجاح');
-
       setCurrentUser({
+        ...getCurrentUser(),
         email: values.email,
         phoneNumber: values.phoneNumber,
       });
+      SetsuccessMessage('لقد تم حفظ الملف التعريفي بنجاح ');
     }
     return response;
   }
@@ -69,63 +71,48 @@ const Account = () => {
       </Helmet>
       <Box
         sx={{
-          backgroundColor: 'background.default',
-          minHeight: '100%',
           py: 3
         }}
       >
-        <Container maxWidth="lg">
-          <Grid
-            container
-            spacing={3}
-          >
-            <Grid
-              container
-              lg={12}
-              md={6}
-              xs={12}
-              marginTop={3}
-            >
-              <CardContent sx={{ padding: "10px", width: "100%" }}>
-                {errMessage && (
-                  <Alert variant="outlined" severity="error">
-                    {errMessage}
-                  </Alert>
-                )}
-                {successMessage && (
-                  <Alert variant="outlined" severity="success">
-                    {successMessage}
-                  </Alert>
-                )}
-                
-                {successMessageFromDialog && (
-                  <Alert variant="outlined" severity="success">
-                    {successMessageFromDialog}
-                  </Alert>
-                )}
-                <AccountFinalFrom // pass initialValues, onSubmit and 4 childrens
-                  initialValues={{
-                    disabledBackButt: true,
-                    lastPageErrorHandling: false,
-                    agree: [false],
-                  }}
-                  isDisable={isDisable}
-                  OTP={OTP}
-                  onSubmit={onSubmit}
+        <Container maxWidth="md">
+          <Card>
+            <CardContent >
+              {errMessage && (
+                <Alert variant="outlined" severity="error">
+                  {errMessage}
+                </Alert>
+              )}
+              {successMessage && (
+                <Alert variant="outlined" severity="success">
+                  {successMessage}
+                </Alert>
+              )}
+              {successMessageFromDialog && (
+                <Alert variant="outlined" severity="success">
+                  {successMessageFromDialog}
+                </Alert>
+              )}
+              <AccountFinalFrom // pass initialValues, onSubmit and 4 childrens
+                initialValues={{
+                  disabledBackButt: true,
+                  lastPageErrorHandling: false,
+                  agree: [false],
+                }}
+                isDisable={isDisable}
+                OTP={OTP}
+                onSubmit={onSubmit}
+              >
+                <AccountFinalFrom.Page
+                  label=""
+                  validate={PersonInfoValidate}
                 >
-                  <AccountFinalFrom.Page
-                    label=""
-                    validate={PersonInfoValidate}
-                  >
-                    <AccountProfileDetails data={{ firstName: firstName, lastName: lastName, email: email, phoneNumber: phoneNumber, idNumIqamaNum: idNumIqamaNum }} setIsDisable={setIsDisable}
-                    />
-                  </AccountFinalFrom.Page>
-                </AccountFinalFrom>
-
-              </CardContent>
-              <ChangePhonenumberDialog data={{ firstName: firstName, lastName: lastName, email: updatedEmail, phoneNumber: num, idNumIqamaNum: idNumIqamaNum }} setOTP={setOTP} dialogContent={dialogContent} SetsuccessMessageFromDialog= {SetsuccessMessageFromDialog} open={open} onClose={handleClose} />
-            </Grid>
-          </Grid>
+                  <AccountProfileDetails data={{ firstName: firstName, lastName: lastName, email: email, phoneNumber: phoneNumber, idNumIqamaNum: idNumIqamaNum }} setIsDisable={setIsDisable} SetErrMessage={SetErrMessage}
+                  />
+                </AccountFinalFrom.Page>
+              </AccountFinalFrom>
+            </CardContent>
+            <ChangePhonenumberDialog data={{ firstName: firstName, lastName: lastName, email: updatedEmail, phoneNumber: num, idNumIqamaNum: idNumIqamaNum }} setOTP={setOTP} dialogContent={dialogContent} SetsuccessMessageFromDialog={SetsuccessMessageFromDialog} open={open} onClose={handleClose} />
+          </Card>
         </Container>
       </Box>
     </>

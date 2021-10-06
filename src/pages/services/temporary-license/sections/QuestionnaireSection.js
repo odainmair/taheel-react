@@ -8,6 +8,7 @@ import {
     FormControl,
     FormControlLabel,
     FormHelperText,
+    Alert,
 } from '@material-ui/core';
 import { Field } from 'react-final-form';
 import PropTypes from 'prop-types';
@@ -39,7 +40,7 @@ const questionComponent = (name, label) => (
                         pl={2}
                     >
                         <FormLabel component="legend">{label}</FormLabel>
-                        {meta.error && meta.touched && <FormHelperText style={{color:'#ec2956',textAlign:'right'}} dir="rtl">{meta.error}</FormHelperText>}
+                        {meta.error && meta.touched && <FormHelperText style={{ color: '#ec2956', textAlign: 'right' }} dir="rtl">{meta.error}</FormHelperText>}
                     </Grid>
                     <Grid
                         item
@@ -127,7 +128,9 @@ const questionnaireSectionComponent = (questionnaire) => (
 const QuestionnaireSection = ({ Condition }) => {
     return (
         <>
-
+            <Alert sx={{margin:3}} severity="info">
+                هذا التقييم استرشادي لمساعدة في معرفة درجة استيفائك لشروط إصدار الترخيص النهائي ولن يتم الرجوع إليه عند طلب إصدار الترخيص النهائي
+            </Alert>
             {questionnaireSectionComponent(questionnaireSectionOne)}
             {questionnaireSectionComponent(questionnaireSectionTwo)}
             {questionnaireSectionComponent(questionnaireSectionThree)}

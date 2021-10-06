@@ -6,22 +6,36 @@ import {
 	Alert,
 	Typography,
 	Box,
+	Link,
 	CircularProgress,
 } from '@material-ui/core';
 import { Field } from 'react-final-form';
+import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { TextField as TextFieldFinal, Select } from 'final-form-material-ui';
 import { calculation } from '../services/finalLicenseAPI'
 import { ContentField } from '../services/finalLicenseUtil'
+import { LICENSE_FORM_TYPES } from 'src/utils/enums'
 import { checkIsNumber } from 'src/utils/inputValidator';
-const Capacity = ({ editMode, Condition, values, setField, setIsEnableNextBtn }) => {
+import numeral from 'numeral';
+import { OnChange } from 'react-final-form-listeners';
+import FinancialGuaranteeTerms from './FinancialGuaranteeTerms';
+import TermsDialog from 'src/components/TermsDialog';
 
+const Capacity = ({ editMode, Condition, values, setField, setIsEnableNextBtn }) => {
+	const [open, setOpen] = useState(false);
 	const [calculatedData, setCalculatedData] = useState(false);
 	const [errMessage, SetErrMessage] = useState('');
 	const [loading, setLoading] = useState(false);
+	const location = useLocation();
+	const fromDraft = location.state ? location.state.fromDraft : false;
 
 	useEffect(() => {
-		if (values.capacity) {
+		console.log(`Capacity :: values.capacity: ${values.capacity}`)
+		console.log(`Capacity :: values.beneficiariesNum: ${values.beneficiariesNum}`)
+		console.log("Capacity :: fromDraft: " + fromDraft)
+		
+		if (values.capacity && !fromDraft) {
 			setIsEnableNextBtn(true);
 			setCalculatedData(true);
 		} else {
@@ -32,47 +46,91 @@ const Capacity = ({ editMode, Condition, values, setField, setIsEnableNextBtn })
 	const calculate = async () => {
 		setLoading(true);
 		SetErrMessage('');
-		if (!values.beneficiariesNum || values.beneficiariesNum <= 0) {
-			SetErrMessage('يرجى ادخال عدد المستفيدين الفعلي صحيح');
-			setLoading(false);
-			return;
-		}
-		if (!values.buildingArea || values.buildingArea <= 0 ) {
-			SetErrMessage('يرجى ادخال مساحة مسطح البناء صحيح');
-			setLoading(false);
-			return;
-		}
-		if (!values.basementArea || values.basementArea <= 0 ) {
-			SetErrMessage('يرجى ادخال مساحة القبو صحيح');
-			setLoading(false);
-			return;
-		}
-		if (parseInt(values.buildingArea) <= parseInt(values.basementArea)) {
-			SetErrMessage('مساحة القبو يجب ان تكون أقل من مساحة مسطح البناء');
-			setLoading(false);
-			return
-		}
-	/*	if (values.beneficiariesNum > parseInt(values.capacity)) {
-			SetErrMessage('عدد المستفيدين يجب ان لا يتجاوز الطاقة الاستعابية');
-			setLoading(false);
-			return
-		}*/
-
+		
 		const response = await calculation(values.buildingArea, values.basementArea);
+		const carryingCapacity = response?.responseBody?.body?.carryingCapacity
+		console.log(`Capacity :: values.capacity: ${values.capacity}`)
+		console.log(`Capacity :: response.responseBody.body.carryingCapacity ${(carryingCapacity)}`)
+		console.log(`Capacity numeral :: ${numeral(carryingCapacity).value()}`)
+		console.log(`Is Capacity >= 1 :: ${numeral(carryingCapacity) >= 1}`)
 		if (!response.isSuccessful) {
 			setIsEnableNextBtn(false);
 			SetErrMessage(response.message);
 			setCalculatedData(false);
 		}
 		else {
-			setField('capacity', response.responseBody.body.carryingCapacity.toFixed(3));
-			setField('financialGuarantee', `${response.responseBody.body.financialGuarantee.toFixed(3)} ر.س.`);
+			setField('capacity', numeral(carryingCapacity).format('00'));
+			setField('financialGuarantee', `${numeral(response.responseBody.body.financialGuarantee).format('0,0.00')} ر.س.`);
 			setCalculatedData(true);
-			setIsEnableNextBtn(true);
 
+			if(numeral(carryingCapacity).value() >= 1) {
+				//	setField('capacity', response.responseBody.body.carryingCapacity.toFixed(2).toLocaleString('en-US', {maximumFractionDigits:2}));
+				//setField('financialGuarantee', `${response.responseBody.body.financialGuarantee.toFixed(2).toLocaleString('en-US', {maximumFractionDigits:2})} ر.س.`);
+					// setField('capacity', numeral(response.responseBody.body.carryingCapacity).format('00'));
+					// setField('financialGuarantee', `${numeral(response.responseBody.body.financialGuarantee).format('0,0.00')} ر.س.`);
+					setIsEnableNextBtn(true);
+			}
+			else {
+				setIsEnableNextBtn(false);
+				SetErrMessage('يرجى ادخال عدد المستفيدين الفعلي عدد صحيح أكبر من صفر');
+			}
 		}
 		setLoading(false);
+
+		if (!values.beneficiariesNum || !checkIsNumber(values.beneficiariesNum) || values.beneficiariesNum <= 0) {
+			SetErrMessage('يرجى ادخال عدد المستفيدين الفعلي عدد صحيح أكبر من صفر');
+			setIsEnableNextBtn(false);
+			return;
+		}
+		if (!values.buildingArea || !checkIsNumber(values.buildingArea) || values.buildingArea <= 0) {
+			SetErrMessage('يرجى ادخال مساحة مسطح البناء عدد صحيح أكبر من صفر');
+			setIsEnableNextBtn(false);
+			return;
+		}
+		if (!values.basementArea || !checkIsNumber(values.basementArea) || values.basementArea < 0) {
+			SetErrMessage('يرجى ادخال مساحة القبو عدد صحيح');
+			setIsEnableNextBtn(false);
+			return;
+		}
+		if (parseInt(values.buildingArea) <= parseInt(values.basementArea)) {
+			SetErrMessage('مساحة القبو يجب ان تكون أقل من مساحة مسطح البناء');
+			setIsEnableNextBtn(false);
+			return
+		}
+		console.log(`Capacity :: values.capacity: ${values.capacity}`)
+		console.log(`Capacity :: values.beneficiariesNum: ${values.beneficiariesNum}`)
+		console.log(`Capacity :: values.beneficiariesNum > values.capacity : ${values.beneficiariesNum > parseInt(values.capacity)}`)
+		if (values.beneficiariesNum > parseInt(numeral(carryingCapacity).value())) {
+			SetErrMessage('عدد المستفيدين يجب ان لا يتجاوز الطاقة الاستعابية');
+			setIsEnableNextBtn(false);
+			return
+		}
+
 	}
+
+	const handleClickOpen = (dialogContent, dialogTitle) => {
+		setOpen(true);
+	  };
+	  const handleClose = (value) => {
+		setOpen(false);
+	  };
+	const termsLabel = (openDialog) => (
+		<>
+		  <Typography gutterBottom variant="h5" component="span">
+		  الضمان المالي 
+			<Link href="#" sx={{ color: '#147fbd' }} 
+			onClick={(event) => {
+				event.preventDefault()
+				openDialog()}
+			}> (للاطلاع على الشروط والاحكام انقر هنا) </Link>
+		  </Typography>
+	  
+		</>
+	  )
+
+	const handleOnChange = (val, nextVal) => {
+		setIsEnableNextBtn(false);
+	};
 
 	return (
 
@@ -109,6 +167,11 @@ const Capacity = ({ editMode, Condition, values, setField, setIsEnableNextBtn })
 						dir="rtl"
 						className="custom-field"
 					/>
+					<OnChange name="beneficiariesNum">
+					{(value, previous) => {
+						handleOnChange(value, previous);
+					}}			
+					</OnChange>		
 				</Grid>
 				<Grid
 					item
@@ -127,6 +190,11 @@ const Capacity = ({ editMode, Condition, values, setField, setIsEnableNextBtn })
 						dir="rtl"
 						className="custom-field"
 					/>
+					<OnChange name="buildingArea">
+					{(value, previous) => {
+						handleOnChange(value, previous);
+					}}			
+					</OnChange>	
 				</Grid>
 				<Grid
 					item
@@ -145,8 +213,12 @@ const Capacity = ({ editMode, Condition, values, setField, setIsEnableNextBtn })
 						dir="rtl"
 						className="custom-field"
 					/>
+					<OnChange name="basementArea">
+					{(value, previous) => {
+						handleOnChange(value, previous);
+					}}			
+					</OnChange>	
 				</Grid>
-
 
 				<Grid
 					item
@@ -208,7 +280,7 @@ const Capacity = ({ editMode, Condition, values, setField, setIsEnableNextBtn })
 								md={12}
 								xs={12}
 							>
-								< ContentField label='الضمان المالي' value={values.financialGuarantee} />
+								< ContentField label={termsLabel(handleClickOpen)} value={values.financialGuarantee} />
 								<Box
 									direction='rtl'
 									className="custom-label-field"
@@ -222,6 +294,7 @@ const Capacity = ({ editMode, Condition, values, setField, setIsEnableNextBtn })
 					</Condition>
 				</Grid>
 			</Grid>
+      <TermsDialog setAgreeValue={()=>{}} dialogContent={FinancialGuaranteeTerms()} dialogTitle={"الشروط والاحكام"} open={open} onClose={handleClose} acceptBtnName="اوافق" />
 		</>
 	)
 };

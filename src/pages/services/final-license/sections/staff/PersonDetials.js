@@ -118,7 +118,7 @@ const Row = ({ editMode, SponsorName, setSponsorName, values, fromEdit, setFromE
               xs={12}
             >
               <IconButton onClick={() => setShowen(!showen)}>
-                {showen ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                {!showen ? <VisibilityIcon /> : <VisibilityOffIcon />}
               </IconButton>
             </Grid>
             <Grid
@@ -134,7 +134,24 @@ const Row = ({ editMode, SponsorName, setSponsorName, values, fromEdit, setFromE
                   setFromEdit(true);
                   setRowIndex(index);
                   setFieldName(name);
-                  const { idNumber, iqamaNo, lastName, nationality, nationalityBtn, day, month, year, fullName, gender, birthDate, staffTypes, cv, cvAtt, EducationalQualification, MedicalPractice, EducationalQualificationAtt, MedicalPracticeAtt, sponsorName } = fields.value[index];
+                  const { 
+                    idNumber, 
+                    iqamaNo, 
+                    lastName, 
+                    nationality, 
+                    nationalityBtn, 
+                    day, 
+                    month, 
+                    year, 
+                    fullName, 
+                    gender, 
+                    birthDate, 
+                    staffTypes, 
+                    cv, 
+                    EducationalQualification, 
+                    MedicalPractice, 
+                    sponsorName 
+                  } = fields.value[index];
                   setField("idNumber", idNumber);
                   setField("iqamaNo", iqamaNo);
                   setField("nationality", nationality)
@@ -149,11 +166,8 @@ const Row = ({ editMode, SponsorName, setSponsorName, values, fromEdit, setFromE
                   setField("birthDate", birthDate)
                   setField("staffTypes", staffTypes)
                   setField("cv", cv)
-                  setField("cvAtt", cvAtt)
                   setField("EducationalQualification", EducationalQualification)
                   setField("MedicalPractice", MedicalPractice)
-                  setField("EducationalQualificationAtt", EducationalQualificationAtt)
-                  setField("MedicalPracticeAtt", MedicalPracticeAtt)
                   handleClickOpen();
                 }}
               >
@@ -263,7 +277,7 @@ const teachersCountComp = ({ maxValue }) => (
             count = fields.value.filter(customer => customer.staffTypes === "معلم تربية خاصة").length
           }
           if (count >= 1) {
-            if (Math.round(maxValue / 8) <= count) {
+            if (Math.ceil(maxValue / 8) <= count) {
               return (<CheckCircleIcon style={{ color: '#04AA6D' }} />);
             } else
               return (<CancelIcon style={{ color: 'red' }} />);
@@ -278,6 +292,7 @@ const teachersCountComp = ({ maxValue }) => (
 
 const PersonDetials = ({ editMode, Condition, MedicalPracticeCondition, setField, pop, push, values }) => {
   const [open, setOpen] = useState(false);
+  const moreInfoLabel = '   المزيد من المعلومات   ';
   const [fieldName, setFieldName] = useState(null);
   const [rowIndex, setRowIndex] = useState(-1);
   const [fromEdit, setFromEdit] = useState(false)
@@ -334,7 +349,7 @@ const PersonDetials = ({ editMode, Condition, MedicalPracticeCondition, setField
             name={'managersCount'}
             component={managersCountComp}
           />
-          مدير عدد 1
+          مدير عدد  1
           <Link
             onClick={() => handleClickOpenInfo(`يسمح بتحديد عدد مدير #1 فقط  `, '')}
             sx={{
@@ -344,7 +359,7 @@ const PersonDetials = ({ editMode, Condition, MedicalPracticeCondition, setField
             }}
             variant="h6"
           >
-            المزيد من المعلومات
+            {moreInfoLabel}
           </Link>
         </Typography>
 
@@ -358,7 +373,7 @@ const PersonDetials = ({ editMode, Condition, MedicalPracticeCondition, setField
             label={'teachers'}
             name={'teachersCount'}
             component={teachersCountComp}
-            maxValue={(values.beneficiariesNum)?values.beneficiariesNum:0}
+            maxValue={(values.beneficiariesNum) ? values.beneficiariesNum : 0}
           />
           معلم تربية خاصة نسبة 1 الى 8
           <Link
@@ -370,7 +385,7 @@ const PersonDetials = ({ editMode, Condition, MedicalPracticeCondition, setField
             }}
             variant="h6"
           >
-            المزيد من المعلومات
+            {moreInfoLabel}
           </Link>
         </Typography>
         <Button
@@ -419,7 +434,7 @@ const PersonDetials = ({ editMode, Condition, MedicalPracticeCondition, setField
             <TableHead>
               <TableRow>
                 <TableCell > الاسم الكامل </TableCell>
-                <TableCell > رقم الهوية/الاإقامة </TableCell>
+                <TableCell > رقم الهوية/الإقامة </TableCell>
                 <TableCell > تاريخ الميلاد </TableCell>
                 <TableCell > نوع الكادر </TableCell>
                 <TableCell > الجنس </TableCell>
@@ -433,7 +448,7 @@ const PersonDetials = ({ editMode, Condition, MedicalPracticeCondition, setField
 
               <FieldArray name="customers">
                 {({ fields }) => fields.map((name, index) => (
-                  <Row key={index+"customers"} editMode={editMode} managersCount={managersCount} setManagersCount={setManagersCount} SponsorName={SponsorName} setSponsorName={setSponsorName} values={values} fromEdit={fromEdit} setFromEdit={setFromEdit} fieldName={fieldName} setFieldName={setFieldName} open={open} setOpen={setOpen} setField={setField} fields={fields} name={name} index={index} setRowIndex={setRowIndex} />
+                  <Row key={index + "customers"} editMode={editMode} managersCount={managersCount} setManagersCount={setManagersCount} SponsorName={SponsorName} setSponsorName={setSponsorName} values={values} fromEdit={fromEdit} setFromEdit={setFromEdit} fieldName={fieldName} setFieldName={setFieldName} open={open} setOpen={setOpen} setField={setField} fields={fields} name={name} index={index} setRowIndex={setRowIndex} />
                 ))}
               </FieldArray>
 
@@ -450,7 +465,7 @@ const PersonDetials = ({ editMode, Condition, MedicalPracticeCondition, setField
         className="custom-label-field"
       />
       <FormDialog
-        title=" اضافة كادر"
+        title={fromEdit?"تحديث بيانات الكادر":" اضافة كادر"}
         openPopup={open}
         setOpenPopup={setOpen}
         onClose={() => {
@@ -474,7 +489,7 @@ const PersonDetials = ({ editMode, Condition, MedicalPracticeCondition, setField
           setField("MedicalPracticeAtt", "")
         }}
       >
-        <AddPersonForm fromEdit={fromEdit} MedicalPracticeCondition={MedicalPracticeCondition} setField={setField}  pop={pop} push={push} values={values} setOpenPopup={setOpen} fieldName={fieldName} Condition={Condition} rowIndex={rowIndex}/>
+        <AddPersonForm fromEdit={fromEdit} MedicalPracticeCondition={MedicalPracticeCondition} setField={setField} pop={pop} push={push} values={values} setOpenPopup={setOpen} fieldName={fieldName} Condition={Condition} rowIndex={rowIndex} />
       </FormDialog>
     </Grid>
   );

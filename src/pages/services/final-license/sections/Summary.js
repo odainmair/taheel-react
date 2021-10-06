@@ -28,6 +28,7 @@ import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 import Collapse from '@material-ui/core/Collapse';
 import { makeStyles } from '@material-ui/core/styles';
+import moment from 'moment-hijri';
 
 const contentField = ({ input: { value, name }, label, inputType }) => (
   <>
@@ -52,7 +53,11 @@ const termsLabel = (openDialog) => (
   <>
     <Typography gutterBottom variant="h5" component="span">
       انا اقر واتعهد بالالتزام بالشروط والاحكام الواردة والمتعلقه بالطلب
-      <Link href="#" sx={{ color: '#147fbd' }} onClick={() => openDialog()}> (للاطلاع على الشروط والاحكام انقر هنا)</Link>
+      <Link href="#" sx={{ color: '#147fbd' }} 
+			onClick={(event) => {
+				event.preventDefault()
+				openDialog()}
+			}> (للاطلاع على الشروط والاحكام انقر هنا)</Link>
     </Typography>
 
   </>
@@ -69,9 +74,10 @@ const getFieldValue = ({ name, value }) => {
   return '';
 }
 
-const Summary = ({ values }) => {
+const Summary = ({ values, setField }) => {
 
   const [open, setOpen] = React.useState(false);
+  const [isAgree, setIsAgree] = React.useState(false);
   const [SponsorName, setSponsorName] = React.useState(false)
   const handleClickOpen = (dialogContent, dialogTitle) => {
     setOpen(true);
@@ -84,7 +90,7 @@ const Summary = ({ values }) => {
 
   const Row = ({ fields, setSponsorName, name, index }) => {
     const classes = useRowStyles();
-    const [showen, setShowen] = React.useState(false)
+    const [showen, setShowen] = React.useState(true);
 
     return (
       <>
@@ -98,7 +104,7 @@ const Summary = ({ values }) => {
             {name.idNumber ? name.idNumber : name.iqamaNo}
           </TableCell>
           <TableCell component="th" scope="row">
-            {name.birthDate}
+            {moment(`${name.birthDate}`, 'iYYYYiMMiDD').format('iDD/iMM/iYYYY')}
           </TableCell>
 
           <TableCell component="th" scope="row">
@@ -132,7 +138,7 @@ const Summary = ({ values }) => {
         </TableRow>
         <TableRow >
           <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={12}>
-            <Collapse in={showen} className={`Attach${index}`} timeout="auto" unmountOnExit  >
+            <Collapse in={!showen} className={`Attach${index}`} timeout="auto" unmountOnExit  >
 
               <Grid
                 container
@@ -260,7 +266,8 @@ const Summary = ({ values }) => {
         mb={3}
       >
         {finalLicenseFieldSchema.filter(fintalLicense => fintalLicense.sectionName === "Requirements" && !fintalLicense.dependOn).map(filteredFinalLicense => (
-          <Grid
+          
+          values[filteredFinalLicense.name] && values[filteredFinalLicense.name][0] ? (<Grid
             item
             key={filteredFinalLicense.id}
             lg={6}
@@ -269,6 +276,7 @@ const Summary = ({ values }) => {
           >
             < DownloadButtTable docIDs={values[filteredFinalLicense.name]} name={filteredFinalLicense.name} label={filteredFinalLicense.label.ar} />
           </Grid>
+        ) : ''
         ))}
       </Grid>
 
@@ -289,33 +297,59 @@ const Summary = ({ values }) => {
         mb={3}
       >
         {finalLicenseFieldSchema.filter(fintalLicense => fintalLicense.sectionName === "HealthServices" && !fintalLicense.dependOn).map(filteredFinalLicense => (
+          values.healthServices === 'yes' ? (
+          <>
+            <Grid
+              item
+              key={filteredFinalLicense.id}
+              lg={6}
+              md={6}
+              xs={12}
+            >
+              <Field
+                label={filteredFinalLicense.label.ar}
+                name={filteredFinalLicense.name}
+                component={contentField}
+                inputType={filteredFinalLicense.type}
+              />
+            </Grid>
+          </>
+          )
+          : filteredFinalLicense.name === 'healthServices' && (
+          <>
+            <Grid
+              item
+              key={filteredFinalLicense.id}
+              lg={6}
+              md={6}
+              xs={12}
+            >
+              <Field
+                label={filteredFinalLicense.label.ar}
+                name={filteredFinalLicense.name}
+                component={contentField}
+                inputType={filteredFinalLicense.type}
+              />
+            </Grid>
+          </>
+          )
+        ))}
+        {values.healthServices === 'yes' && (
           <Grid
             item
-            key={filteredFinalLicense.id}
             lg={6}
             md={6}
             xs={12}
-          >
-            <Field
-              label={filteredFinalLicense.label.ar}
-              name={filteredFinalLicense.name}
-              component={contentField}
-              inputType={filteredFinalLicense.type}
-            />
+            >
+            < DownloadButtTable docIDs={values.healthServiceAttachment} name='healthServiceAttachment' label='مرفقات الخدمات الصحية' />
           </Grid>
-        ))}
-        <Grid
-          item
-          lg={6}
-          md={6}
-          xs={12}
-        >
-          < DownloadButtTable docIDs={values.healthServiceAttachment} name='healthServiceAttachment' label='مرفقات الخدمات الصحية' />
-        </Grid>
+        )}
 
       </Grid>
       <Divider />
 
+      {Array.isArray(values.customers) && values.customers.length > 0 && 
+      <>
       <Typography
         color="textPrimary"
         gutterBottom
@@ -351,15 +385,16 @@ const Summary = ({ values }) => {
                   {SponsorName &&
                     <TableCell > اسم الكفيل</TableCell>
                   }
+                  <TableCell> المرفقات</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                <FieldArray name="customers">
-
-                  {({ fields }) => fields.value.map((name, index) => (
+              {<FieldArray name="customers">
+                  {({ fields }) => fields && fields.value && fields.value.map((name, index) => (
                     <Row key={index} setSponsorName={setSponsorName} fields={fields} name={name} index={index} />
                   ))}
                 </FieldArray>
+              }
               </TableBody>
             </Table>
           </TableContainer>
@@ -367,6 +402,8 @@ const Summary = ({ values }) => {
         </Grid>
       </Grid>
       <Divider />
+      </>
+      }
 
       <Grid
         container
@@ -382,7 +419,12 @@ const Summary = ({ values }) => {
                     name="agree"
                     component={Checkbox}
                     type="checkbox"
-                    value="true"
+                    value={!!values.agree[0]}
+                    checked={isAgree}
+                    onClick={() => {
+                      setField("agree", values.agree ? [] : [true]); 
+                      setIsAgree(!isAgree) 
+                    }}
                   />
                 }
               />
@@ -390,7 +432,12 @@ const Summary = ({ values }) => {
           )}
         </Field>
       </Grid>
-      <TermsDialog dialogContent={TermsContent()} dialogTitle={"التعهد"} open={open} onClose={handleClose} acceptBtnName="اوافق" />
+      <TermsDialog setAgreeValue={
+        ()=>{
+            setIsAgree(true);
+            setField("agree", [true])
+          }
+        } dialogContent={TermsContent()} dialogTitle={"التعهد"} open={open} onClose={handleClose} acceptBtnName="اوافق" />
     </>
   )
 }
@@ -404,6 +451,7 @@ Summary.propTypes = {
   index: PropTypes.number,
   name: PropTypes.string,
   fields: PropTypes.object,
+  setField: PropTypes.func.isRequired,
   setSponsorName: PropTypes.func,
 
 };

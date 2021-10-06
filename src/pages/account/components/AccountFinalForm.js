@@ -148,7 +148,7 @@ export default class AccountFinalFrom extends React.Component {
                 <Grid item>
                   <Button
                     startIcon={submitting ? <CircularProgress size="1rem" /> : null}
-                    disabled={!isDisable}
+                    disabled={!isDisable || submitting}
                     variant="contained"
                     color="primary"
                     type="submit"

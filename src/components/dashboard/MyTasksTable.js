@@ -16,6 +16,7 @@ import Skeleton from '@material-ui/lab/Skeleton';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router';
+import { LICENSE_FORM_TYPES } from 'src/utils/enums'
 
 const MyTasksTable = (props) => {
   const navigate = useNavigate();
@@ -78,7 +79,7 @@ const MyTasksTable = (props) => {
                         component="span"
                         onClick={() => {
                           console.log("edit function");
-                          navigate('/services/finallicense', { state: { centerLicenceNumber: request.centerLicenceNumber, taskID: request.ID,requestNum:request.requestNum } });
+                          navigate('/services/editfinallicense', { state: { centerLicenceNumber: request.centerLicenceNumber, taskID: request.ID,requestNum:request.requestNum, formType: LICENSE_FORM_TYPES.EDIT } });
                         }}
                       >
                         <VisibilityIcon />

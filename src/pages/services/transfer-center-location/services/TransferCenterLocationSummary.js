@@ -21,9 +21,9 @@ const TransferCenterLocationSummary = () => {
     const licenceNumber = location.state.licenceNumber
     const [taskID, setTaskID] = useState()
     const requestNum = location.state.requestNum
-    // console.log("TransferCenterLocationSummary :: licenceNumber: ", licenceNumber)
-    // console.log("TransferCenterLocationSummary :: requestNum: ", requestNum)
-    // console.log("TransferCenterLocationSummary :: taskID: ", taskID)
+    console.log("TransferCenterLocationSummary :: licenceNumber: ", licenceNumber)
+    console.log("TransferCenterLocationSummary :: requestNum: ", requestNum)
+    console.log("TransferCenterLocationSummary :: taskID: ", taskID)
     const [details, setDetails] = useState(false)
     const [isAgree, setIsAgree] = useState(false)
     const [errMessage, SetErrMessage] = useState('')
