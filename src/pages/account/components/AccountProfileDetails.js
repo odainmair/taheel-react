@@ -12,11 +12,8 @@ import {
   Alert,
   TextField
 } from '@material-ui/core';
-import { getCurrentUser } from 'src/utils/UserLocalStorage';
-const { email, phoneNumber } = getCurrentUser();
 
-const AccountProfileDetails = ({ setIsDisable, data, SetErrMessage }) => {
-
+const AccountProfileDetails = ({ setIsDisable, data }) => {
   return (
     <Card>
       <CardHeader
@@ -41,7 +38,6 @@ const AccountProfileDetails = ({ setIsDisable, data, SetErrMessage }) => {
               variant="outlined"
               dir="rtl"
               className="custom-field"
-            // disabled = 'true'
             />
           </Grid>
           <Grid
@@ -56,6 +52,7 @@ const AccountProfileDetails = ({ setIsDisable, data, SetErrMessage }) => {
               name="email"
               component={TextFieldFinal}
               type="email"
+              // onChange={handleChange}
               initialValue={data.email}
               variant="outlined"
               dir="rtl"
@@ -64,14 +61,7 @@ const AccountProfileDetails = ({ setIsDisable, data, SetErrMessage }) => {
 
             <OnChange name="email">
               {(value, previous) => {
-                if (value == email) {
-                  setIsDisable(false);
-                  SetErrMessage('');
-                }
-                else {
-                  setIsDisable(true);
-
-                }
+                setIsDisable(true);
               }}
             </OnChange>
           </Grid>
@@ -93,14 +83,7 @@ const AccountProfileDetails = ({ setIsDisable, data, SetErrMessage }) => {
 
             <OnChange name="phoneNumber">
               {(value, previous) => {
-                if (value == phoneNumber) {
-                  setIsDisable(false);
-                  SetErrMessage('');
-                }
-                else {
-                  setIsDisable(true);
-
-                }
+                setIsDisable(true);
               }}
             </OnChange>
           </Grid>

@@ -9,12 +9,11 @@ import PropTypes from 'prop-types';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
 export default function TermsDialog(props) {
-    const { onClose, dialogContent, dialogTitle, open, acceptBtnName, setAgreeValue } = props;
+    const { onClose, dialogContent, dialogTitle, open, acceptBtnName } = props;
     const handleClose = () => {
         onClose();
     };
     const handleAccept = () => {
-        setAgreeValue(true)
         onClose();
     };
     return (

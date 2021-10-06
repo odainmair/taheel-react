@@ -27,7 +27,7 @@ const TotalPendingRequest = (props) => {
                 gutterBottom
                 variant="h5"
               >
-               الطلبات قيد المراجعة
+                مجموع الطلبات قيد المراجعة
               </Typography>
             ) : (
               <Skeleton animation="wave" height={10} width={150} style={{ marginBottom: 6 }} />

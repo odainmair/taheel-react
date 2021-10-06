@@ -17,32 +17,25 @@ import { getCurrentUser } from 'src/utils/UserLocalStorage';
 import MyTasksTable from 'src/components/dashboard/MyTasksTable';
 
 const Dashboard = () => {
-  const { userType } = getCurrentUser();
-  console.log('userType+++++++++++', userType);
-
   const getTaheelRequestsFun = async (userEmail) => {
     const url = 'taheel-apis-records-getRequests-v2';
-    const queryParams = { userEmail, startIndex: 1, batchSize: 5 };
+    const queryParams = { userEmail };
     const response = await APIRequest({ url, queryParams });
     return response;
   };
   const getCentersFun = async (userEmail) => {
     const url = 'taheel-apis-records-getCenters-v2';
-    const queryParams = { userEmail, startIndex: 1, batchSize: 5 };
+    const queryParams = { userEmail };
     const response = await APIRequest({ url, queryParams });
     return response;
   };
   const getMyTasksFun = async (userEmail) => {
     const url = 'taheel-apis-utilities-GetGetExternalUserTasks-v2';
-    const queryParams = { userEmail, taskStatus: 0 };
+    const queryParams = { userEmail, taskStatus:0 };
     const response = await APIRequest({ url, queryParams });
     return response;
   };
-  const [loadingTaheelRequests, setLoadingTaheelRequests] = useState(false);
-  const [loadingCenters, setLoadingCenters] = useState(false);
-  const [loadingMyTasks, setLoadingMyTasks] = useState(false);
-
-
+  const [loading, setLoading] = useState(false);
   const [taheelRequests, setTaheelRequests] = useState([]);
   const [taskRequests, setTaskRequests] = useState([]);
   const [centerRequests, setCenterRequests] = useState([]);
@@ -52,53 +45,45 @@ const Dashboard = () => {
   const [totalTahelRequests, setTotalTahelRequests] = useState(0);
   const [totalReturnRequests, setTotalReturnRequests] = useState(0);
   const [totalCenters, setTotalCenters] = useState(0);
-  const { email } = getCurrentUser();
-  useEffect(async () => {
 
+  useEffect(async () => {
+    const { email } = getCurrentUser();
     const getTaheelRequestsRs = await getTaheelRequestsFun(email);
     let response = {};
     if (!getTaheelRequestsRs.isSuccessful) {
-      setLoadingTaheelRequests(true);
+      setLoading(true);
       response = { isSuccessful: false, message: getTaheelRequestsRs.message };
     } else {
-      const { requests, totalCount, totalAccepted, totalPending, totalRejected } = getTaheelRequestsRs.responseBody.data;
-      console.log(JSON.stringify(requests));
-      setTaheelRequests(requests);
-      setTotalTahelRequests(totalCount);
-      setTotalCompletedRequests(totalAccepted);
-      setTotalRejectedRequests(totalRejected);
-      setTotalPendingRequests(totalPending);
-      setLoadingTaheelRequests(true)
+      const { data } = getTaheelRequestsRs.responseBody;
+      console.log(JSON.stringify(data));
+      setTaheelRequests(data);
+      setTotalTahelRequests(data.length);
+      setTotalCompletedRequests(data.filter((request) => request.status === -1).length);
+      setTotalRejectedRequests(data.filter((request) => request.status === -2).length);
+      setTotalPendingRequests(data.filter((request) => request.status !== -1 && request.status !== -2).length);
     }
 
-    return response;
-  }, []);
-  useEffect(async () => {
-    let response = {};
     const getCentersRs = await getCentersFun(email);
     if (!getCentersRs.isSuccessful) {
-      setLoadingCenters(true);
+      setLoading(true);
       response = { isSuccessful: false, message: getCentersRs.message };
     } else {
-      const { Centers, totalCount } = getCentersRs.responseBody.data;
-      setTotalCenters(totalCount);
+      const { Centers } = getCentersRs.responseBody.data;
+      setTotalCenters(Centers.length);
       setCenterRequests(Centers);
-      setLoadingCenters(true)
     }
-  }, []);
-  useEffect(async () => {
     const getMyTasksRs = await getMyTasksFun(email);
-    let response = {};
     if (!getMyTasksRs.isSuccessful) {
-      setLoadingMyTasks(true);
+      setLoading(true);
       response = { isSuccessful: false, message: getMyTasksRs.message };
     } else {
       const { data } = getMyTasksRs.responseBody;
       console.log(JSON.stringify(data));
       setTaskRequests(data);
-      setTotalReturnRequests(data.totalCount)
-      setLoadingMyTasks(true);
+      setTotalReturnRequests(data.length)
+      setLoading(true);
     }
+    return response;
   }, []);
   return (
     <>
@@ -124,7 +109,7 @@ const Dashboard = () => {
               xl={3}
               xs={12}
             >
-              <TotalCenters loading={loadingCenters} totalcenters={totalCenters} />
+              <TotalCenters loading={loading} totalcenters={totalCenters} />
             </Grid>
             <Grid
               item
@@ -133,7 +118,7 @@ const Dashboard = () => {
               xl={3}
               xs={12}
             >
-              <TotalCompletedRequest loading={loadingTaheelRequests} totalcompletedrequests={totalCompletedRequests} />
+              <TotalCompletedRequest loading={loading} totalcompletedrequests={totalCompletedRequests} />
             </Grid>
             <Grid
               item
@@ -142,7 +127,7 @@ const Dashboard = () => {
               xl={3}
               xs={12}
             >
-              <TotalPendingRequest loading={loadingTaheelRequests} totalpendingrequests={totalPendingRequests} />
+              <TotalPendingRequest loading={loading} totalpendingrequests={totalPendingRequests} />
             </Grid>
             <Grid
               item
@@ -151,7 +136,7 @@ const Dashboard = () => {
               xl={3}
               xs={12}
             >
-              <TotalProfit sx={{ height: '100%' }} loading={loadingMyTasks} totalreturnrequests={totalReturnRequests} />
+              <TotalProfit sx={{ height: '100%' }} loading={loading} totalreturnrequests={totalReturnRequests} />
             </Grid>
             <Grid
               item
@@ -160,7 +145,7 @@ const Dashboard = () => {
               xl={9}
               xs={12}
             >
-              <LatestRequests loading={loadingTaheelRequests} taheelRequests={taheelRequests} />
+              <LatestRequests loading={loading} taheelRequests={taheelRequests} />
             </Grid>
             <Grid
               item
@@ -171,33 +156,31 @@ const Dashboard = () => {
             >
               <RequestsChart
                 sx={{ height: '100%' }}
-                loading={loadingTaheelRequests}
+                loading={loading}
                 totalcompletedrequests={totalCompletedRequests}
                 totalpendingrequests={totalPendingRequests}
                 totalrejectedrequests={totalRejectedRequests}
                 totaltahelrequests={totalTahelRequests}
               />
             </Grid>
-            {userType === "2" &&
-              <Grid
-                item
-                lg={8}
-                md={12}
-                xl={9}
-                xs={12}
-              >
-                <CentersTable loading={loadingCenters} centerRequests={centerRequests} />
-              </Grid>
-            }
             <Grid
               item
-              lg={4}
-              md={6}
-              xl={3}
+              lg={8}
+              md={12}
+              xl={9}
               xs={12}
             >
-              <MyTasksTable loading={loadingMyTasks} taskRequests={taskRequests} />
+              <CentersTable loading={loading} centerRequests={centerRequests} />  
             </Grid>
+            <Grid
+                item
+                lg={4}
+                md={6}
+                xl={3}
+                xs={12}
+              >
+                <MyTasksTable loading={loading} taskRequests={taskRequests} />
+              </Grid>
           </Grid>
         </Container>
       </Box>

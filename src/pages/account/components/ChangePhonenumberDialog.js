@@ -2,21 +2,24 @@ import React, { useState } from 'react';
 import {
 	Dialog,
 	DialogContent,
+	DialogTitle,
 	Box,
 	Alert,
 	CardContent,
 	Typography,
 	Container
 } from '@material-ui/core';
+import { useNavigate } from 'react-router-dom';
 import { getCurrentUser, setCurrentUser } from 'src/utils/UserLocalStorage';
 import PropTypes from 'prop-types';
-import { smsOTPValidate } from '../AccountUtils';
+import { ChangePhoneNumValidate, smsOTPValidate } from '../AccountUtils';
 import { AuthOTPPhoneNum, ownerInfoUpdate } from '../data/AccountApi';
 import SmsOTP from './SmsOTP';
 import AccountFinalFrom from './AccountFinalForm';
+import AlertDialog from 'src/components/AlertDialog';
 
 export default function ChangePhonenumberDialog(props) {
-	const { onClose, open, setOTP, SetsuccessMessageFromDialog, data } = props;
+	const { onClose, open, setOTP,SetsuccessMessageFromDialog  } = props;
 	const [errMessage, SetErrMessage] = useState('');
 
 	const handleClose = () => {
@@ -41,8 +44,8 @@ export default function ChangePhonenumberDialog(props) {
 		handleClose();
 		setCurrentUser({
 			...getCurrentUser(),
-			email: props.data.email,
-			phoneNumber: props.data.phoneNumber,
+			email: props.data.updatedEmail,
+			phoneNumber: props.data.num,
 		});
 		return response;
 	};
@@ -101,7 +104,7 @@ ChangePhonenumberDialog.propTypes = {
 	setOTP: PropTypes.func.isRequired,
 	onClose: PropTypes.func.isRequired,
 	open: PropTypes.bool.isRequired,
-	SetsuccessMessageFromDialog: PropTypes.string.isRequired,
+	SetsuccessMessageFromDialog : PropTypes.string.isRequired,
 	// openDialog: PropTypes.bool.isRequired,
 	// num: PropTypes.string.isRequired,
 	dialogContent: PropTypes.string.isRequired,

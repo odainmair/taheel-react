@@ -30,11 +30,7 @@ const termsLabel = (openDialog) => (
     <>
         <Typography gutterBottom variant="h5" component="span">
             انا اقر واتعهد بالالتزام بالشروط والاحكام الواردة والمتعلقه بالطلب
-            <Link href="#" sx={{ color: '#147fbd' }} 
-			onClick={(event) => {
-				event.preventDefault()
-				openDialog()}
-			}> (للاطلاع على الشروط والاحكام انقر هنا)</Link>
+            <Link href="#" sx={{ color: '#147fbd' }} onClick={() => openDialog()}> (للاطلاع على الشروط والاحكام انقر هنا)</Link>
         </Typography>
 
     </>
@@ -53,9 +49,8 @@ const getFieldValue = ({ name, value }) => {
     return '';
 }
 
-const Summary = ({ Condition, dialog, setField, values }) => {
+const Summary = ({ Condition, dialog }) => {
     const [open, setOpen] = React.useState(false);
-    const [isAgree, setIsAgree] = React.useState(false);
     const handleClickOpen = (dialogContent, dialogTitle) => {
         setOpen(true);
     };
@@ -249,12 +244,7 @@ const Summary = ({ Condition, dialog, setField, values }) => {
                                         name="agree"
                                         component={Checkbox}
                                         type="checkbox"
-                                        value={!!values.agree[0]}
-                                        checked={isAgree}
-                                        onClick={() => {
-                                          setField("agree", values.agree ? [] : [true]); 
-                                          setIsAgree(!isAgree) 
-                                        }}
+                                        value="true"
                                     />
                                 }
                             />
@@ -262,12 +252,7 @@ const Summary = ({ Condition, dialog, setField, values }) => {
                     )}
                 </Field>
             </Grid>
-            <TermsDialog setAgreeValue={
-                ()=>{
-                    setIsAgree(true);
-                    setField("agree", [true])
-                }
-                } dialogContent={TermsContent()} dialogTitle={"التعهد"} open={open} onClose={handleClose} acceptBtnName="اوافق" />
+            <TermsDialog dialogContent={TermsContent()} dialogTitle={"التعهد"} open={open} onClose={handleClose} acceptBtnName="اوافق" />
 
         </>
     )
@@ -277,7 +262,5 @@ export default Summary;
 
 Summary.propTypes = {
     Condition: PropTypes.func.isRequired,
-    setField: PropTypes.func.isRequired,
-    values: PropTypes.func.isRequired,
     dialog: PropTypes.func.isRequired,
 };

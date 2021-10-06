@@ -38,7 +38,6 @@ const PersonForm = ({ fromEdit, isSaudi, MedicalPracticeCondition, fieldName, se
   }
 
   const staffTypes = ["معلم تربية خاصة", "أخصائي اجتماعي", "مراقب اجتماعي", "حارس", "عامل تنظيفات", "مشرف فني عام", "اخصائي نفسي و توجيه اجتماعي", "عامل رعاية شخصية", "مدير", "سائق", "مرافق سائق", "أخصائي علاج طبيعي", "أخصائي علاج وظيفي", "أخصائي نطق و تخاطب", "ممرض"]
-  const medicalStaffTypes = ['أخصائي علاج طبيعي', 'أخصائي علاج وظيفي','ممرض', 'أخصائي نطق و تخاطب']
   return (
     <>
       <Grid
@@ -57,7 +56,7 @@ const PersonForm = ({ fromEdit, isSaudi, MedicalPracticeCondition, fieldName, se
             required
             label="الاسم الكامل"
             disabled
-            name={fieldName === null ? "fullName" : `fullName`}
+            name={fieldName === null ? "fullName" : `${fieldName}.fullName`}
             component={TextFieldFinal}
             type="text"
             variant="outlined"
@@ -77,7 +76,7 @@ const PersonForm = ({ fromEdit, isSaudi, MedicalPracticeCondition, fieldName, se
             required
             label="الجنس"
             disabled
-            name={fieldName === null ? "gender" : `gender`}
+            name={fieldName === null ? "gender" : `${fieldName}.gender`}
             component={TextFieldFinal}
             type="text"
             variant="outlined"
@@ -98,7 +97,7 @@ const PersonForm = ({ fromEdit, isSaudi, MedicalPracticeCondition, fieldName, se
               required
               label="اسم الكفيل"
               disabled
-              name={fieldName === null ? "sponsorName" : `sponsorName`}
+              name={fieldName === null ? "sponsorName" : `${fieldName}.sponsorName`}
               component={TextFieldFinal}
               type="text"
               variant="outlined"
@@ -117,7 +116,7 @@ const PersonForm = ({ fromEdit, isSaudi, MedicalPracticeCondition, fieldName, se
             fullWidth
             required
             label="نوع الكادر"
-            name={fieldName === null ? "staffTypes" : `staffTypes`}
+            name={fieldName === null ? "staffTypes" : `${fieldName}.staffTypes`}
             component={Select}
             type="text"
             variant="outlined"
@@ -139,7 +138,7 @@ const PersonForm = ({ fromEdit, isSaudi, MedicalPracticeCondition, fieldName, se
         >
           <Field
             label="السيرة الذاتية"
-            name={fieldName === null ? "cv" : `cv`}
+            name={fieldName === null ? "cv" : `${fieldName}.cv`}
             component={FileUploaderComp}
             inputType={false}
             setField={setField}
@@ -155,18 +154,17 @@ const PersonForm = ({ fromEdit, isSaudi, MedicalPracticeCondition, fieldName, se
         >
           <Field
             label="المؤهلات التعليمية"
-            name={fieldName === null ? "EducationalQualification" : `EducationalQualification`}
+            name={fieldName === null ? "EducationalQualification" : `${fieldName}.EducationalQualification`}
             component={FileUploaderComp}
             inputType={false}
             setField={setField}
             setDocument={setDocument}
             values={values}
             rowIndex={rowIndex}
-            tooltipText="مطلوب اخر مؤهل له علاقة بالوظيفة. حجم الملف لا يتجاوز 2MB الملفات المقبولة pdf,png,jpg"
           />
         </Grid>
 
-        <MedicalPracticeCondition when={fieldName === null ? "staffTypes" : `staffTypes`} is={medicalStaffTypes}>
+        <MedicalPracticeCondition when={fieldName === null ? "staffTypes" : `${fieldName}.staffTypes`} is={['أخصائي علاج طبيعي', 'أخصائي علاج وظيفي', 'أخصائي نطق و تخاطب']}>
           <Grid
             item
             md={6}
@@ -174,7 +172,7 @@ const PersonForm = ({ fromEdit, isSaudi, MedicalPracticeCondition, fieldName, se
           >
             <Field
               label="رخصة المزاولة"
-              name={fieldName === null ? "MedicalPractice" : `MedicalPractice`}
+              name={fieldName === null ? "MedicalPractice" : `${fieldName}.MedicalPractice`}
               component={FileUploaderComp}
               inputType={false}
               setField={setField}

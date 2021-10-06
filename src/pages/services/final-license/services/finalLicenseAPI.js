@@ -3,11 +3,9 @@ import { APIRequest } from 'src/api/APIRequest';
 import { uploadFileAPI } from 'src/api/APIRequest';
 import { downloadFileAPI } from 'src/api/APIRequest';
 import { getCurrentUser } from 'src/utils/UserLocalStorage'
-import { LICENSE_FORM_TYPES } from 'src/utils/enums'
-
 const getFurnitures = (values) => {
 	const furnitures = []
-	values.Furniture && values.Furniture.map((docId, index) => {
+	values.Furniture.map((docId, index) => {
 		furnitures.push({ Document: docId })
 	})
 	return furnitures
@@ -16,7 +14,6 @@ const getStaff = (values) => {
 
 	const staffTypesNo = {}
 	const newKeys = {
-		id: 'id',
 		idNumber: 'idNumIqamaNum',
 		day: 'birthDate',
 		fullName: 'name',
@@ -36,18 +33,15 @@ const getStaff = (values) => {
 
 
 
-	var staff = JSON.parse(JSON.stringify(values.customers ? values.customers : []))
+	var staff = JSON.parse(JSON.stringify(values.customers))
 
 	staff.map((customer) => {
 		Object.keys(customer).map((key) => {
 			const newKey = newKeys[key] || key;
 			if (key === 'gender')
 				customer[newKey] = customer[key] === 'انثى' ? 'f' : 'm'
-				else if (key === 'idNumber' || key === 'iqamaNo') {
-					console.log(`--getStaff::customer.idNumber ${customer.idNumber}`);
-					console.log(`--getStaff::customer.iqamaNo ${customer.iqamaNo}`);
-					customer[newKey] = customer.idNumber  === undefined || !customer.idNumber? customer.iqamaNo : customer.idNumber;
-				}
+			else if (key === 'idNumber' || key === 'iqamaNo')
+				customer[newKey] = customer.idNumber ? customer.idNumber : customer.iqamaNo
 			else if (key === 'staffTypes')
 				customer[newKey] = staffTypesNo[customer[key]]
 			else if (key === 'day' || key === 'month' || key === 'year') {
@@ -70,19 +64,21 @@ const getStaff = (values) => {
 	return staff
 }
 
-const updateFinalLicenseAPIFunc = async (values, actionType, TaskID, isDraft, reqNum) => {
+
+const createFinalLicenseAPIFunc = async (values) => {
+
+
 	const requestBody = {
 		"userCreationEmail": getCurrentUser().email,
 		"staff": getStaff(values),
+
 		"center": {
 			"licenceNumber": values.temporaryLicenceNum,
 			"centerParentType": values.centerParentType,
 			"centerFirstSubType": values.centerFirstSubType,
 			"centerSecondSubType": values.centerSecondSubType,
 			"crInfo_r": {
-				"ID": values.crInfo_r,
-				// "ID": values.centerInfo_r,
-				"idNumIqamaNum": values.idNumber,
+				"ID": values.centerInfo_r,
 				"crNumber": values.CRNumber,
 				"crActivityType": values.activities,
 				"commissionerMobNum": "",
@@ -96,12 +92,64 @@ const updateFinalLicenseAPIFunc = async (values, actionType, TaskID, isDraft, re
 				"buildingArea": values.buildingArea,
 				"basementArea": values.basementArea,
 				"carryingnumber": values.capacity,
-				"financialGuarantee": values.financialGuarantee && values.financialGuarantee.substring(0, values.financialGuarantee.length - 5),
-				"financialGuarbteeAtt": values.FinancialGuaranteeAtt && values.FinancialGuaranteeAtt[0],
-				"executivePlan": values.ExecutivePlan && values.ExecutivePlan[0],
-				"operationPlan": values.OperationalPlan && values.OperationalPlan[0],
-				"engineeringPlan": values.OfficeReport && values.OfficeReport[0],
-				"securityReport": values.SecurityReport && values.SecurityReport[0],
+				"financialGuarantee": values.financialGuarantee.substring(0, values.financialGuarantee.length - 5),
+				"financialGuarbteeAtt": values.FinancialGuaranteeAtt[0],
+				"executivePlan": values.ExecutivePlan[0],
+				"engineeringPlan": values.OfficeReport[0],
+				"securityReport": values.SecurityReport[0],
+				"operationPlan": values.OperationalPlan[0],
+				"beneficiaryCount": values.beneficiariesNum,
+				"furniturePhoto_r": getFurnitures(values),
+			},
+			"isHealthCareServices": values.healthServices === 'yes' ? true : false,
+			"healthCareServices_r": {
+				"ID": values.healthCareServices_r,
+				"type": values.healthServices === 'yes' ? values.healthServiceType : null,
+				"attachment": values.healthServices === 'yes' ?
+					values.healthServiceAttachment[0]
+					: null
+			}
+		}
+
+	}
+	const url = "taheel-apis-services-createFinalLicense-v2"
+	const response = await APIRequest({ requestBody, url });
+	return response;
+}
+
+
+const updateFinalLicenseAPIFunc = async (values, TaskID) => {
+
+	const requestBody = {
+		"externalUserTaskID": TaskID,
+		"cancel": "false",
+		"staff": getStaff(values),
+		"center": {
+			"licenceNumber": values.temporaryLicenceNum,
+			"centerParentType": values.centerParentType,
+			"centerFirstSubType": values.centerFirstSubType,
+			"centerSecondSubType": values.centerSecondSubType,
+			"crInfo_r": {
+				"ID": values.crInfo_r,
+				"crNumber": values.CRNumber,
+				"crActivityType": values.activities,
+				"commissionerMobNum": "",
+				"entityName": values.companyName,
+				"MoMRA_Licence": values.municipLicenseNo,
+				"crIssueDate": values.crIssueDate,
+				"crExpirationDate": values.crExpirationDate,
+			},
+			"centerInfo_r": {
+				"ID": values.centerInfo_r,
+				"buildingArea": values.buildingArea,
+				"basementArea": values.basementArea,
+				"carryingnumber": values.capacity,
+				"financialGuarantee": values.financialGuarantee.substring(0, values.financialGuarantee.length - 5),
+				"financialGuarbteeAtt": values.FinancialGuaranteeAtt[0],
+				"executivePlan": values.ExecutivePlan[0],
+				"operationalPlan": values.OperationalPlan[0],
+				"engineeringPlan": values.OfficeReport[0],
+				"securityReport": values.SecurityReport[0],
 				"beneficiaryCount": values.beneficiariesNum,
 				"furniturePhoto_r": getFurnitures(values)
 			},
@@ -115,56 +163,16 @@ const updateFinalLicenseAPIFunc = async (values, actionType, TaskID, isDraft, re
 			}
 		}
 	}
-
-	let url = "taheel-apis-services-createFinalLicense-v2";
-	requestBody.requestNumber = reqNum ? reqNum : null;
-
-	if (isDraft) {
-		requestBody.isDraft = true;
-		requestBody.draft_values = values;
-		if (actionType === LICENSE_FORM_TYPES.RENEW) {
-			url = "taheel-apis-services-renewLicenseV2";
-		}
-	}
-	else {
-		if (actionType === LICENSE_FORM_TYPES.RENEW) {
-			url = "taheel-apis-services-renewLicenseV2";
-		}
-		else if (actionType === LICENSE_FORM_TYPES.EDIT) {
-			requestBody.externalUserTaskID = TaskID
-			requestBody.cancel = "false"
-			url = "taheel-apis-services-continueFinalLicense-v2";
-		}
-	}
-
-	console.log('updateFinalLicenseAPIFunc :: requestBody :: ' + JSON.stringify(requestBody))
-	// const response = {isSuccessful:false, message:"DUMMY"}
+	const url = "taheel-apis-services-continueFinalLicense-v2"
 	const response = await APIRequest({ requestBody, url });
 	return response;
 }
 
-const getCentersForFinal = async (userEmail) => {
-	const url = 'taheel-apis-records-getCenters-v2';
-	// const queryParams = { userEmail, isExpired: false, licenseType: 'رخصة مؤقتة' };
-	const queryParams = { userEmail, forRenewal: true, isEligibleForFinal: true, licenseType: 'رخصة نهائية' };
-	// const queryParams = { userEmail, forRenewal: true};
-	const response = await APIRequest({ url, queryParams });
-	// console.log("response===============> " + JSON.parse(response));
-	return response;
-};
-const getCentersForFinalNoExpired = async (userEmail) => {
-	const url = 'taheel-apis-records-getCenters-v2';
-	// const queryParams = { userEmail, isExpired: false, licenseType: 'رخصة مؤقتة' };
-	const queryParams = { userEmail, isExpired: false, isEligibleForFinal: true, licenseType: 'رخصة نهائية' };
-	// const queryParams = { userEmail, forRenewal: true};
-	const response = await APIRequest({ url, queryParams });
-	// console.log("response===============> " + JSON.parse(response));
-	return response;
-};
+
 
 const getTempLicense = async (userEmail) => {
 	const url = 'taheel-apis-records-getCenters-v2';
-	const queryParams = { userEmail, isExpired: false, licenseType: 'رخصة مؤقتة', isEligibleForFinal: true };
+	const queryParams = { userEmail, isExpired: false, licenseType: 'رخصة مؤقتة',isEligibleForFinal:true };
 	const response = await APIRequest({ url, queryParams });
 	return response;
 };
@@ -195,12 +203,11 @@ const calculation = async (buildingArea, basementArea) => {
 	return response;
 }
 
-const validateCitizenFunc = async (idNumber, birthDate, checkGovermental) => {
+const validateCitizenFunc = async (idNumber, birthDate) => {
 	const url = "taheel-apis-utilities-validateCitizen-v3"
 	const requestBody = {
 		IDNo: idNumber,
-		HijriDateOfBirth: birthDate,
-		checkGovermental: checkGovermental
+		HijriDateOfBirth: birthDate
 	};
 	const response = await APIRequest({ requestBody, url });
 	return response;
@@ -220,12 +227,6 @@ const CentertDetails = async (licenseNumber) => {
 	return response;
 }
 
-const DraftDetails = async (reqNum) => {
-	const url = 'taheel-apis-records-RequestDetails-v2';
-	const queryParams = { reqNum };
-	const response = await APIRequest({ url, queryParams });
-	return response;
-};
 
 const uploadDocumentApi = async (name, image) => {
 	const url = "taheel-apis-utilities-uploadDocument-v2"
@@ -237,18 +238,15 @@ const uploadDocumentApi = async (name, image) => {
 }
 
 
-const downloadDocument = async (DocID, attachment, name) => {
+const downloadDocument = async (DocID, attachment) => {
 	const url = "taheel-apis-utilities-downloadDocument-v2"
-	console.log(`downloadDocument :: attachment :: ${JSON.stringify(attachment)}`)
-	console.log(`downloadDocument :: name :: ${JSON.stringify(name)}`)
-	const fileName = `${name}`;
 	const queryParams = {
 		DocID: DocID,
 		attachment: attachment
 	};
-	const response = await downloadFileAPI({ url, queryParams, fileName });
+	const response = await downloadFileAPI({ url, queryParams });
 	return response;
 }
 
 
-export { getCentersForFinal, validateCompanyFunc,getCentersForFinalNoExpired, updateFinalLicenseAPIFunc, calculation, validateCitizenFunc, uploadDocumentApi, getTempLicense, getMunicipalLicenseNoApi, downloadDocument, TaskDetails, CentertDetails, DraftDetails };
+export { validateCompanyFunc, createFinalLicenseAPIFunc, updateFinalLicenseAPIFunc, calculation, validateCitizenFunc, uploadDocumentApi, getTempLicense, getMunicipalLicenseNoApi, downloadDocument, TaskDetails, CentertDetails };

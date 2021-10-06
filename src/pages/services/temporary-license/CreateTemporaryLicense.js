@@ -34,7 +34,7 @@ const CreateTemporaryLicense = () => {
     console.log(JSON.stringify(values))
     const response = await createTempLicenseAPIFunc(values);
     console.log(JSON.stringify(response));
-    handleClickOpen(`عزيزي مقدم الطلب، تم إصدار ترخيص مؤقت ينتهي بتاريخ ${response.responseBody.data.expirationDate}`, '');
+    handleClickOpen(`تم تقديم طلبك بنجاح، رقم الرخصة ${response.responseBody.data.licenceNumber} وتاريخ انتهاء الرخصة ${response.responseBody.data.expirationDate} هجري`, 'تم تقديم طلبك بنجاح');
   };
 
   const handleClickOpen = (dialogContent, dialogTitle) => {
@@ -53,7 +53,7 @@ const CreateTemporaryLicense = () => {
     <Container maxWidth="md">
       <Card>
         <CardHeader
-          title="اصدار ترخيص مؤقت لمركز أهلي"
+          title="اصدار ترخيص مؤقت لمركز تأهيل أهلي"
         />
         <Divider />
         <CardContent>
@@ -61,6 +61,7 @@ const CreateTemporaryLicense = () => {
             initialValues={{
               centerType: '01',
               beneficiaryCategory: '01',
+              requestType: '1',
               idNumber: idNumIqamaNum,
               birthDate: DOB,
               mobileNo: phoneNumber,
@@ -92,10 +93,10 @@ const CreateTemporaryLicense = () => {
               validate={(values) => {
                 const error = sectionValidateInput(tempLicenseFieldSchema, "CenterDetails", values);
                 if(values['targetedGender'] === "b" && values['ageGroup'] !== "2-12"){
-                  error['ageGroup']= "الفئة العمرية من ١٣-١٨ و ١٩-٤٥ لا تسمح بكلا الجنسين"
+                  error['ageGroup']= "يرجى اختيار الفئة العمرية من سنتين الى 12 سنة"
                 }
                 if(values['centerCap']<=0){
-                  error['centerCap']= "يجب إدخال الطاقة الاستعابية اكبر من صفر "
+                  error['centerCap']= "يجب ادخل طاقة استعابية اكبر من صفر "
 
                 }
                 return error;
@@ -109,12 +110,11 @@ const CreateTemporaryLicense = () => {
             >
               <QuestionnaireSection Condition={ConditionComp} />
             </FinalFromWizard.Page>
-            <TempSummary
+            <FinalFromWizard.Page
               label="ملخص"
-              Condition={ConditionComp} 
-              dialog={handleClickOpen}
             >
-            </TempSummary>
+              <Summary Condition={ConditionComp} dialog={handleClickOpen} />
+            </FinalFromWizard.Page>
           </FinalFromWizard>
         </CardContent>
       </Card>
@@ -128,16 +128,4 @@ const FinalFromWizardAddressPage = ({ label, validate, setField }) => (
   </Box>
 
 );
-
-const TempSummary = ({ setField, temporaryLicenses, values, label, Condition, dialog }) => (
-    <Summary
-      values={values}
-      temporaryLicenses={temporaryLicenses}
-      setField={(fieldName, fieldValue) => setField(fieldName, fieldValue)}
-      label={label}
-      Condition={Condition}
-      dialog={dialog}
-      />
-);
-
 export default CreateTemporaryLicense;

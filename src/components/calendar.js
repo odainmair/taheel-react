@@ -10,26 +10,27 @@ import moment from 'moment-hijri';
 import { useEffect } from 'react';
 
 
-const Calendar = ({ FeiledWidth, fieldName, disabled = false, yearCalender = { start: 1324, end: moment().format('iYYYY') - 16 } }) => {
+const Calendar = ({ FeiledWidth, fieldName,disabled =false }) => {
     const calendar = {
         days: [],
         months: [],
         years: []
     };
 
-    const CalenderDate = (type, start, end) => {
+    const BirthdayDate = (type, start, end) => {
         for (let i = start; i <= end; i++) {
             type.push(i);
         }
     };
-    CalenderDate(calendar.days, 1, 30);
-    CalenderDate(calendar.months, 1, 12);
-    CalenderDate(calendar.years, !!yearCalender.start ? yearCalender.start : 1324, !!yearCalender.end ? yearCalender.end : moment().format('iYYYY') - 16);
-
+    BirthdayDate(calendar.days, 1, 30);
+    BirthdayDate(calendar.months, 1, 12);
+   
+    BirthdayDate(calendar.years, 1324,  moment().format('iYYYY')-16);
+  
     useEffect(() => {
         console.log(`--- disabled ${disabled}`);
-
-
+  
+       
     }, [])
 
     return (
@@ -123,6 +124,5 @@ export default Calendar
 Calendar.propTypes = {
     FeiledWidth: PropTypes.number.isRequired,
     fieldName: PropTypes.object,
-    yearCalender: PropTypes.object,
     disabled: PropTypes.bool,
 };

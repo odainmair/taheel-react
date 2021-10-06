@@ -9,8 +9,7 @@ import PropTypes from 'prop-types';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
 export default function AlertDialog(props) {
-	const { onClose, dialogContent, dialogTitle, open, acceptBtnName, buttons } = props;
-	console.log("buttons ===>", buttons)
+	const { onClose, dialogContent, dialogTitle, open, acceptBtnName } = props;
 	const handleClose = () => {
 		onClose();
 	};
@@ -31,27 +30,21 @@ export default function AlertDialog(props) {
 				</DialogContentText>
 			</DialogContent>
 			<DialogActions>
-				{!!buttons ?
-					<>
-						{!!buttons.leftBtn ? (<Button onClick={buttons.leftBtn.func} autoFocus>{buttons.leftBtn.title}</Button>) : ''}
-						{!!buttons.rightBtn ? <Button onClick={buttons.rightBtn.func}>{buttons.rightBtn.title}</Button> : ''}
-					</>
-					:
-					<Button
-						onClick={handleAccept}
-						color="primary"
-						variant="contained"
-						autoFocus
-						sx={{
-							backgroundColor: '#3c8084',
-							color: '#fff',
-							margin: '0 auto',
-							pr: 6,
-							pl: 6
-						}}
-					>
-						{acceptBtnName}
-					</Button>}
+				<Button
+					onClick={handleAccept}
+					color="primary"
+					variant="contained"
+					autoFocus
+					sx={{
+						backgroundColor: '#3c8084',
+						color: '#fff',
+						margin: '0 auto',
+						pr: 6,
+						pl: 6
+					}}
+				>
+					{acceptBtnName}
+				</Button>
 			</DialogActions>
 		</Dialog>
 	);
@@ -63,5 +56,4 @@ AlertDialog.propTypes = {
 	dialogContent: PropTypes.string.isRequired,
 	dialogTitle: PropTypes.string.isRequired,
 	acceptBtnName: PropTypes.string.isRequired,
-	buttons: PropTypes.func,
 };
