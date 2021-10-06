@@ -32,8 +32,7 @@ import numeral from 'numeral';
 import { centerLocationTransferAPIFunc } from './TransferCenterLocationAPI';
 import { AttachementValidation, NewAddressValidation } from './TransferCenterLoactionUtil';
 import { getRequestDetails } from 'src/pages/services/data/servicesApi'
-import { getDateFromObject } from 'src/pages/services/transfer-center-location/services/TransferCenterLoactionUtil'
-
+import { extractDate, getDocId } from 'src/utils/TaheelUtils'
 
 const TransferCenterLocationRequest = () => {
     const location = useLocation();
@@ -78,7 +77,7 @@ const TransferCenterLocationRequest = () => {
                 let Details = getReqDetails.responseBody.requestDetails.data
                 console.log("TransferCenterLocationRequest :: Details: ", JSON.stringify(Details))
                 console.log("TransferCenterLocationRequest :: Details.draft_values.isDraft: ", JSON.stringify(Details.draft_values.isDraft))
-                console.log("TransferCenterLocationRequest :: Details.draft_values.draft_values: ", JSON.stringify(Details.draft_values.draft_values))
+                console.log("TransferCenterLocationRequest :: details : ", Details)
                 // console.log("TransferCenterLocationRequest :: draft_values?.draft_values?.buildingArea: ", draft_values?.draft_values?.buildingArea)
 
                 if (Details.draft_values.isDraft) {
@@ -86,7 +85,7 @@ const TransferCenterLocationRequest = () => {
                         buildingArea: Details.draft_values?.draft_values?.buildingArea,
                         basementArea: Details.draft_values?.draft_values?.basementArea,
                         buildNo: Details.draft_values?.draft_values?.buildNo,
-                        capacity: Details.draft_values?.draft_values?.capacity,
+                        capacity: null,
                         ...extractDate(Details.draft_values?.center?.centerInfo_r?.expirarionDateForFireDepartmentLicenseHijri),
                         city: Details.draft_values?.draft_values?.city,
                         buildNo: Details.draft_values?.draft_values?.buildNo,
@@ -94,10 +93,10 @@ const TransferCenterLocationRequest = () => {
                         sub: Details.draft_values?.draft_values?.sub,
                         postalCode: Details.draft_values?.draft_values?.postalCode,
                         additionalNo: Details.draft_values?.draft_values?.additionalNo,
-                        Furniture: [Details.draft_values?.draft_values?.Furniture],
-                        municipLicenseNo: [Details.draft_values?.draft_values?.municipLicenseNo],
-                        fireDepartmentLicense: [Details.draft_values?.draft_values?.fireDepartmentLicense],
-                        OfficeReport: [Details.draft_values?.draft_values?.OfficeReport],
+                        Furniture: getDocId(Details.draft_values?.draft_values?.Furniture),
+                        municipLicenseNo: getDocId(Details.draft_values?.draft_values?.municipLicenseNo),
+                        fireDepartmentLicense: getDocId(Details.draft_values?.draft_values?.fireDepartmentLicense),
+                        OfficeReport: getDocId(Details.draft_values?.draft_values?.OfficeReport),
                     })
                 }
                 else {
@@ -143,26 +142,6 @@ const TransferCenterLocationRequest = () => {
         }
     }, [])
 
-    const extractDate = (dateObject) => {
-        console.log(`extractDate =============================> ${dateObject}`)
-        const expDate = {}
-        if (!!dateObject) {
-            let returned = getDateFromObject(dateObject, 'iYYYYiMMiDD', 'iDD');
-            if (!isNaN(returned)) {
-                expDate.day = Number.parseInt(returned)
-            }
-            returned = getDateFromObject(dateObject, 'iYYYYiMMiDD', 'iMM');
-            if (!isNaN(returned)) {
-                expDate.month = Number.parseInt(returned)
-            }
-            returned = getDateFromObject(dateObject, 'iYYYYiMMiDD', 'iYYYY');
-            if (!isNaN(returned)) {
-                expDate.year = Number.parseInt(returned)
-            }
-        }
-        console.log(`expDate =============================> ${JSON.stringify(expDate)}`)
-        return expDate
-    }
     const getCentertDetails = async (licenceNumber) => {
         setIsLoading(true)
         SetErrMessage("");
@@ -233,8 +212,8 @@ const TransferCenterLocationRequest = () => {
         console.log("values++++++++++++", JSON.stringify(values))
         const response = await centerLocationTransferAPIFunc(values);
         console.log("response.isSuccessful", response.isSuccessful);
-        if(response.isSuccessful) {
-            if(values.isDraft && !!response?.responseBody?.data) {
+        if (response.isSuccessful) {
+            if (values.isDraft && !!response?.responseBody?.data) {
                 handleClickOpen(`${response.responseBody.data.message[0]} طلب رقم ${response.responseBody.data.requestNumber}`, '');
             }
             else {
@@ -255,10 +234,10 @@ const TransferCenterLocationRequest = () => {
                 />
                 <Divider />
                 {!isLoading && fromDraft &&
-                <Alert icon={<DraftsTwoToneIcon sx={{ color: 'grey !important' }} />} variant="outlined" severity="info" sx={{ marginLeft: 2, marginRight: 2, marginTop: 1, color: 'grey !important', borderColor: 'grey !important' }}>
-                    <AlertTitle> مسودة رقم {requestNum}</AlertTitle>
-                    {editInitValues?.chairmanComment && editInitValues.chairmanComment?.comment}
-                </Alert>
+                    <Alert icon={<DraftsTwoToneIcon sx={{ color: 'grey !important' }} />} variant="outlined" severity="info" sx={{ marginLeft: 2, marginRight: 2, marginTop: 1, color: 'grey !important', borderColor: 'grey !important' }}>
+                        <AlertTitle> مسودة رقم {requestNum}</AlertTitle>
+                        {editInitValues?.chairmanComment && editInitValues.chairmanComment?.comment}
+                    </Alert>
                 }
                 {errMessage && (
                     <Alert variant="outlined" severity="error">
@@ -336,7 +315,6 @@ const TransferCenterLocationRequest = () => {
                             <FinalFromWizarLocationDataPage
                                 label="بيانات المقر الجديد للمركز "
                                 validate={(values) => AttachementValidation(values)}
-
                                 setIsEnableNextBtn={(isEnable) => setIsEnableNextBtn(isEnable)}
                             />
                             <FinalFromWizardAddressPage

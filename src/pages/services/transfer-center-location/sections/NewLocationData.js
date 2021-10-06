@@ -24,11 +24,11 @@ const NewLocationData = ({ setField, values, setIsEnableNextBtn }) => {
     const [calculatedData, setCalculatedData] = useState(false);
     const [errMessage, SetErrMessage] = useState('');
     const [loading, setLoading] = useState(false);
-	console.log('#==> values__values__values ' + JSON.stringify(values))
+    console.log('#==> values__values__values ' + JSON.stringify(values))
 
     useEffect(() => {
-
-        setIsEnableNextBtn(false);
+        if (!values.capacity || !values.basementArea || !values.buildingArea || !values.Furniture || !values.municipLicenseNo || !values.fireDepartmentLicense || !values.OfficeReport || !values.day || !values.month || !values.year)
+            setIsEnableNextBtn(false);
 
     }, []);
 
@@ -77,6 +77,9 @@ const NewLocationData = ({ setField, values, setIsEnableNextBtn }) => {
     const handleOnChange = (val, nextVal) => {
         setIsEnableNextBtn(false);
     };
+    const clearCapacity = () => {
+        setField('capacity', null);
+    }
     return (
         <>
             <Typography
@@ -127,6 +130,7 @@ const NewLocationData = ({ setField, values, setIsEnableNextBtn }) => {
                         <OnChange name="basementArea">
                             {(value, previous) => {
                                 handleOnChange(value, previous);
+                                clearCapacity();
                             }}
                         </OnChange>
                     </Grid>
@@ -151,6 +155,7 @@ const NewLocationData = ({ setField, values, setIsEnableNextBtn }) => {
                         <OnChange name="buildingArea">
                             {(value, previous) => {
                                 handleOnChange(value, previous);
+                                clearCapacity();
                             }}
                         </OnChange>
                     </Grid>
@@ -230,7 +235,7 @@ const NewLocationData = ({ setField, values, setIsEnableNextBtn }) => {
                     >
                         <Typography> تاريخ الانتهاء</Typography>
                     </Grid>
-                    < Calendar FeiledWidth={4} fieldName={null} yearCalender={{ start: moment().format('iYYYY'), end: Number.parseInt(moment().format('iYYYY'))+15 }} />
+                    < Calendar FeiledWidth={4} fieldName={null} yearCalender={{ start: moment().format('iYYYY'), end: Number.parseInt(moment().format('iYYYY')) + 15 }} />
                 </Grid>
             </Grid>
         </>

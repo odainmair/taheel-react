@@ -1,5 +1,3 @@
-import moment from 'moment-hijri';
-
 const required = 'يجب تعبئة الحقل';
 
 const AttachementValidation = values => {
@@ -56,8 +54,4 @@ const NewAddressValidation = values => {
   return msg;
 }
 
-const getDateFromObject = (date, format, req) => {
-  return moment(date, format).format(req);
-}
-
-export { AttachementValidation, NewAddressValidation, getDateFromObject };
+export { AttachementValidation, NewAddressValidation };
