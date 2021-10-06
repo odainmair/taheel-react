@@ -104,6 +104,7 @@ const TransferCenterLocationRequest = () => {
                     Details = { NewCenterLocationData: { ...Details.processVariablesDump.NewCenterLocationData }, center: { ...Details.center } }
                     const date = Details?.NewCenterLocationData?.centerInfo_r?.expirarionDateForFireDepartmentLicenseHijri;
                     setFormInits({
+                        beneficiariesNum: center && center.centerInfo_r && center.centerInfo_r.beneficiaryCount,
                         buildingArea: Details?.NewCenterLocationData?.centerInfo_r?.buildingArea,
                         basementArea: Details?.NewCenterLocationData?.centerInfo_r?.basementArea,
                         buildNo: Details?.NewCenterLocationData?.centerLocation_r?.buildNo,
