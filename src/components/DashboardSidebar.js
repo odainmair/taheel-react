@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
@@ -14,8 +14,11 @@ import {
 import {
   LogOut as LogoutIcon,
   Monitor as BarChartIcon,
+  Archive as DraftsIcon,
   ShoppingBag as ShoppingBagIcon,
   User as UserIcon,
+  Home as homeIcon,
+  FileText as ordersIcon,
 } from 'react-feather';
 import { getCurrentUser } from 'src/utils/UserLocalStorage';
 import { logoutUser } from 'src/utils/UserLocalStorage';
@@ -29,7 +32,7 @@ moment.locale('ar-SA');
 const user = {
   avatar: '/static/images/avatars/avatar_4.png',
   currentDate: moment().format('iYYYY iMMM iD'),
-  name: 'عبدالله بن محمد'
+  name: 'عبدالله بن محمد',
 };
 
 const items = [
@@ -46,12 +49,27 @@ const items = [
   {
     href: '/app/account',
     icon: UserIcon,
-    title: 'المعلومات الشخصيه'
+    title: 'الملف التعريفي'
   },
   {
     href: '/app/centers',
-    icon: UserIcon,
+    icon: homeIcon,
     title: 'المراكز'
+  },
+  {
+    href: '/app/orders',
+    icon: ordersIcon,
+    title: 'الطلبات'
+  },
+  // {
+  //   href: '/app/notifications',
+  //   icon: UserIcon,
+  //   title: 'التنبيهات'
+  // },
+  {
+    href: '/app/drafts',
+    icon: DraftsIcon,
+    title: 'المسودات'
   },
   {
     href: '/login',
@@ -60,12 +78,45 @@ const items = [
     onClick: () => logoutUser()
   }
 ];
+const beneficiaryItems = [
+  {
+    href: '/app/dashboard',
+    icon: BarChartIcon,
+    title: 'لوحة البيانات'
+  },
+  {
+    href: '/app/products',
+    icon: ShoppingBagIcon,
+    title: 'الخدمات'
+  },
+  {
+    href: '/app/account',
+    icon: UserIcon,
+    title: 'الملف التعريفي'
+  },
+  {
+    href: '/app/orders',
+    icon: ordersIcon,
+    title: 'الطلبات'
+  },
+  // {
+  //   href: '/app/notifications',
+  //   icon: UserIcon,
+  //   title: 'التنبيهات'
+  // },
+  {
+    href: '/login',
+    icon: LogoutIcon,
+    title: 'تسجيل خروج',
+    onClick: () => logoutUser()
+  }
+];
+
 
 const DashboardSidebar = ({ onMobileClose, openMobile }) => {
   const location = useLocation();
-  const { firstName, lastName } = getCurrentUser();
+  const { firstName, lastName, userType } = getCurrentUser();
   user.name = `${firstName} ${lastName}`;
-
   useEffect(() => {
     if (openMobile && onMobileClose) {
       onMobileClose();
@@ -124,7 +175,16 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
       <Divider />
       <Box sx={{ p: 2 }}>
         <List>
-          {items.map((item) => (
+          {userType === "2" && items.map((item) => (
+            <NavItem
+              href={item.href}
+              key={item.title}
+              title={item.title}
+              icon={item.icon}
+              onClick={item.onClick}
+            />
+          ))}
+          {userType === "4" && beneficiaryItems.map((item) => (
             <NavItem
               href={item.href}
               key={item.title}

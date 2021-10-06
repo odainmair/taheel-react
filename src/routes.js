@@ -5,30 +5,40 @@ import MainLayout from 'src/components/MainLayout';
 import Account from 'src/pages/account/Account';
 import CreateTemporaryLicense from 'src/pages/services/temporary-license/CreateTemporaryLicense';
 import CreatefinalLicense from 'src/pages/services/final-license/CreateFinalLicense';
+import CreateFinalLicenseRenewal from 'src/pages/services/final-license/CreateFinalLicenseRenewal';
 import CustomerList from 'src/pages/CustomerList';
 import Dashboard from 'src/pages/Dashboard';
-import Login from 'src/pages/Login';
+import Drafts from 'src/pages/Drafts';
+import Login from 'src/pages/UserAuthentication/Login/Login';
 import NotFound from 'src/pages/NotFound';
 import ProductList from 'src/pages/ProductList';
-import Register from 'src/pages/Registration/Register';
+import Register from 'src/pages/UserAuthentication/Registration/Register';
 import Settings from 'src/pages/Settings';
-import OTPLogin from 'src/pages/LoginOtp';
+import OTPLogin from 'src/pages/UserAuthentication/Login/components/LoginOtp';
 import Home from './pages/public/Home';
 import About from './pages/public/AboutUs';
 import Faq from './pages/public/faq';
 import Services from './pages/public/Services';
 import ContactUs from './pages/public/ContactUs';
-import ForgetPassword from './pages/forgetPassword/ForgetPassword';
+import ForgetPassword from './pages/UserAuthentication/forgetPassword/ForgetPassword';
 import CentersDetails from './pages/CentersManagement/components/CentersDetails';
 import Centers from './pages/CentersManagement/Centers';
+import AddCommissioner from './pages/CentersManagement/components/AddCommissioner';
+import CommissionersManagement from './pages/CentersManagement/components/CommissionersManagement';
+import DownloadDoc from './pages/UserAuthentication/Login/components/DownloadDoc';
+import Orders from './pages/Orders';
+import { LICENSE_FORM_TYPES, REQUEST_STATUS } from 'src/utils/enums'
+import TransferCenterLocationRequest from 'src/pages/services/transfer-center-location/services/TransferCenterLocationRequest';
+import TransferCenterLocationSummary from 'src/pages/services/transfer-center-location/services/TransferCenterLocationSummary';
 
 const routes = (isLoggedIn) => [
   {
     path: '/',
     element: <MainLayout />,
     children: [
-      { path: 'login', element: isLoggedIn === "" ? <Login /> : <Navigate to="/app/dashboard" />},
+      { path: 'login', element: isLoggedIn === "" ? <Login /> : <Navigate to="/app/dashboard" /> },
       { path: 'otplogin', element: <OTPLogin /> },
+      { path: 'downloadDoc', element: <DownloadDoc /> },
       { path: 'Home', element: <Home /> },
       { path: '/about', element: <About /> },
       { path: '/faq', element: <Faq /> },
@@ -50,10 +60,17 @@ const routes = (isLoggedIn) => [
       { path: 'account', element: <Account /> },
       { path: 'centers', element: <Centers /> },
       { path: 'centersDetails', element: <CentersDetails /> },
+      { path: 'AddCommissioner', element: <AddCommissioner /> },
+      { path: 'CommissionersManagement', element: <CommissionersManagement /> },
       { path: 'customers', element: <CustomerList /> },
       { path: 'dashboard', element: <Dashboard /> },
+      // { path: 'drafts', element: <Drafts /> },
       { path: 'products', element: <ProductList /> },
       { path: 'settings', element: <Settings /> },
+      { path: 'orders', element: <Orders type={LICENSE_FORM_TYPES.ALL} /> },
+      { path: 'drafts', element: <Orders type={LICENSE_FORM_TYPES.DRAFT} /> },
+
+
       { path: '*', element: <Navigate to="/404" /> }
     ]
   },
@@ -63,6 +80,12 @@ const routes = (isLoggedIn) => [
     children: [
       { path: 'templicense', element: <CreateTemporaryLicense /> },
       { path: 'finallicense', element: <CreatefinalLicense /> },
+      { path: 'updatefinallicenserenewal', element: <CreatefinalLicense /> },
+      { path: 'editfinallicense', element: <CreatefinalLicense /> },
+      { path: 'finallicenserenewal', element: <CreateFinalLicenseRenewal /> },
+      { path: 'transfercenter', element: <TransferCenterLocationRequest /> },
+      { path: 'transfercentersummary', element: <TransferCenterLocationSummary /> },
+
       { path: '*', element: <Navigate to="/404" /> }
     ]
   }

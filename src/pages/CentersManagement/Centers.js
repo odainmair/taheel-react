@@ -1,74 +1,44 @@
-import { Helmet } from 'react-helmet';
-import React, { useState, useEffect } from 'react';
-
-import {
-  Box,
-  Container,
-  Grid,
-  TextField
-} from '@material-ui/core';
+import React, { useState, useEffect, useMemo } from 'react';
 import { getCurrentUser } from 'src/utils/UserLocalStorage';
 import { getCenters } from './data/CentersApi';
-import CentersTableComponent from './components/CentersTableComponent';
-
-const Centers = (props) => {
+import TableCreator from 'src/Core/Components/TableCreator';
+import CentersTableSchema, { SchemaActions } from './Schema/CentersTableSchema';
+import { TablePaginationObject } from 'src/Core/Utils/TablePagination';
+import TableDataViewEnum from 'src/Core/Utils/TableDataViewEnum';
+const Centers = () => {
   const { email } = getCurrentUser();
   console.log("email+++++++++++++", email);
   const [centers, setCenters] = useState([]);
   const [loading, setLoading] = useState(true);
-
-
+  const [errMessage, SetErrMessage] = useState('')
+  const TPObject = TablePaginationObject(TableDataViewEnum.PAGINATION_DATA)
+  const paramData = useMemo(() => {
+    return {
+      batchSize: TPObject.pagination.batchSize,
+      startIndex: TPObject.pagination.startIndex,
+      filters: TPObject.pagination.filters
+    }
+  }, [TPObject.pagination.batchSize, TPObject.pagination.startIndex, TPObject.pagination.filters])
+  const pageTitle = 'المراكز'
   useEffect(async () => {
     // const getCentersRs = await getCentersFun(email);
-    const getCentersDetails = await getCenters(email);
+    setLoading(true)
+    let response = ''
+    const getCentersDetails = await getCenters(email, paramData.startIndex, paramData.batchSize, paramData.filters);
     if (!getCentersDetails.isSuccessful) {
       response = { isSuccessful: false, message: getCentersDetails.message };
+      setCenters('')
+      SetErrMessage(getCentersDetails.message)
+      setLoading(false)
     } else {
-      const { Centers } = getCentersDetails.responseBody.data;
-      setCenters(Centers)
-      console.log("Centerssssssssssssssssssssss+++++++++++++", Centers);
+      const CentersData = getCentersDetails.responseBody;
+      SetErrMessage('')
+      setCenters(CentersData.data)
+      setLoading(false)
     }
-  }, []);
+  }, [paramData]);
   return (
-    <>
-      <Helmet>
-        <title>Centers</title>
-      </Helmet>
-      <Box
-        sx={{
-          backgroundColor: 'background.default',
-          minHeight: '100%',
-          py: 3
-        }}
-      >
-        <Container maxWidth="lg">
-          <Grid
-            container
-            spacing={3}
-          >
-            <Grid
-              container
-              lg={12}
-              md={6}
-              xs={12}
-              marginTop={3}
-            >
-              <Grid item
-                lg={12}
-                md={12}
-                xs={12}
-                marginBottom={3}
-              >
-                <CentersTableComponent loading={loading} centerRequests={centers} />  
-
-                
-                {/* <CentersDetails centers={centers} /> */}
-              </Grid >
-            </Grid>
-          </Grid>
-        </Container>
-      </Box>
-    </>
+    <TableCreator pageTitle={pageTitle} tableShcema={ {...CentersTableSchema, ...SchemaActions()} } dataTable={centers.Centers} totalCount={centers.totalCount} loading={loading} TPObject={TPObject} errMessage={errMessage}/>
   );
 }
 
