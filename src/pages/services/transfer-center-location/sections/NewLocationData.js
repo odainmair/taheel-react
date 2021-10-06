@@ -97,9 +97,9 @@ const NewLocationData = ({ setField, values, setIsEnableNextBtn }) => {
       return;
     }
     if (values.beneficiariesNum > numeral(carryingCapacity).format('00')) {
-        SetErrMessage(
-            'يجب ان يكون عدد المستفيدين الحالي اقل من الطاقة الإستيعابية'
-            );
+      SetErrMessage(
+        'يجب ان يكون عدد المستفيدين الحالي اقل من الطاقة الإستيعابية'
+      );
       setIsEnableNextBtn(false);
       return;
     }
@@ -113,9 +113,12 @@ const NewLocationData = ({ setField, values, setIsEnableNextBtn }) => {
   };
 
   const handleOnChange = (val, nextVal) => {
-      values.capacity=null;
+    values.capacity = null;
     setIsEnableNextBtn(false);
   };
+  const clearCapacity = () => {
+    setField('capacity', null);
+  }
   return (
     <>
       <Typography
@@ -153,6 +156,7 @@ const NewLocationData = ({ setField, values, setIsEnableNextBtn }) => {
             <OnChange name="basementArea">
               {(value, previous) => {
                 handleOnChange(value, previous);
+                clearCapacity();
               }}
             </OnChange>
           </Grid>
@@ -171,6 +175,7 @@ const NewLocationData = ({ setField, values, setIsEnableNextBtn }) => {
             <OnChange name="basementArea">
               {(value, previous) => {
                 handleOnChange(value, previous);
+                clearCapacity();
               }}
             </OnChange>
           </Grid>
@@ -191,6 +196,7 @@ const NewLocationData = ({ setField, values, setIsEnableNextBtn }) => {
             <OnChange name="buildingArea">
               {(value, previous) => {
                 handleOnChange(value, previous);
+                clearCapacity();
               }}
             </OnChange>
           </Grid>
@@ -216,23 +222,23 @@ const NewLocationData = ({ setField, values, setIsEnableNextBtn }) => {
           </Grid>
           <Grid item lg={12} md={12} xs={12}>
             {values.capacity && (
-             	<Grid
-                 item
-                 lg={12}
-                 md={12}
-                 xs={12}
-             >
-                 < ContentField label='الطاقة الاستعابية' value={values.capacity} />
-                 <Box
-                     direction='rtl'
-                     className="custom-label-field"
-                 >
-                     <Alert severity="info" size="small">
-                          يتم حساب الطاقة الإستيعابية من قبل المنصة : 
-                         (مساحة مسطح البناء - مساحة القبو)/10
-                     </Alert>
-                 </Box>
-             </Grid>
+              <Grid
+                item
+                lg={12}
+                md={12}
+                xs={12}
+              >
+                < ContentField label='الطاقة الاستعابية' value={values.capacity} />
+                <Box
+                  direction='rtl'
+                  className="custom-label-field"
+                >
+                  <Alert severity="info" size="small">
+                    يتم حساب الطاقة الإستيعابية من قبل المنصة :
+                    (مساحة مسطح البناء - مساحة القبو)/10
+                  </Alert>
+                </Box>
+              </Grid>
             )}
             <Box direction="rtl" className="custom-label-field"></Box>
           </Grid>
@@ -266,7 +272,7 @@ const NewLocationData = ({ setField, values, setIsEnableNextBtn }) => {
           />
         </Grid>
       </Grid>
-  
+
     </>
   );
 };
