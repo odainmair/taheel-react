@@ -37,17 +37,16 @@ const sampleData = {
   ],
 };
 
-const NewCenterAddress = ({ values,Condition, setField, setIsEnableNextBtn }) => {
+const NewCenterAddress = ({ values, Condition, setField, setIsEnableNextBtn }) => {
 
   const inputEl = useRef(null);
   const [streetAddr, setStreetAddr] = useState(sampleData.vendorStreetAddress);
 
 
   useEffect(() => {
-    // if ( values) {
+    if (!values.capacity || !values.basementArea || !values.buildingArea || !values.Furniture || !values.municipLicenseNo || !values.fireDepartmentLicense || !values.OfficeReport || !values.day || !values.month || !values.year)
       setIsEnableNextBtn(true);
-    // }
- 
+
   }, []);
 
   const getStreetAddrPartsFromGeoResult = (geoResult) => {

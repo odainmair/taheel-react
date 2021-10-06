@@ -1,4 +1,5 @@
 import { checkIsfilled } from 'src/utils/inputValidator';
+import { getDocId } from 'src/utils/TaheelUtils';
 import { v4 as uuid } from 'uuid';
 
 const getCenterType = (value) => {
@@ -367,6 +368,20 @@ export default
             },
             name: 'financialGuarbteeAtt.id',
             valueFunc: (values) => (values?.financialGuarbteeAtt?.id),
+            type: 'file',
+            gridSize: '6',
+            sectionName: Sections.Requirements,
+            options: [],
+            validators: [],
+        },
+        {
+            id: uuid(),
+            label: {
+                ar: "مرفقات خدمات الرعاية الصحية",
+                en: 'Health care service documents'
+            },
+            name: 'healthCareServices_r',
+            valueFunc: (values) => (getDocId(values?.healthCareServices_r)),
             type: 'file',
             gridSize: '6',
             sectionName: Sections.Requirements,

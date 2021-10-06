@@ -38,7 +38,6 @@ export function SchemaActions() {
                     iconTag: IconsTypeEnum.DELETE_ICON,
                     color: 'secondary',
                     btnFun: async (data, otherFunc) => {
-                        console.log("async data samer ====> ",data)
                         otherFunc(data)
                     }
                 }]
