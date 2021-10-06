@@ -41,7 +41,7 @@ const FileUploaderComp = ({ input: { value, name }, label,imgOnly, meta, setFiel
     // console.log(`========================> docId.length: ${docId.length}`)
     if (Array.isArray(docId) && docId.length > 0 && !!docId[0]) {
       // console.log(`========================> docId: ${docId[0]}`)
-      setUploadedFileName(`تم رفع الملف ${values[`${name}FileName`]?values[`${name}FileName`]:""} بنجاح`);
+      setUploadedFileName(`تم رفع الملف ${values[`${name}FileName`] ? values[`${name}FileName`] : ""} بنجاح`);
     }
 
   }, [resetAttachment])
@@ -66,20 +66,20 @@ const FileUploaderComp = ({ input: { value, name }, label,imgOnly, meta, setFiel
     console.log(`--fileUploaded ${JSON.stringify(fileUploaded)}`);
     for (let i = 0; i < fileUploaded.length; i++) {
       console.log('...fileUploaded...', JSON.stringify(fileUploaded[i].name))
-      console.log('...fileUploaded :: SIZE: ', JSON.stringify(fileUploaded[i].size) <= (1024*1024*2))
+      console.log('...fileUploaded :: SIZE: ', JSON.stringify(fileUploaded[i].size) <= (1024 * 1024 * 2))
 
       const fileValidation = validateFile(fileUploaded[i],imgOnly)
 
-      if(fileValidation && !fileValidation.isValid) {
+      if (fileValidation && !fileValidation.isValid) {
         setShowFileError(true)
         setLoading(false)
         setErrMessage(fileValidation.error)
         return
       }
-      
+
       setShowFileError(false)
       const buf = await uploadDocument(fileUploaded[i]);
-      const response = await uploadDocumentApi(fileUploaded[i].name, buf);
+      const response = await uploadDocumentApi(encodeURIComponent(fileUploaded[i].name), buf);
 
       console.log('...response...', response)
       if (response.status != 200) {

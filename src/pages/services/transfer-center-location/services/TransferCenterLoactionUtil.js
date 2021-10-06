@@ -17,10 +17,10 @@ const AttachementValidation = values => {
     msg.municipLicenseNo = "يرجى ارفاق هذا الملف";
 
 
-  if (!values.day || !values.month|| !values.year ) {
+  if (!values.day || !values.month || !values.year) {
     msg.day = required
-    msg.month =  required
-    msg.year =  required
+    msg.month = required
+    msg.year = required
   }
 
   

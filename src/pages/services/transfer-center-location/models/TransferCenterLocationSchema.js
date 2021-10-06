@@ -89,7 +89,7 @@ export default
                 ar: 'الطاقة الإستعابية القصوى',
                 en: 'Center Carrying Capacity'
             },
-            name: 'center.centerInfo_r.carryingnumber',//here
+            name: 'NewCenterLocationData.centerInfo_r.carryingnumber',//here
             type: 'Text',
             gridSize: '6',
             sectionName: Sections.Capacity,
@@ -233,8 +233,8 @@ export default
                 ar: 'تاريخ انتهاء رخصة الدفاع المدني',
                 en: 'Fire department License Expiry Date'
             },
-            name: 'NewCenterLocationData.centerInfo_r.expirarionDateForFireDepartmentLicenseGreg',
-            attrFunc:(value) => {console.log(value);moment(`${value}`, 'iYYYYiMMiDD').format('iDD/iMM/iYYYY')},
+            name: 'NewCenterLocationData.centerInfo_r.expirarionDateForFireDepartmentLicenseHijri',
+            attrFunc:(value) => {return moment(`${value}`, 'iYYYYiMMiDD').format('iDD/iMM/iYYYY')},
             type: 'Text',
             gridSize: '6',
             sectionName: Sections.Location,
@@ -262,7 +262,7 @@ export default
                 en: 'Municiplity License for the New building'
             },
             name: 'MoMRA_Licence',
-            valueFunc: (values) => (values?.centerInfo_r?.MoMRA_Licence),
+            valueFunc: (values) => (values?.NewCenterLocationData?.centerInfo_r?.momraDoc),
             type: 'file',
             gridSize: '6',
             sectionName: Sections.Attachments,
@@ -290,7 +290,7 @@ export default
                 en: 'Furniture'
             },
             name: 'Furniture',
-            valueFunc: (values) => (values?.NewCenterLocationData?.furniturePhoto_r),
+            valueFunc: (values) => (values?.NewCenterLocationData?.centerInfo_r?.furniturePhoto_r?.Document?.id || values?.NewCenterLocationData?.centerInfo_r?.furniturePhoto_r?.Document?.map(d => d?.id) || values?.NewCenterLocationData?.centerInfo_r?.furniturePhoto_r?.map(d => d?.Document) || values?.NewCenterLocationData?.centerInfo_r?.furniturePhoto_r?.map(d => d?.Document?.id)),
             type: 'file',
             gridSize: '6',
             sectionName: Sections.Attachments,

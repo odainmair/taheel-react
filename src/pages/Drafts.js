@@ -1,3 +1,7 @@
+/*
+    TO BE DELETED
+    THIS HAS BEEN IMPLEMENTED INSIDE ORDERS WITH FILTERATION FOR DRAFTS
+*/
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import {

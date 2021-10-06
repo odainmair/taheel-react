@@ -70,7 +70,7 @@ const getStaff = (values) => {
 	return staff
 }
 
-const updateFinalLicenseAPIFunc = async (values, actionType, TaskID, isDraft) => {
+const updateFinalLicenseAPIFunc = async (values, actionType, TaskID, isDraft, reqNum) => {
 	const requestBody = {
 		"userCreationEmail": getCurrentUser().email,
 		"staff": getStaff(values),
@@ -117,6 +117,7 @@ const updateFinalLicenseAPIFunc = async (values, actionType, TaskID, isDraft) =>
 	}
 
 	let url = "taheel-apis-services-createFinalLicense-v2";
+	requestBody.requestNumber = reqNum ? reqNum : null;
 
 	if (isDraft) {
 		requestBody.isDraft = true;
@@ -136,7 +137,7 @@ const updateFinalLicenseAPIFunc = async (values, actionType, TaskID, isDraft) =>
 		}
 	}
 
-	console.log('updateFinalLicenseAPIFunc :: requestBody :: ' + JSON.stringify(requestBody))
+	console.log('=================================================updateFinalLicenseAPIFunc :: requestBody :: ' + JSON.stringify(requestBody))
 	// const response = {isSuccessful:false, message:"DUMMY"}
 	const response = await APIRequest({ requestBody, url });
 	return response;
@@ -146,6 +147,15 @@ const getCentersForFinal = async (userEmail) => {
 	const url = 'taheel-apis-records-getCenters-v2';
 	// const queryParams = { userEmail, isExpired: false, licenseType: 'رخصة مؤقتة' };
 	const queryParams = { userEmail, forRenewal: true, isEligibleForFinal: true, licenseType: 'رخصة نهائية' };
+	// const queryParams = { userEmail, forRenewal: true};
+	const response = await APIRequest({ url, queryParams });
+	// console.log("response===============> " + JSON.parse(response));
+	return response;
+};
+const getCentersForFinalNoExpired = async (userEmail) => {
+	const url = 'taheel-apis-records-getCenters-v2';
+	// const queryParams = { userEmail, isExpired: false, licenseType: 'رخصة مؤقتة' };
+	const queryParams = { userEmail, isExpired: false, isEligibleForFinal: true, licenseType: 'رخصة نهائية' };
 	// const queryParams = { userEmail, forRenewal: true};
 	const response = await APIRequest({ url, queryParams });
 	// console.log("response===============> " + JSON.parse(response));
@@ -241,4 +251,4 @@ const downloadDocument = async (DocID, attachment, name) => {
 }
 
 
-export { getCentersForFinal, validateCompanyFunc, updateFinalLicenseAPIFunc, calculation, validateCitizenFunc, uploadDocumentApi, getTempLicense, getMunicipalLicenseNoApi, downloadDocument, TaskDetails, CentertDetails, DraftDetails };
+export { getCentersForFinal, validateCompanyFunc,getCentersForFinalNoExpired, updateFinalLicenseAPIFunc, calculation, validateCitizenFunc, uploadDocumentApi, getTempLicense, getMunicipalLicenseNoApi, downloadDocument, TaskDetails, CentertDetails, DraftDetails };

@@ -54,11 +54,13 @@ const DashboardNavbar = ({ onMobileNavOpen, ...rest }) => {
   };
   useEffect(async () => {
     const { email } = getCurrentUser()
-    const notifications = await getNotifications(email)
-    if (notifications.isSuccessful) {
-      console.log("notifications --> ", notifications.responseBody.data.content)
-      setAllNotif(notifications?.responseBody?.data?.content)
-      setUnreadNotif(notifications?.responseBody?.data?.content?.filter(notif => !notif.isRead)?.length)
+    if(email){ 
+      const notifications = await getNotifications(email)
+      if (notifications.isSuccessful) {
+        console.log("notifications --> ", notifications.responseBody.data.content)
+        setAllNotif(notifications?.responseBody?.data?.content)
+        setUnreadNotif(notifications?.responseBody?.data?.content?.filter(notif => !notif.isRead)?.length)
+      }
     }
   }, []);
 

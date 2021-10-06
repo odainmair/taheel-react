@@ -20,25 +20,25 @@ export const centerLocationTransferAPIFunc = async (values) => {
 
 	const requestBody = {
 		serviceStatus: 1,
-		isDraft: false,
+		isDraft: values.isDraft,
 		userCreationEmail: email,
 		center: {
 			licenceNumber: values.centerLicenceNumber,
 			centerInfo_r: {
-				financialGuarantee : financialGuarantee,
+				financialGuarantee: financialGuarantee,
 				ID: values.centerInfo_r,
 				buildingArea: values.buildingArea,
 				basementArea: values.basementArea,
 				carryingnumber: values.capacity,
 				furniturePhoto_r: [
 					{
-						Document: values.Furniture[0],
+						Document: !!values?.Furniture && values?.Furniture[0],
 					}
 				],
-				fireDepartmentLicense: values.fireDepartmentLicense[0],
+				fireDepartmentLicense: !!values?.fireDepartmentLicense && values?.fireDepartmentLicense[0],
 				expirarionDateForFireDepartmentLicenseHijri: expiryDate,
-				engineeringPlan: values.OfficeReport[0],
-				momraDoc: values.municipLicenseNo[0],
+				engineeringPlan: !!values?.OfficeReport && values?.OfficeReport[0],
+				momraDoc: !!values?.municipLicenseNo && values?.municipLicenseNo[0],
 			},
 			centerLocation_r: {
 				city: values.city,
@@ -52,12 +52,20 @@ export const centerLocationTransferAPIFunc = async (values) => {
 			}
 		}
 	}
-
+	if (!!values.taskID) {
+		requestBody.serviceStatus = 2
+		requestBody.externalUserTaskID = values.taskID
+	}
+	if(values.isDraft) {
+		requestBody.draft_values = {temporaryLicenceNum: values.licenceNumber, ...values}
+		requestBody.requestNumber = values.requestNum ? values.requestNum : null
+	}
 	let url = "taheel-apis-services-initiate-center-location-change-request";
 
 	console.log('#==> requestBody ' + JSON.stringify(requestBody))
 	const response = await APIRequest({ requestBody, url });
-	return response;
+	// const response = {isSuccessful:false, message:"DUMMY"}
+return response;
 }
 
 // export { centerLocationTransferAPIFunc };
