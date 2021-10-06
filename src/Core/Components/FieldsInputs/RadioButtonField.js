@@ -16,7 +16,6 @@ export default function RadioButtonField(props) {
   console.log("props ===> ", props)
   props.options.forEach((option) => {
     console.log("props.options.forEach(option  ===> ", option.label.ar);
-    console.log("Samer= == = =? ", option.value)
   }
   )
 
