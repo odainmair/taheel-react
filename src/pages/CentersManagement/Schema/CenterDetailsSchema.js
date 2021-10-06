@@ -372,6 +372,20 @@ export default
             sectionName: Sections.Requirements,
             options: [],
             validators: [],
+        },
+        {
+            id: uuid(),
+            label: {
+                ar: "مرفقات خدمات الرعاية الصحية",
+                en: 'Health care service documents'
+            },
+            name: 'healthCareServices_r',
+            valueFunc: (values) => (values?.healthCareServices_r?.ID),
+            type: 'file',
+            gridSize: '6',
+            sectionName: Sections.Requirements,
+            options: [],
+            validators: [],
         }
     ]
 

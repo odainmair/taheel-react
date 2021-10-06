@@ -40,14 +40,14 @@ export default function FormField(props) {
     let gridSize = !!props.gridSize ? props.gridSize : 12;
     const inputName = props.name.includes('.') ? props.name.split('.') : props.name
     let value = ''
-    if (props.name.includes('.') && !props.isLoading && !!props.values) {
+    if (!!props.valueFunc && !props.isLoading) {
+        value = props.valueFunc(props.values)
+        console.log("Samer --------------------------------> ", props.valueFunc(props.values));
+    } else if (props.name.includes('.') && !props.isLoading && !!props.values) {
         value = props.values;
         inputName.forEach(iName => {
             value = !!value ? value[iName] : null;
         })
-    } else if (!!props.valueFunc && !props.isLoading) {
-        value = props.valueFunc(props.values)
-        console.log("Samer --------------------------------> ", props.valueFunc(props.values));
     } else {
         value = props.values[inputName]
     }
@@ -56,9 +56,9 @@ export default function FormField(props) {
     console.log('inputName===> ', inputName)
     console.log('props.values[props.name]===> ', props.values[props.name])
     console.log('!props.isLoading)===> ', !props.isLoading)
-    console.log('value===> ', value)
+    console.log('value===> ' + props.name + '   ', value)
     console.log('=======================================')
-    if (!value && !props.isLoading) {
+    if (!(value + '') && !props.isLoading) {
         console.log("Samer empity null", props.name)
         console.log("Samer empity null", value)
         return null;
