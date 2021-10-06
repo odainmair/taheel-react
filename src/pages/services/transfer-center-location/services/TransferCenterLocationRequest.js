@@ -273,7 +273,7 @@ const TransferCenterLocationRequest = () => {
                                 beneficiariesNum: center && center.centerInfo_r && center.centerInfo_r.beneficiaryCount,
                                 newCapacity: center && center.centerInfo_r && numeral(center.centerInfo_r.carryingnumber).format('0,0'),
                                 financialGuarantee: center && center.centerInfo_r && `${numeral(center.centerInfo_r.financialGuarantee).format('0,0.00')} ر.س.`,
-
+                                beneficiariesNum: center && center.centerInfo_r && center.centerInfo_r.beneficiaryCount,
                                 //getting the form initial values if exist
                                 ...formInits,
                                 requestNum: requestNum,

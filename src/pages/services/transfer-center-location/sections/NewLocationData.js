@@ -104,9 +104,9 @@ const NewLocationData = ({ setField, values, setIsEnableNextBtn }) => {
       setIsEnableNextBtn(false);
       return;
     }
-    if (values.beneficiariesNum > values.capacity) {
+    if (values.beneficiariesNum > numeral(carryingCapacity).format('00')) {
       SetErrMessage(
-        'يجب ان يكون عدد المستفيدين الحالي اقل من الطاقة الإستيغابية'
+        'يجب ان يكون عدد المستفيدين الحالي اقل من الطاقة الإستيعابية'
       );
       setIsEnableNextBtn(false);
       return;
