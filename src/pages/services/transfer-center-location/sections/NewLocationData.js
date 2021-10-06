@@ -98,6 +98,11 @@ const NewLocationData = ({ setField, values, setIsEnableNextBtn }) => {
       setIsEnableNextBtn(false);
       return;
     }
+    if (parseInt(values.buildingArea) <= parseInt(values.basementArea)) {
+      SetErrMessage('مساحة القبو يجب ان تكون أقل من مساحة مسطح البناء');
+      setIsEnableNextBtn(false);
+      return;
+    }
     if (values.beneficiariesNum > numeral(carryingCapacity).format('00')) {
       SetErrMessage(
         'يجب ان يكون عدد المستفيدين الحالي اقل من الطاقة الإستيعابية'
@@ -106,11 +111,7 @@ const NewLocationData = ({ setField, values, setIsEnableNextBtn }) => {
       return;
     }
 
-    if (parseInt(values.buildingArea) <= parseInt(values.basementArea)) {
-      SetErrMessage('مساحة القبو يجب ان تكون أقل من مساحة مسطح البناء');
-      setIsEnableNextBtn(false);
-      return;
-    }
+
     setIsEnableNextBtn(true);
   };
 
