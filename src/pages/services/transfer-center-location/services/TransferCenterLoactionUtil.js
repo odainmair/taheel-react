@@ -33,9 +33,7 @@ const AttachementValidation = (values) => {
     msg.month = InvalidDate;
     msg.year = InvalidDate;
   }
-  if (values.basementArea === 0) {
-    msg.basementArea = 'ERRR';
-  }
+
   return msg;
 };
 
