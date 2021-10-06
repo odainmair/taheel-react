@@ -97,7 +97,6 @@ const TransferCenterLocationRequest = () => {
                         municipLicenseNo: getDocId(Details.draft_values?.draft_values?.municipLicenseNo),
                         fireDepartmentLicense: getDocId(Details.draft_values?.draft_values?.fireDepartmentLicense),
                         OfficeReport: getDocId(Details.draft_values?.draft_values?.OfficeReport),
-                        isDraft: Details?.draft_values?.isDraft,
                     })
                 }
                 else {
