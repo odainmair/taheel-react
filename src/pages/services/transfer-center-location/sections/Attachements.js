@@ -22,7 +22,6 @@ const Attachements = ({ setField, values, setIsEnableNextBtn }) => {
       <Grid
         container
         spacing={3}
-        mt={3}
       >
         <Grid
           item
