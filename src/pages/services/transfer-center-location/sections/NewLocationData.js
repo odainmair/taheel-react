@@ -28,7 +28,9 @@ const NewLocationData = ({ setField, values, setIsEnableNextBtn }) => {
   console.log('#==> values__values__values ' + JSON.stringify(values));
 
   useEffect(() => {
-    setIsEnableNextBtn(false);
+    if (!values.capacity || !values.basementArea || !values.buildingArea || !values.Furniture || !values.municipLicenseNo || !values.fireDepartmentLicense || !values.OfficeReport || !values.day || !values.month || !values.year) {
+        setIsEnableNextBtn(false);
+    }
   }, []);
 
   const calculate = async () => {
@@ -153,7 +155,7 @@ const NewLocationData = ({ setField, values, setIsEnableNextBtn }) => {
               className="custom-field"
               disabled="true"
             />
-            <OnChange name="basementArea">
+            <OnChange name="beneficiariesNum">
               {(value, previous) => {
                 handleOnChange(value, previous);
                 clearCapacity();

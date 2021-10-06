@@ -44,7 +44,6 @@ const NewCenterAddress = ({ values, Condition, setField, setIsEnableNextBtn }) =
 
 
   useEffect(() => {
-    if (!values.capacity || !values.basementArea || !values.buildingArea || !values.Furniture || !values.municipLicenseNo || !values.fireDepartmentLicense || !values.OfficeReport || !values.day || !values.month || !values.year)
       setIsEnableNextBtn(true);
 
   }, []);

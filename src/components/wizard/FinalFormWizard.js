@@ -270,7 +270,7 @@ export default class FinalFromWizard extends React.Component {
                       this.setState((state) => ({ open: false }))
                     }
                     }
-                    onAcceptFn={() => this.end(values)}
+                    onAcceptFn={() => this.end({...values, isDraft: true})}
                     onCloseFn={() => {
                       console.log("===================== onCloseFn")
                       this.setState((state) => ({ open: false }))
