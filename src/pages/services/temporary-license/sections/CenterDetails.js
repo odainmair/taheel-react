@@ -108,7 +108,7 @@ const CenterDetails = ({ Condition }) => (
               <FormLabel component="legend">فترة العمل</FormLabel>
               <RadioGroup row>
                 <FormControlLabel
-                  label="الفترة الصباحية"
+                  label="القترة الصباحية"
                   control={<Field name="workingHours" component={Radio} type="radio" value="morning" />}
 
                 />

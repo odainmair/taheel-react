@@ -16,11 +16,7 @@ export default [
       { value: '2', label: { ar: 'صفة طبيعية' } },
       { value: '1', label: { ar: 'صفة اعتباريه' } },
     ],
-    validators: [{
-      id: 'requestType-required',
-      isValidFun: checkIsfilled,
-      alert: 'هذا الحقل مطلوب'
-    }],
+    validators: [],
   },
   {
     id: uuid(),
@@ -35,11 +31,7 @@ export default [
     options: [
       { value: '01', label: { ar: 'ذوي الإعاقة' } },
     ],
-    validators: [{
-      id: 'beneficiaryCategory-required',
-      isValidFun: checkIsfilled,
-      alert: 'هذا الحقل مطلوب'
-    }],
+    validators: [],
   },
   {
     id: uuid(),
@@ -366,7 +358,7 @@ export default [
     },{
       id: 'centerCap-required',
       isValidFun: checkIsNumber,
-      alert: 'يرجى إدخال رقم صحيح'
+      alert: 'يرجى ادخل رقم صحيح'
     }],
   },
   {
@@ -414,7 +406,7 @@ export default [
   {
     id: uuid(),
     label: {
-      ar: 'جنس المستفدين',
+      ar: 'الفئة العمرية للمستفدين',
       en: 'targetedGender'
     },
     name: 'targetedGender',

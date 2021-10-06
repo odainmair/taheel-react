@@ -17,10 +17,6 @@ import {
   Button,
   CircularProgress,
 } from '@material-ui/core';
-import { checkIsNumber } from 'src/utils/inputValidator';
-
-const staffTypes = ["معلم تربية خاصة", "أخصائي اجتماعي", "مراقب اجتماعي", "حارس", "عامل تنظيفات", "مشرف فني عام", "اخصائي نفسي و توجيه اجتماعي", "عامل رعاية شخصية", "مدير", "سائق", "مرافق سائق", "أخصائي علاج طبيعي", "أخصائي علاج وظيفي", "أخصائي نطق و تخاطب", "ممرض"]
-const medicalStaffTypes = ['أخصائي علاج طبيعي', 'أخصائي علاج وظيفي', 'ممرض', 'أخصائي نطق و تخاطب']
 
 const CenterDetailsValidation = values => {
   console.log("values", isNaN(values.CRNumber))
@@ -29,67 +25,55 @@ const CenterDetailsValidation = values => {
     msg.CRNumber = required
   if (!values.temporaryLicenceNum)
     msg.temporaryLicenceNum = required
-  if (values.CRNumber && checkIsNumber(values.CRNumber) && values.CRNumber.length > 10)
-    msg.CRNumber = "يجب ان يحتوي فقط على ارقام ولا يزيد عددها عن 10 خانات"
+  if (values.CRNumber && isNaN(values.CRNumber) && values.CRNumber.length > 10)
+    msg.CRNumber = "يجب ان يحتوي فقط على ارقام والا يزيد عددها عن 10 خانات"
   return msg
 }
 
 const capacityValidation = values => {
   var msg = {}
-  console.log('capacityValidation :: values.beneficiariesNum', typeof (values.beneficiariesNum), 'values.capacity', typeof (values.capacity))
-  console.log('capacityValidation :: values.buildingArea', typeof (values.buildingArea), 'values.basementArea', typeof (values.basementArea))
+  console.log(' values.beneficiariesNum', typeof (values.beneficiariesNum), 'values.capacity', typeof (values.capacity))
+  console.log(' values.buildingArea', typeof (values.buildingArea), 'values.basementArea', typeof (values.basementArea))
   if (!values.beneficiariesNum)
     msg.beneficiariesNum = required
-  else if (parseInt(values.beneficiariesNum) <= 0) {
-      msg.beneficiariesNum = 'يجب ان يكون عدد المستفيدين اكبر من صفر'
-    }
-  else if (!checkIsNumber(values.beneficiariesNum)) {
-    msg.beneficiariesNum = 'يجب ان يكون عدد المستفيدين عدد صحيح'
-  }
+  if (parseInt(values.beneficiariesNum) <= 0)
+    msg.basementArea = 'يجب ان يكون عدد المستفيدين اكبر من صفر'
 
   if (!values.buildingArea)
     msg.buildingArea = required
-  else if (parseInt(values.buildingArea) <= 0) {
-      msg.buildingArea = 'يجب ان يكون مساحة مسطح البناء اكبر من صفر'
-    }
-  else if (!checkIsNumber(values.buildingArea)) {
-    msg.buildingArea = 'يجب ان يكون مساحة مسطح البناء عدد صحيح'
-  }
+  if (parseInt(values.buildingArea) <= 0)
+    msg.basementArea = 'يجب ان يكون مساحة مسطح البناء اكبر من صفر'
 
-  if (!values.basementArea && values.basementArea != 0)
+  if (!values.basementArea)
     msg.basementArea = required
-  else if (parseInt(values.basementArea) < 0) {
-      msg.basementArea = 'يجب ان يكون مساحة القبو اكبر من صفر'
-    }
-  else if (!checkIsNumber(values.buildingArea)) {
-    msg.basementArea = 'يجب ان يكون مساحة القبو عدد صحيح'
-  }
+  if (parseInt(values.basementArea) <= 0)
+    msg.basementArea = 'يجب ان يكون مساحة القبو اكبر من صفر'
 
   if (parseInt(values.buildingArea) <= parseInt(values.basementArea))
     msg.basementArea = 'مساحة القبو يجب ان تكون أقل من مساحة مسطح البناء'
-  if (values.beneficiariesNum > parseInt(values.capacity))
-    msg.beneficiariesNum = 'عدد المستفيدين يجب ان لا يتجاوز الطاقة الاستعابية'
+  /*if (values.beneficiariesNum > parseInt(values.capacity))
+    msg.beneficiariesNum = 'عدد المستفيدين يجب ان لا يتجاوز الطاقة الاستعابية'*/
   return msg
 }
 
 const RequirementsValidation = values => {
   var msg = {}
-  if (!values.OperationalPlan || !values.OperationalPlan[0])
+  if (!values.OperationalPlan)
     msg.OperationalPlan = "يرجى ارفاق هذا الملف";
 
-  if (!values.ExecutivePlan || !values.ExecutivePlan[0])
+  if (!values.ExecutivePlan)
     msg.ExecutivePlan = "يرجى ارفاق هذا الملف";
 
-  if (!values.OfficeReport || !values.OfficeReport[0])
+  if (!values.OfficeReport)
     msg.OfficeReport = "يرجى ارفاق هذا الملف";
 
-  if (!values.SecurityReport || !values.SecurityReport[0])
+  if (!values.SecurityReport)
     msg.SecurityReport = "يرجى ارفاق هذا الملف";
 
-  if (!values.Furniture || !values.Furniture[0])
+  if (!values.Furniture)
     msg.Furniture = "يرجى ارفاق هذا الملف";
 
-  if (!values.FinancialGuaranteeAtt || !values.FinancialGuaranteeAtt[0])
+  if (!values.FinancialGuaranteeAtt)
     msg.FinancialGuaranteeAtt = "يرجى ارفاق هذا الملف";
 
   return msg;
@@ -124,18 +108,18 @@ const personsValidation = async values => {
   const TeachersCount = values.customers.filter(customer => customer.staffTypes === "معلم تربية خاصة").length
   const managersCount = values.customers.filter(customer => customer.staffTypes === "مدير").length
   console.log(`--manager count ::: ${managersCount}`)
-  if (managersCount !== 1)
+  if ( managersCount !== 1)
     return { isSuccessful: false, message: "يرجى استيفاء الشروط" };
 
-  if (Math.ceil(values.beneficiariesNum / 8) > TeachersCount || TeachersCount < 1)
+  if (Math.round(values.beneficiariesNum / 8) > TeachersCount || TeachersCount < 1)
     return { isSuccessful: false, message: "يرجى استيفاء الشروط" };
   return response
 }
 
-const downloadFileFn = async (setLoading, loading, licenseNumber, name) => {
+const downloadFileFn = async (setLoading, loading, licenseNumber) => {
   setLoading(true)
-  console.log(`finalLicenseUtil :: downloadFileFn: ${licenseNumber}`)
-  const downloadDoc = await downloadDocument(licenseNumber, true, name)
+  console.log("responseresponse", licenseNumber)
+  const downloadDoc = await downloadDocument(licenseNumber, true)
   if (downloadDoc.isSuccessful) {
     setLoading(false)
   }
@@ -170,6 +154,7 @@ const ConditionComp = ({ when, is, children }) => (
     {({ input: { value } }) => (value == is ? children : null)}
   </Field>
 )
+
 const MedicalPracticeComp = ({ when, is, children }) => (
   <Field name={when} subscription={{ value: true }}>
     {({ input: { value } }) => (is.includes(value) ? children : null)}
@@ -197,7 +182,7 @@ const DownloadButt = ({ index, docID, name, label }) => {
   return (
     <>
       <TableRow>
-        <TableCell style={{ width: '35%' }}>  {'ملف رقم'.concat(index + 1)} </TableCell>
+        <TableCell> ملف رقم {index + 1} </TableCell>
         <TableCell>
           <Button
             startIcon={loading ? <CircularProgress size="1rem" /> : <CloudDownloadIcon />}
@@ -208,7 +193,7 @@ const DownloadButt = ({ index, docID, name, label }) => {
             sx={{
               backgroundColor: '#3c8084',
             }}
-            onClick={() => downloadFileFn(setLoading, loading, docID, name)}
+            onClick={() => downloadFileFn(setLoading, loading, docID)}
           >
             تنزيل
           </Button>
@@ -232,13 +217,13 @@ const DownloadButtTable = ({ docIDs, name, label }) => {
               </TableHead>
               <TableBody>
 
-                {[].concat(docIDs).map((docID, index) => (
-                  <DownloadButt key={!!docID?.id ? docID.id : docID  + "_" + index} index={index} docID={docID?.id ? docID.id : docID} name={name} label={label} />
-                ))
-                }
+                {docIDs.map((docID, index) => (
+                  < DownloadButt key={docID+"_"+index} index={index} docID={docID} name={name} label={label} />
+                ))}
               </TableBody>
             </Table>
           </TableContainer>
+
           <>
 
           </>
@@ -254,7 +239,7 @@ const validateAddStaffForm = (values, rowIndex, SAForm, forignForm) => {
   console.log(`-- SAForm :: ${SAForm}`)
   console.log(`-- forignForm :: ${forignForm}`)
   console.log(`-- rowIndex :: ${!rowIndex || rowIndex !== -1 ? JSON.stringify(values.customers[rowIndex]) : values}`)
-  const { nationality, year, month, day, idNumber, iqamaNo, staffTypes, EducationalQualification, cv, MedicalPractice } = !rowIndex || rowIndex !== -1 ? values.customers[rowIndex] : values;
+  const { nationality, year, month, day, idNumber, iqamaNo, staffTypes,EducationalQualification,cv } = !rowIndex || rowIndex !== -1 ? values.customers[rowIndex] : values;
   console.log(`-- nationality :: ${nationality}`);
   console.log(`-- idNumber :: ${idNumber}`);
   console.log(`-- year :: ${year}`);
@@ -282,7 +267,6 @@ const validateAddStaffForm = (values, rowIndex, SAForm, forignForm) => {
 
   }
   if (SAForm || forignForm) {
-    console.log('finalLicenseAPI :: staffTypes :: ' + staffTypes)
     if (!staffTypes) {
       return "يرجى اختيار نوع الكادر";
     }
@@ -292,16 +276,13 @@ const validateAddStaffForm = (values, rowIndex, SAForm, forignForm) => {
     if (!cv) {
       return "يرجى رفع السيرة الذاتية";
     }
-    if (!MedicalPractice && medicalStaffTypes.includes(staffTypes)) {
-      return "يرجى رفع رخصة المزاولة";
-    }
 
   }
   return null;
 }
 const getStaff = (data) => {
   const newKeys = {
-    id: 'id',
+    id:'id',
     idNumIqamaNum: 'idNumber',
     birthDate: 'birthDate',
     name: 'fullName',
@@ -313,9 +294,10 @@ const getStaff = (data) => {
     professionalLicense: 'MedicalPractice',
   }
 
+  const staffTypes = ["معلم تربية خاصة", "أخصائي اجتماعي", "مراقب اجتماعي", "حارس", "عامل تنظيفات", "مشرف فني عام", "اخصائي نفسي و توجيه اجتماعي", "عامل رعاية شخصية", "مدير", "سائق", "مرافق سائق", "أخصائي علاج طبيعي", "أخصائي علاج وظيفي", "أخصائي نطق و تخاطب", "ممرض"]
   var staff = JSON.parse(JSON.stringify(data))
 
-  staff && staff.map((customer) => {
+  staff.map((customer) => {
     Object.keys(customer).map((key) => {
       if (customer[key]) {
         const newKey = newKeys[key] || key;
@@ -327,25 +309,24 @@ const getStaff = (data) => {
           else
             customer['iqamaNo'] = customer[key]
         }
-        else if (key === 'birthDate' && customer['nationality'] === 'سعودي') {
-          const birthDateDay = moment(customer[key], 'iYYYYiMMiDD').format('iDD')
-          const birthDateMonth = moment(customer[key], 'iYYYYiMMiDD').format('iMM')
-          const birthDateYear = moment(customer[key], 'iYYYYiMMiDD').format('iYYYY')
+        else if (key === 'birthDate'&&customer['nationality'] === 'سعودي') {
+          const birthDateDay= moment(customer[key], 'iYYYYiMMiDD').format('iDD')
+          const birthDateMonth=moment(customer[key], 'iYYYYiMMiDD').format('iMM')
+          const birthDateYear=moment(customer[key], 'iYYYYiMMiDD').format('iYYYY')
           console.log(`odai odai ${birthDateDay} ${birthDateMonth} ${birthDateYear}`)
-          customer['day'] = parseInt(birthDateDay);
-          customer['month'] = parseInt(birthDateMonth);
-          customer['year'] = parseInt(birthDateYear);
+          customer['day']=parseInt(birthDateDay);
+          customer['month']=parseInt(birthDateMonth);
+          customer['year']=parseInt(birthDateYear);
 
         }
-        else if (key === 'id') {
-          if (customer[key])
+        else if (key === 'id'){
+          if(customer[key])
             customer['id'] = customer[key];
         }
         else if (key === 'StaffType')
           customer[newKey] = staffTypes[customer[key] - 1]
-        else if (['professionalLicense', 'educationQualifications', 'CV'].includes(key)){
-          customer[newKey] = [!!customer[key].id ? customer[key].id : customer[key]]
-        }
+        else if (['professionalLicense', 'educationQualifications', 'CV'].includes(key))
+          customer[newKey] = [customer[key].id]
         else
           customer[newKey] = customer[key];
         if (!customer[newKey] || newKey !== key)
@@ -355,84 +336,6 @@ const getStaff = (data) => {
   });
   return staff
 }
-
-// TO BE REMOVED WHEN THE LOOKUP SERVICE IS READY
-const centerTypeJSON = {
-  "type": [
-    {
-      "name": "متسولين",
-      "ID": 1
-    },
-    {
-      "name": "ارشاد أسري",
-      "ID": 2
-    },
-    {
-      "name": "ذوي الإعاقة",
-      "ID": 3
-    },
-    {
-      "name": "أيتام",
-      "ID": 4
-    },
-    {
-      "name": "كبار السن",
-      "ID": 5
-    },
-    {
-      "name": "أحداث",
-      "ID": 6
-    },
-    {
-      "name": "حماية الأسرة",
-      "ID": 7
-    }
-  ],
-  "targetedBeneficiary": [
-    {
-      "name": "البيوت الإجتماعية",
-      "ID": 1
-    },
-    {
-      "name": "البيوت الإجتماعية",
-      "ID": 2
-    },
-    {
-      "name": "التدريب المهني",
-      "ID": 3
-    },
-    {
-      "name": "الرعاية النهارية",
-      "ID": 4
-    },
-    {
-      "name": "الرعاية الإجتماعية المنزلية",
-      "ID": 5
-    }
-  ],
-  "targetedServices": [
-    {
-      "name": "مراكز تأهيل الأشخاص ذوي الأعاقات المحددة",
-      "ID": 1
-    },
-    {
-      "name": "مراكز تأهيل الأشخاص ذوي الأعاقات المحددة",
-      "ID": 2
-    },
-    {
-      "name": " مراكز تأهيل الأشخاص ذوي الأعاقات العقلية والأعاقات الحركية",
-      "ID": 3
-    },
-    {
-      "name": "مراكز تأهيل الأسخاص ذوي الأعاقة العقلية",
-      "ID": 4
-    },
-    {
-      "name": "مراكز تأهيل الأشخاص ذوي الأعاقة متوسط وشديدي الإعاقة ",
-      "ID": 5
-    }
-  ]
-};
 
 export {
   CenterDetailsValidation,
@@ -448,6 +351,5 @@ export {
   ContentField,
   DownloadButtTable,
   getStaff,
-  validateAddStaffForm,
-  centerTypeJSON
+  validateAddStaffForm
 };

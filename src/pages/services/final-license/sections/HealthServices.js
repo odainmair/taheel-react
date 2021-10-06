@@ -13,12 +13,10 @@ import { Radio, Select } from 'final-form-material-ui';
 import { OnChange } from 'react-final-form-listeners';
 import PropTypes from 'prop-types';
 import FileUploaderComp from '../components/FileUploader';
-import { useState } from 'react';
+
 
 
 const HealthServices = ({ Condition, values, setField }) => {
-  
-  const [resetAttachment, setResetAttachment] = useState(false);
 
   var multipleDocs = []
   const setDocument = (name, docID, multiple) => {
@@ -94,14 +92,6 @@ const HealthServices = ({ Condition, values, setField }) => {
               <MenuItem value={1}> رخصة وزارة الصحة </MenuItem>
               <MenuItem value={2}> عقد شراكة مع منشأة رعاية صحية </MenuItem>
             </Field>
-            <OnChange name="healthServiceType">
-            {(value, previous) => {
-              console.log("-- healthServiceType:: OnChange :: resetAttachment " + resetAttachment)
-                setField("healthServiceAttachment","");
-                setResetAttachment(prev=>!prev);
-
-            }}
-          </OnChange>
           </Grid>
           <Grid
             item
@@ -114,9 +104,7 @@ const HealthServices = ({ Condition, values, setField }) => {
               component={FileUploaderComp}
               multipleDocs={false}
               setField={setField}
-              resetAttachment={resetAttachment}
               setDocument={setDocument}
-              // values={resetAttachment != 0 ? values : ""}
               values={values}
             />
           </Grid>

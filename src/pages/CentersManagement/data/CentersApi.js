@@ -1,50 +1,32 @@
 import { APIRequest } from "src/api/APIRequest";
 
-const getCenters = async (email, startIndex, batchSize, filters) => {
+const getCenters = async (email) => {
+    const res = { isSuccessful: true, message: '' };
     const url = 'taheel-apis-records-getCenters-v2?';
-    const requestBody = filters
     const queryParams = {
         userEmail: email,
-        startIndex: startIndex,
-        batchSize: batchSize
-    }
-    const response = await APIRequest({ requestBody, queryParams, url });
+        }
+    const response = await APIRequest({ queryParams, url });
     return response;
+    console.log("response++++++++++", JSON.stringify(response.responseBody.data.Centers[0].name));
+
+    if (!res.isSuccessful) {
+        return { isSuccessful: false, message: response.message };
+    }
 }
 
 const centerDetails = async (licenseNum) => {
+    const res = { isSuccessful: true, message: '' };
     const url = 'taheel-apis-records-getCenters-v2?';
     const queryParams = {
         licenseNumber: licenseNum,
-    }
+        }
     const response = await APIRequest({ queryParams, url });
     return response;
+
+    if (!res.isSuccessful) {
+        return { isSuccessful: false, message: response.message };
+    }
 }
 
-const addCommissionerRs = async (email, jobTitle, staffId, permissions) => {
-    const url = 'tt-api-utilities-commissioner-services';
-    const requestBody = {
-        "serviceType": "1",
-        "commissioner": {
-            "email": email,
-            "jobTitle": jobTitle,
-            "staffId": '' + staffId,
-            "permissions": permissions
-        }
-    };
-
-    const response = await APIRequest({ requestBody, url });
-    return response;
-};
-const deleteCommissionerRs = async (email) => {
-    const url = 'tt-api-utilities-commissioner-services';
-    const requestBody = {
-        "serviceType": "3",
-        "commissioner": {
-            "email": email
-        }
-    }
-    const response = await APIRequest({ requestBody, url });
-    return response;
-};
-export { getCenters, centerDetails, addCommissionerRs, deleteCommissionerRs }
+export {getCenters, centerDetails }

@@ -14,6 +14,6 @@ export const checkMobilePattern = mobile => {
 	return regex.test(mobile);
 }
 export const checkIsNumber = number => {
-	const regex =  /^\d+$/
+	const regex = /^[+]?\d+$/
 	return regex.test(number);
 }

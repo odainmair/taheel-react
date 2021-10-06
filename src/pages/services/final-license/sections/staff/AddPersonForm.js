@@ -33,10 +33,9 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
   const CitizenValidate_SA = async () => {
 
     setLoading(true);
-    setErrMessage("");
     const { nationality, year, month, day, idNumber } = !rowIndex || rowIndex !== -1 ? values.customers[rowIndex] : values;
     console.log(`CitizenValidate_SA--idNumber :::  ${idNumber}`);
-   if (values.customers) {
+    /*if (values.customers) {
       console.log(`CitizenValidate_SA--customers :::  ${JSON.stringify(values.customers)}`);
       const custumerByIdCount =  values.customers.filter(customer => customer.idNumber === idNumber).length;
       if (custumerByIdCount > 0) {
@@ -44,7 +43,7 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
         setLoading(false);
         return;
       }
-    }
+    }*/
     if (!idNumber) {
       setErrMessage("يرجى ادخال رقم الهوية");
       setLoading(false);
@@ -59,7 +58,7 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
       return ('0' + day).slice(-2);
     }
     const birthDate = year + '' + numberToDay(month) + numberToDay(day);
-    const response = await validateCitizenFunc(idNumber, birthDate,false)
+    const response = await validateCitizenFunc(idNumber, birthDate)
 
     if (!response.isSuccessful)
       setErrMessage(response.message)
@@ -72,22 +71,21 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
 
   const CitizenValidate_Forign = async () => {
     setLoading(true);
-    setErrMessage("");
     const { iqamaNo } = !rowIndex || rowIndex !== -1 ? values.customers[rowIndex] : values;
-    if (values.customers) {
+    /*if (values.customers) {
       const custumerByIdCount = values.customers.filter(customer => customer.iqamaNo === iqamaNo).length;
       if (custumerByIdCount > 0) {
         setErrMessage(" رقم الاقامة مستخدم يرجى استخدام رقم اخر");
         setLoading(false);
         return;
       }
-    }
+    }*/
     if (!iqamaNo) {
       setErrMessage("يرجى ادخال رقم الاقامة");
       setLoading(false);
       return;
     }
-    const response = await validateCitizenFunc(iqamaNo,"",false);
+    const response = await validateCitizenFunc(iqamaNo);
     if (!response.isSuccessful)
       setErrMessage(response.message);
     else {
@@ -130,14 +128,14 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
             <FormControlLabel
               label="سعودي"
               control={<Field
-                name={fieldName === null ? "nationality" : `nationality`}
+                name={fieldName === null ? "nationality" : `${fieldName}.nationality`}
                 component={Radio} type="radio" value="سعودي" />}
               disabled={loading || SAForm || forignForm}
             />
             <FormControlLabel
               label="غير سعودي"
               control={<Field
-                name={fieldName === null ? "nationality" : `nationality`}
+                name={fieldName === null ? "nationality" : `${fieldName}.nationality`}
                 component={Radio} type="radio" value="غير سعودي" />}
               disabled={loading || SAForm || forignForm}
             />
@@ -150,7 +148,7 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
           className="custom-label-field"
         >
 
-          <Condition when={fieldName === null ? "nationality" : `nationality`} is='سعودي'>
+          <Condition when={fieldName === null ? "nationality" : `${fieldName}.nationality`} is='سعودي'>
 
             <Grid
               item
@@ -162,7 +160,7 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
                 fullWidth
                 required
                 label="رقم الهوية "
-                name={fieldName === null ? "idNumber" : `idNumber`}
+                name={fieldName === null ? "idNumber" : `${fieldName}.idNumber`}
                 component={TextFieldFinal}
                 disabled={loading || SAForm || forignForm}
                 type="number"
@@ -170,14 +168,6 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
                 dir="rtl"
                 className="custom-field"
               />
-            </Grid>
-            <Grid
-              item
-              mt={4}
-              md={12}
-              xs={12}
-            >
-              <Typography> تاريخ الميلاد</Typography>
             </Grid>
 
             < Calendar FeiledWidth={2} fieldName={fieldName} disabled={loading || SAForm || forignForm} />
@@ -227,7 +217,7 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
           spacing={1}
           className="custom-label-field"
         >
-          <Condition when={fieldName === null ? "nationality" : `nationality`} is='غير سعودي'>
+          <Condition when={fieldName === null ? "nationality" : `${fieldName}.nationality`} is='غير سعودي'>
             <Grid
               item
               md={6}
@@ -238,7 +228,7 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
                 fullWidth
                 required
                 label="رقم الإقامة "
-                name={fieldName === null ? "iqamaNo" : `iqamaNo`}
+                name={fieldName === null ? "iqamaNo" : `${fieldName}.iqamaNo`}
                 component={TextFieldFinal}
                 type="number"
                 disabled={loading || SAForm || forignForm}
@@ -361,22 +351,12 @@ const AddPersonForm = ({ fromEdit, MedicalPracticeCondition, setField, pop, push
               if (fieldName === null) {
                 push("customers", { fullName: fullName, idNumber: idNumber, iqamaNo: iqamaNo, staffTypes: staffTypes, gender: gender, birthDate: birthDate, nationality: nationality, day: day, month: month, year: year, sponsorName: sponsorName, cv: cv, cvAtt: cvAtt, EducationalQualification: EducationalQualification, MedicalPractice: MedicalPractice, EducationalQualificationAtt: EducationalQualificationAtt, MedicalPracticeAtt: MedicalPracticeAtt });
               }
-              else {
-                if (fieldName) {
-                  setField(`${fieldName}.staffTypes`, staffTypes);
-                  setField(`${fieldName}.EducationalQualification`, EducationalQualification);
-                  setField(`${fieldName}.cv`, cv);
-                  setField(`${fieldName}.MedicalPractice`, MedicalPractice);
-                }
-              }
-              console.log(`-- rowIndex :: ${rowIndex}`)
 
               setOpenPopup(false);
 
             }}
           >
-            {fromEdit ? "تحديث" : "اضافة"}
-
+            اضافة
           </Button>
         </Grid>
 

@@ -79,7 +79,7 @@ const RequestsChart = (props) => {
     },
     {
       title: 'مرفوض',
-      value: totaltahelrequests !== 0 ? ((totalrejectedrequests / totaltahelrequests) * 100).toFixed(1) : 0,
+      value: totaltahelrequests !== 0 ? ((totalpendingrequests / totaltahelrequests) * 100).toFixed(1) : 0,
       icon: ErrorOutlineIcon,
       color: colors.red[600]
     }

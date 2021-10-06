@@ -19,19 +19,11 @@ export default [
   },
   {
     id: uuid(),
-    description: 'طلب تجديد رخصة نهائية',
-    media: '/static/images/products/renew.png',
-    title: 'طلب تجديد رخصة نهائية',
-    url: '/services/finallicenserenewal',
-    isActive: true
-  },
-  {
-    id: uuid(),
     description: 'تتيح هذه الخدمة للمركز تقييم جاهزيته',
     media: '/static/images/products/checklist.png',
-    title: 'نقل مقر مركز أهلي',
-    url: '/services/transfercenter',
-    isActive: true
+    title: 'التقيم الذاتي - تقييم الجاهزية',
+    url: '/services/survey',
+    isActive: false
   },
   {
     id: uuid(),
