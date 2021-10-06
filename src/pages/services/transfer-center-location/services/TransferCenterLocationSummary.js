@@ -108,6 +108,7 @@ const TransferCenterLocationSummary = () => {
                             onClick={() => {
                                 navigate("/services/transfercenter", {
                                     state: {
+                                        licenceNumber: licenceNumber,
                                         centerLicenceNumber: licenceNumber,
                                         taskID,
                                         requestNum,
