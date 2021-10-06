@@ -234,7 +234,7 @@ export default
                 en: 'Fire department License Expiry Date'
             },
             name: 'NewCenterLocationData.centerInfo_r.expirarionDateForFireDepartmentLicenseHijri',
-            attrFunc:(value) => {return moment(`${value}`, 'iDDiMMiYYYY').format('iDD/iMM/iYYYY')},
+            attrFunc:(value) => {return moment(`${value}`, 'iYYYYiMMiDD').format('iDD/iMM/iYYYY')},
             type: 'Text',
             gridSize: '6',
             sectionName: Sections.Location,
@@ -290,7 +290,7 @@ export default
                 en: 'Furniture'
             },
             name: 'Furniture',
-            valueFunc: (values) => (values?.NewCenterLocationData?.centerInfo_r?.furniturePhoto_r?.map(d => d?.Document) || values?.NewCenterLocationData?.centerInfo_r?.furniturePhoto_r?.map(d => d?.Document?.id)),
+            valueFunc: (values) => (values?.NewCenterLocationData?.centerInfo_r?.furniturePhoto_r?.Document?.id || values?.NewCenterLocationData?.centerInfo_r?.furniturePhoto_r?.Document?.map(d => d?.id) || values?.NewCenterLocationData?.centerInfo_r?.furniturePhoto_r?.map(d => d?.Document) || values?.NewCenterLocationData?.centerInfo_r?.furniturePhoto_r?.map(d => d?.Document?.id)),
             type: 'file',
             gridSize: '6',
             sectionName: Sections.Attachments,

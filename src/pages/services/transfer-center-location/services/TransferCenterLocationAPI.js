@@ -3,7 +3,7 @@ import { getCurrentUser } from 'src/utils/UserLocalStorage';
 import { APIRequest } from 'src/api/APIRequest';
 import { calculation } from '../../final-license/services/finalLicenseAPI';
 
-export const centerLocationTransferAPIFunc = async (values, editForm, taskID) => {
+export const centerLocationTransferAPIFunc = async (values) => {
 	console.log('#==> valuesvaluesvalues ' + JSON.stringify(values))
 
 
@@ -20,7 +20,7 @@ export const centerLocationTransferAPIFunc = async (values, editForm, taskID) =>
 
 	const requestBody = {
 		serviceStatus: 1,
-		isDraft: false,
+		isDraft: values.isDraft,
 		userCreationEmail: email,
 		center: {
 			licenceNumber: values.centerLicenceNumber,
@@ -32,13 +32,13 @@ export const centerLocationTransferAPIFunc = async (values, editForm, taskID) =>
 				carryingnumber: values.capacity,
 				furniturePhoto_r: [
 					{
-						Document: values.Furniture[0],
+						Document: !!values?.Furniture && values?.Furniture[0],
 					}
 				],
-				fireDepartmentLicense: values.fireDepartmentLicense[0],
+				fireDepartmentLicense: !!values?.fireDepartmentLicense && values?.fireDepartmentLicense[0],
 				expirarionDateForFireDepartmentLicenseHijri: expiryDate,
-				engineeringPlan: values.OfficeReport[0],
-				momraDoc: values.municipLicenseNo[0],
+				engineeringPlan: !!values?.OfficeReport && values?.OfficeReport[0],
+				momraDoc: !!values?.municipLicenseNo && values?.municipLicenseNo[0],
 			},
 			centerLocation_r: {
 				city: values.city,
@@ -52,15 +52,20 @@ export const centerLocationTransferAPIFunc = async (values, editForm, taskID) =>
 			}
 		}
 	}
-	if (editForm) {
+	if (!!values.taskID) {
 		requestBody.serviceStatus = 2
-		requestBody.externalUserTaskID = taskID
+		requestBody.externalUserTaskID = values.taskID
+	}
+	if(values.isDraft) {
+		requestBody.draft_values = {temporaryLicenceNum: values.licenceNumber, ...values}
+		requestBody.requestNumber = values.requestNum ? values.requestNum : null
 	}
 	let url = "taheel-apis-services-initiate-center-location-change-request";
 
 	console.log('#==> requestBody ' + JSON.stringify(requestBody))
 	const response = await APIRequest({ requestBody, url });
-	return response;
+	// const response = {isSuccessful:false, message:"DUMMY"}
+return response;
 }
 
 // export { centerLocationTransferAPIFunc };

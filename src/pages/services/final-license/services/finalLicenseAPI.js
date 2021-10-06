@@ -137,7 +137,7 @@ const updateFinalLicenseAPIFunc = async (values, actionType, TaskID, isDraft, re
 		}
 	}
 
-	console.log('=================================================updateFinalLicenseAPIFunc :: requestBody :: ' + JSON.stringify(requestBody))
+	console.log('updateFinalLicenseAPIFunc :: requestBody :: ' + JSON.stringify(requestBody))
 	// const response = {isSuccessful:false, message:"DUMMY"}
 	const response = await APIRequest({ requestBody, url });
 	return response;
