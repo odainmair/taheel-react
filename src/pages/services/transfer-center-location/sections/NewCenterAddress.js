@@ -37,17 +37,15 @@ const sampleData = {
   ],
 };
 
-const NewCenterAddress = ({ values,Condition, setField, setIsEnableNextBtn }) => {
+const NewCenterAddress = ({ values, Condition, setField, setIsEnableNextBtn }) => {
 
   const inputEl = useRef(null);
   const [streetAddr, setStreetAddr] = useState(sampleData.vendorStreetAddress);
 
 
   useEffect(() => {
-    // if ( values) {
       setIsEnableNextBtn(true);
-    // }
- 
+
   }, []);
 
   const getStreetAddrPartsFromGeoResult = (geoResult) => {

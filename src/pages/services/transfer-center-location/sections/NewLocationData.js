@@ -25,18 +25,18 @@ const NewLocationData = ({ setField, values, setIsEnableNextBtn }) => {
   const [calculatedData, setCalculatedData] = useState(false);
   const [errMessage, SetErrMessage] = useState('');
   const [loading, setLoading] = useState(false);
-  console.log('#==> values__values__values ' + JSON.stringify(values))
+  console.log('#==> values__values__values ' + JSON.stringify(values));
 
   useEffect(() => {
-    if (!values.capacity || !values.basementArea || !values.buildingArea || !values.Furniture || !values.municipLicenseNo || !values.fireDepartmentLicense || !values.OfficeReport || !values.day || !values.month || !values.year)
-      setIsEnableNextBtn(false);
-
+    if (!values.capacity || !values.basementArea || !values.buildingArea || !values.Furniture || !values.municipLicenseNo || !values.fireDepartmentLicense || !values.OfficeReport || !values.day || !values.month || !values.year) {
+        setIsEnableNextBtn(false);
+    }
   }, []);
 
   const calculate = async () => {
     setLoading(true);
     SetErrMessage('');
-    console.log('hiiiiiiiiiiiii', values.buildingArea, values.basementArea)
+    console.log('hiiiiiiiiiiiii', values.buildingArea, values.basementArea);
 
     const response = await calculation(
       values.buildingArea,
@@ -66,23 +66,17 @@ const NewLocationData = ({ setField, values, setIsEnableNextBtn }) => {
     setLoading(false);
 
     if (!values.basementArea && !values.buildingArea) {
-      SetErrMessage(
-        'الرجاء تعبئة الحقول'
-      );
+      SetErrMessage('الرجاء تعبئة الحقول');
       setIsEnableNextBtn(false);
       return;
     }
     if (!values.basementArea) {
-      SetErrMessage(
-        'الرجاء تعبئة حقل مساحة القبو'
-      );
+      SetErrMessage('الرجاء تعبئة حقل مساحة القبو');
       setIsEnableNextBtn(false);
       return;
     }
     if (!values.buildingArea) {
-      SetErrMessage(
-        'الرجاء تعبئة حقل مساحة البناء'
-      );
+      SetErrMessage('الرجاء تعبئة حقل مساحة البناء');
       setIsEnableNextBtn(false);
       return;
     }
@@ -121,6 +115,7 @@ const NewLocationData = ({ setField, values, setIsEnableNextBtn }) => {
   };
 
   const handleOnChange = (val, nextVal) => {
+    values.capacity = null;
     setIsEnableNextBtn(false);
   };
   const clearCapacity = () => {
@@ -135,12 +130,11 @@ const NewLocationData = ({ setField, values, setIsEnableNextBtn }) => {
         mt={6}
         variant="h4"
       >
-        بيانات الموقع الجديد
+        بيانات الموقع الجديد{' '}
       </Typography>
 
-      <Grid container>
-        {' '}
-        <Grid container spacing={3} mt={3}>
+      <Grid container mt={3} mb={3}>
+        <Grid container spacing={3}>
           <Grid item md={12} xs={12}>
             {errMessage && (
               <Alert variant="outlined" severity="error">
@@ -161,7 +155,7 @@ const NewLocationData = ({ setField, values, setIsEnableNextBtn }) => {
               className="custom-field"
               disabled="true"
             />
-            <OnChange name="basementArea">
+            <OnChange name="beneficiariesNum">
               {(value, previous) => {
                 handleOnChange(value, previous);
                 clearCapacity();
@@ -229,11 +223,28 @@ const NewLocationData = ({ setField, values, setIsEnableNextBtn }) => {
             </Button>
           </Grid>
           <Grid item lg={12} md={12} xs={12}>
-            <ContentField label="الطاقة الاستعابية" value={values.capacity} />
+            {values.capacity && (
+              <Grid
+                item
+                lg={12}
+                md={12}
+                xs={12}
+              >
+                < ContentField label='الطاقة الاستعابية' value={values.capacity} />
+                <Box
+                  direction='rtl'
+                  className="custom-label-field"
+                >
+                  <Alert severity="info" size="small">
+                    يتم حساب الطاقة الإستيعابية من قبل المنصة :
+                    (مساحة مسطح البناء - مساحة القبو)/10
+                  </Alert>
+                </Box>
+              </Grid>
+            )}
             <Box direction="rtl" className="custom-label-field"></Box>
           </Grid>
         </Grid>
-        <Divider />
         <Typography
           color="textPrimary"
           gutterBottom
@@ -249,7 +260,7 @@ const NewLocationData = ({ setField, values, setIsEnableNextBtn }) => {
           setIsEnableNextBtn={setIsEnableNextBtn}
         />
         <Divider />
-        <Grid container spacing={3} mt={2}>
+        <Grid container spacing={3} mt={2} mb={3}>
           <Grid item md={12} xs={12}>
             <Typography>تاريخ انتهاء رخصة الدفاع المدني</Typography>
           </Grid>
@@ -263,6 +274,7 @@ const NewLocationData = ({ setField, values, setIsEnableNextBtn }) => {
           />
         </Grid>
       </Grid>
+
     </>
   );
 };
