@@ -1,4 +1,5 @@
 import moment from 'moment-hijri';
+moment.locale('ar-SA');
 
 const required = 'يجب تعبئة الحقل';
 const FielsRequired = 'يرجى ارفاق هذا الملف';
@@ -24,14 +25,19 @@ const AttachementValidation = (values) => {
   }
 
   let currentDate = moment().format('iYYYY/iM/iD');
-  let enteredDate = moment(
+  let hijriDate = moment(
     `${values.year} / ${values.month} / ${values.day}`,
     'iYYYY/iM/iD'
-  ).format('iYYYY/iM/iD');
+  );
+  let enteredDate = moment(hijriDate).format('iYYYY/iM/iD');
   if (moment(enteredDate).isBefore(currentDate)) {
     msg.day = InvalidDate;
     msg.month = InvalidDate;
     msg.year = InvalidDate;
+  }
+
+  if (!hijriDate.isValid()) {
+    msg.day = 'day doesnt exist';
   }
 
   return msg;
