@@ -1,49 +1,63 @@
 import moment from 'moment-hijri';
 
 const required = 'يجب تعبئة الحقل';
+const FielsRequired = 'يرجى ارفاق هذا الملف';
+const InvalidDate = 'تاريخ غير صالح'; // placeholder
 
-const AttachementValidation = values => {
-  var msg = {}
+const AttachementValidation = (values) => {
+  var msg = {};
   if (!values.fireDepartmentLicense || !values.fireDepartmentLicense[0])
-    msg.fireDepartmentLicense = "يرجى ارفاق هذا الملف";
+    msg.fireDepartmentLicense = FielsRequired;
 
   if (!values.OfficeReport || !values.OfficeReport[0])
-    msg.OfficeReport = "يرجى ارفاق هذا الملف";
+    msg.OfficeReport = FielsRequired;
 
-  if (!values.Furniture || !values.Furniture[0])
-    msg.Furniture = "يرجى ارفاق هذا الملف";
+  if (!values.Furniture || !values.Furniture[0]) msg.Furniture = FielsRequired;
 
   if (!values.municipLicenseNo || !values.municipLicenseNo[0])
-    msg.municipLicenseNo = "يرجى ارفاق هذا الملف";
-
+    msg.municipLicenseNo = FielsRequired;
 
   if (!values.day || !values.month || !values.year) {
-    msg.day = required
-    msg.month = required
-    msg.year = required
+    msg.day = required;
+    msg.month = required;
+    msg.year = required;
+  }
+
+  let currentDate = moment().format('iYYYY/iM/iD');
+  let enteredDate = moment(
+    `${values.year} / ${values.month} / ${values.day}`,
+    'iYYYY/iM/iD'
+  ).format('iYYYY/iM/iD');
+  if (!moment(enteredDate).isAfter(currentDate)) {
+    msg.day = InvalidDate;
+    msg.month = InvalidDate;
+    msg.year = InvalidDate;
+  }
+  if (values.basementArea === 0) {
+    msg.basementArea = 'ERRR';
   }
   return msg;
-}
+};
 
-const NewAddressValidation = values => {
-  var msg = {}
+const NewAddressValidation = (values) => {
+  var msg = {};
   if (!values.sub) {
-    msg.sub = required
+    msg.sub = required;
   }
   if (!values.city) {
-    msg.city = required
+    msg.city = required;
   }
   if (!values.street) {
-    msg.street = required
+    msg.street = required;
   }
   if (!values.buildNo) {
-    msg.buildNo = required
+    msg.buildNo = required;
   }
   if (!values.postalCode) {
-    msg.postalCode = required
+    msg.postalCode = required;
   }
   if (!values.additionalNo) {
-    msg.additionalNo = required
+    msg.additionalNo = required;
   }
   // console.log("values.additionalNo++++ ", values.additionalNo)
   // console.log("length++++ ", values.additionalNo.length)
@@ -51,13 +65,13 @@ const NewAddressValidation = values => {
   if (values?.additionalNo?.length != 4) {
     // console.log("length++++ ", values.additionalNo.length)
 
-    msg.additionalNo = 'يجب ان يحتوي الرقم الاضافي على 4 خانات'
+    msg.additionalNo = 'يجب ان يحتوي الرقم الاضافي على 4 خانات';
   }
   return msg;
-}
+};
 
 const getDateFromObject = (date, format, req) => {
   return moment(date, format).format(req);
-}
+};
 
 export { AttachementValidation, NewAddressValidation, getDateFromObject };
