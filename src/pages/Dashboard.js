@@ -151,7 +151,7 @@ const Dashboard = () => {
               xl={3}
               xs={12}
             >
-              <TotalProfit sx={{ height: '100%' }} loading={loadingMyTasks} totalreturnrequests={totalReturnRequests} />
+              <TotalProfit sx={{ height: '100%' }} loading={loadingMyTasks} totalreturnrequests={totalRejectedRequests} />
             </Grid>
             <Grid
               item

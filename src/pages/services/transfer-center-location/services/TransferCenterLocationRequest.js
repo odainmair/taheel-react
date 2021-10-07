@@ -119,6 +119,7 @@ const TransferCenterLocationRequest = () => {
                         municipLicenseNo: [Details?.NewCenterLocationData?.centerInfo_r?.momraDoc],
                         fireDepartmentLicense: [Details?.NewCenterLocationData?.centerInfo_r?.fireDepartmentLicense],
                         OfficeReport: [Details?.NewCenterLocationData?.centerInfo_r?.engineeringPlan],
+                        taskID: taskID,
                     })
                 }
                 setIsEnableNextBtn(true)

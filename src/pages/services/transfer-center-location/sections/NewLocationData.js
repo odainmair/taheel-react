@@ -275,6 +275,7 @@ const NewLocationData = ({ setField, values, setIsEnableNextBtn }) => {
           />
         </Grid>
       </Grid>
+     {!values.capacity&& (<Typography>**يجب الضغط على زر "احتساب الطاقة الإحتسابية" للإنتقال للصفحة التالية</Typography>)}
 
     </>
   );
