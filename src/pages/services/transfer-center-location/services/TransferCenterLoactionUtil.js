@@ -82,6 +82,8 @@ const NewAddressValidation = (values) => {
 
   if (!values.postalCode) {
     msg.postalCode = required;
+  }else if(values.postalCode.length!=5){
+    msg.additionalNo = 'يجب ان يحتوي الرمز البريدي على خمس أرقام فقط'
   }
 
   if (!values.additionalNo) {
