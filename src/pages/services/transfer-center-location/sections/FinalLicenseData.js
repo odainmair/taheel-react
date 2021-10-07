@@ -14,7 +14,9 @@ import { useEffect } from 'react';
 const FinalLicenseData = ({ setField, renewableLicenses, formEdit, values, setCenterLicenceNumber, getCentertDetails, showSummary, setShowSummary, isLoading, setIsEnableNextBtn }) => {
 
   useEffect(() => {
-     if (values.centerLicenceNumber) {
+    // console.log(`centerLicenceNumber: ${centerLicenceNumber}`)
+    console.log(`values.centerLicenceNumber: ${values.centerLicenceNumber}`)
+     if (values.centerLicenceNumber === 1) {
        setIsEnableNextBtn(true);
     }
     // setIsEnableNextBtn(false);
@@ -51,7 +53,7 @@ const FinalLicenseData = ({ setField, renewableLicenses, formEdit, values, setCe
                 formControlProps={{ fullWidth: true }}
                 disabled={!Array.isArray(renewableLicenses) || !renewableLicenses.length || formEdit}
               >
-                {/* <MenuItem value="1" key="1" selected={true}>اختيار</MenuItem> */}
+                <MenuItem value="1" key="1" selected={true}>اختيار</MenuItem>
                 {renewableLicenses.map(item => (
                   <MenuItem key={item.licenceNumber} value={item.licenceNumber}>{item.licenceNumber}</MenuItem>
                 ))}
