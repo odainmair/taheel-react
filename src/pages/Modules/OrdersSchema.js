@@ -17,7 +17,7 @@ const getChipComponentsForStatus = (data) => {
     if (status === REQUEST_STATUS.COMPLETED) {
         return (
             <Chip
-                label="مكتمل"
+                label={data.statusName.statusName}
                 variant="outlined"
                 size="medium"
                 icon={<DoneIcon sx={{ color: '#43A047 !important' }} />}
@@ -31,7 +31,7 @@ const getChipComponentsForStatus = (data) => {
     else if (status === REQUEST_STATUS.REJECTED) {
         return (
             <Chip
-                label="مرفوض"
+                label={data.statusName.statusName}
                 variant="outlined"
                 size="medium"
                 icon={<ErrorOutlineIcon sx={{ color: '#e53935 !important' }} />}
@@ -45,7 +45,7 @@ const getChipComponentsForStatus = (data) => {
     else if (status === REQUEST_STATUS.DRAFT) {
         return (
             <Chip
-                label="مسودة"
+                label={data.statusName.statusName}
                 variant="outlined"
                 size="medium"
                 icon={<DraftsTwoToneIcon sx={{ color: 'grey !important' }} />}
@@ -58,7 +58,7 @@ const getChipComponentsForStatus = (data) => {
     }
     return (
         <Chip
-            label="قيد المراجعة"
+            label={data.statusName.statusName}
             variant="outlined"
             size="medium"
             icon={<HistoryOutlinedIcon sx={{ color: '#fb8c00 !important' }} />}
