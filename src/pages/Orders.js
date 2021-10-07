@@ -24,18 +24,16 @@ const Orders = (props) => {
     const TPObject = TablePaginationObject(TableDataViewEnum.ALL_DATA)
     const tabsInfo = [
         {
-            pageTitle: 'عرض الجميع',
             tableTitle: 'عرض الجميع',
         },
         {
-            pageTitle: 'المسودات',
             tableTitle: 'المسودات',
         },
         {
-            pageTitle: 'الطلبات المعادة',
             tableTitle: 'الطلبات المعادة',
         },
     ]
+    const pageTitle = 'الطلبات'
     const [value, setValue] = useState(0);
 
     const paramData = useMemo(() => {
@@ -77,7 +75,7 @@ const Orders = (props) => {
             {tabsInfo.map((t, idx) => {
                 return (
                     <TabPanel key={idx} value={value} index={idx}>
-                        <TableCreator key={idx} tableTitle={tabsInfo} useValue={[value, setValue]} tableShcema={{ ...OrdersSchema({ navigate }), actions: '' }} dataTable={taheelRequests[idx]} totalCount={taheelRequests[idx]?.length} loading={loading} TPObject={TPObject} errMessage={errMessage} />
+                        <TableCreator key={idx} pageTitle={pageTitle} tableTitle={tabsInfo} useValue={[value, setValue]} tableShcema={{ ...OrdersSchema({ navigate }), actions: '' }} dataTable={taheelRequests[idx]} totalCount={taheelRequests[idx]?.length} loading={loading} TPObject={TPObject} errMessage={errMessage} />
                     </TabPanel>
                 )
             })}
