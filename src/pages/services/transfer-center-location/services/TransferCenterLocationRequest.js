@@ -257,7 +257,7 @@ const TransferCenterLocationRequest = () => {
                                     && centerTypeJSON.type[parseInt(center.type)] && centerTypeJSON.targetedBeneficiary[parseInt(center.targetedBeneficiary)] && centerTypeJSON.targetedBeneficiary[parseInt(center.targetedBeneficiary)] && centerTypeJSON.targetedServices[parseInt(center.targetedServices)]
                                     && centerTypeJSON.type[parseInt(center.type)].name + ' - ' + centerTypeJSON.targetedBeneficiary[parseInt(center.targetedBeneficiary)].name + ' - ' + centerTypeJSON.targetedServices[parseInt(center.targetedServices)].name,
                                 CRNumber: center && center.crInfo_r && center.crInfo_r.crNumber,
-                                centerLicenceNumber: center && center.licenceNumber,
+                                centerLicenceNumber: center && center.licenceNumber || centerLicenceNumber,
                                 temporaryLicenceNum: center && center.licenceNumber,
                                 licenseCreationDate: center && dateFormatter(center.creationDate),
                                 licenseExpiryDate: center && dateFormatter(center.expirationDate),

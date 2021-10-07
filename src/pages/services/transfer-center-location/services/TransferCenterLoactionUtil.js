@@ -36,8 +36,11 @@ const AttachementValidation = (values) => {
   if(!values.year){
     msg.year=required
   }
-   if (!hijriDate.isValid()) {
+   if (!hijriDate.isValid() && !!values.day && !!values.month && !!values.year) {
     msg.day = InvalidDate;
+    msg.month = InvalidDate;
+    msg.year = InvalidDate;
+    console.log(` hijriDate ================> ${values.year} / ${values.month} / ${values.day}`)
   }
   if (moment(enteredDate).isBefore(currentDate)) {
     msg.day = OldDate;
@@ -73,12 +76,14 @@ const NewAddressValidation = (values) => {
     msg.buildNo = required;
   } else if (!checkIsNumber(values.buildNo)) {
     msg.buildNo = 'يجب ان يحتوي رقم المبنى على ارقام فقط';
-  } else if (values.buildNo.length > 4) {
-    msg.buildNo = 'يجب ان يكون رقم المبنى اربعة ارقام او اقل';
+  } else if (values.buildNo.length != 4) {
+    msg.buildNo = 'يجب ان يحتوي الرقم المبنى على 4 خانات';
   }
 
   if (!values.postalCode) {
     msg.postalCode = required;
+  }else if(values.postalCode.length!=5){
+    msg.additionalNo = 'يجب ان يحتوي الرمز البريدي على خمس أرقام فقط'
   }
 
   if (!values.additionalNo) {

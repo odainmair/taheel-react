@@ -36,7 +36,7 @@ export default function TableCreator({ pageTitle, tableTitle, tableShcema, dataT
         setValue(newValue);
     };
     return (
-        <>
+        <Box sx={{ p: 3 }}>
             <Card style={{ padding: "20px", minHeight: "100%" }}>
                 {!!pageTitle ?
                     <>
@@ -98,7 +98,7 @@ export default function TableCreator({ pageTitle, tableTitle, tableShcema, dataT
                                                 Array.isArray(tableTitle) ?
                                                     <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
                                                         {tableTitle.map((t, idx) => {
-                                                            return <Tab key={idx} label={t.pageTitle} {...a11yProps(idx)} />
+                                                            return <Tab key={idx} label={t.tableTitle} {...a11yProps(idx)} />
                                                         })}
                                                     </Tabs> :
                                                     tableTitle
@@ -216,7 +216,7 @@ export default function TableCreator({ pageTitle, tableTitle, tableShcema, dataT
                                                 </Table>)
                                             }
                                         </Paper>
-                                        {loading ? <Skeleton /> : <PaginationDraw totalCount={totalCount} TPObject={TPObject} loading={loading} />}
+                                        {loading ? <Skeleton /> : dataTable?.length === 0 || !dataTable ? '' : <PaginationDraw totalCount={totalCount} TPObject={TPObject} loading={loading} />}
                                     </PerfectScrollbar>
                                 </Card>
                             </Grid >
@@ -224,7 +224,7 @@ export default function TableCreator({ pageTitle, tableTitle, tableShcema, dataT
                     </Container >
                 </CardContent>
             </Card>
-        </>
+        </Box>
     )
 
 }
