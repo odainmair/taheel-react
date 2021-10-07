@@ -24,9 +24,17 @@ import PropTypes from 'prop-types'
 import IconsTypeEnum from '../Utils/IconsTypeEnum'
 import Fab from '@mui/material/Fab';
 import IconsList from './FieldsInputs/IconsList'
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import Box from '@mui/material/Box';
+import { a11yProps } from 'src/Core/Components/FieldsInputs/TabPanel'
 
-export default function TableCreator({ pageTitle, tableTitle, tableShcema, dataTable, totalCount, loading, TPObject, errMessage, otherFunc, navBackUrl, action }) {
+export default function TableCreator({ pageTitle, tableTitle, tableShcema, dataTable, totalCount, loading, TPObject, errMessage, otherFunc, navBackUrl, action, useValue = [] }) {
     const navigateion = useNavigate()
+    const [value, setValue] = useValue
+    const handleChange = (event, newValue) => {
+        setValue(newValue);
+    };
     return (
         <>
             <Card style={{ padding: "20px", minHeight: "100%" }}>
@@ -83,7 +91,19 @@ export default function TableCreator({ pageTitle, tableTitle, tableShcema, dataT
 
                                 <Card>
                                     {!!tableTitle ?
-                                        <CardHeader title={tableTitle}
+                                        <CardHeader title={
+                                            loading ? (
+                                                <Skeleton animation="wave" height={15} width="20%" style={{ marginBottom: 6 }} />
+                                            ) : (
+                                                Array.isArray(tableTitle) ?
+                                                    <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+                                                        {tableTitle.map((t, idx) => {
+                                                            return <Tab key={idx} label={t.pageTitle} {...a11yProps(idx)} />
+                                                        })}
+                                                    </Tabs> :
+                                                    tableTitle
+                                            )
+                                        }
                                             action={action}
                                         /> : <></>}
                                     <Divider />
@@ -144,7 +164,7 @@ export default function TableCreator({ pageTitle, tableTitle, tableShcema, dataT
                                                     </TableHead>
                                                     <TableBody>
                                                         {
-                                                            (((dataTable).map((responseData, index) => {
+                                                            (((dataTable)?.map((responseData, index) => {
                                                                 return (
                                                                     <TableRow
                                                                         hover
@@ -179,18 +199,19 @@ export default function TableCreator({ pageTitle, tableTitle, tableShcema, dataT
                                                                                 </TableCell>
                                                                             )
                                                                         })}
-                                                                        <TableButtonsDraw otherFunc={otherFunc} actions={tableShcema.actions} responseData={responseData} loading={loading} index={index} />
+                                                                        {!loading ? <TableButtonsDraw otherFunc={otherFunc} actions={tableShcema.actions} responseData={responseData} loading={loading} index={index} /> : ''}
                                                                     </TableRow>
                                                                 )
                                                             })
                                                             )
                                                             )
                                                         }
-                                                        {dataTable?.length === 0 ? (<TableRow hover>
-                                                            <TableCell colSpan={8} >
-                                                                <p style={{ textAlign: 'center' }} >لا يوجد بيانات </p>
-                                                            </TableCell>
-                                                        </TableRow>) : <></>}
+                                                        {!loading && (dataTable?.length === 0 || !dataTable) ? (
+                                                            <TableRow hover>
+                                                                <TableCell colSpan={8} >
+                                                                    <p style={{ textAlign: 'center' }} >لا يوجد بيانات </p>
+                                                                </TableCell>
+                                                            </TableRow>) : <></>}
                                                     </TableBody>
                                                 </Table>)
                                             }
@@ -219,4 +240,5 @@ TableCreator.propTypes = {
     errMessage: PropTypes.string,
     otherFunc: PropTypes.func,
     action: PropTypes.object,
+    useValue: PropTypes.array,
 }

@@ -10,6 +10,7 @@ export const REQUEST_STATUS = {
     REJECTED: -2,
     DRAFT: -3,
     TRANS_CENTER_REQ: 4,
+    RETERNED_REQ: 6,
 }
 export const REQUEST_TYPES = {
     TEMPOR: 1,

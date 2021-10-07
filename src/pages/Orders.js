@@ -12,16 +12,32 @@ import { useNavigate } from 'react-router';
 import { getMyTasksFun } from 'src/pages/services/data/servicesApi'
 import { useLocation } from 'react-router-dom'
 import { getTaheelRequestsFun } from 'src/pages/services/data/servicesApi'
+import { TabPanel } from 'src/Core/Components/FieldsInputs/TabPanel'
+
 const Orders = (props) => {
     const location = useLocation()
     const navigate = useNavigate();
-    const { type } = props
     const [loading, setLoading] = useState(true);
     const [totalCount, setTotalCount] = useState();
     const [taheelRequests, setTaheelRequests] = useState([]);
     const [errMessage, SetErrMessage] = useState('')
-    const tableTitle = type === LICENSE_FORM_TYPES.DRAFT ? 'المسودات' : 'الطلبات المقدمة'
     const TPObject = TablePaginationObject(TableDataViewEnum.ALL_DATA)
+    const tabsInfo = [
+        {
+            pageTitle: 'عرض الجميع',
+            tableTitle: 'عرض الجميع',
+        },
+        {
+            pageTitle: 'المسودات',
+            tableTitle: 'المسودات',
+        },
+        {
+            pageTitle: 'الطلبات المعادة',
+            tableTitle: 'الطلبات المعادة',
+        },
+    ]
+    const [value, setValue] = useState(0);
+
     const paramData = useMemo(() => {
         return {
             batchSize: TPObject.pagination.batchSize,
@@ -30,31 +46,42 @@ const Orders = (props) => {
     }, [TPObject.pagination.batchSize, TPObject.pagination.startIndex])
 
     useEffect(async () => {
+        SetErrMessage('')
         setLoading(true)
         const { email } = getCurrentUser();
-        const getTaheelRequestsRs = await getTaheelRequestsFun(email, paramData.startIndex, paramData.batchSize, type);
+        let getTaheelRequestsRs;
+
+        getTaheelRequestsRs = await getTaheelRequestsFun(email, paramData.startIndex, paramData.batchSize);
         let response = {};
         if (!getTaheelRequestsRs.isSuccessful) {
             setLoading(false);
             SetErrMessage(getTaheelRequestsRs.message)
             response = { isSuccessful: false, message: getTaheelRequestsRs.message };
         } else {
-            const data = getTaheelRequestsRs.responseBody.data;
-            setTotalCount(data.totalCount)
-            if (type === LICENSE_FORM_TYPES.DRAFT) {
-                setTaheelRequests(data.requests);
-            }
-            else {
-                const { data } = getTaheelRequestsRs.responseBody;
-                setTaheelRequests(data.requests.filter(r => r.status != REQUEST_STATUS.DRAFT));
-            }
+            let allData = []
+            const data = getTaheelRequestsRs.responseBody.data.requests;
+            const drafts = data.filter(r => r.status === REQUEST_STATUS.DRAFT)
+            const filteredExtReq = data.filter(d => d.status === REQUEST_STATUS.RETERNED_REQ);
+            allData[0] = data
+            allData[1] = drafts
+            allData[2] = filteredExtReq
+            setTaheelRequests(allData);
             setLoading(false);
         }
 
         return response;
-    }, [paramData.batchSize, paramData.startIndex, type]);
+    }, [paramData.batchSize, paramData.startIndex]);
     return (
-        <TableCreator tableTitle={tableTitle} tableShcema={{ ...OrdersSchema({ navigate }), actions: '' }} dataTable={taheelRequests} totalCount={totalCount} loading={loading} TPObject={TPObject} errMessage={errMessage} />
+
+        <>
+            {tabsInfo.map((t, idx) => {
+                return (
+                    <TabPanel key={idx} value={value} index={idx}>
+                        <TableCreator key={idx} tableTitle={tabsInfo} useValue={[value, setValue]} tableShcema={{ ...OrdersSchema({ navigate }), actions: '' }} dataTable={taheelRequests[idx]} totalCount={taheelRequests[idx]?.length} loading={loading} TPObject={TPObject} errMessage={errMessage} />
+                    </TabPanel>
+                )
+            })}
+        </>
     )
 }
 
