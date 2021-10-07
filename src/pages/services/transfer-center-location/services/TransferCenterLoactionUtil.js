@@ -73,8 +73,8 @@ const NewAddressValidation = (values) => {
     msg.buildNo = required;
   } else if (!checkIsNumber(values.buildNo)) {
     msg.buildNo = 'يجب ان يحتوي رقم المبنى على ارقام فقط';
-  } else if (values.buildNo.length > 4) {
-    msg.buildNo = 'يجب ان يكون رقم المبنى اربعة ارقام او اقل';
+  } else if (values.buildNo.length != 4) {
+    msg.buildNo = 'يجب ان يحتوي الرقم المبنى على 4 خانات';
   }
 
   if (!values.postalCode) {
