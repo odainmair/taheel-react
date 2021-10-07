@@ -14,10 +14,11 @@ import { useEffect } from 'react';
 const FinalLicenseData = ({ setField, renewableLicenses, formEdit, values, setCenterLicenceNumber, getCentertDetails, showSummary, setShowSummary, isLoading, setIsEnableNextBtn }) => {
 
   useEffect(() => {
-    //  if ( values.centerLicenceNumber) {
-    setIsEnableNextBtn(true);
-    //   console.log("editing++++++++++", values.centerLicenceNumber);
-    // }
+    // console.log(`centerLicenceNumber: ${centerLicenceNumber}`)
+    console.log(`values.centerLicenceNumber: ${values.centerLicenceNumber}`)
+     if (values.centerLicenceNumber === 1) {
+       setIsEnableNextBtn(true);
+    }
     // setIsEnableNextBtn(false);
 
   }, []);

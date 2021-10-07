@@ -50,7 +50,7 @@ export default function FormField(props) {
     } else {
         value = props.values[inputName]
     }
-    if (!(value + '') && !props.isLoading) {
+    if (!(value?.toString) && !props.isLoading) {
         return null;
     }
     if (props.type === 'Text') {

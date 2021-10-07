@@ -5,7 +5,13 @@ import { calculation } from '../../final-license/services/finalLicenseAPI';
 
 export const centerLocationTransferAPIFunc = async (values) => {
 	console.log('#==> valuesvaluesvalues ' + JSON.stringify(values))
-
+	const getFurnitures = (values) => {
+		const furnitures = []
+		values.Furniture && values.Furniture.map((docId, index) => {
+			furnitures.push({ Document: docId })
+		})
+		return furnitures
+	}
 
 	function numberToDay(day) {
 		return ('0' + day).slice(-2);
@@ -30,11 +36,7 @@ export const centerLocationTransferAPIFunc = async (values) => {
 				buildingArea: values.buildingArea,
 				basementArea: values.basementArea,
 				carryingnumber: values.capacity,
-				furniturePhoto_r: [
-					{
-						Document: !!values?.Furniture && values?.Furniture[0],
-					}
-				],
+				furniturePhoto_r: getFurnitures(values),
 				fireDepartmentLicense: !!values?.fireDepartmentLicense && values?.fireDepartmentLicense[0],
 				expirarionDateForFireDepartmentLicenseHijri: expiryDate,
 				engineeringPlan: !!values?.OfficeReport && values?.OfficeReport[0],
@@ -56,16 +58,15 @@ export const centerLocationTransferAPIFunc = async (values) => {
 		requestBody.serviceStatus = 2
 		requestBody.externalUserTaskID = values.taskID
 	}
-	if(values.isDraft) {
-		requestBody.draft_values = {temporaryLicenceNum: values.licenceNumber, ...values}
-		requestBody.requestNumber = values.requestNum ? values.requestNum : null
+	if (values.isDraft) {
+		requestBody.draft_values = { temporaryLicenceNum: values.licenceNumber, ...values }
 	}
 	let url = "taheel-apis-services-initiate-center-location-change-request";
 
 	console.log('#==> requestBody ' + JSON.stringify(requestBody))
 	const response = await APIRequest({ requestBody, url });
 	// const response = {isSuccessful:false, message:"DUMMY"}
-return response;
+	return response;
 }
 
 // export { centerLocationTransferAPIFunc };

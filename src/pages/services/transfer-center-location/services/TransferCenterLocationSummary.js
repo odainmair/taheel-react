@@ -68,7 +68,7 @@ const TransferCenterLocationSummary = () => {
                     })
                 }
             });
-            setDialogContent(`${deleteCommissioner.responseBody.data.message} `+reqNum);
+            setDialogContent(`${deleteCommissioner.responseBody.data.message} `+requestNum);
             setDialogTitle('')
             setOpen(true);
 
