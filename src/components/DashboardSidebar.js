@@ -66,11 +66,11 @@ const items = [
   //   icon: UserIcon,
   //   title: 'التنبيهات'
   // },
-  {
-    href: '/app/drafts',
-    icon: DraftsIcon,
-    title: 'المسودات'
-  },
+  // {
+  //   href: '/app/drafts',
+  //   icon: DraftsIcon,
+  //   title: 'المسودات'
+  // },
   {
     href: '/login',
     icon: LogoutIcon,
