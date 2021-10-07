@@ -220,7 +220,7 @@ const NewLocationData = ({ setField, values, setIsEnableNextBtn }) => {
               }}
               onClick={calculate}
             >
-              احتساب الطاقة الاستيعابية
+              احتساب الطاقة الاستيعابية ( للمبنى الجديد)
             </Button>
           </Grid>
           <Grid item lg={12} md={12} xs={12}>
