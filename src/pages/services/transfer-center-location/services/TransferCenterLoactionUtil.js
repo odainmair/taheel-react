@@ -36,8 +36,11 @@ const AttachementValidation = (values) => {
   if(!values.year){
     msg.year=required
   }
-   if (!hijriDate.isValid()) {
+   if (!hijriDate.isValid() && !!values.day && !!values.month && !!values.year) {
     msg.day = InvalidDate;
+    msg.month = InvalidDate;
+    msg.year = InvalidDate;
+    console.log(` hijriDate ================> ${values.year} / ${values.month} / ${values.day}`)
   }
   if (moment(enteredDate).isBefore(currentDate)) {
     msg.day = OldDate;
