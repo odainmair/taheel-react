@@ -79,7 +79,7 @@ const MyTasksTable = (props) => {
                         component="span"
                         onClick={() => {
                           console.log("edit function");
-                          navigate('/services/editfinallicense', { state: { centerLicenceNumber: request.centerLicenceNumber, taskID: request.ID,requestNum:request.requestNum, formType: LICENSE_FORM_TYPES.EDIT } });
+                          navigate(request.type===4?'/services/transfercentersummary':'/services/editfinallicense', { state: { centerLicenceNumber: request.centerLicenceNumber, taskID: request.ID,requestNum:request.requestNum, formType: LICENSE_FORM_TYPES.EDIT } });
                         }}
                       >
                         <VisibilityIcon />

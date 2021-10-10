@@ -53,12 +53,14 @@ const DashboardNavbar = ({ onMobileNavOpen, ...rest }) => {
     return response;
   };
   const changeNotificationStatus = async (notif) => {
+    if(notif.isRead===false){
     setUnreadNotif(unreadNotif-1);
     notif.isRead=true
     const url = 'taheel-apis-utilities-change-web-notification-status';
     const queryParams = { notificationId: notif.ID };
     const res = await APIRequest({ url, queryParams });
     return res;
+  }
   };
   useEffect(async () => {
     const { email } = getCurrentUser()
