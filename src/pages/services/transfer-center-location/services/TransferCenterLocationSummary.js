@@ -7,7 +7,6 @@ import FormCreator from 'src/Core/Components/FormCreator'
 import {
     Grid,
     Button,
-    CircularProgress,
 } from '@material-ui/core';
 import IconsTypeEnum from 'src/Core/Utils/IconsTypeEnum'
 import IconsList from 'src/Core/Components/FieldsInputs/IconsList'
@@ -26,25 +25,27 @@ const TransferCenterLocationSummary = () => {
     console.log("TransferCenterLocationSummary :: taskID: ", taskID)
     const [details, setDetails] = useState(false)
     const [isAgree, setIsAgree] = useState(false)
-    const [errMessage, SetErrMessage] = useState('')
+    const [errMessage, setErrMessage] = useState()
+    const [alertComment, setAlertComment] = useState()
     const [loading, setLoading] = useState(true)
     const [open, setOpen] = useState(false)
     const [btnsOptions, setBtnsOptions] = useState({})
     const [dialogContent, setDialogContent] = useState("")
     const [dialogTitle, setDialogTitle] = useState("")
     const handleClickOpen = (data) => {
-        SetErrMessage('')
+        setErrMessage('')
         setOpen(true);
     };
     useEffect(async () => {
         setLoading(true)
         const getReqDetails = await getRequestDetails(requestNum)
         if (!getReqDetails.isSuccessful) {
-            SetErrMessage(getReqDetails.message)
+            setErrMessage(getReqDetails.message)
         } else {
             let Details = getReqDetails.responseBody.requestDetails.data
+            setAlertComment({ msg: Details.chairmanComment, title: 'تعليق الرئيس' })
             setTaskID(Details?.externalTaskData?.ID)
-            Details = { NewCenterLocationData: { ...Details.processVariablesDump.NewCenterLocationData }, center: { ...Details.center } }
+            Details = { NewCenterLocationData: { ...Details.processVariablesDump.NewCenterLocationData }, center: { ...Details.center }, chairmanComment: Details.chairmanComment }
             console.log("Details+++++++++++++", Details)
             setDetails(Details)
             setLoading(false)
@@ -54,7 +55,7 @@ const TransferCenterLocationSummary = () => {
         setLoading(true)
         const deleteCommissioner = await cancelTCRequest(taskID, licenceNumber)
         if (!deleteCommissioner.isSuccessful) {
-            SetErrMessage(deleteCommissioner.message);
+            setErrMessage(deleteCommissioner.message);
             return { isSquccessful: false, message: deleteCommissioner.message };
         } else {
             setLoading(false)
@@ -68,7 +69,7 @@ const TransferCenterLocationSummary = () => {
                     })
                 }
             });
-            setDialogContent(`${deleteCommissioner.responseBody.data.message} `+requestNum);
+            setDialogContent(`${deleteCommissioner.responseBody.data.message} ` + requestNum);
             setDialogTitle('')
             setOpen(true);
 
@@ -77,8 +78,8 @@ const TransferCenterLocationSummary = () => {
         return { isSquccessful: true, message: "تم الحذف بنجاح" };
     }
     const title = 'تفاصيل طلب نقل المركز'
-    const additionalFields = (isAgree, setIsAgree) => {
-        return !!taskID ?
+    const additionalFields = () => {
+        return !!taskID &&
             (
                 <Grid container spacing={2} mt={3} justifyContent="space-between">
                     <Grid item>
@@ -86,7 +87,7 @@ const TransferCenterLocationSummary = () => {
                             variant="contained"
                             color="secondary"
                             onClick={() => {
-                                setBtnsOptions({ onClose: () => { setOpen(false) }, buttons: { leftBtn: { title: 'نعم', func: () => { setOpen(false); onCancelTCRequest(); } }, rightBtn: { title: 'لا', func: ()=>{setOpen(false)} } } });
+                                setBtnsOptions({ onClose: () => { setOpen(false) }, buttons: { leftBtn: { title: 'نعم', func: () => { setOpen(false); onCancelTCRequest(); } }, rightBtn: { title: 'لا', func: () => { setOpen(false) } } } });
                                 setDialogContent('هل انت متأكد من الغاء طلب نقل المركز ؟ ');
                                 setDialogTitle('إلغاء طلب نقل المركز')
                                 setOpen(true);
@@ -112,7 +113,7 @@ const TransferCenterLocationSummary = () => {
                                         centerLicenceNumber: licenceNumber,
                                         taskID,
                                         requestNum,
-                                        formEdit:true
+                                        formEdit: true
                                     }
                                 })
                             }}
@@ -121,7 +122,7 @@ const TransferCenterLocationSummary = () => {
                         </Button>
                     </Grid>
                 </Grid >
-            ) : ''
+            )
     }
     return (
         <>
@@ -131,6 +132,7 @@ const TransferCenterLocationSummary = () => {
                 schema={TransferCenterLocationSchema}
                 errMessage={errMessage}
                 initValues={details}
+                alertComment={alertComment}
                 additionalFields={additionalFields(isAgree, setIsAgree)}
                 isLoading={loading}
                 navBackUrl={{ url: '/app/orders', state: { licenceNumber: licenceNumber } }}

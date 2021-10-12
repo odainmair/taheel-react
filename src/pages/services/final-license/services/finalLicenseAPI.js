@@ -43,11 +43,11 @@ const getStaff = (values) => {
 			const newKey = newKeys[key] || key;
 			if (key === 'gender')
 				customer[newKey] = customer[key] === 'انثى' ? 'f' : 'm'
-				else if (key === 'idNumber' || key === 'iqamaNo') {
-					console.log(`--getStaff::customer.idNumber ${customer.idNumber}`);
-					console.log(`--getStaff::customer.iqamaNo ${customer.iqamaNo}`);
-					customer[newKey] = customer.idNumber  === undefined || !customer.idNumber? customer.iqamaNo : customer.idNumber;
-				}
+			else if (key === 'idNumber' || key === 'iqamaNo') {
+				console.log(`--getStaff::customer.idNumber ${customer.idNumber}`);
+				console.log(`--getStaff::customer.iqamaNo ${customer.iqamaNo}`);
+				customer[newKey] = customer.idNumber === undefined || !customer.idNumber ? customer.iqamaNo : customer.idNumber;
+			}
 			else if (key === 'staffTypes')
 				customer[newKey] = staffTypesNo[customer[key]]
 			else if (key === 'day' || key === 'month' || key === 'year') {
@@ -97,11 +97,11 @@ const updateFinalLicenseAPIFunc = async (values, actionType, TaskID, isDraft, re
 				"basementArea": values.basementArea,
 				"carryingnumber": values.capacity,
 				"financialGuarantee": values.financialGuarantee && values.financialGuarantee.substring(0, values.financialGuarantee.length - 5),
-				"financialGuarbteeAtt": values.FinancialGuaranteeAtt && values.FinancialGuaranteeAtt[0],
-				"executivePlan": values.ExecutivePlan && values.ExecutivePlan[0],
-				"operationPlan": values.OperationalPlan && values.OperationalPlan[0],
-				"engineeringPlan": values.OfficeReport && values.OfficeReport[0],
-				"securityReport": values.SecurityReport && values.SecurityReport[0],
+				"financialGuarbteeAtt": values.FinancialGuaranteeAtt && (values.FinancialGuaranteeAtt[0]?.id || values.FinancialGuaranteeAtt[0]),
+				"executivePlan": values.ExecutivePlan && (values.ExecutivePlan[0]?.id || values.ExecutivePlan[0]),
+				"operationPlan": values.OperationalPlan && (values.OperationalPlan[0]?.id || values.OperationalPlan[0]),
+				"engineeringPlan": values.OfficeReport && (values.OfficeReport[0]?.id || values.OfficeReport[0]),
+				"securityReport": values.SecurityReport && (values.SecurityReport[0]?.id || values.SecurityReport[0]),
 				"beneficiaryCount": values.beneficiariesNum,
 				"furniturePhoto_r": getFurnitures(values)
 			},
@@ -251,4 +251,4 @@ const downloadDocument = async (DocID, attachment, name) => {
 }
 
 
-export { getCentersForFinal, validateCompanyFunc,getCentersForFinalNoExpired, updateFinalLicenseAPIFunc, calculation, validateCitizenFunc, uploadDocumentApi, getTempLicense, getMunicipalLicenseNoApi, downloadDocument, TaskDetails, CentertDetails, DraftDetails };
+export { getCentersForFinal, validateCompanyFunc, getCentersForFinalNoExpired, updateFinalLicenseAPIFunc, calculation, validateCitizenFunc, uploadDocumentApi, getTempLicense, getMunicipalLicenseNoApi, downloadDocument, TaskDetails, CentertDetails, DraftDetails };
