@@ -29,24 +29,45 @@ const AttachementValidation = (values) => {
 
   if (!values.day) {
     msg.day = required;
-  
-  }if(!values.month){
-    msg.month=required
-  } 
-  if(!values.year){
-    msg.year=required
   }
-   if (!hijriDate.isValid() && !!values.day && !!values.month && !!values.year) {
+  if (!values.month) {
+    msg.month = required;
+  }
+  if (!values.year) {
+    msg.year = required;
+  }
+  if (!hijriDate.isValid() && !!values.day && !!values.month && !!values.year) {
     msg.day = InvalidDate;
     msg.month = InvalidDate;
     msg.year = InvalidDate;
-    console.log(` hijriDate ================> ${values.year} / ${values.month} / ${values.day}`)
+    console.log(
+      ` hijriDate ================> ${values.year} / ${values.month} / ${values.day}`
+    );
   }
+  if (values.year < parseInt(moment().format('iYYYY'))) {
+    msg.year = OldDate;
+  }
+  if (values.year == parseInt(moment().format('iYYYY'))) {
+    if (values.month < parseInt(moment().format('iMM'))) {
+      msg.month = OldDate;
+    }
+  }
+  if (values.year ==parseInt(moment().format('iYYYY'))) {
+    if (values.month ==parseInt(moment().format('iMM'))) {
+      if (values.day <parseInt(moment().format('iDD'))) {
+        msg.day =OldDate;
+      }
+    }
+  }
+
+  /*
+  
+  
   if (moment(enteredDate).isBefore(currentDate)) {
     msg.day = OldDate;
     msg.month = OldDate;
     msg.year = OldDate;
-  }
+  }*/
 
   return msg;
 };
@@ -82,8 +103,6 @@ const NewAddressValidation = (values) => {
 
   if (!values.postalCode) {
     msg.postalCode = required;
-  }else if(values.postalCode.length!=5){
-    msg.postalCode = 'يجب ان يحتوي الرمز البريدي على خمس أرقام فقط'
   }
 
   if (!values.additionalNo) {
