@@ -22,7 +22,7 @@ const Terms = ({ setField, values }) => {
                 mt={3}
             >
                 <div className="section-1 font-45Light">
-                    <p className="section-headline">يجب أن يقر المالك على توفر الشروط التالية في المبنى المقرر لاستخراج الترخيص المؤقت:</p>
+                    <p className="section-headline">يجب أن يقر المالك على توفر الشروط التالية في المبنى المقرر لنقل مقر مركز أهلي:</p>
                     <ul className="unordered-list">
                         <li className="unordered-list-item">تعهد من المالك أن تكون الأرض المخصصة للمركز على شارعين احدهما تجاري لا يقل عن عرض 15 متر </li>
                         <li className="unordered-list-item">تعهد من المالك أن يكون المركز مستقل و بمداخل خارجية مستقلة و في موقع مناسب للنشاط من حيث الهدوء و سهولة الوصول اليه</li>

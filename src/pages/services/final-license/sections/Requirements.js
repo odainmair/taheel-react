@@ -71,7 +71,6 @@ const Requirements = ({ setField, values }) => {
             values={values}
             multipleFile={true}
           />
-          <>* يمكنك ارفاق اكثر من صورة في ان واحد</>
         </Grid>
         <Grid item md={6} xs={12}>
           <Field

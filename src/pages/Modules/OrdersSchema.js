@@ -91,6 +91,9 @@ const getRequestValues = (navigate, taskType, data) => {
             navigatinURL = '/services/finallicense'
             draftFormType = LICENSE_FORM_TYPES.NEW
         }
+    } else if (data.typeId === REQUEST_TYPES.FINAL || data.typeId === REQUEST_TYPES.RENEW) {
+        navigatinURL = '/app/centersDetails'
+
     } else {
         navigatinURL = '/services/transfercentersummary'
     }
@@ -116,7 +119,7 @@ export default ({ navigate, taskRequests }) => {
                 },
                 name: 'requestNum',
                 attrFunc: (data) => {
-                    if (data.status === REQUEST_STATUS.DRAFT || data.typeId === REQUEST_TYPES.TRANS_CENTER) {
+                    if (data.status === REQUEST_STATUS.DRAFT || data.typeId === REQUEST_TYPES.TRANS_CENTER || data.typeId === REQUEST_TYPES.FINAL || data.typeId === REQUEST_TYPES.RENEW) {
                         return (
                             <>
                                 {data.requestNum}

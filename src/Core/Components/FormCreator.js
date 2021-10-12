@@ -9,6 +9,7 @@ import {
     Box,
     Card,
     Alert,
+    AlertTitle,
     CardContent,
     CardHeader,
     Divider,
@@ -20,7 +21,7 @@ import IconsTypeEnum from '../Utils/IconsTypeEnum'
 import IconsList from './FieldsInputs/IconsList'
 import Fab from '@mui/material/Fab';
 
-export default function FormCreator({ title, pageName, isLoading, submitInfo, schema, initValues, navBackUrl, sectionNames, cancel, formType, lookupObject, additionalFields, fieldsName, errMessage }) {
+export default function FormCreator({ title, pageName, isLoading, submitInfo, schema, initValues, navBackUrl, sectionNames, cancel, formType, lookupObject, additionalFields, fieldsName, errMessage, alertComment }) {
     //const [t] = useTranslation('common')
     const navigateion = useNavigate()
     const [loading, setLoading] = useState(false)
@@ -76,16 +77,20 @@ export default function FormCreator({ title, pageName, isLoading, submitInfo, sc
                             }
                             <CardContent  >
                                 {errMessage && (
-                                    <Alert variant="outlined" severity="error">
-                                        {errMessage}
-                                    </Alert>
-                                )}
+                                    <Alert variant="outlined" severity={!!errMessage.type ? errMessage.alertype : "error"}>
+                                        {!!errMessage.msg ? errMessage.msg : errMessage}
+                                    </Alert>)
+                                }
+                                {alertComment && alertComment.msg && (<Alert variant="outlined" severity="warning" sx={{ marginLeft: 2, marginRight: 2, marginTop: 1 }}>
+                                    <AlertTitle> {alertComment.title}</AlertTitle>
+                                    {alertComment.msg}
+                                </Alert>)}
                                 <Grid
                                     container
                                     spacing={3}
                                     mt={3}
                                     mb={3}
-                                    style={{ paddingRight: formType === 'view' ? '80px' : '',paddingLeft: formType === 'view' ? '150px' : '' }}
+                                    style={{ paddingRight: formType === 'view' ? '80px' : '', paddingLeft: formType === 'view' ? '150px' : '' }}
                                 >
                                     {FieldsCreator({ schema, fieldsName, sectionNames, lookupObject, formType, values, isLoading, setField })}
                                 </Grid>
@@ -127,5 +132,6 @@ FormCreator.propTypes = {
     additionalFields: PropTypes.object,
     fieldsName: PropTypes.object,
     errMessage: PropTypes.string,
+    alertComment: PropTypes.any,
     isLoading: PropTypes.bool,
 }
